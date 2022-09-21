@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="_kXbWMP_rEeWgopfFW9GC4w" name="javadef" ref="resource.tech#UUID_DEF_TECH_JSON1?fileId=UUID_DEF_TECH_JSON1$type=tech$name=json?">
+  <xPathExpression expression="if (tech:javaType()='Map') then 'json:object'  else&#xD;&#xA;if (tech:javaType()='List') then 'json:array'  else&#xD;&#xA;if (tech:javaType()='Date') then 'dateTime' else&#xD;&#xA;if (tech:javaType()='String') then 'string' else&#xD;&#xA;if (tech:javaType()='Boolean') then 'boolean' else&#xD;&#xA;if (tech:javaType()='Integer') then 'int' else&#xD;&#xA;if (tech:javaType()='BigDecimal') then 'decimal' else&#xD;&#xA;'string'   ">
+    <code>XML_TYPE</code>
+    <code>SUPER_TYPE_NAME</code>
+  </xPathExpression>
+  <xPathExpression expression="'element'">
+    <code>XML_FORM</code>
+  </xPathExpression>
+  <xPathExpression expression="'com.indy.runtime.json.impl.BsonXmlReaderV1'">
+    <code>XML_READER_CLASS</code>
+  </xPathExpression>
+  <xPathExpression description="" expression="'com.indy.runtime.json.impl.BsonXmlOutputFactoryV1'">
+    <code>XML_OUTPUT_FACTORY_CLASS</code>
+  </xPathExpression>
+  <xPathExpression expression="if (tech:javaType()='Map') then 'com.stambia.json.object'  else&#xD;&#xA;if (tech:javaType()='List') then 'com.stambia.json.array'   else&#xD;&#xA;'com.stambia.json.value'   ">
+    <code>XML_DEF_TYPE</code>
+  </xPathExpression>
+  <xPathExpression expression="'root'">
+    <code>XML_ROOT_NAME</code>
+  </xPathExpression>
+  <xPathExpression expression="'XML'">
+    <code>DATATYPE_PRODUCT_CODE</code>
+    <code>DATATYPE_TECH_CODE</code>
+  </xPathExpression>
+  <xPathExpression expression="md:ifEmpty(@filePath,concat('${/CORE_JAVA_TEMPORARY_FOLDER}$/',@id,'.json'))">
+    <code>XML_FILE_PATH</code>
+    <code>IO_META_DATA_RESOURCE</code>
+  </xPathExpression>
+  <xPathExpression expression="tech:encodeName(if (../tech:xmlType()!='json:array' and ../tech:xmlType()!='json:object' ) then 'e'  else &#xD;&#xA;if (../tech:xmlType()='json:array') then 'e' else md:ifEmpty(tech:name(),@name))&#xD;&#xA;">
+    <code>XML_NAME</code>
+  </xPathExpression>
+  <xPathExpression expression="if (matches($p1,'^[A-Za-z_]([A-Za-z0-9_\\.]|-)*$')) then $p1 else concat('_.',mds:encodeHexString($p1,false()),'._')">
+    <code>ENCODE_NAME</code>
+    <xPathParameter/>
+  </xPathExpression>
+  <xPathExpression expression="if (not(../tech:xmlType()!='')) then '-1' else&#xD;&#xA;if (../tech:xmlType()='json:array') then '-1' else '1'">
+    <code>XML_MAX_OCCURS</code>
+  </xPathExpression>
+  <xPathExpression expression="name()='e'">
+    <code>INTERNAL_USE_AS_KEY</code>
+  </xPathExpression>
+</tech:tech>

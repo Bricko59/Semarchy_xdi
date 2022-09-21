@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" description="" id="UUID_TECH_SELECTOR" name="Object Selection" ref="resource.md#UUID_MD_SUPER_TYPE?fileId=UUID_MD_SUPER_TYPE$type=md$name=super?">
+  <level icon="icons/full/custom/selector16x16.png" xmlName="selector" xpathDisplayName="if (@name!='')then @name else 'Selector'" code="com.stambia.selector.selector" configurable="false" displayName="Object Selector" hasName="false" isFile="false" position="1" subMetaDataFileCapability="true">
+    <icons name="Element" xpath="'icons/full/custom/selector16x16.png'"/>
+    <attribute xmlName="name" code="name" displayName="Name"/>
+    <attribute xmlName="description" category="" code="description" displayName="Description" multiLine="true"/>
+    <attribute xmlName="content" code="content" displayName="Content" type="reference" unbounded="true">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.dnd.emfMetaInf" value="http://www.stambia.com/md;MdNode"/>
+    </attribute>
+    <parent>com.stambia.selector.root</parent>
+    <view code="selector.root" enablementXpath="true()" levelCode="" root="true" xpath="ancestor-or-self::selector/@content/ref:getRef()"/>
+  </level>
+  <level icon="icons/full/custom/selector16x16.png" iconBundleName="" xmlName="root" xpathDisplayName="if (@name='') then 'Object Selector' else @name" code="com.stambia.selector.root" configurable="false" displayName="Object Selection" hasName="false" isFile="true">
+    <icons name="Element" xpath="'icons/full/custom/selector16x16.png'"/>
+    <attribute xmlName="name" code="name" displayName="Name"/>
+    <attribute xmlName="description" category="" code="description" displayName="Description" multiLine="true"/>
+  </level>
+</tech:tech>

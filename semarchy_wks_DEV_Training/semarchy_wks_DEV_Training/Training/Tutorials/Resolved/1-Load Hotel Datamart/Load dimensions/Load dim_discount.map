@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map:map xmlns:map="http://www.indy.com/v2/map" id="_MhlIIJb-EeytipfABCJWjQ" internalVersion="8" tech="resource.tech#_waYSMH8VEd2__Mzb_dB76A?fileId=_waYSMH8VEd2__Mzb_dB76A$type=tech$name=flow?">
+  <datastore id="_OXUhwJb-EeytipfABCJWjQ" alias="DiscountRanges" dataset="_OXsVMJb-EeytipfABCJWjQ" ref="resource.md#_kEVdQJb9EeytipfABCJWjQ?fileId=_yUtrUDuOEeufR_jwQ73gkQ$type=md$name=discount_range?">
+    <field id="_OXjyUZb-EeytipfABCJWjQ" fullAlias="min" name="min" parent="_OXjyUJb-EeytipfABCJWjQ" ref="resource.md#_rgBywJb9EeytipfABCJWjQ?fileId=_yUtrUDuOEeufR_jwQ73gkQ$type=md$name=min?"/>
+    <field id="_OXjyUJb-EeytipfABCJWjQ" expand="true" name="discount_range" ref="resource.md#_kEVdQJb9EeytipfABCJWjQ?fileId=_yUtrUDuOEeufR_jwQ73gkQ$type=md$name=discount_range?" updateKey="true"/>
+    <field id="_OXkZYJb-EeytipfABCJWjQ" fullAlias="max" name="max" parent="_OXjyUJb-EeytipfABCJWjQ" ref="resource.md#_rgCZ05b9EeytipfABCJWjQ?fileId=_yUtrUDuOEeufR_jwQ73gkQ$type=md$name=max?"/>
+    <field id="_OXkZYZb-EeytipfABCJWjQ" fullAlias="range" name="range" parent="_OXjyUJb-EeytipfABCJWjQ" ref="resource.md#_rgCZ15b9EeytipfABCJWjQ?fileId=_yUtrUDuOEeufR_jwQ73gkQ$type=md$name=range?"/>
+  </datastore>
+  <datastore id="_Pho_0Jb-EeytipfABCJWjQ" alias="dim_discount" dataset="_Phw7oJb-EeytipfABCJWjQ" ref="resource.md#_b6tgMZb8EeytipfABCJWjQ?fileId=_50xksJMhEeymq6fNOAxqGA$type=md$name=dim_discount?" subExpression="[A]">
+    <field id="_PhqN8Jb-EeytipfABCJWjQ" enable="true" insert="true" name="dis_min" ref="resource.md#_b62DEZb8EeytipfABCJWjQ?fileId=_50xksJMhEeymq6fNOAxqGA$type=md$name=dis_min?" update="true">
+      <expression id="_QcRcEJb-EeytipfABCJWjQ" setDescriptorRef="_QcKuYJb-EeytipfABCJWjQ">
+        <expression>DiscountRanges.min</expression>
+      </expression>
+    </field>
+    <field id="_Phpm4Zb-EeytipfABCJWjQ" enable="true" insert="true" name="dis_range" ref="resource.md#_b6y_wJb8EeytipfABCJWjQ?fileId=_50xksJMhEeymq6fNOAxqGA$type=md$name=dis_range?" update="true" updateKey="true">
+      <expression id="_QcSDIJb-EeytipfABCJWjQ" setDescriptorRef="_QcKuYJb-EeytipfABCJWjQ">
+        <expression>DiscountRanges.range</expression>
+      </expression>
+    </field>
+    <field id="_PhqN8Zb-EeytipfABCJWjQ" enable="true" insert="true" name="dis_max" ref="resource.md#_b64fUZb8EeytipfABCJWjQ?fileId=_50xksJMhEeymq6fNOAxqGA$type=md$name=dis_max?" update="true">
+      <expression id="_QcSDIZb-EeytipfABCJWjQ" setDescriptorRef="_QcKuYJb-EeytipfABCJWjQ">
+        <expression>DiscountRanges.max</expression>
+      </expression>
+    </field>
+    <constraint id="_PhrcEJb-EeytipfABCJWjQ" name="pk_dim_discount" ref="resource.md#_b68wwJb8EeytipfABCJWjQ?fileId=_50xksJMhEeymq6fNOAxqGA$type=md$name=pk_dim_discount?" reject="true"/>
+    <setDescriptor id="_QcKuYJb-EeytipfABCJWjQ" label="A"/>
+  </datastore>
+  <template id="_QcamAJb-EeytipfABCJWjQ" name="I_dim_discount" process="resource.proc#_dQ2dRp4SEd6bQIkgWyxFQQ?fileId=_dQ2dRp4SEd6bQIkgWyxFQQ$type=proc$name=INTEGRATION%20PostgreSql?" targetId="_Pho_0Jb-EeytipfABCJWjQ"/>
+  <template id="_Qm5XsJb-EeytipfABCJWjQ" name="L1_dim_discount" process="resource.proc#_8fa24535-b67f-4d00-aca7-ac642ec8ff0f?fileId=_8fa24535-b67f-4d00-aca7-ac642ec8ff0f$type=proc$name=LOAD%20File%20to%20PostGre%20SQL%20(with%20Copy)?" sourceId="_OXUhwJb-EeytipfABCJWjQ" targetId="_Pho_0Jb-EeytipfABCJWjQ"/>
+  <dataSet id="_OXsVMJb-EeytipfABCJWjQ">
+    <container>_OXUhwJb-EeytipfABCJWjQ</container>
+  </dataSet>
+  <dataSet id="_Phw7oJb-EeytipfABCJWjQ">
+    <container>_Pho_0Jb-EeytipfABCJWjQ</container>
+  </dataSet>
+  <hint>
+    <usedField>#_OXjyUZb-EeytipfABCJWjQ</usedField>
+    <usedField>#_OXkZYJb-EeytipfABCJWjQ</usedField>
+    <usedField>#_OXkZYZb-EeytipfABCJWjQ</usedField>
+  </hint>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation " xmi:id="_MvwuEJb-EeytipfABCJWjQ" type="Map" measurementUnit="Pixel">
+  <children xmi:type="notation:Shape" xmi:id="_Ph10IJb-EeytipfABCJWjQ" type="2004" fontName="Segoe UI">
+    <children xmi:type="notation:DecorationNode" xmi:id="_Ph10Ipb-EeytipfABCJWjQ" type="5005"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_Ph10I5b-EeytipfABCJWjQ" type="5007"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_Ph10JJb-EeytipfABCJWjQ" type="7003"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_Ph10JZb-EeytipfABCJWjQ" type="7009"/>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_Ph2bMJb-EeytipfABCJWjQ" type="7004">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Ph2bMZb-EeytipfABCJWjQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Ph2bMpb-EeytipfABCJWjQ"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" xmi:id="_Ph2bM5b-EeytipfABCJWjQ" type="5009">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_Ph2bNJb-EeytipfABCJWjQ"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" xmi:id="_Ph2bNZb-EeytipfABCJWjQ" type="7005">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Ph2bNpb-EeytipfABCJWjQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Ph2bN5b-EeytipfABCJWjQ"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_Ph2bOJb-EeytipfABCJWjQ" type="7007"/>
+    <element xmi:type="map:Datastore" href="resource.map#_Pho_0Jb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Ph10IZb-EeytipfABCJWjQ" x="266" y="38"/>
+  </children>
+  <children xmi:type="notation:Shape" xmi:id="_OYPu0Jb-EeytipfABCJWjQ" type="2004" fontName="Segoe UI">
+    <children xmi:type="notation:DecorationNode" xmi:id="_OYTZMJb-EeytipfABCJWjQ" type="5005"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_OYUAQJb-EeytipfABCJWjQ" type="5007"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_OYUAQZb-EeytipfABCJWjQ" type="7003"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_OYUAQpb-EeytipfABCJWjQ" type="7009"/>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_OYV1cJb-EeytipfABCJWjQ" type="7004">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_OYV1cZb-EeytipfABCJWjQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_OYV1cpb-EeytipfABCJWjQ"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" xmi:id="_OYV1c5b-EeytipfABCJWjQ" type="5009">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_OYWcgJb-EeytipfABCJWjQ"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" xmi:id="_OYWcgZb-EeytipfABCJWjQ" type="7005">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_OYWcgpb-EeytipfABCJWjQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_OYWcg5b-EeytipfABCJWjQ"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_OaE60Jb-EeytipfABCJWjQ" type="7007"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_OaE60Zb-EeytipfABCJWjQ" type="5009">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_OaE60pb-EeytipfABCJWjQ"/>
+    </children>
+    <element xmi:type="map:Datastore" href="resource.map#_OXUhwJb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_OYPu0Zb-EeytipfABCJWjQ" x="30" y="30"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_MvwuEZb-EeytipfABCJWjQ"/>
+  <element xmi:type="map:Map" href="resource.map#_MhlIIJb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map$name=Load%20dim_discount?"/>
+  <edges xmi:type="notation:Edge" xmi:id="_QmZocJb-EeytipfABCJWjQ" type="targetLink" source="_Ph10IJb-EeytipfABCJWjQ" target="_OYPu0Jb-EeytipfABCJWjQ">
+    <element xsi:nil="true"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_QmZocZb-EeytipfABCJWjQ" points="[0, 0, 60, 0]$[-60, 0, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Xd2ocJb-EeytipfABCJWjQ" id="(0.0,0.4942528735632184)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Xd2ocZb-EeytipfABCJWjQ" id="(1.0,0.49514563106796117)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_QmmcwJb-EeytipfABCJWjQ" type="targetDataSetLink" source="_Ph10IJb-EeytipfABCJWjQ" target="_Ph10IJb-EeytipfABCJWjQ">
+    <element xmi:type="map:DataSet" href="resource.map#_OXsVMJb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_QmmcwZb-EeytipfABCJWjQ" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_QmnD0Jb-EeytipfABCJWjQ" type="targetSetLink" source="_Ph10IJb-EeytipfABCJWjQ" target="_Ph10IJb-EeytipfABCJWjQ">
+    <element xmi:type="map:SetDescriptor" href="resource.map#_QcKuYJb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_QmnD0Zb-EeytipfABCJWjQ" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+</notation:Diagram>
+]]></diagram>
+</map:map>

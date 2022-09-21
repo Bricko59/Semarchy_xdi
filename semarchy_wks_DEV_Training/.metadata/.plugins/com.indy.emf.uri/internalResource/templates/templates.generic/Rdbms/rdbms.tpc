@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tpc:conf xmlns:tpc="http://www.stambia.com/tpc" id="_cwWmIFE5Ed-SQuyZS8LpiA">
+  <case name="I-TP">
+    <propertyState name="TYPE" value="I-TP"/>
+    <case name="RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="TRG_NO_LOAD_ONLY">
+        <or>
+          <propertyState name="trgProduct" value="MICROSOFT_EXCEL"/>
+          <propertyState name="trgProduct" value="GOOGLE_SPREADSHEET"/>
+        </or>
+        <template id="_Nbb1VMlXEeeq3sp4Y851OA" ref="INTEGRATION%20Rdbms%20to%20Rdbms%20(no%20load).tp.proc#_p0wtRslVEeeq3sp4Y851OA?fileId=_p0wtRslVEeeq3sp4Y851OA$type=proc$name=INTEGRATION%20Rdbms%20to%20Rdbms%20(no%20load).tp?"/>
+      </case>
+      <case name="TRG_NO_LOAD">
+        <or>
+          <propertyState mode="EQUALS" name="srcTechList" value="RDBMS"/>
+          <propertyState mode="EQUALS" name="srcTechList" value="FILE"/>
+        </or>
+        <template id="_snopeNOyEeiV7K8aGu3dew" ref="INTEGRATION%20Rdbms.tp.proc#_946a4183-2772-439c-9dea-078288948f0e?fileId=_946a4183-2772-439c-9dea-078288948f0e$type=proc$name=INTEGRATION%20Rdbms?"/>
+        <template id="_tLdIN9OyEeiV7K8aGu3dew" ref="INTEGRATION%20Rdbms%20to%20Rdbms%20(no%20load).tp.proc#_p0wtRslVEeeq3sp4Y851OA?fileId=_p0wtRslVEeeq3sp4Y851OA$type=proc$name=INTEGRATION%20Rdbms%20to%20Rdbms%20(no%20load).tp?"/>
+      </case>
+      <template id="_cwXNN1E5Ed-SQuyZS8LpiA" ref="INTEGRATION%20Rdbms.tp.proc#_946a4183-2772-439c-9dea-078288948f0e?fileId=_946a4183-2772-439c-9dea-078288948f0e$type=proc$name=INTEGRATION%20Rdbms?"/>
+    </case>
+  </case>
+  <case name="L-TP">
+    <propertyState name="TYPE" value="L-TP"/>
+    <case name="TRG_RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="SRC_RDBMS">
+        <or>
+          <propertyState name="srcTech" value="RDBMS"/>
+          <propertyState mode="CONTAINS" name="srcCompatibleTechList" value="RDBMS"/>
+        </or>
+        <template id="_cwZCZFE5Ed-SQuyZS8LpiA" ref="LOAD%20Rdbms%20to%20Rdbms.tp.proc#_aafbe681-11ab-4ebc-ab56-de794128c580?fileId=_aafbe681-11ab-4ebc-ab56-de794128c580$type=proc$name=LOAD%20Rdbms%20to%20Rdbms?"/>
+      </case>
+    </case>
+  </case>
+  <case name="C-TP">
+    <propertyState name="TYPE" value="C-TP"/>
+    <case name="RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <template id="_cwaQglE5Ed-SQuyZS8LpiA" ref="REJECT%20Rdbms.tp.proc#_826062e8-1075-4019-b24b-3310febef468?fileId=_826062e8-1075-4019-b24b-3310febef468$type=proc$name=REJECT%20Rdbms?"/>
+    </case>
+  </case>
+  <case name="IS-TP">
+    <propertyState name="TYPE" value="IS-TP"/>
+    <template id="_G5MCpDUHEeSTu9_1LuMQ2Q" ref="STAGING%20Rdbms%20As%20SubQuery.proc#_v8JEkTNEEeSH5LKy1U4ptg?fileId=_v8JEkTNEEeSH5LKy1U4ptg$type=proc$name=STAGING%20Rdbms%20As%20SubQuery?"/>
+    <template id="_HOGitDUHEeSTu9_1LuMQ2Q" ref="STAGING%20Rdbms%20As%20View.proc#_8TmCNqkHEeOSSfIO8yxrzw?fileId=_8TmCNqkHEeOSSfIO8yxrzw$type=proc$name=STAGING%20Rdbms%20As%20View?"/>
+    <template id="_HfHaNDUHEeSTu9_1LuMQ2Q" ref="STAGING%20Rdbms%20As%20Table.proc#_rdD5MTRMEeSQ37GXUClEnA?fileId=_rdD5MTRMEeSQ37GXUClEnA$type=proc$name=STAGING%20Rdbms%20As%20Table?"/>
+  </case>
+</tpc:conf>

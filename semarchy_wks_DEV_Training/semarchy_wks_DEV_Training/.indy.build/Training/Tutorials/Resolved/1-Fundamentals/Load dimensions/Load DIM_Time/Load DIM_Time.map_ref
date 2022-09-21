@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ref:mapRef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:ref="http://www.indy.com/v2/ref" id="_ay55AJMqEeymq6fNOAxqGA">
+  <dataModel>_54dA8PHyEeeYj5neBLIRPw?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map$name=Load%20DIM_Time?</dataModel>
+  <containerRef xsi:type="ref:RDatastore" id="_ay55AZMqEeymq6fNOAxqGA" countShownFields="9" hierarchical="false">
+    <dataModel>_6z-1EPHyEeeYj5neBLIRPw?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_ay55ApMqEeymq6fNOAxqGA" size="10" type="VARCHAR" mandatory="true" position="3">
+      <dataModel>_60B4YfHyEeeYj5neBLIRPw?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map$name=TIME_KEY_DAY?</dataModel>
+      <expressionRef id="_ay7HIJMqEeymq6fNOAxqGA" internalExpression="substr(${Time.DAY_DATE}$, 7,4) + '/' + substr(${Time.DAY_DATE}$, 4,2) + '/' + substr(${Time.DAY_DATE}$, 1,2) ">
+        <dataModel>_MfM7IPQmEeqjYM3_lpIqtg?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map?</dataModel>
+        <sourceRef>_ay6gEJMqEeymq6fNOAxqGA</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_ay55A5MqEeymq6fNOAxqGA" size="26" type="TIMESTAMP" position="6">
+      <dataModel>_60B4YvHyEeeYj5neBLIRPw?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map$name=TIME_DATE?</dataModel>
+      <expressionRef id="_ay6gF5MqEeymq6fNOAxqGA" internalExpression="convert(substr(${Time.DAY_DATE}$, 7,4) + '-' + substr(${Time.DAY_DATE}$, 4,2) + '-' + substr(${Time.DAY_DATE}$, 1,2) + ' 00:00:00',TIMESTAMP)">
+        <dataModel>_MfNiNPQmEeqjYM3_lpIqtg?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map?</dataModel>
+        <sourceRef>_ay6gEJMqEeymq6fNOAxqGA</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_ay55BJMqEeymq6fNOAxqGA" precision="0" size="2" type="NUMERIC" position="9">
+      <dataModel>_60B4Y_HyEeeYj5neBLIRPw?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map$name=TIME_MONTH_DAY?</dataModel>
+      <expressionRef id="_ay6gFpMqEeymq6fNOAxqGA" internalExpression="convert(substr(${Time.DAY_DATE}$, 1,2),NUMERIC) ">
+        <dataModel>_MfNiM_QmEeqjYM3_lpIqtg?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map?</dataModel>
+        <sourceRef>_ay6gEJMqEeymq6fNOAxqGA</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_ay55BZMqEeymq6fNOAxqGA" precision="0" size="1" type="NUMERIC" position="12">
+      <dataModel>_60CfcPHyEeeYj5neBLIRPw?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map$name=TIME_WEEK_DAY?</dataModel>
+      <expressionRef id="_ay6gE5MqEeymq6fNOAxqGA" internalExpression="dayofweek(CONVERT(substr(${Time.DAY_DATE}$, 7,4) + '-' + substr(${Time.DAY_DATE}$, 4,2) + '-' + substr(${Time.DAY_DATE}$, 1,2) + ' 00:00:00',TIMESTAMP)) ">
+        <dataModel>_MfNiMPQmEeqjYM3_lpIqtg?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map?</dataModel>
+        <sourceRef>_ay6gEJMqEeymq6fNOAxqGA</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_ay55BpMqEeymq6fNOAxqGA" size="15" type="VARCHAR" position="15">
+      <dataModel>_60CfcfHyEeeYj5neBLIRPw?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map$name=TIME_DAY_NAME?</dataModel>
+      <expressionRef id="_ay7HIZMqEeymq6fNOAxqGA" internalExpression="dayname(convert(substr(${Time.DAY_DATE}$, 7,4) + '-' + substr(${Time.DAY_DATE}$, 4,2) + '-' + substr(${Time.DAY_DATE}$, 1,2) + ' 00:00:00', TIMESTAMP)) ">
+        <dataModel>_MfNiN_QmEeqjYM3_lpIqtg?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map?</dataModel>
+        <sourceRef>_ay6gEJMqEeymq6fNOAxqGA</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_ay55B5MqEeymq6fNOAxqGA" precision="0" size="2" type="NUMERIC" position="18">
+      <dataModel>_60CfcvHyEeeYj5neBLIRPw?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map$name=TIME_MONTH?</dataModel>
+      <expressionRef id="_ay6gGJMqEeymq6fNOAxqGA" internalExpression="convert(substr(${Time.DAY_DATE}$,4,2),NUMERIC)">
+        <dataModel>_MfNiNfQmEeqjYM3_lpIqtg?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map?</dataModel>
+        <sourceRef>_ay6gEJMqEeymq6fNOAxqGA</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_ay55CJMqEeymq6fNOAxqGA" size="15" type="VARCHAR" position="21">
+      <dataModel>_60Cfc_HyEeeYj5neBLIRPw?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map$name=TIME_MONTH_NAME?</dataModel>
+      <expressionRef id="_ay6gGZMqEeymq6fNOAxqGA" internalExpression="monthname(convert(substr(${Time.DAY_DATE}$, 7,4) + '-' + substr(${Time.DAY_DATE}$, 4,2) + '-' + substr(${Time.DAY_DATE}$, 1,2) + ' 00:00:00',TIMESTAMP)) ">
+        <dataModel>_MfNiNvQmEeqjYM3_lpIqtg?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map?</dataModel>
+        <sourceRef>_ay6gEJMqEeymq6fNOAxqGA</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_ay55CZMqEeymq6fNOAxqGA" precision="0" size="1" type="NUMERIC" position="24">
+      <dataModel>_60CfdPHyEeeYj5neBLIRPw?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map$name=TIME_QUARTER?</dataModel>
+      <expressionRef id="_ay6gFZMqEeymq6fNOAxqGA" internalExpression="quarter(convert(substr(${Time.DAY_DATE}$, 7,4) + '-' + substr(${Time.DAY_DATE}$, 4,2) + '-' + substr(${Time.DAY_DATE}$, 1,2) + ' 00:00:00',TIMESTAMP)) ">
+        <dataModel>_MfNiMvQmEeqjYM3_lpIqtg?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map?</dataModel>
+        <sourceRef>_ay6gEJMqEeymq6fNOAxqGA</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_ay55CpMqEeymq6fNOAxqGA" precision="0" size="4" type="NUMERIC" position="27">
+      <dataModel>_60DGgPHyEeeYj5neBLIRPw?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map$name=TIME_YEAR?</dataModel>
+      <expressionRef id="_ay6gFJMqEeymq6fNOAxqGA" internalExpression="convert(substr(${Time.DAY_DATE}$, 7,4),NUMERIC) ">
+        <dataModel>_MfNiMfQmEeqjYM3_lpIqtg?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map?</dataModel>
+        <sourceRef>_ay6gEJMqEeymq6fNOAxqGA</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <constraintRef id="_ay_YkJMqEeymq6fNOAxqGA" type="pk">
+      <dataModel>_60DGgfHyEeeYj5neBLIRPw?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map$name=PK_DIM_TIME?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_ay55C5MqEeymq6fNOAxqGA" countShownFields="2" hierarchical="true">
+    <dataModel>_75UsgPHyEeeYj5neBLIRPw?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_ay6gEJMqEeymq6fNOAxqGA" size="66" type="String" mandatory="true" position="6">
+      <dataModel>_75VTkvHyEeeYj5neBLIRPw?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map$name=DAY_DATE?</dataModel>
+      <usage>_ay6gE5MqEeymq6fNOAxqGA</usage>
+      <usage>_ay6gFJMqEeymq6fNOAxqGA</usage>
+      <usage>_ay6gFZMqEeymq6fNOAxqGA</usage>
+      <usage>_ay6gFpMqEeymq6fNOAxqGA</usage>
+      <usage>_ay6gF5MqEeymq6fNOAxqGA</usage>
+      <usage>_ay6gGJMqEeymq6fNOAxqGA</usage>
+      <usage>_ay6gGZMqEeymq6fNOAxqGA</usage>
+      <usage>_ay7HIJMqEeymq6fNOAxqGA</usage>
+      <usage>_ay7HIZMqEeymq6fNOAxqGA</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_ay6gEZMqEeymq6fNOAxqGA" mandatory="true" position="3">
+      <dataModel>_75VTkfHyEeeYj5neBLIRPw?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map$name=Time?</dataModel>
+    </fieldRef>
+  </containerRef>
+  <targetSetRef id="_ay7uOJMqEeymq6fNOAxqGA" sourceSet="_ay7uN5MqEeymq6fNOAxqGA">
+    <container>_ay55AZMqEeymq6fNOAxqGA</container>
+  </targetSetRef>
+  <sourceSetRef id="_ay7uN5MqEeymq6fNOAxqGA" targetSet="_ay7uOJMqEeymq6fNOAxqGA">
+    <dataSet xsi:type="map:DataSet">#_8vUKQfH7EeeYj5neBLIRPw</dataSet>
+  </sourceSetRef>
+  <templateRef id="_ay7HJ5MqEeymq6fNOAxqGA" description="Load : Time" nodeCode="com.stambia.flow.step" templateCriteria="type=L-TP;trgProduct=HYPERSONIC_SQL;trgPath=server:HSQL_Datamart/schema:HOTEL_DATAMART/datastore:DIM_TIME;trgTech=RDBMS;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProduct=FILE;srcPath=server:null/directory:Reference_Files_Folder/file:Time;srcTech=FILE;srcWorkspaceCapability=false;srcMapCapability=true;srcFilterCapability=true;srcJoinCapability=false">
+    <dataModel>_MfZvdPQmEeqjYM3_lpIqtg?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map$name=L1_DIM_TIME?</dataModel>
+    <load>_ay7HJpMqEeymq6fNOAxqGA</load>
+    <targetRef>_6z-1EPHyEeeYj5neBLIRPw?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_ay7uMJMqEeymq6fNOAxqGA" description="Integration : DIM_TIME" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=HYPERSONIC_SQL;trgPath=server:HSQL_Datamart/schema:HOTEL_DATAMART/datastore:DIM_TIME;trgTech=RDBMS;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcTechList=FILE;srcProductList=FILE">
+    <dataModel>_MfaWgPQmEeqjYM3_lpIqtg?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map$name=I_DIM_TIME?</dataModel>
+    <targetRef>_6z-1EPHyEeeYj5neBLIRPw?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map?</targetRef>
+  </templateRef>
+  <loadSet id="_ay7HJpMqEeymq6fNOAxqGA">
+    <container>_75UsgPHyEeeYj5neBLIRPw?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map?</container>
+  </loadSet>
+  <loadSet id="_ay7HJJMqEeymq6fNOAxqGA">
+    <container>_6z-1EPHyEeeYj5neBLIRPw?fileId=_54dA8PHyEeeYj5neBLIRPw$type=map?</container>
+  </loadSet>
+</ref:mapRef>

@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_-EKZkS0tEeSv4_9BSBNusA" description="This tool is used to integrate data from a file into an LDAP server. &#xD;&#xA;&#xD;&#xA;Defined operation is performed for each row of the file.&#xD;&#xA;&#xD;&#xA;To use the tool:&#xD;&#xA;1. Drag and drop it in a process&#xD;&#xA;2. Add a LDAP server Metadata Link on the process&#xD;&#xA;3. Add a File Metadata Link on the process&#xD;&#xA;4. Define the tool's parameters accordingly to your needs&#xD;&#xA;&#xD;&#xA;The physical name of the fields defined in File Metadata must match the names of LDAP attributes to be integrated.&#xD;&#xA;E.g. &quot;cn&quot;,&quot;sn&quot;, ...&#xD;&#xA;&#xD;&#xA;The following statistics are published by the tool, depending on performed operation:&#xD;&#xA;LDAP_INSERT_DONE,LDAP_INSERT_ERROR,LDAP_UPDATE_DONE,LDAP_UPDATE_ERROR,LDAP_DELETE_DONE,LDAP_DELETE_ERROR&#xD;&#xA;&#xD;&#xA;All rows of the file are processed and the result is published through those variables.&#xD;&#xA;Failed operations are counted in LDAP_&lt;OPERATION>_ERROR variables.&#xD;&#xA;'Export Errors' parameter can be used to export error message into a file if required.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;Refer to the description of each Parameter for more information.&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;09/01/2019&#x9;Scripting actions are now using a dynamic Scripting Connection based on session id and path in the process to allow using the tool multiple times in the same process and also in parallel&#xD;&#xA;09/01/2019&#x9;New parameter 'Export Errors'&#xD;&#xA;09/01/2019&#x9;Process no longer stops when a single operation fails (update, insert, delete): now the bind continues to the next iteration&#xD;&#xA;09/01/2019&#x9;Statistics about execution operations are now published at the end&#xD;&#xA;">
+  <parameter id="_IP3SABjFEemxiaxatLKQfg" description="When performing an LDAP operation, all failed request error messages will be exported in a file in the temporary folder of the Runtime.&#xD;&#xA;&#xD;&#xA;Exported file is named &quot;ldap_error_messages_&lt;sessionid>.txt&quot;.&#xD;&#xA;&#xD;&#xA;If the option is not enabled, error messages will not be kept.&#xD;&#xA;&#xD;&#xA;Note that in both cases number of failed operations is traced in the LDAP_* variables published on the tool after execution." name="exportErrors" type="Boolean" value="false"/>
+  <parameter id="_NNXSsC1BEeSw2osX6gjtWg" description="Possible integration modes:&#xD;&#xA;&#xD;&#xA;- upsert: existing data will be updated, non-existing data will be inserted&#xD;&#xA;- update: data will be updated only&#xD;&#xA;- insert: data will be inserted only&#xD;&#xA;- delete: data will be deleted from LDAP server" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;upsert&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;update&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;insert&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;delete&quot;/>" name="integrationMode" type="String" value="upsert"/>
+  <parameter id="_gYZPEC0_EeSw2osX6gjtWg" description="Physical name of the field containing the LDAP object full path (DN) on which to perform the operation.&#xD;&#xA;&#xD;&#xA;This is mandatory for the tool to know on which object to perform the operation.&#xD;&#xA;&#xD;&#xA;For instance if the source file content is the following, this parameter should be set to 'fullPath'.&#xD;&#xA;&#xD;&#xA;=== Begin of sample file ===&#xD;&#xA;fullPath,sn,cn&#xD;&#xA;&quot;mail=abc@test.com,ou=test1&quot;,value1,value2&#xD;&#xA;&quot;mail=def@test.com,ou=test1&quot;,value3,value4&#xD;&#xA;=== End of sample file ===" name="pathName" type="String" value="fullPath"/>
+  <parameter id="_AD6q2C0uEeSv4_9BSBNusA" description="Name of the LDAP Classes to be processed. &#xD;&#xA;Multiple classes can be specified by separating them with a + sign.&#xD;&#xA;&#xD;&#xA;This is mandatory when performing insert or upsert operations.&#xD;&#xA;&#xD;&#xA;Example: inetOrgPerson+Employee" name="classFilter" type="String" value=""/>
+  <actionCode id="_ADzWEC0uEeSv4_9BSBNusA" isBeginAction="false" name="DeclareObject" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.BeanScriptingActionCodeI">
+    <link id="_uC6LABjGEemxiaxatLKQfg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_nJBiEBjGEemxiaxatLKQfg?fileId=_-EKZkS0tEeSv4_9BSBNusA$type=proc$name=Operation?"/>
+    <parameter id="_ADzWEy0uEeSv4_9BSBNusA" description="Scripting language (groovy, jython)" name="SCRIPTING_LANGUAGE" type="String" value="beanshell"/>
+    <parameter id="_ADzWFC0uEeSv4_9BSBNusA" name="SCRIPTING_CONNECTION" type="String" value="${/CORE_SESSION_ID}$/${../CORE_PATH}$"/>
+    <code>import java.util.HashMap;&#xD;
+import java.util.Map;&#xD;
+import java.util.Properties;&#xD;
+&#xD;
+import javax.naming.Context;&#xD;
+import javax.naming.NamingException;&#xD;
+import javax.naming.ldap.InitialLdapContext;&#xD;
+&#xD;
+String filter = &quot;${../classFilter}$&quot;;&#xD;
+String providerURL=&quot;%x{$ldap/tech:providerURL()}x%&quot;;&#xD;
+String securityCredentials=&quot;%x{$ldap/tech:securityCredentials()}x%&quot;;&#xD;
+String securityPrincipal=&quot;%x{$ldap/tech:securityPrincipal()}x%&quot;;&#xD;
+String initialContextFactory=&quot;%x{$ldap/tech:initialContextFactory()}x%&quot;;&#xD;
+String exportErrors=&quot;%x{md:ifEmpty(md:paramValue($this,'exportErrors'),false)}x%&quot;;&#xD;
+&#xD;
+int nbInserts = 0;&#xD;
+int nbInsertErrors = 0;&#xD;
+int nbUpdates = 0;&#xD;
+int nbUpdateErrors = 0;&#xD;
+int nbDeletes = 0;&#xD;
+int nbDeleteErrors = 0;&#xD;
+Object writer;&#xD;
+&#xD;
+Properties props = new Properties();&#xD;
+props.put(Context.PROVIDER_URL,providerURL);&#xD;
+props.put(Context.INITIAL_CONTEXT_FACTORY,&quot;com.sun.jndi.ldap.LdapCtxFactory&quot;);&#xD;
+props.put(&quot;STB_ENCODED_PROPERTY:&quot;+Context.SECURITY_CREDENTIALS, securityCredentials);&#xD;
+props.put(Context.SECURITY_PRINCIPAL, securityPrincipal); &#xD;
+InitialLdapContext initialContext = __ctx__.getInitialContextManager().createInitialLdapContext(props,null);&#xD;
+&#xD;
+LdapIntegrator li=new LdapIntegrator(filter, initialContext);&#xD;
+Map map=new HashMap();&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_AD6q0y0uEeSv4_9BSBNusA" isBeginAction="false" name="DeclareClass" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.BeanScriptingActionCodeI">
+    <link id="_AD6q1C0uEeSv4_9BSBNusA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_ADzWEC0uEeSv4_9BSBNusA"/>
+    <parameter id="_AD6q1S0uEeSv4_9BSBNusA" description="Scripting language (groovy, jython)" name="SCRIPTING_LANGUAGE" type="String" value="beanshell"/>
+    <parameter id="_AD6q1i0uEeSv4_9BSBNusA" name="SCRIPTING_CONNECTION" type="String" value="${/CORE_SESSION_ID}$/${../CORE_PATH}$"/>
+    <code>import java.util.ArrayList;&#xD;
+import java.util.Arrays;&#xD;
+import java.util.List;&#xD;
+import java.util.Map;&#xD;
+&#xD;
+import javax.naming.NameNotFoundException;&#xD;
+import javax.naming.NamingException;&#xD;
+import javax.naming.directory.Attribute;&#xD;
+import javax.naming.directory.Attributes;&#xD;
+import javax.naming.directory.BasicAttribute;&#xD;
+import javax.naming.directory.BasicAttributes;&#xD;
+import javax.naming.directory.DirContext;&#xD;
+import javax.naming.directory.ModificationItem;&#xD;
+import javax.naming.ldap.InitialLdapContext;&#xD;
+import javax.naming.NamingException;&#xD;
+&#xD;
+public class LdapIntegrator {&#xD;
+&#xD;
+	List classFilter = null;&#xD;
+	&#xD;
+	InitialLdapContext initialContext;&#xD;
+	&#xD;
+	LdapIntegrator(String classFilter, &#xD;
+			InitialLdapContext initialContext ) {&#xD;
+		if (classFilter!=null){&#xD;
+			this.classFilter=Arrays.asList(classFilter.split(&quot;\\+&quot;));&#xD;
+		}else{&#xD;
+			this.classFilter=new ArrayList();&#xD;
+		}&#xD;
+		this.initialContext = initialContext;&#xD;
+		//this.exportErrors = exportErrors;&#xD;
+	}&#xD;
+	&#xD;
+	&#xD;
+	void upsert(String fullName,Map fieldValue) throws NamingException{&#xD;
+		try{&#xD;
+			initialContext.getAttributes(fullName);&#xD;
+			update(fullName,fieldValue);&#xD;
+		}catch(NameNotFoundException e){&#xD;
+			insert(fullName,  fieldValue);	&#xD;
+		}&#xD;
+	}&#xD;
+&#xD;
+	void rename(String oldName,String newName) throws NamingException{&#xD;
+		initialContext.rename(oldName, newName);&#xD;
+	}&#xD;
+&#xD;
+	void delete(String fullName) throws NamingException{&#xD;
+		try {&#xD;
+			initialContext.destroySubcontext(fullName);&#xD;
+			nbDeletes++;&#xD;
+			__ctx__.publishVariable(&quot;../../LDAP_DELETE_DONE&quot;,String.valueOf(nbDeletes),&quot;Integer&quot;);&#xD;
+		} catch (NamingException e) {&#xD;
+			nbDeleteErrors++;&#xD;
+			__ctx__.publishVariable(&quot;../../LDAP_DELETE_ERROR&quot;,String.valueOf(nbDeleteErrors),&quot;Integer&quot;);&#xD;
+			if(exportErrors.equals(&quot;true&quot;)){&#xD;
+				writeError(e.toString());			&#xD;
+			}&#xD;
+		}&#xD;
+		&#xD;
+	}&#xD;
+&#xD;
+	void update(String fullName,Map fieldValue) throws NamingException{&#xD;
+		ModificationItem[] mods = new ModificationItem[fieldValue.size()];&#xD;
+&#xD;
+		int i=0;&#xD;
+		 for (String key:fieldValue.keySet()){&#xD;
+			 mods[i++] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute(key,fieldValue.get(key)));&#xD;
+		 }&#xD;
+		&#xD;
+		try {&#xD;
+			initialContext.modifyAttributes(fullName, mods);&#xD;
+			nbUpdates++;&#xD;
+			__ctx__.publishVariable(&quot;../../LDAP_UPDATE_DONE&quot;,String.valueOf(nbUpdates),&quot;Integer&quot;);&#xD;
+		} catch (NamingException e) {&#xD;
+			nbUpdateErrors++;&#xD;
+			__ctx__.publishVariable(&quot;../../LDAP_UPDATE_ERROR&quot;,String.valueOf(nbUpdateErrors),&quot;Integer&quot;);&#xD;
+			if(exportErrors.equals(&quot;true&quot;)){&#xD;
+				writeError(e.toString());			&#xD;
+			}&#xD;
+		}&#xD;
+	}&#xD;
+&#xD;
+	void insert(String fullName,Map fieldValue) throws NamingException{&#xD;
+		 Attribute objClasses = new BasicAttribute(&quot;objectClass&quot;);&#xD;
+		 for (Object _class:classFilter){&#xD;
+			 objClasses.add((String)_class);&#xD;
+		 }&#xD;
+		 Attributes container = new BasicAttributes();&#xD;
+		 container.put(objClasses);&#xD;
+		 &#xD;
+		 for (String key:fieldValue.keySet()){&#xD;
+			 Attribute attr= new BasicAttribute(key, fieldValue.get(key));&#xD;
+			 container.put(attr);&#xD;
+		 }&#xD;
+		 &#xD;
+		try {&#xD;
+			initialContext.createSubcontext(fullName, container);&#xD;
+			nbInserts++;&#xD;
+			__ctx__.publishVariable(&quot;../../LDAP_INSERT_DONE&quot;,String.valueOf(nbInserts),&quot;Integer&quot;);&#xD;
+		} catch (NamingException e) {&#xD;
+			nbInsertErrors++;&#xD;
+			__ctx__.publishVariable(&quot;../../LDAP_INSERT_ERROR&quot;,String.valueOf(nbInsertErrors),&quot;Integer&quot;);&#xD;
+			if(exportErrors.equals(&quot;true&quot;)){&#xD;
+				writeError(e.toString());			&#xD;
+			}&#xD;
+		}&#xD;
+		 			 &#xD;
+	}&#xD;
+	&#xD;
+	void writeError(String error){&#xD;
+	   if(writer == null){&#xD;
+			writer=	new com.indy.runtime.file.DelimitedFileWriter(new java.io.FileOutputStream(&quot;${/CORE_JAVA_TEMPORARY_FOLDER}$/ldap_error_messages_${/CORE_SESSION_ID}$.txt&quot;));&#xD;
+			writer.setEncoding(&quot;UTF-8&quot;);&#xD;
+			writer.setRowSeparator(&quot;\n&quot;,null);&#xD;
+			writer.setStringDelimiter(null,null);&#xD;
+		}&#xD;
+		&#xD;
+		if(writer !=null){&#xD;
+			writer.writeString(error);&#xD;
+			writer.endRecord();&#xD;
+		}&#xD;
+	}&#xD;
+&#xD;
+}&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_kbNPwBisEem-lKehVjL7yQ" isBeginAction="false" name="unexpected errors" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.BeanScriptingActionCodeI">
+    <parameter id="_kbUkgBisEem-lKehVjL7yQ" name="SCRIPTING_LANGUAGE" type="String" value="beanshell"/>
+    <parameter id="_lr730BisEem-lKehVjL7yQ" name="SCRIPTING_CONNECTION" type="String" value="${/CORE_SESSION_ID}$/${../CORE_PATH}$"/>
+    <code>if(writer != null){&#xD;
+		writer.close();&#xD;
+}&#xD;
+throw &quot;An unexpected error occured while executing the tool&quot;;</code>
+  </actionCode>
+  <subProcess id="_nJBiEBjGEemxiaxatLKQfg" isBeginAction="false" name="Operation" nbCycles="-1" toleratedError="false">
+    <link id="_x3hsIBjGEemxiaxatLKQfg" executionType="KO" generationType="OK_KO" mandatory="1" targetId="_kbNPwBisEem-lKehVjL7yQ"/>
+    <actionCode id="_q0cD4BjGEemxiaxatLKQfg" enable="false" isBeginAction="false" name="Scripting" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+      <link id="_z9IeABjXEempzcg6sCbj7g" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_wbKzIBjXEempzcg6sCbj7g"/>
+      <parameter id="_q0cD4RjGEemxiaxatLKQfg" description="Scripting language (Rhino, Jython, etc.)" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+      <parameter id="_HEmF0BjSEempzcg6sCbj7g" name="SCRIPTING_CONNECTION" type="String" value="${/CORE_SESSION_ID}$/${../../CORE_PATH}$"/>
+      <code>%xsl{&#xD;
+&lt;xsl:for-each select=&quot;$file/ref:field()&quot;>&#xD;
+	print(&quot; %x{tech:name()}x%: &quot;); &#xD;
+	print(&quot;:{%x{tech:name()}x%}:&quot;);&#xD;
+&#xD;
+&lt;/xsl:for-each>&#xD;
+}xsl%&#xD;
+	println();&#xD;
+&#xD;
+</code>
+    </actionCode>
+    <actionCode id="_q0cD4hjGEemxiaxatLKQfg" isBeginAction="false" name="SqlOperation" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <bindLink id="_rOuMIBjGEemxiaxatLKQfg" bindType="DirectBind" targetId="_q0cD4BjGEemxiaxatLKQfg"/>
+      <bindLink id="_rzaNkBjGEemxiaxatLKQfg" bindType="DirectBind" targetId="_q0cD6xjGEemxiaxatLKQfg"/>
+      <bindLink id="_sAmVABjGEemxiaxatLKQfg" bindType="DirectBind" targetId="_q0cD7hjGEemxiaxatLKQfg"/>
+      <bindLink id="_sPBLgBjGEemxiaxatLKQfg" bindType="DirectBind" targetId="_q0cD6BjGEemxiaxatLKQfg"/>
+      <bindLink id="_ssLBkBjGEemxiaxatLKQfg" bindType="DirectBind" targetId="_q0cD5RjGEemxiaxatLKQfg"/>
+      <parameter id="_q0cD4xjGEemxiaxatLKQfg" description="Sql Action type (DDL_DML or SELECT, INSERT, UPDATE, DELETE)" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+      <parameter id="_q0cD5BjGEemxiaxatLKQfg" description="SQL Connection" name="SQL_CONNECTION" type="String" value="%connection{$file}%"/>
+      <code>select * from %x{$file/tech:name()}x%&#xD;
+%x{$file/tech:xmlMetadata()}x%</code>
+    </actionCode>
+    <actionCode id="_q0cD5RjGEemxiaxatLKQfg" generationCondition="'${integrationMode}$'='delete'" isBeginAction="false" name="delete" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.BeanScriptingActionCodeI">
+      <link id="_zcVeEBjXEempzcg6sCbj7g" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_wbKzIBjXEempzcg6sCbj7g"/>
+      <parameter id="_q0cD5hjGEemxiaxatLKQfg" description="Scripting language (groovy, jython)" name="SCRIPTING_LANGUAGE" type="String" value="beanshell"/>
+      <parameter id="_q0cD5xjGEemxiaxatLKQfg" name="SCRIPTING_CONNECTION" type="String" value="${/CORE_SESSION_ID}$/${../../CORE_PATH}$"/>
+      <code>map.clear();&#xD;
+%xsl{&#xD;
+&lt;xsl:for-each select=&quot;$file/ref:field()[tech:name()!=md:paramValue($this,'pathName')]&quot;>&#xD;
+&#xD;
+map.put(&quot;%x{tech:name()}x%&quot;,&quot;:{%x{tech:name()}x%}:&quot;);&lt;/xsl:for-each>&#xD;
+}xsl%&#xD;
+li.delete(&quot;:{%x{md:paramValue($this,'pathName')}x%}:&quot;);</code>
+    </actionCode>
+    <actionCode id="_q0cD6BjGEemxiaxatLKQfg" generationCondition="'${integrationMode}$'='update'" isBeginAction="false" name="update" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.BeanScriptingActionCodeI">
+      <link id="_zMjVoBjXEempzcg6sCbj7g" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_wbKzIBjXEempzcg6sCbj7g"/>
+      <parameter id="_q0cD6RjGEemxiaxatLKQfg" description="Scripting language (groovy, jython)" name="SCRIPTING_LANGUAGE" type="String" value="beanshell"/>
+      <parameter id="_q0cD6hjGEemxiaxatLKQfg" name="SCRIPTING_CONNECTION" type="String" value="${/CORE_SESSION_ID}$/${../../CORE_PATH}$"/>
+      <code>map.clear();&#xD;
+%xsl{&#xD;
+&lt;xsl:for-each select=&quot;$file/ref:field()[tech:name()!=md:paramValue($this,'pathName')]&quot;>&#xD;
+&#xD;
+map.put(&quot;%x{tech:name()}x%&quot;,&quot;:{%x{tech:name()}x%}:&quot;);&lt;/xsl:for-each>&#xD;
+}xsl%&#xD;
+li.update(&quot;:{%x{md:paramValue($this,'pathName')}x%}:&quot;, map);</code>
+    </actionCode>
+    <actionCode id="_q0cD6xjGEemxiaxatLKQfg" generationCondition="'${integrationMode}$'='upsert'" isBeginAction="false" name="upsert" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.BeanScriptingActionCodeI">
+      <link id="_zqdZoBjXEempzcg6sCbj7g" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_wbKzIBjXEempzcg6sCbj7g"/>
+      <parameter id="_q0cD7BjGEemxiaxatLKQfg" description="Scripting language (groovy, jython)" name="SCRIPTING_LANGUAGE" type="String" value="beanshell"/>
+      <parameter id="_q0cD7RjGEemxiaxatLKQfg" name="SCRIPTING_CONNECTION" type="String" value="${/CORE_SESSION_ID}$/${../../CORE_PATH}$"/>
+      <code>map.clear();&#xD;
+%xsl{&#xD;
+&lt;xsl:for-each select=&quot;$file/ref:field()[tech:name()!=md:paramValue($this,'pathName')]&quot;>&#xD;
+&#xD;
+map.put(&quot;%x{tech:name()}x%&quot;,&quot;:{%x{tech:name()}x%}:&quot;);&lt;/xsl:for-each>&#xD;
+}xsl%&#xD;
+li.upsert(&quot;:{%x{md:paramValue($this,'pathName')}x%}:&quot;, map);</code>
+    </actionCode>
+    <actionCode id="_q0cD7hjGEemxiaxatLKQfg" generationCondition="'${integrationMode}$'='insert'" isBeginAction="false" name="insert" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.BeanScriptingActionCodeI">
+      <link id="_y8rtoBjXEempzcg6sCbj7g" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_wbKzIBjXEempzcg6sCbj7g"/>
+      <parameter id="_q0cD7xjGEemxiaxatLKQfg" description="Scripting language (groovy, jython)" name="SCRIPTING_LANGUAGE" type="String" value="beanshell"/>
+      <parameter id="_q0cD8BjGEemxiaxatLKQfg" name="SCRIPTING_CONNECTION" type="String" value="${/CORE_SESSION_ID}$/${../../CORE_PATH}$"/>
+      <code>map.clear();&#xD;
+%xsl{&#xD;
+&lt;xsl:for-each select=&quot;$file/ref:field()[tech:name()!=md:paramValue($this,'pathName')]&quot;>&#xD;
+&#xD;
+map.put(&quot;%x{tech:name()}x%&quot;,&quot;:{%x{tech:name()}x%}:&quot;);&lt;/xsl:for-each>&#xD;
+}xsl%&#xD;
+li.insert(&quot;:{%x{md:paramValue($this,'pathName')}x%}:&quot;, map);&#xD;
+</code>
+    </actionCode>
+    <actionCode id="_wbKzIBjXEempzcg6sCbj7g" isBeginAction="false" name="end" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+      <link id="_1pjjkBjXEempzcg6sCbj7g" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_1bTFIBjXEempzcg6sCbj7g"/>
+    </actionCode>
+    <actionCode id="_1bTFIBjXEempzcg6sCbj7g" isBeginAction="false" name="close" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.BeanScriptingActionCodeI">
+      <parameter id="_1bTFIRjXEempzcg6sCbj7g" name="SCRIPTING_LANGUAGE" type="String" value="beanshell"/>
+      <parameter id="_1bTFIhjXEempzcg6sCbj7g" name="SCRIPTING_CONNECTION" type="String" value="${/CORE_SESSION_ID}$/${../../CORE_PATH}$"/>
+      <code>if(writer != null){&#xD;
+		writer.close();&#xD;
+}</code>
+    </actionCode>
+  </subProcess>
+  <xslVariable id="_dR3zsC3nEeSB99I2LuHSFA" code="$this/metaDataLink/mdj:getMetaDataRef(.)[@defType='com.stambia.file.file'][1]" name="file" type="xpath"/>
+  <xslVariable id="_dR_IcS3nEeSB99I2LuHSFA" code="$this/metaDataLink/mdj:getMetaDataRef(.)[@defType='com.stambia.ldap.server'][1]" name="ldap" type="xpath"/>
+</proc:process>

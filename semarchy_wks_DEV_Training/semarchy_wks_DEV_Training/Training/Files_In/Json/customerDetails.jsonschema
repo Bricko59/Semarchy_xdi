@@ -1,0 +1,107 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$ref": "#/definitions/CustomerDetails",
+    "definitions": {
+        "CustomerDetails": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "customer_list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/CustomerList"
+                    }
+                }
+            },
+            "required": [
+                "customer_list"
+            ],
+            "title": "CustomerDetails"
+        },
+        "CustomerList": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "birthday": {
+                    "type": "null"
+                },
+                "address": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Address"
+                    }
+                },
+                "phoneNumber": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/PhoneNumber"
+                    }
+                }
+            },
+            "required": [
+                "birthday",
+                "firstName",
+                "lastName"
+            ],
+            "title": "CustomerList"
+        },
+        "Address": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "streetAddress": {
+                    "type": "string"
+                },
+                "city": {
+                    "type": "string"
+                },
+                "state": {
+                    "type": "string"
+                },
+                "postalCode": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "city",
+                "postalCode",
+                "state",
+                "streetAddress"
+            ],
+            "title": "Address"
+        },
+        "PhoneNumber": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "type": {
+                    "$ref": "#/definitions/Type"
+                },
+                "number": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "number",
+                "type"
+            ],
+            "title": "PhoneNumber"
+        },
+        "Type": {
+            "type": "string",
+            "enum": [
+                "Home",
+                "VoIP",
+                "Office",
+                "Cellular phone"
+            ],
+            "title": "Type"
+        }
+    }
+}

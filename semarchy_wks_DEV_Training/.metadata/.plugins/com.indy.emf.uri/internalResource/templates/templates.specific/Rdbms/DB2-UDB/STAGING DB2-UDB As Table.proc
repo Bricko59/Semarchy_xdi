@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:UUID="java.util.UUID" xmlns:common="http://exslt.org/common" xmlns:mdj="java:com.indy.xsl.global.Functions" xmlns:proc="http://www.example.org/proc" xmlns:saxon="http://saxon.sf.net/" id="_HwkihlLsEeWq6Ivm3g-r1Q" description="This template is used to create a Stage table on the DB2-UDB schema provided.&#xD;&#xA;The table is created from the columns provided on Stage, and populated from the sources.&#xD;&#xA;This offers the possibility to temporarily stage the data during an integration process.&#xD;&#xA;&#xD;&#xA;Refer to the description of each Parameter for more information.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;16/06/2020&#x9;Add support for CDC Sources&#xD;&#xA;16/06/2020&#x9;New Parameters 'Unlock Cdc Table' and 'Lock Cdc Table'&#xD;&#xA;16/06/2020&#x9;New Parameter 'Cdc Subscriber'&#xD;&#xA;04/12/2018&#x9;Reorganize the parameters display order&#xD;&#xA;13/11/2018  New options &quot;workTableOption&quot; and &quot;transactionalModeOnWorkTables&quot; &#xD;&#xA;20/09/2017&#x9;Initialize template history" isBeginAction="true" name="STAGING DB2-UDB As Table" nbCycles="-1" toleratedError="false">
+  <parameter id="_HwkiiFLsEeWq6Ivm3g-r1Q" description="If true, a DISTINCT statement will be added on the query inserting data in the Stage table.&#xD;&#xA;This is used to avoid having duplicates in the table." name="useDistinct" type="Boolean" value="false"/>
+  <parameter id="_Hwkih1LsEeWq6Ivm3g-r1Q" description="If true, the temporary objects created during staging are removed at the end of the process." name="cleanTemporaryObjects " type="Boolean" value="true"/>
+  <parameter id="_iLQE8OdMEeiOTelEq94qbQ" description="If true, the operations on the work tables will be executed in a dedicated transaction.&#xD;&#xA;This is useful for instance if one of the source tables has been loaded in a previous and uncommitted Mapping.&#xD;&#xA;In this case, it is necessary to populate the work tables within the same transaction so that the data loaded as part of this previous Mapping are visible.&#xD;&#xA;&#xD;&#xA;If false, each statement on the work tables uses an Autocommit transaction." name="transactionalModeOnWorkTables" type="Boolean" value="false"/>
+  <parameter id="_BuZBEOx5EeaHab5deMqBaw" description="Set this option to true to use the name of the Stage to create the temporary object.&#xD;&#xA;This can be useful to create a named table on the fly using a Stage and reuse it afterwards." name="useStageNameForTemporaryObjectName" type="Boolean" value="false"/>
+  <parameter id="_Xd6YgOdMEeiOTelEq94qbQ" description="Used to specify options on the Stage table.&#xD;&#xA;They are added at the end of the create table statement.&#xD;&#xA;&#xD;&#xA;The default NOT LOGGED INITIALLY option can be useful when working with large amount of data that requires a lot of space in transactional journal. Please note that this default option requires that actions are executed in transactional mode (when 'Transactional Mode On Work Tables' is enabled)." name="workTableOption" type="String" value="NOT LOGGED INITIALLY"/>
+  <parameter id="_6M6AoLFXEeqAJL64qj9Gxw" description="When a source table is used as CDC a lock is performed on it. It makes the changed data available in the Mapping.&#xD;&#xA;If set to false, the Lock must have been performed as part of a previous Mapping." name="lockCdcTable" type="Boolean" value="true"/>
+  <parameter id="_6M-5ILFXEeqAJL64qj9Gxw" description="When a source table is used as CDC an unlock is performed on it after processing. It marks the changed data as consumed.&#xD;&#xA;If set to false, the Unlock must be performed as part of an upcoming Mapping." name="unlockCdcTable" type="Boolean" value="true"/>
+  <parameter id="_6M-5IbFXEeqAJL64qj9Gxw" description="CDC Subscriber to use when CDC has been enabled on a source table." name="cdcSubscriber" type="String"/>
+  <subProcess id="_HwkiiVLsEeWq6Ivm3g-r1Q" name="STAGING">
+    <link id="_HwkiilLsEeWq6Ivm3g-r1Q" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_HwkimVLsEeWq6Ivm3g-r1Q?fileId=_HwkihlLsEeWq6Ivm3g-r1Q$type=proc$name=CLEAN_INTEGRATION?"/>
+    <actionCode id="_Hwkii1LsEeWq6Ivm3g-r1Q" generationCondition="" isBeginAction="false" name="Creation of staging" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_s3VqoFYqEeWDvqY0LXz_NQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_qqeKcFYqEeWDvqY0LXz_NQ"/>
+      <parameter id="_HwkijFLsEeWq6Ivm3g-r1Q" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_HwkijVLsEeWq6Ivm3g-r1Q" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_HwkijlLsEeWq6Ivm3g-r1Q" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_yvBhoFYoEeWDvqY0LXz_NQ" name="SQL_MULTI_QUERYS" type="String" value="true"/>
+      <code>%xsl{Create table %x{$stageTableName}x%
+AS (
+&lt;xsl:variable name=&quot;sets&quot;>
+&lt;xsl:for-each select=&quot;if (count($REF/tech:sourceSets())=0) then '' else $REF/tech:sourceSets() &quot;>
+&lt;set name=&quot;{.}&quot;>
+&lt;xsl:variable name=&quot;sourceSetName&quot; select=&quot;.&quot;/>
+&lt;xsl:variable name=&quot;columns&quot; select=&quot;$REF/ref:columns($sourceSetName)&quot;/>
+select		%x{if (md:paramValue($this,'useDistinct')='true') then 'DISTINCT ' else ''}x%
+	%x{md:patternList($columns,'[expression] AS [workName]', ',\n\t')}x%
+	%x{if($REF/tech:hasCdcSource()) then if($REF/tech:hasCdc($sourceSetName)) then ', CDC_CHANGE_TYPE' else ', ''I'' AS CDC_CHANGE_TYPE' else ''}x%
+from	%x{$REF/tech:fromPart($sourceSetName)}x%
+where	(1=2)%xsl{
+%x{$REF/tech:joinPart($sourceSetName)}x%
+%x{$REF/tech:filterPart($sourceSetName)}x%
+%x{$REF/tech:cdcFilterPart2($this,$sourceSetName)}x%
+%x{$REF/tech:groupByPart($sourceSetName)}x%
+%x{$REF/tech:havingPart($sourceSetName)}x%}xsl%&lt;/set>
+&lt;/xsl:for-each>
+&lt;/xsl:variable>
+%x{md:resolveSetExpression($sets/set,$REF/@setExpression)}%
+) WITH NO DATA /* Mandatory option with DB2 UDB */
+%x{md:getParamValue($this,'workTableOption')}x%
+}xsl%
+
+%x{if(md:paramValue($this,'useStageNameForTemporaryObjectName') = 'true')
+	then md:setStagingPoint($REF/@id,concat('select * from ', $stageTableName),'query')
+	else '' 
+}x%
+</code>
+    </actionCode>
+    <actionCode id="_Hwkij1LsEeWq6Ivm3g-r1Q" generationCondition="" isBeginAction="false" name="Drop table stagging" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_HwkikFLsEeWq6Ivm3g-r1Q" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_AmlfgLFYEeqAJL64qj9Gxw?fileId=_HwkihlLsEeWq6Ivm3g-r1Q$type=proc$name=Lock%20CDC?"/>
+      <parameter id="_HwkikVLsEeWq6Ivm3g-r1Q" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_HwkiklLsEeWq6Ivm3g-r1Q" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_Hwkik1LsEeWq6Ivm3g-r1Q" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>drop table %x{$stageTableName}x%</code>
+    </actionCode>
+    <actionCode id="_HwkilFLsEeWq6Ivm3g-r1Q" generationCondition="" enable="true" isBeginAction="false" name="Drop view staging" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_HwkilVLsEeWq6Ivm3g-r1Q" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_Hwkij1LsEeWq6Ivm3g-r1Q"/>
+      <parameter id="_HwkillLsEeWq6Ivm3g-r1Q" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_Hwkil1LsEeWq6Ivm3g-r1Q" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_HwkimFLsEeWq6Ivm3g-r1Q" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>drop view %x{$stageTableName}x%</code>
+    </actionCode>
+    <actionCode id="_qqeKcFYqEeWDvqY0LXz_NQ" generationCondition="" isBeginAction="false" name="Insert into staging" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_2CulsOdMEeiOTelEq94qbQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_xeuPAOdMEeiOTelEq94qbQ"/>
+      <parameter id="_qqeKcVYqEeWDvqY0LXz_NQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_qqeKclYqEeWDvqY0LXz_NQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_qqeKc1YqEeWDvqY0LXz_NQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_qqeKdFYqEeWDvqY0LXz_NQ" name="SQL_MULTI_QUERYS" type="String" value="true"/>
+      <code>%xsl{Insert into %x{$stageTableName}x%
+&lt;xsl:variable name=&quot;sets&quot;>
+&lt;xsl:for-each select=&quot;if (count($REF/tech:sourceSets())=0) then '' else $REF/tech:sourceSets() &quot;>
+&lt;set name=&quot;{.}&quot;>
+&lt;xsl:variable name=&quot;sourceSetName&quot; select=&quot;.&quot;/>
+&lt;xsl:variable name=&quot;columns&quot; select=&quot;$REF/ref:columns($sourceSetName)&quot;/>
+select		%x{if (md:paramValue($this,'useDistinct')='true') then 'DISTINCT ' else ''}x%
+	%x{md:patternList($columns,'[expression] AS [workName]', ',\n\t')}x%
+
+from	%x{$REF/tech:fromPart($sourceSetName)}x%
+where	(1=1)%xsl{
+%x{$REF/tech:joinPart($sourceSetName)}x%
+%x{$REF/tech:filterPart($sourceSetName)}x%
+%x{$REF/tech:cdcFilterPart2($this,$sourceSetName)}x%
+%x{if ($REF/tech:hasCdc() and md:paramValue($this,'appendMode')='true') then '
+And CDC_CHANGE_TYPE in (''I'',''D'')' else '' }x%	
+%x{$REF/tech:groupByPart($sourceSetName)}x%
+%x{$REF/tech:havingPart($sourceSetName)}x%}xsl%&lt;/set>
+&lt;/xsl:for-each>
+&lt;/xsl:variable>
+%x{md:resolveSetExpression($sets/set,$REF/@setExpression)}%
+}xsl%
+</code>
+    </actionCode>
+    <actionCode id="_xeuPAOdMEeiOTelEq94qbQ" generationCondition=" '${transactionalModeOnWorkTables}$'='true'" isBeginAction="false" name="Commit" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter id="_xeuPAedMEeiOTelEq94qbQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_xeuPAudMEeiOTelEq94qbQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_xeuPBOdMEeiOTelEq94qbQ" name="SQL_MULTI_QUERYS" type="String" value="true"/>
+      <parameter id="_0P-1sOdMEeiOTelEq94qbQ" name="SQL_TRANSACTION_TYPE" type="String" value="COMMIT"/>
+      <code></code>
+    </actionCode>
+    <subProcess id="_AmlfgLFYEeqAJL64qj9Gxw" generationCondition="not(md:paramValue($this, 'lockCdcTable')='false')" isBeginAction="false" name="Lock CDC" nbCycles="-1" repetitionMode="Parallelize" repetitionQuery="$sourceSets/sourceSet" repetitionVariableName="CUR_SOURCE_SET" toleratedError="false">
+      <link id="_BgIWoLFYEeqAJL64qj9Gxw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_Hwkii1LsEeWq6Ivm3g-r1Q"/>
+      <actionCode id="_AmlfgbFYEeqAJL64qj9Gxw" generationCondition="" isBeginAction="false" name="Lock of CDC table" nbCycles="-1" repetitionMode="Parallelize" repetitionQuery="$REF/ref:from($CUR_SOURCE_SET/@name)[tech:isCdc()]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+        <parameter id="_AmlfgrFYEeqAJL64qj9Gxw" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+        <parameter id="_Amlfg7FYEeqAJL64qj9Gxw" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+        <code>update 	%x{$CDC/ref:target()/tech:cdcTablePath()}x%&#xD;
+set 	CDC_CONSUMMATION = '1'&#xD;
+where	(1=1)&#xD;
+%x{$CDC/tech:cdcFilterPart2($this)}x%</code>
+      </actionCode>
+    </subProcess>
+    <templateType>EXECUTE</templateType>
+    <xslVariable id="_Vt5ccOx5EeaHab5deMqBaw" code="if(md:paramValue($this,'useStageNameForTemporaryObjectName') = 'true')&#xD;&#xA;&#x9;then md:objectPath($REF/ref:schema(),$REF/ref:schema()/tech:addDelimiter(substring-after($REF/ancestor-or-self::step/@name, '_')))&#xD;&#xA;&#x9;else md:physicalPath($REF,'workName')" name="stageTableName" type="xpath"/>
+    <xslVariable id="_AmtbULFYEeqAJL64qj9Gxw" code="%xsl{&#xD;&#xA;&lt;xsl:for-each select=&quot;if (count($REF/tech:sourceSets())=0) then '' else $REF/tech:sourceSets() &quot;>&#xD;&#xA;&lt;xsl:variable name=&quot;sourceSetName&quot; select=&quot;.&quot; />&#xD;&#xA;&lt;xsl:if test=&quot;exists($REF/ref:from($sourceSetName)[tech:isCdc()])&quot;>&#xD;&#xA;&lt;sourceSet name=&quot;{$sourceSetName}&quot;/>&#xD;&#xA;&lt;/xsl:if>&#xD;&#xA;&lt;/xsl:for-each>&#xD;&#xA;}xsl%" name="sourceSets" type="xsl"/>
+  </subProcess>
+  <subProcess id="_HwkimVLsEeWq6Ivm3g-r1Q" generationCondition="" name="CLEAN_INTEGRATION">
+    <actionCode id="_HwkimlLsEeWq6Ivm3g-r1Q" generationCondition="'${cleanTemporaryObjects }$'='true' " enable="true" isBeginAction="false" name="Drop table staging" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter id="_Hwkim1LsEeWq6Ivm3g-r1Q" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_HwkinFLsEeWq6Ivm3g-r1Q" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_HwkinVLsEeWq6Ivm3g-r1Q" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>drop table %x{$stageTableName}x%</code>
+    </actionCode>
+    <subProcess id="_HoVrALFYEeqAJL64qj9Gxw" generationCondition="not(md:paramValue($this, 'unlockCdcTable')='false')" isBeginAction="false" name="Unlock CDC" nbCycles="-1" repetitionMode="Parallelize" repetitionQuery="$sourceSets/sourceSet" repetitionVariableName="CUR_SOURCE_SET" toleratedError="false">
+      <actionCode id="_HoVrAbFYEeqAJL64qj9Gxw" generationCondition="" isBeginAction="false" name="Unlock of CDC table" nbCycles="-1" repetitionMode="Parallelize" repetitionQuery="$REF/ref:from($CUR_SOURCE_SET/@name)[tech:isCdc()]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+        <parameter id="_HoVrArFYEeqAJL64qj9Gxw" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+        <parameter id="_HoVrA7FYEeqAJL64qj9Gxw" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+        <code>%x{$CDC/ref:target()/tech:cdcDeleteDml()}x%&#xD;
+Where	CDC_CONSUMMATION = '1'&#xD;
+%x{$CDC/tech:cdcFilterPart2($this)}x%</code>
+      </actionCode>
+    </subProcess>
+    <templateType>CLEANUP</templateType>
+    <xslVariable id="_Wz7QYOx5EeaHab5deMqBaw" code="if(md:paramValue($this,'useStageNameForTemporaryObjectName') = 'true')&#xD;&#xA;&#x9;then md:objectPath($REF/ref:schema(),$REF/ref:schema()/tech:addDelimiter(substring-after($REF/ancestor-or-self::step/@name, '_')))&#xD;&#xA;&#x9;else md:physicalPath($REF,'workName')" name="stageTableName" type="xpath"/>
+    <xslVariable id="_HoYHQLFYEeqAJL64qj9Gxw" code="%xsl{&#xD;&#xA;&lt;xsl:for-each select=&quot;if (count($REF/tech:sourceSets())=0) then '' else $REF/tech:sourceSets() &quot;>&#xD;&#xA;&lt;xsl:variable name=&quot;sourceSetName&quot; select=&quot;.&quot; />&#xD;&#xA;&lt;xsl:if test=&quot;exists($REF/ref:from($sourceSetName)[tech:isCdc()])&quot;>&#xD;&#xA;&lt;sourceSet name=&quot;{$sourceSetName}&quot;/>&#xD;&#xA;&lt;/xsl:if>&#xD;&#xA;&lt;/xsl:for-each>&#xD;&#xA;}xsl%" name="sourceSets" type="xsl"/>
+  </subProcess>
+  <templateType>I-TP.RDBMS</templateType>
+</proc:process>

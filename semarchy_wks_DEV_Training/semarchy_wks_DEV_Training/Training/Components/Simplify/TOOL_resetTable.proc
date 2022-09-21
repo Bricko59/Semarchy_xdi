@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_ExT5MeutEeag0Ol_UBAlAw">
+  <parameter id="_MJ8QEPUjEea4Xbg1ZQZXWA" name="genPrimaryKey" type="Boolean" value="true"/>
+  <actionCode id="_F9DTkOutEeag0Ol_UBAlAw" isBeginAction="false" name="CREATE TABLE" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <parameter id="_F9SkIOutEeag0Ol_UBAlAw" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_F9SkIeutEeag0Ol_UBAlAw" name="SQL_CONNECTION" type="String" value="%targetConnection{$TARGET_TABLE}%"/>
+    <code>Create table %x{md:physicalPath($TARGET_TABLE/ref:target())}x%&#xD;
+%x{md:patternList($TARGET_TABLE/ref:columns(),' [name] [targetCreationType] [null]',',\n','(\n','')}x%&#xD;
+%x{if(md:paramValue($this, 'genPrimaryKey') = 'true') then concat(',',$TARGET_TABLE/ref:pk()/tech:creationDdl()) else ''}x%)&#xD;
+&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_9HbhQOutEeag0Ol_UBAlAw" isBeginAction="false" name="Start" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_9sAN8OutEeag0Ol_UBAlAw" generationCondition="exists($TARGET_TABLE)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_BkpJEOvSEeag0Ol_UBAlAw"/>
+  </actionCode>
+  <actionCode id="_BkpJEOvSEeag0Ol_UBAlAw" isBeginAction="false" name="DROP TABLE" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_E3NGAOvSEeag0Ol_UBAlAw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_F9DTkOutEeag0Ol_UBAlAw"/>
+    <parameter id="_BkpJEevSEeag0Ol_UBAlAw" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_BkpJEuvSEeag0Ol_UBAlAw" name="SQL_CONNECTION" type="String" value="%targetConnection{$TARGET_TABLE}%"/>
+    <code>DROP table %x{md:physicalPath($TARGET_TABLE/ref:target())}x%</code>
+  </actionCode>
+  <xslVariable id="_4ptYwOutEeag0Ol_UBAlAw" code="$this/metaDataLink/mdj:getMetaDataRef(.)[@defType='com.stambia.rdbms.datastore'][1]" name="TARGET_TABLE" order="1" type="xpath"/>
+</proc:process>

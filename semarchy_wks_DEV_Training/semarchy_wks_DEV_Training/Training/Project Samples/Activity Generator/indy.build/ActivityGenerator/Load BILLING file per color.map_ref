@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ref:mapRef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ref="http://www.indy.com/v2/ref" id="_P51DQIGVEean7JATlUQCiw">
+  <dataModel>_AxcOEIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=Load%20BILLING%20file%20per%20color?</dataModel>
+  <containerRef xsi:type="ref:RDatastore" id="_P54t94GVEean7JATlUQCiw" countShownFields="20" hierarchical="true">
+    <dataModel>_E4rJMIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_P6ACYIGVEean7JATlUQCiw" fullName="flat_file_to_generate" mandatory="true" objectMask="[OBJECT]" position="3">
+      <dataModel>_E406MIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=flat_file_to_generate?</dataModel>
+      <expressionRef id="_P6bgM4GVEean7JATlUQCiw" internalExpression="${BILLING.PRODUCT_COLOR}$">
+        <dataModel>_HL5JAYC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</dataModel>
+        <sourceRef>_P6X10YGVEean7JATlUQCiw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6ACYYGVEean7JATlUQCiw" fullName="FILE_RECORD" mandatory="true" objectMask="[OBJECT]" position="6">
+      <dataModel>_E406MYC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=FILE_RECORD?</dataModel>
+      <expressionRef id="_P6bgNIGVEean7JATlUQCiw" internalExpression="${BILLING.PRODUCT_COLOR}$">
+        <dataModel>_HL5wEIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</dataModel>
+        <sourceRef>_P6X10YGVEean7JATlUQCiw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6ACYoGVEean7JATlUQCiw" fullName="&quot;FILE_RECORD/BILL_ID&quot;" mandatory="true" objectMask="[OBJECT]" position="9" size="12" type="Numeric">
+      <dataModel>_E406MoC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=BILL_ID?</dataModel>
+      <expressionRef id="_P6a5I4GVEean7JATlUQCiw" internalExpression="${BILLING.BILL_ID}$">
+        <dataModel>_HL2swIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</dataModel>
+        <sourceRef>_P6Yc5IGVEean7JATlUQCiw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6ApcIGVEean7JATlUQCiw" fullName="&quot;FILE_RECORD/ORDER_DATE&quot;" mandatory="true" objectMask="[OBJECT]" position="12" size="23" type="Timestamp">
+      <dataModel>_E406M4C0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=ORDER_DATE?</dataModel>
+      <expressionRef id="_P6bgMoGVEean7JATlUQCiw" internalExpression="${BILLING.ORDER_DATE}$">
+        <dataModel>_HL5JAIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</dataModel>
+        <sourceRef>_P6Yc5oGVEean7JATlUQCiw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6ApcYGVEean7JATlUQCiw" status="WARNING" fullName="&quot;FILE_RECORD/ORDER_CONFIRMED&quot;" mandatory="true" objectMask="[OBJECT]" position="15" size="55" type="String">
+      <dataModel>_E406NIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=ORDER_CONFIRMED?</dataModel>
+      <expressionRef id="_P6ZrAYGVEean7JATlUQCiw" internalExpression="CAST(${BILLING.ORDER_CONFIRMED}$ AS VARCHAR)">
+        <dataModel>_HLwmIIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</dataModel>
+        <problem id="_P6kDEYGVEean7JATlUQCiw" code="WARNING_SQL_PARSER_FAILURE" message=""/>
+        <sourceRef>_P6Yc54GVEean7JATlUQCiw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6ApcoGVEean7JATlUQCiw" fullName="&quot;FILE_RECORD/BILL_DATE&quot;" mandatory="true" objectMask="[OBJECT]" position="18" size="23" type="Timestamp">
+      <dataModel>_E406NYC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=BILL_DATE?</dataModel>
+      <expressionRef id="_P6bgMIGVEean7JATlUQCiw" internalExpression="${BILLING.BILL_DATE}$">
+        <dataModel>_HL364YC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</dataModel>
+        <sourceRef>_P6X10IGVEean7JATlUQCiw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6Apc4GVEean7JATlUQCiw" status="WARNING" fullName="&quot;FILE_RECORD/PAYMENT_RECEIVED&quot;" mandatory="true" objectMask="[OBJECT]" position="21" size="55" type="String">
+      <dataModel>_E406NoC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=PAYMENT_RECEIVED?</dataModel>
+      <expressionRef id="_P6bgMYGVEean7JATlUQCiw" internalExpression="CAST(${BILLING.PAYMENT_RECEIVED}$ AS VARCHAR)">
+        <dataModel>_HL4h8IC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</dataModel>
+        <problem id="_P6kDEoGVEean7JATlUQCiw" code="WARNING_SQL_PARSER_FAILURE" message=""/>
+        <sourceRef>_P6E7CYGVEean7JATlUQCiw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6ApdIGVEean7JATlUQCiw" fullName="&quot;FILE_RECORD/BILL_AMOUNT&quot;" mandatory="true" objectMask="[OBJECT]" position="24" size="57" type="String">
+      <dataModel>_E406N4C0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=BILL_AMOUNT?</dataModel>
+      <expressionRef id="_P6aSEoGVEean7JATlUQCiw" internalExpression="${BILLING.BILL_AMOUNT}$">
+        <dataModel>_HLzCYIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</dataModel>
+        <sourceRef>_P6X104GVEean7JATlUQCiw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6ApdYGVEean7JATlUQCiw" fullName="&quot;FILE_RECORD/DISCOUNT_PERCENTAGE&quot;" mandatory="true" objectMask="[OBJECT]" position="27" size="55" type="String">
+      <dataModel>_E406OIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=DISCOUNT_PERCENTAGE?</dataModel>
+      <expressionRef id="_P6aSE4GVEean7JATlUQCiw" internalExpression="${BILLING.DISCOUNT_PERCENTAGE}$">
+        <dataModel>_HLzpcIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</dataModel>
+        <sourceRef>_P6Yc44GVEean7JATlUQCiw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6ApdoGVEean7JATlUQCiw" fullName="&quot;FILE_RECORD/PRODUCT_QUANTITY&quot;" mandatory="true" objectMask="[OBJECT]" position="30" size="12" type="Numeric">
+      <dataModel>_E406OYC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=PRODUCT_QUANTITY?</dataModel>
+      <expressionRef id="_P6a5IYGVEean7JATlUQCiw" internalExpression="${BILLING.PRODUCT_QUANTITY}$">
+        <dataModel>_HL2FsIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</dataModel>
+        <sourceRef>_P6X11YGVEean7JATlUQCiw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6Apd4GVEean7JATlUQCiw" status="VALID" fullName="&quot;FILE_RECORD/PRODUCT_COLOR&quot;" mandatory="true" objectMask="[OBJECT]" position="33" size="56" type="String">
+      <dataModel>_E406OoC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=PRODUCT_COLOR?</dataModel>
+      <expressionRef id="_P6a5IoGVEean7JATlUQCiw" internalExpression="TRIM(${BILLING.PRODUCT_COLOR}$)">
+        <dataModel>_HL2FsYC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</dataModel>
+        <sourceRef>_P6X10YGVEean7JATlUQCiw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6ApeIGVEean7JATlUQCiw" fullName="&quot;FILE_RECORD/CUSTOMER_ID&quot;" mandatory="true" objectMask="[OBJECT]" position="36" size="12" type="Numeric">
+      <dataModel>_E406O4C0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=CUSTOMER_ID?</dataModel>
+      <expressionRef id="_P6aSEIGVEean7JATlUQCiw" internalExpression="${BILLING.CUSTOMER_ID}$">
+        <dataModel>_HLxNMIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</dataModel>
+        <sourceRef>_P6Yc6IGVEean7JATlUQCiw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6ApeYGVEean7JATlUQCiw" fullName="&quot;FILE_RECORD/PRODUCT_ID&quot;" mandatory="true" objectMask="[OBJECT]" position="39" size="12" type="Numeric">
+      <dataModel>_E406PIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=PRODUCT_ID?</dataModel>
+      <expressionRef id="_P6a5JYGVEean7JATlUQCiw" internalExpression="${BILLING.PRODUCT_ID}$">
+        <dataModel>_HL3T0YC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</dataModel>
+        <sourceRef>_P6X10oGVEean7JATlUQCiw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6ApeoGVEean7JATlUQCiw" status="WARNING" fullName="&quot;FILE_RECORD/GET_DISCOUNT&quot;" mandatory="true" objectMask="[OBJECT]" position="42" size="55" type="String">
+      <dataModel>_E406PYC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=GET_DISCOUNT?</dataModel>
+      <expressionRef id="_P6aSFIGVEean7JATlUQCiw" internalExpression="CAST(${BILLING.GET_DISCOUNT}$ AS VARCHAR)">
+        <dataModel>_HL0QgIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</dataModel>
+        <problem id="_P6kqIIGVEean7JATlUQCiw" code="WARNING_SQL_PARSER_FAILURE" message=""/>
+        <sourceRef>_P6X11IGVEean7JATlUQCiw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6Ape4GVEean7JATlUQCiw" fullName="&quot;FILE_RECORD/CITY_ID&quot;" mandatory="true" objectMask="[OBJECT]" position="45" size="12" type="Numeric">
+      <dataModel>_E406PoC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=CITY_ID?</dataModel>
+      <expressionRef id="_P6a5IIGVEean7JATlUQCiw" internalExpression="${BILLING.CITY_ID}$">
+        <dataModel>_HL1eoIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</dataModel>
+        <sourceRef>_P6Yc4oGVEean7JATlUQCiw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6BQgIGVEean7JATlUQCiw" fullName="&quot;FILE_RECORD/COUNTRY_ID&quot;" mandatory="true" objectMask="[OBJECT]" position="48" size="12" type="Numeric">
+      <dataModel>_E406P4C0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=COUNTRY_ID?</dataModel>
+      <expressionRef id="_P6a5JIGVEean7JATlUQCiw" internalExpression="${BILLING.COUNTRY_ID}$">
+        <dataModel>_HL3T0IC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</dataModel>
+        <sourceRef>_P6Yc4YGVEean7JATlUQCiw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6BQgYGVEean7JATlUQCiw" status="VALID" fullName="&quot;FILE_RECORD/REQUIRED_CHANGE&quot;" mandatory="true" objectMask="[OBJECT]" position="51" size="82" type="String">
+      <dataModel>_E406QIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=REQUIRED_CHANGE?</dataModel>
+      <expressionRef id="_P6a5JoGVEean7JATlUQCiw" internalExpression="TRIM(${BILLING.REQUIRED_CHANGE}$)">
+        <dataModel>_HL364IC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</dataModel>
+        <sourceRef>_P6Yc5YGVEean7JATlUQCiw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6BQgoGVEean7JATlUQCiw" status="VALID" fullName="&quot;FILE_RECORD/FRENCH_COMMENT&quot;" mandatory="true" objectMask="[OBJECT]" position="54" size="272" type="String">
+      <dataModel>_E406QYC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=FRENCH_COMMENT?</dataModel>
+      <expressionRef id="_P6aSEYGVEean7JATlUQCiw" internalExpression="TRIM(${BILLING.FRENCH_COMMENT}$)">
+        <dataModel>_HLx0QIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</dataModel>
+        <sourceRef>_P6Yc4IGVEean7JATlUQCiw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6BQg4GVEean7JATlUQCiw" status="VALID" fullName="&quot;FILE_RECORD/PRODUCT_PACKAGING&quot;" mandatory="true" objectMask="[OBJECT]" position="57" size="20" type="String">
+      <dataModel>_fe0TYoFOEean7JATlUQCiw?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=PRODUCT_PACKAGING?</dataModel>
+      <expressionRef id="_P6bgNYGVEean7JATlUQCiw" internalExpression="TRIM(${BILLING.PRODUCT_PACKAGING}$)">
+        <dataModel>_fe0TY4FOEean7JATlUQCiw?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</dataModel>
+        <sourceRef>_P6Yc6YGVEean7JATlUQCiw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6BQhIGVEean7JATlUQCiw" status="VALID" fullName="&quot;FILE_RECORD/PRODUCT_DELIVERY_EMERGENCY_LEVEL&quot;" mandatory="true" objectMask="[OBJECT]" position="60" size="20" type="String">
+      <dataModel>_fe0TZIFOEean7JATlUQCiw?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=PRODUCT_DELIVERY_EMERGENCY_LEVEL?</dataModel>
+      <expressionRef id="_P6bgNoGVEean7JATlUQCiw" internalExpression="TRIM(${BILLING.PRODUCT_DELIVERY_EMERGENCY_LEVEL}$)">
+        <dataModel>_fe0TZYFOEean7JATlUQCiw?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</dataModel>
+        <sourceRef>_P6Yc6oGVEean7JATlUQCiw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_P6E7CIGVEean7JATlUQCiw" countShownFields="18" hierarchical="false">
+    <dataModel>_GoDcIIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_P6E7CYGVEean7JATlUQCiw" fullName="PAYMENT_RECEIVED" mandatory="true" objectMask="[OBJECT]" position="15" size="1" type="BOOLEAN">
+      <dataModel>_GoFRUoC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=PAYMENT_RECEIVED?</dataModel>
+      <usage>_P6bgMYGVEean7JATlUQCiw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6X10IGVEean7JATlUQCiw" fullName="BILL_DATE" objectMask="[OBJECT]" position="12" size="26" type="TIMESTAMP">
+      <dataModel>_GoFRUYC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=BILL_DATE?</dataModel>
+      <usage>_P6bgMIGVEean7JATlUQCiw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6X10YGVEean7JATlUQCiw" fullName="PRODUCT_COLOR" objectMask="[OBJECT]" position="27" size="20" type="VARCHAR">
+      <dataModel>_GoF4YoC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=PRODUCT_COLOR?</dataModel>
+      <usage>_P6bgM4GVEean7JATlUQCiw</usage>
+      <usage>_P6bgNIGVEean7JATlUQCiw</usage>
+      <usage>_P6a5IoGVEean7JATlUQCiw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6X10oGVEean7JATlUQCiw" fullName="PRODUCT_ID" mandatory="true" objectMask="[OBJECT]" position="39" precision="0" size="32" type="INTEGER">
+      <dataModel>_GoGfcIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=PRODUCT_ID?</dataModel>
+      <usage>_P6a5JYGVEean7JATlUQCiw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6X104GVEean7JATlUQCiw" fullName="BILL_AMOUNT" objectMask="[OBJECT]" position="18" precision="2" size="10" type="NUMERIC">
+      <dataModel>_GoFRU4C0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=BILL_AMOUNT?</dataModel>
+      <usage>_P6aSEoGVEean7JATlUQCiw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6X11IGVEean7JATlUQCiw" fullName="GET_DISCOUNT" objectMask="[OBJECT]" position="42" size="1" type="BOOLEAN">
+      <dataModel>_GoGfcYC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=GET_DISCOUNT?</dataModel>
+      <usage>_P6aSFIGVEean7JATlUQCiw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6X11YGVEean7JATlUQCiw" fullName="PRODUCT_QUANTITY" objectMask="[OBJECT]" position="24" precision="0" size="32" type="INTEGER">
+      <dataModel>_GoF4YYC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=PRODUCT_QUANTITY?</dataModel>
+      <usage>_P6a5IYGVEean7JATlUQCiw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6Yc4IGVEean7JATlUQCiw" fullName="FRENCH_COMMENT" mandatory="true" objectMask="[OBJECT]" position="54" size="400" type="VARCHAR">
+      <dataModel>_GoHGgYC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=FRENCH_COMMENT?</dataModel>
+      <usage>_P6aSEYGVEean7JATlUQCiw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6Yc4YGVEean7JATlUQCiw" fullName="COUNTRY_ID" mandatory="true" objectMask="[OBJECT]" position="48" precision="0" size="32" type="INTEGER">
+      <dataModel>_GoGfc4C0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=COUNTRY_ID?</dataModel>
+      <usage>_P6a5JIGVEean7JATlUQCiw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6Yc4oGVEean7JATlUQCiw" fullName="CITY_ID" mandatory="true" objectMask="[OBJECT]" position="45" precision="0" size="32" type="INTEGER">
+      <dataModel>_GoGfcoC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=CITY_ID?</dataModel>
+      <usage>_P6a5IIGVEean7JATlUQCiw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6Yc44GVEean7JATlUQCiw" fullName="DISCOUNT_PERCENTAGE" mandatory="true" objectMask="[OBJECT]" position="21" precision="2" size="10" type="NUMERIC">
+      <dataModel>_GoF4YIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=DISCOUNT_PERCENTAGE?</dataModel>
+      <usage>_P6aSE4GVEean7JATlUQCiw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6Yc5IGVEean7JATlUQCiw" fullName="BILL_ID" mandatory="true" objectMask="[OBJECT]" position="3" precision="0" size="32" type="INTEGER">
+      <dataModel>_GoEqQIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=BILL_ID?</dataModel>
+      <usage>_P6a5I4GVEean7JATlUQCiw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6Yc5YGVEean7JATlUQCiw" fullName="REQUIRED_CHANGE" objectMask="[OBJECT]" position="51" size="32" type="VARCHAR">
+      <dataModel>_GoHGgIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=REQUIRED_CHANGE?</dataModel>
+      <usage>_P6a5JoGVEean7JATlUQCiw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6Yc5oGVEean7JATlUQCiw" fullName="ORDER_DATE" objectMask="[OBJECT]" position="6" size="26" type="TIMESTAMP">
+      <dataModel>_GoEqQYC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=ORDER_DATE?</dataModel>
+      <usage>_P6bgMoGVEean7JATlUQCiw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6Yc54GVEean7JATlUQCiw" fullName="ORDER_CONFIRMED" mandatory="true" objectMask="[OBJECT]" position="9" size="1" type="BOOLEAN">
+      <dataModel>_GoFRUIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=ORDER_CONFIRMED?</dataModel>
+      <usage>_P6ZrAYGVEean7JATlUQCiw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6Yc6IGVEean7JATlUQCiw" fullName="CUSTOMER_ID" mandatory="true" objectMask="[OBJECT]" position="36" precision="0" size="32" type="INTEGER">
+      <dataModel>_GoF4Y4C0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=CUSTOMER_ID?</dataModel>
+      <usage>_P6aSEIGVEean7JATlUQCiw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6Yc6YGVEean7JATlUQCiw" fullName="PRODUCT_PACKAGING" objectMask="[OBJECT]" position="30" size="20" type="VARCHAR">
+      <dataModel>_qdFR0IDMEeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=PRODUCT_PACKAGING?</dataModel>
+      <usage>_P6bgNYGVEean7JATlUQCiw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_P6Yc6oGVEean7JATlUQCiw" fullName="PRODUCT_DELIVERY_EMERGENCY_LEVEL" objectMask="[OBJECT]" position="33" size="20" type="VARCHAR">
+      <dataModel>_fe2IloFOEean7JATlUQCiw?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=PRODUCT_DELIVERY_EMERGENCY_LEVEL?</dataModel>
+      <usage>_P6bgNoGVEean7JATlUQCiw</usage>
+    </fieldRef>
+    <constraintRef id="_P6kDEIGVEean7JATlUQCiw" type="pk">
+      <dataModel>_GoHGgoC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=PK_BILLING?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <targetSetRef id="_QGQ_8YGZEean7JATlUQCiw" sourceSet="_QGQ_8IGZEean7JATlUQCiw">
+    <container>_P54t94GVEean7JATlUQCiw</container>
+  </targetSetRef>
+  <sourceSetRef id="_QGQ_8IGZEean7JATlUQCiw" targetSet="_QGQ_8YGZEean7JATlUQCiw">
+    <dataSet>../../ActivityGenerator/Load%20BILLING%20file%20per%20color.map#_GoKJ0IC0EeaWqIy4qrYByg</dataSet>
+  </sourceSetRef>
+  <templateRef description="Integration : flat_file_to_generate" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=FILE;trgPath=server:null/directory:RefFileFolder/file:flat_file_to_generate;trgTech=FILE;trgWorkspaceCapability=false;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=false;srcProduct=HYPERSONIC_SQL;srcPath=server:HSQL_Datamart/schema:ACTV_GEN/datastore:BILLING;srcTech=RDBMS;srcWorkspaceCapability=true;srcMapCapability=true;srcFilterCapability=true;srcJoinCapability=true;NO_LOAD=true;">
+    <dataModel>_HL8MUIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=I_flat_file_to_generate?</dataModel>
+    <targetRef>_E4rJMIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</targetRef>
+  </templateRef>
+  <loadSet id="_P6cHRIGVEean7JATlUQCiw">
+    <container>_GoDcIIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</container>
+  </loadSet>
+  <loadSet id="_P6cHQoGVEean7JATlUQCiw">
+    <container>_E4rJMIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?</container>
+  </loadSet>
+</ref:mapRef>

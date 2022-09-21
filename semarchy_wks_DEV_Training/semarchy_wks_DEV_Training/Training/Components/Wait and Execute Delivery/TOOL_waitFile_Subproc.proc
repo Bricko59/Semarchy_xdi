@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_HSYjQq5VEeWbpPQe63GnHg">
+  <actionCode id="_HSYjQ65VEeWbpPQe63GnHg" generationCondition="" isBeginAction="false" name="#Throw an error#" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <parameter id="_HSYjRK5VEeWbpPQe63GnHg" description="Scripting language (Rhino, Jython, etc.)" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+    <code>throw(&quot;Error in process !&quot;)&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_HSYjRa5VEeWbpPQe63GnHg" isBeginAction="true" name="Begin waitFile_Subproc" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_HSYjRq5VEeWbpPQe63GnHg" generationCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_HSYjR65VEeWbpPQe63GnHg"/>
+  </actionCode>
+  <actionCode id="_HSYjR65VEeWbpPQe63GnHg" isBeginAction="false" name="FileMove In Progress" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileMoveActionCodeI">
+    <link id="_HSYjSK5VEeWbpPQe63GnHg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_HSYjWK5VEeWbpPQe63GnHg?fileId=_HSYjQq5VEeWbpPQe63GnHg$type=proc$name=File+treatment+to+define?"/>
+    <parameter id="_HSYjSa5VEeWbpPQe63GnHg" name="FILE_TO_DIR" type="String" value="${~/p_in_progress_dir}$"/>
+    <parameter id="_HSYjSq5VEeWbpPQe63GnHg" name="FILE_OVERWRITE_MODE" type="String" value="ALWAYS"/>
+    <parameter id="_HSYjS65VEeWbpPQe63GnHg" name="FILE_FROM_DIR" type="String" value="${~/p_to_treat_dir}$"/>
+    <parameter id="_HSYjTK5VEeWbpPQe63GnHg" name="FILE_INCLUDES" type="String" value="${~/p_select_file}$"/>
+  </actionCode>
+  <actionCode id="_HSYjTa5VEeWbpPQe63GnHg" isBeginAction="false" name="FileMove In Treated" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileMoveActionCodeI">
+    <parameter id="_HSYjTq5VEeWbpPQe63GnHg" name="FILE_TO_DIR" type="String" value="${~/p_treated_dir}$"/>
+    <parameter id="_HSYjT65VEeWbpPQe63GnHg" name="FILE_OVERWRITE_MODE" type="String" value="ALWAYS"/>
+    <parameter id="_HSYjUK5VEeWbpPQe63GnHg" name="FILE_INCLUDES" type="String" value="${~/p_select_file}$"/>
+    <parameter id="_HSYjUa5VEeWbpPQe63GnHg" name="FILE_FROM_DIR" type="String" value="${~/p_in_progress_dir}$"/>
+  </actionCode>
+  <actionCode id="_HSYjUq5VEeWbpPQe63GnHg" isBeginAction="false" name="FileMove In to_treat in case of error" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileMoveActionCodeI">
+    <link id="_HSYjU65VEeWbpPQe63GnHg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_HSYjQ65VEeWbpPQe63GnHg"/>
+    <parameter id="_HSYjVK5VEeWbpPQe63GnHg" name="FILE_TO_DIR" type="String" value="${~/p_to_treat_dir}$"/>
+    <parameter id="_HSYjVa5VEeWbpPQe63GnHg" name="FILE_OVERWRITE_MODE" type="String" value="ALWAYS"/>
+    <parameter id="_HSYjVq5VEeWbpPQe63GnHg" name="FILE_FROM_DIR" type="String" value="${~/p_in_progress_dir}$"/>
+    <parameter id="_HSYjV65VEeWbpPQe63GnHg" name="FILE_INCLUDES" type="String" value="${~/p_select_file}$"/>
+  </actionCode>
+  <subProcess id="_HSYjWK5VEeWbpPQe63GnHg" isBeginAction="false" name="File treatment to define" nbCycles="-1" toleratedError="false">
+    <link id="_HSYjWa5VEeWbpPQe63GnHg" executionType="KO" generationType="OK_KO" mandatory="1" targetId="_HSYjUq5VEeWbpPQe63GnHg"/>
+    <link id="_HSYjWq5VEeWbpPQe63GnHg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_HSYjTa5VEeWbpPQe63GnHg"/>
+  </subProcess>
+</proc:process>

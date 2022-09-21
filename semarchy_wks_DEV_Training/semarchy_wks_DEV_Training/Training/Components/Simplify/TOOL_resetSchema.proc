@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_mbXZ0SCBEeWkpdwlbgb5vw" repetitionQuery="">
+  <parameter id="_wfxeACCBEeWkpdwlbgb5vw" name="dropCascade" type="Boolean" value="true"/>
+  <parameter id="_DSJTgPUkEea4Xbg1ZQZXWA" name="genPrimaryKey" type="Boolean" value="true"/>
+  <parameter id="_aASlwPUsEea4Xbg1ZQZXWA" name="createTable" type="Boolean" value="true"/>
+  <actionCode id="_zwpY4CCBEeWkpdwlbgb5vw" isBeginAction="false" name="DROP Schema" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_zv5gECCDEeWkpdwlbgb5vw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_zf4HECCDEeWkpdwlbgb5vw"/>
+    <parameter id="_zwpY4SCBEeWkpdwlbgb5vw" description="Sql Action type (DDL_DML or SELECT, INSERT, UPDATE, DELETE)" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_zwpY4iCBEeWkpdwlbgb5vw" description="SQL Connection" name="SQL_CONNECTION" type="String" value="%targetConnection{$TARGET_SCHEMA}%"/>
+    <code>DROP SCHEMA %x{$TARGET_SCHEMA/tech:physicalName()}x% %e(rhino){ var dropCascade = &quot;%x{md:paramValue($this,'dropCascade')}x%&quot;;if (dropCascade.equals('true')) { __ctx__.retValue = &quot;CASCADE&quot;; } else { __ctx__.retValue = &quot;&quot;;} }e(rhino)%&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_BaWIwCCCEeWkpdwlbgb5vw" isBeginAction="false" name="Begin" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_CVHH4CCCEeWkpdwlbgb5vw" generationCondition="exists($TARGET_SCHEMA) and ($TARGET_SCHEMA/tech:productCode()='HYPERSONIC_SQL')" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_zwpY4CCBEeWkpdwlbgb5vw"/>
+    <link id="_91b8cOMKEeaTKderAuaCSA" generationCondition="exists($TARGET_SCHEMA) and ($TARGET_SCHEMA/tech:productCode()='ORACLE')" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_2YwvgOMKEeaTKderAuaCSA"/>
+    <link id="_3h9EYPfBEeiTMPwLnAVf4g" generationCondition="exists($TARGET_SCHEMA) and ($TARGET_SCHEMA/tech:productCode()='POSTGRESSQL')" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_soXrsPfBEeiTMPwLnAVf4g"/>
+  </actionCode>
+  <actionCode id="_zf4HECCDEeWkpdwlbgb5vw" isBeginAction="false" name="CREATE Schema" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_wwO3gPUjEea4Xbg1ZQZXWA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_vsjM8PUjEea4Xbg1ZQZXWA"/>
+    <parameter id="_zf4HESCDEeWkpdwlbgb5vw" description="Sql Action type (DDL_DML or SELECT, INSERT, UPDATE, DELETE)" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_zf4HEiCDEeWkpdwlbgb5vw" description="SQL Connection" name="SQL_CONNECTION" type="String" value="%targetConnection{$TARGET_SCHEMA}%"/>
+    <code>CREATE SCHEMA %x{$TARGET_SCHEMA/tech:physicalName()}x% &#xD;
+</code>
+  </actionCode>
+  <actionCode id="_2YwvgOMKEeaTKderAuaCSA" isBeginAction="false" name="DROP User in Oracle" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_2YxWkOMKEeaTKderAuaCSA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_4WkgAOMKEeaTKderAuaCSA"/>
+    <parameter id="_2YxWkeMKEeaTKderAuaCSA" description="Sql Action type (DDL_DML or SELECT, INSERT, UPDATE, DELETE)" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_2YxWkuMKEeaTKderAuaCSA" description="SQL Connection" name="SQL_CONNECTION" type="String" value="%targetConnection{$TARGET_SCHEMA}%"/>
+    <code>DROP USER %x{$TARGET_SCHEMA/tech:physicalName()}x% %e(rhino){ var dropCascade = &quot;%x{md:paramValue($this,'dropCascade')}x%&quot;;if (dropCascade.equals('true')) { __ctx__.retValue = &quot;CASCADE&quot;; } else { __ctx__.retValue = &quot;&quot;;} }e(rhino)%&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_4WkgAOMKEeaTKderAuaCSA" isBeginAction="false" name="CREATE User in Oracle" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_IkKBIPfCEeiTMPwLnAVf4g" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_vsjM8PUjEea4Xbg1ZQZXWA"/>
+    <parameter id="_4WkgAeMKEeaTKderAuaCSA" description="Sql Action type (DDL_DML or SELECT, INSERT, UPDATE, DELETE)" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_4WkgAuMKEeaTKderAuaCSA" description="SQL Connection" name="SQL_CONNECTION" type="String" value="%targetConnection{$TARGET_SCHEMA}%"/>
+    <parameter id="_9L7scOMKEeaTKderAuaCSA" name="SQL_MULTI_QUERYS" type="Boolean" value="true"/>
+    <code>CREATE USER %x{$TARGET_SCHEMA/tech:physicalName()}x% IDENTIFIED BY %x{$TARGET_SCHEMA/tech:physicalName()}x% DEFAULT TABLESPACE USERS;&#xD;
+ALTER USER %x{$TARGET_SCHEMA/tech:physicalName()}x% QUOTA UNLIMITED ON USERS;&#xD;
+&#xD;
+GRANT CREATE SESSION TO %x{$TARGET_SCHEMA/tech:physicalName()}x%;&#xD;
+GRANT DBA TO %x{$TARGET_SCHEMA/tech:physicalName()}x% WITH ADMIN OPTION;</code>
+  </actionCode>
+  <actionCode id="_vsjM8PUjEea4Xbg1ZQZXWA" generationCondition="md:paramValue($this, 'createTable') = 'true'" isBeginAction="false" name="CREATE TABLE" nbCycles="-1" repetitionQuery="$TARGET_SCHEMA/datastore" repetitionVariableName="TARGET_TABLE" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <parameter id="_vsjM8fUjEea4Xbg1ZQZXWA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_vsjM8vUjEea4Xbg1ZQZXWA" name="SQL_CONNECTION" type="String" value="%targetConnection{$TARGET_TABLE}%"/>
+    <code>Create table %x{md:physicalPath($TARGET_TABLE/ref:target())}x%&#xD;
+%x{md:patternList($TARGET_TABLE/ref:columns(),' [name] [targetCreationType] [null]',',\n','(\n','')}x%&#xD;
+%x{if(md:paramValue($this, 'genPrimaryKey') = 'true') then concat(',',$TARGET_TABLE/ref:pk()/tech:creationDdl()) else ''}x%)&#xD;
+&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_soPI0PfBEeiTMPwLnAVf4g" isBeginAction="false" name="CREATE User in PostgreSQL" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_CzfqEPfCEeiTMPwLnAVf4g" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_vsjM8PUjEea4Xbg1ZQZXWA"/>
+    <parameter id="_soPI0vfBEeiTMPwLnAVf4g" name="SQL_CONNECTION" type="String" value="%targetConnection{$TARGET_SCHEMA}%"/>
+    <parameter id="_soPI0_fBEeiTMPwLnAVf4g" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <code>CREATE SCHEMA IF NOT EXISTS %x{$TARGET_SCHEMA/tech:schemaName()}x%</code>
+  </actionCode>
+  <actionCode id="_soXrsPfBEeiTMPwLnAVf4g" isBeginAction="false" name="DROP User in PostgreSQL" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_soXrsffBEeiTMPwLnAVf4g" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_soPI0PfBEeiTMPwLnAVf4g"/>
+    <parameter id="_soXrs_fBEeiTMPwLnAVf4g" name="SQL_CONNECTION" type="String" value="%targetConnection{$TARGET_SCHEMA}%"/>
+    <parameter id="_soXrtPfBEeiTMPwLnAVf4g" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <code>DROP SCHEMA IF EXISTS %x{$TARGET_SCHEMA/tech:schemaName()}x% CASCADE</code>
+  </actionCode>
+  <xslVariable id="_hV0PwNMoEeaDteTOAtNgoA" code="if ($this/metaDataLink/mdj:getMetaDataRef(.)[@defType='com.stambia.rdbms.schema'][1]) then $this/metaDataLink/mdj:getMetaDataRef(.)[@defType='com.stambia.rdbms.schema'][1] else $TARGET&#xD;&#xA;" name="TARGET_SCHEMA" order="1" type="xpath"/>
+</proc:process>

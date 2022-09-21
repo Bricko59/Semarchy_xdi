@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_ZNh2gbRxEeWILqLDL1pWkA">
+  <parameter id="_ZNh2grRxEeWILqLDL1pWkA" label="xsd sub directory/xsd_file to control" name="TOOL_xsdPath" type="String" value="xsd/geography.xsd"/>
+  <parameter id="_ZNh2g7RxEeWILqLDL1pWkA" label="File Includes" name="TOOL_fileIncludes" type="String" value="*.xml"/>
+  <parameter id="_SKpoIEg2Eea4nq3yL-QfXA" label="Subject of the mail sent (if mailing list or message drag &amp; drop)" name="TOOL_mailSubject" type="String" value="Error(s) in XML control found"/>
+  <actionCode id="_ZNh2hLRxEeWILqLDL1pWkA" isBeginAction="false" name="Scripting" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <bindLink id="_ZNh2hbRxEeWILqLDL1pWkA" bindType="DirectBind" targetId="_ZNh2h7RxEeWILqLDL1pWkA"/>
+    <parameter id="_ZNh2hrRxEeWILqLDL1pWkA" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+    <code>dir=java.io.File(&quot;%x{replace($SOURCE_FOLDER/tech:path(),'\\','/')}x%/xml_to_treat/&quot;);&#xD;
+files=dir.listFiles();&#xD;
+var count=0;&#xD;
+var error_count = 0;&#xD;
+var valid_count = 0;&#xD;
+st=__ctx__.createBindedPreparedStatement();&#xD;
+st.setColumnName(1,&quot;FILE_NAME&quot;);&#xD;
+factory = javax.xml.validation.SchemaFactory.newInstance(&quot;http://www.w3.org/2001/XMLSchema&quot;) ;&#xD;
+sourceentree = new org.xml.sax.InputSource(new java.io.FileInputStream(&quot;%x{replace($SOURCE_FOLDER/tech:path(),'\\','/')}x%/${../TOOL_xsdPath}$&quot;));&#xD;
+sourceXSD = new javax.xml.transform.sax.SAXSource(sourceentree);&#xD;
+schema = factory.newSchema(sourceXSD);&#xD;
+validator = schema.newValidator() ;&#xD;
+&#xD;
+dbf = javax.xml.parsers.DocumentBuilderFactory.newInstance();&#xD;
+dbf.setValidating(false);&#xD;
+dbf.setSchema(null);&#xD;
+db = dbf.newDocumentBuilder();&#xD;
+&#xD;
+&#xD;
+try {&#xD;
+    var fileName=&quot;xmlControl%x{md:formatDate(&quot;yyyyMMdd&quot;)}x%_%e(jython){import  time; __ctx__.retValue =time.strftime(&quot;%Hh%Mm%S&quot;)}e(jython)%.html&quot;;&#xD;
+    __ctx__.publishVariable(&quot;~/log_file_name&quot;,fileName);&#xD;
+	var myFile   = new java.io.File(&quot;%x{replace($SOURCE_FOLDER/tech:path(),'\\','/')}x%/&quot;+fileName);&#xD;
+	var myWriter = new java.io.FileWriter(myFile);&#xD;
+	myWriter.write(&quot;&lt;h1> XML control list on %x{replace($SOURCE_FOLDER/tech:path(),'\\','/')}x% files &lt;/h1>&lt;br>&quot;); &#xD;
+	myWriter.write(&quot;&lt;h2> Value of the paramater fileInclude = ${../TOOL_fileIncludes}$  &lt;/h2>&lt;br>&lt;br>&quot;); &#xD;
+	myWriter.write('&lt;TABLE BORDER=&quot;1&quot;> &lt;CAPTION> File LIST &lt;/CAPTION> &lt;TR> &lt;TH> FILE NAME &lt;/TH> &lt;TH> CONTROL STATUS &lt;/TH> &lt;/TR> ');&#xD;
+	&#xD;
+	for (i=0;i&lt;files.length;i++)&#xD;
+	{&#xD;
+       &#xD;
+		file=files[i];&#xD;
+		if (!file.isDirectory())&#xD;
+		{&#xD;
+			if (file.getName().endsWith(&quot;.xml&quot;)  )&#xD;
+			{&#xD;
+				try {&#xD;
+                 	doc = db.parse(&quot;%x{replace($SOURCE_FOLDER/tech:path(),'\\','/')}x%/xml_to_treat/&quot;+file.getName());&#xD;
+                 	try {&#xD;
+                 	    validator.validate(new javax.xml.transform.stream.StreamSource(file));&#xD;
+                 	    myWriter.write(&quot;&lt;TR> &lt;TD>&quot;+file.getName()+&quot;&lt;/TD> &lt;TD>Ok&lt;/TD> &lt;/TR>&quot;);&#xD;
+                 	    valid_count = valid_count + 1 ;&#xD;
+                 	    st.setString(1,file.getName());&#xD;
+			     	    st.executeUpdate();                &#xD;
+			     	    } &#xD;
+				    catch (err) {&#xD;
+				                 myWriter.write(&quot;&lt;TR> &lt;TD>&quot;+file.getName()+&quot;&lt;/TD> &lt;TD>Ko on XSD control&lt;/TD> &lt;/TR>&quot;);&#xD;
+				                 error_count = error_count + 1;&#xD;
+                         	     continue;&#xD;
+                                 }&#xD;
+                  	} &#xD;
+				catch (err) {&#xD;
+				             myWriter.write(&quot;&lt;TR> &lt;TD>&quot;+file.getName()+&quot;&lt;/TD> &lt;TD>Ko on XML compliance norm &lt;/TD> &lt;/TR>&quot;);&#xD;
+				             error_count = error_count + 1;&#xD;
+                         	 continue;&#xD;
+                    }&#xD;
+			}&#xD;
+		}&#xD;
+		java.lang.Thread.sleep(3);&#xD;
+	}&#xD;
+}&#xD;
+finally {&#xD;
+        myWriter.write(&quot;&lt;/TABLE> &lt;br> &lt;br> &quot;);&#xD;
+		myWriter.close(); &#xD;
+	    java.lang.Thread.sleep(20);	&#xD;
+	    __ctx__.publishVariable(&quot;~/TOOL_count_xml_error_file&quot;,error_count);	&#xD;
+	    __ctx__.publishVariable(&quot;~/TOOL_count_xml_valid_file&quot;,valid_count);	&#xD;
+}	 </code>
+  </actionCode>
+  <actionCode id="_ZNh2h7RxEeWILqLDL1pWkA" isBeginAction="false" name="FileMove valid xml files" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileMoveActionCodeI">
+    <link id="_ZNh2iLRxEeWILqLDL1pWkA" executionCondition="${~/TOOL_count_xml_error_file}$ > 0" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_ZNh2lrRxEeWILqLDL1pWkA"/>
+    <parameter id="_ZNh2ibRxEeWILqLDL1pWkA" name="FILE_FROM_FILE" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%/xml_to_treat/:{FILE_NAME}:"/>
+    <parameter id="_ZNh2irRxEeWILqLDL1pWkA" name="FILE_TO_DIR" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%/valid_xml"/>
+  </actionCode>
+  <actionCode id="_ZNh2i7RxEeWILqLDL1pWkA" isBeginAction="false" name="MkDir valid_xml" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.MkDirActionCodeI">
+    <link id="_ZNh2jLRxEeWILqLDL1pWkA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_ZNh2k7RxEeWILqLDL1pWkA"/>
+    <parameter id="_ZNh2jbRxEeWILqLDL1pWkA" name="FILE_DIR" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%/valid_xml"/>
+  </actionCode>
+  <actionCode id="_ZNh2jrRxEeWILqLDL1pWkA" isBeginAction="false" name="MkDir xml_to_treat" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.MkDirActionCodeI">
+    <link id="_ZNh2lLRxEeWILqLDL1pWkA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_ZNh2mrRxEeWILqLDL1pWkA"/>
+    <link id="_ZNh2j7RxEeWILqLDL1pWkA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_ZNh2i7RxEeWILqLDL1pWkA"/>
+    <parameter id="_ZNh2kLRxEeWILqLDL1pWkA" name="FILE_DIR" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%/xml_to_treat"/>
+  </actionCode>
+  <actionCode id="_ZNh2kbRxEeWILqLDL1pWkA" isBeginAction="false" name="Start" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_ZNh2krRxEeWILqLDL1pWkA" generationCondition="exists($SOURCE_FOLDER)" executionType="OK" generationType="OK" mandatory="1" targetId="_ZNh2jrRxEeWILqLDL1pWkA"/>
+  </actionCode>
+  <actionCode id="_ZNh2k7RxEeWILqLDL1pWkA" isBeginAction="false" name="MkDir unvalid_xml" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.MkDirActionCodeI">
+    <link id="_S3s8wNDUEeWkgv-Twlf-FA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_ZNh2hLRxEeWILqLDL1pWkA"/>
+    <parameter id="_ZNh2lbRxEeWILqLDL1pWkA" name="FILE_DIR" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%/unvalid_xml"/>
+  </actionCode>
+  <actionCode id="_ZNh2lrRxEeWILqLDL1pWkA" isBeginAction="false" name="FileMove Unvalid xml files" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileMoveActionCodeI">
+    <link id="_2J8tkEghEea4nq3yL-QfXA" generationCondition="exists($MAILING_LIST)" executionCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_xZa90EghEea4nq3yL-QfXA"/>
+    <link id="_9oTVgEghEea4nq3yL-QfXA" generationCondition="exists($TARGET_MESSAGE)" executionCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_z-DdwEghEea4nq3yL-QfXA"/>
+    <parameter id="_ZNh2l7RxEeWILqLDL1pWkA" name="FILE_TO_DIR" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%/unvalid_xml"/>
+    <parameter id="_ZNh2mLRxEeWILqLDL1pWkA" name="FILE_FROM_DIR" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%/xml_to_treat"/>
+    <parameter id="_ZNh2mbRxEeWILqLDL1pWkA" name="FILE_INCLUDES" type="String" value="${../TOOL_fileIncludes}$"/>
+  </actionCode>
+  <actionCode id="_ZNh2mrRxEeWILqLDL1pWkA" isBeginAction="false" name="FileMoveXmlFilesInXml_to_treat" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileMoveActionCodeI">
+    <link id="_kXpbgEgfEea4nq3yL-QfXA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_fGRogEgfEea4nq3yL-QfXA"/>
+    <parameter id="_ZNh2nLRxEeWILqLDL1pWkA" name="FILE_TO_DIR" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%/xml_to_treat"/>
+    <parameter id="_ZNh2nbRxEeWILqLDL1pWkA" name="FILE_FROM_DIR" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%"/>
+    <parameter id="_ZNh2nrRxEeWILqLDL1pWkA" name="FILE_INCLUDES" type="String" value="${../TOOL_fileIncludes}$"/>
+  </actionCode>
+  <actionCode id="_fGRogEgfEea4nq3yL-QfXA" isBeginAction="false" name="countFiles" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <link id="_ZNh2m7RxEeWILqLDL1pWkA" executionCondition="${~/TOOL_count_files}$ > 0" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_ZNh2hLRxEeWILqLDL1pWkA"/>
+    <parameter id="_fGRogkgfEea4nq3yL-QfXA" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+    <code>dir=java.io.File(&quot;%x{replace($SOURCE_FOLDER/tech:path(),'\\','/')}x%/xml_to_treat/&quot;);&#xD;
+files=dir.listFiles();&#xD;
+var count=0;&#xD;
+&#xD;
+	for (i=0;i&lt;files.length;i++)&#xD;
+	{&#xD;
+       &#xD;
+		file=files[i];&#xD;
+		if (!file.isDirectory())&#xD;
+		{&#xD;
+			if (file.getName().endsWith(&quot;.xml&quot;)  )&#xD;
+			{&#xD;
+				count = count + 1;&#xD;
+			}&#xD;
+		}&#xD;
+	}&#xD;
+	__ctx__.publishVariable(&quot;~/TOOL_count_files&quot;,count);&#xD;
+&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_xZa90EghEea4nq3yL-QfXA" generationCondition="" enable="true" isBeginAction="false" name="SendMail with mailing list" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SendMailActionCodeI">
+    <parameter id="_xZa90kghEea4nq3yL-QfXA" description="SMTP Host name" name="MAIL_HOSTNAME" type="String" value="%x{$MAILING_LIST/../outgoingServer[1]/tech:hostName()}x%"/>
+    <parameter id="_xZa900ghEea4nq3yL-QfXA" description="Mail sender" name="MAIL_FROM" type="String" value="${../EMAIL_SENDER}$"/>
+    <parameter id="_xZa91EghEea4nq3yL-QfXA" name="MAIL_TO" type="String" value="%x{$MAILING_LIST/tech:addressList()}x%"/>
+    <parameter id="_xZa91UghEea4nq3yL-QfXA" name="MAIL_SUBJECT" type="String" value="${../TOOL_mailSubject}$"/>
+    <parameter id="_xZa91kghEea4nq3yL-QfXA" name="MAIL_PORT" type="String" value="%x{$MAILING_LIST/../outgoingServer[1]/tech:port()}x%"/>
+    <parameter id="_xZa910ghEea4nq3yL-QfXA" name="MAIL_USER" type="String" value="%x{$MAILING_LIST/../outgoingServer[1]/tech:user()}x%"/>
+    <parameter id="_xZa92EghEea4nq3yL-QfXA" name="MAIL_PASSWORD" type="String" value="%x{$MAILING_LIST/../outgoingServer[1]/tech:password()}x%"/>
+    <parameter id="_xZa92UghEea4nq3yL-QfXA" name="MAIL_SSL_PROTOCOL" type="String" value="%x{$MAILING_LIST/../outgoingServer[1]/tech:sslProtocol()}x%"/>
+    <parameter id="_xZa92kghEea4nq3yL-QfXA" name="MAIL_USE_SSL" type="String" value="%x{$MAILING_LIST/../outgoingServer[1]/tech:useSsl()}x%"/>
+    <parameter id="_xZa920ghEea4nq3yL-QfXA" name="MAIL_HTML_MODE" type="String" value="true"/>
+    <parameter id="_e5Gn0EgiEea4nq3yL-QfXA" name="MAIL_CC" type="String" value=""/>
+    <parameter id="_VKWmYEgpEea4nq3yL-QfXA" name="MAIL_CONTENT_FILE" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%/${~/log_file_name}$"/>
+    <code></code>
+  </actionCode>
+  <actionCode id="_z-DdwEghEea4nq3yL-QfXA" generationCondition="" enable="true" isBeginAction="false" name="SendMail with message" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SendMailActionCodeI">
+    <parameter id="_z-EE0UghEea4nq3yL-QfXA" description="SMTP Host name" name="MAIL_HOSTNAME" type="String" value="%x{$TARGET_MESSAGE/tech:hostName()}x%"/>
+    <parameter id="_z-EE0kghEea4nq3yL-QfXA" description="Mail sender" name="MAIL_FROM" type="String" value="%x{$TARGET_MESSAGE/tech:user()}x%"/>
+    <parameter id="_z-EE00ghEea4nq3yL-QfXA" name="MAIL_TO" type="String" value="%x{$TARGET_MESSAGE/tech:To()}x%"/>
+    <parameter id="_z-EE1EghEea4nq3yL-QfXA" name="MAIL_SUBJECT" type="String" value="${../TOOL_mailSubject}$"/>
+    <parameter id="_z-EE1UghEea4nq3yL-QfXA" name="MAIL_PORT" type="String" value="%x{$TARGET_MESSAGE/tech:port()}x%"/>
+    <parameter id="_z-EE1kghEea4nq3yL-QfXA" name="MAIL_USER" type="String" value="%x{$TARGET_MESSAGE/tech:user()}x%"/>
+    <parameter id="_z-EE10ghEea4nq3yL-QfXA" name="MAIL_PASSWORD" type="String" value="%x{$TARGET_MESSAGE/tech:password()}x%"/>
+    <parameter id="_z-EE2EghEea4nq3yL-QfXA" name="MAIL_SSL_PROTOCOL" type="String" value="%x{$TARGET_MESSAGE/tech:sslProtocol()}x%"/>
+    <parameter id="_z-EE2UghEea4nq3yL-QfXA" name="MAIL_USE_SSL" type="String" value="%x{$TARGET_MESSAGE/tech:useSsl()}x%"/>
+    <parameter id="_z-EE2kghEea4nq3yL-QfXA" name="MAIL_HTML_MODE" type="String" value="false"/>
+    <parameter id="_heqU0EgiEea4nq3yL-QfXA" name="MAIL_CC" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%/${~/log_file_name}$"/>
+    <code></code>
+  </actionCode>
+  <xslVariable id="_ZNh2n7RxEeWILqLDL1pWkA" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='directory'][1]" name="SOURCE_FOLDER" type="xpath"/>
+  <xslVariable id="_vU4vsEggEea4nq3yL-QfXA" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='mailingList'][1]" name="MAILING_LIST" type="xpath"/>
+  <xslVariable id="_vU4vsUggEea4nq3yL-QfXA" description="How to use it ?&#xD;&#xA;----------------&#xD;&#xA;1-Drag &amp; Drop this template at the top (main) level of a process&#xD;&#xA;2-Drag &amp; Drop a RDBMS schema in this template&#xD;&#xA;3-Link the end of the process to this template with a &quot;Unsuccessful Link&quot;&#xD;&#xA;4-Define the properties of the template&#xD;&#xA;&#xD;&#xA;What will be done ?&#xD;&#xA;---------------------&#xD;&#xA;The template will try to CREATE the STB_ERROR_LOG table in the schema &#xD;&#xA;The template will INSERT error properties in the STB_ERROR_LOG table , one record per error&#xD;&#xA;At the end, an error is generated to keep the process in error&#xD;&#xA;&#xD;&#xA;What are your options ?&#xD;&#xA;-------------------------&#xD;&#xA;You can add a process reference/code, different to the process name. It will work even if there is no value&#xD;&#xA;You can choose to drop the STB_ERROR_LOG table at the begin of the template&#xD;&#xA;You can choose to insert also the TOLERATED errors in the table&#xD;&#xA;&#xD;&#xA;mdj:getMetaDataRef($this/metaDataLink[1])" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='message'][1]" name="TARGET_MESSAGE" type="xpath"/>
+</proc:process>

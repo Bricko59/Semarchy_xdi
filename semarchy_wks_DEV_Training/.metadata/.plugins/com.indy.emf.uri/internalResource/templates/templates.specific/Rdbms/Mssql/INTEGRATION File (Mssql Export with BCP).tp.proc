@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:UUID="java.util.UUID" xmlns:common="http://exslt.org/common" xmlns:mdj="java:com.indy.xsl.global.Functions" xmlns:proc="http://www.example.org/proc" xmlns:saxon="http://saxon.sf.net/" id="_Zn-84RS-EemJ-PVUNWIcUA" description="This template is used to export data from MSSQL table into delimited file with BCP utility.&#xD;&#xA;It requires that bcp utility is installed on the machine that executes the mapping.&#xD;&#xA;&#xD;&#xA;History&#xD;&#xA;16/06/2020&#x9;New Parameters 'Unlock Cdc Table' and 'Lock Cdc Table'&#xD;&#xA;16/06/2020   Initialize Template history" isBeginAction="true" nbCycles="-1" toleratedError="false">
+  <parameter id="_Zn-84xS-EemJ-PVUNWIcUA" description="If true, a DISTINCT statement will be added on the query retrieving source data.&#xD;&#xA;This is used to avoid having duplicates in the target table." name="useDistinct" type="Boolean" value="false"/>
+  <parameter id="_Zn-85xS-EemJ-PVUNWIcUA" description="ASCII field separator used to separate the fields in the exported file." name="fieldSeparator" type="String" value=""/>
+  <parameter id="_Zn-86BS-EemJ-PVUNWIcUA" description="Character used to separate rows in the target file (line separator). If not defined the line separator from the metadata File used as target will be used.&#xD;&#xA;Please note that SQL Server automatically prefixes '\n' with '\r' which results in a row terminator '\r\n'.&#xD;&#xA;" name="rowSeparator" type="String" value=""/>
+  <parameter id="_Zn-88RS-EemJ-PVUNWIcUA" description="Used to specify an order by expression to be added to the query retrieving source data.&#xD;&#xA;This can help to order the data in the target file.&#xD;&#xA;&#xD;&#xA;E.g.&#xD;&#xA;T_CUSTOMER.CUS_ID DESC" name="orderByExpression" type="String" value=""/>
+  <parameter id="_Zn-88xS-EemJ-PVUNWIcUA" description="CDC Subscriber to use when CDC has been enabled on a source table." name="cdcSubscriber" type="String"/>
+  <parameter id="_7elHEBTCEemJ-PVUNWIcUA" description="If set to true BCP utility will connect to SQL Server with a trusted connection using integrated security (option -T).&#xD;&#xA;If set to false, BCP will use user and password configured on the target metadata server to connect (options -U and -P)." name="useTrustedConnection" type="Boolean"/>
+  <parameter id="_jgHeoLFiEeqAJL64qj9Gxw" description="When a source table is used as CDC a lock is performed on it. It makes the changed data available in the Mapping.&#xD;&#xA;If set to false, the Lock must have been performed as part of a previous Mapping." name="lockCdcTable" type="Boolean" value="true"/>
+  <parameter id="_jgOMULFiEeqAJL64qj9Gxw" description="When a source table is used as CDC an unlock is performed on it after processing. It marks the changed data as consumed.&#xD;&#xA;If set to false, the Unlock must be performed as part of an upcoming Mapping." name="unlockCdcTable" type="Boolean" value="true"/>
+  <subProcess id="_Zn-89BS-EemJ-PVUNWIcUA" name="INTEGRATION">
+    <parameter id="_Zn-89RS-EemJ-PVUNWIcUA" name="TPL_STEP" type="String" value="Integration.AfterControl"/>
+    <actionCode id="_Zn-9CxS-EemJ-PVUNWIcUA" generationCondition="not(md:paramValue($this, 'lockCdcTable')='false')" isBeginAction="false" name="Lock of CDC table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="mdj:xpath($REF,'FROM_REF')[mdj:xpath(.,'IS_CDC')]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_UyXU8BTCEemJ-PVUNWIcUA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_KAj_QBTCEemJ-PVUNWIcUA"/>
+      <parameter id="_Zn-9DRS-EemJ-PVUNWIcUA" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_Zn-9DhS-EemJ-PVUNWIcUA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_Zn-9DxS-EemJ-PVUNWIcUA" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>update 	%x{md:physicalPath($CDC,'cdcTableName')}x%
+set 	CDC_CONSUMMATION = '1'
+where	(1=1)
+%x{$CDC/tech:cdcFilterPart($this)}x%</code>
+    </actionCode>
+    <actionCode id="_Zn-9EBS-EemJ-PVUNWIcUA" generationCondition="not(md:paramValue($this, 'unlockCdcTable')='false')" isBeginAction="false" name="Unlock of CDC table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="mdj:xpath($REF,'FROM_REF')[mdj:xpath(.,'IS_CDC')]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter id="_Zn-9ERS-EemJ-PVUNWIcUA" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_Zn-9EhS-EemJ-PVUNWIcUA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_Zn-9ExS-EemJ-PVUNWIcUA" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>Delete 	from 	%x{md:physicalPath($CDC,'cdcTableName')}x%
+Where	CDC_CONSUMMATION = '1'
+%x{$CDC/tech:cdcFilterPart($this)}x%</code>
+    </actionCode>
+    <actionCode id="_KAj_QBTCEemJ-PVUNWIcUA" generationCondition="" enable="true" isBeginAction="false" name="BCP Export" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+      <link id="_VT7J4BTCEemJ-PVUNWIcUA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_Zn-9EBS-EemJ-PVUNWIcUA"/>
+      <parameter id="_KAj_QRTCEemJ-PVUNWIcUA" description="Scripting language (Rhino, Jython, etc.)" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+      <code>importPackage(java.lang);&#xD;
+importPackage(java.io);&#xD;
+&#xD;
+dataFilePath = &quot;%x{$REF/ref:target()/tech:filePath()}x%&quot;;&#xD;
+/*Append line separator to the last line&#xD;
+&#xD;
+dataFile = new BufferedWriter(new FileWriter(dataFilePath, true));&#xD;
+dataFile.append(&quot;%x{md:ifEmpty(md:paramValue($this,'recordSeparator'),'\r\n')}x%&quot;);&#xD;
+dataFile.close(); */&#xD;
+&#xD;
+&#xD;
+tempFolder = &quot;${/CORE_JAVA_TEMPORARY_FOLDER}$&quot;;&#xD;
+command = new java.lang.String();&#xD;
+osName=System.getProperty(&quot;os.name&quot;).toLowerCase();&#xD;
+&#xD;
+ii=0;&#xD;
+args=new Array();&#xD;
+&#xD;
+if (osName.startsWith(&quot;win&quot;)) {&#xD;
+  command = command + &quot;cmd.exe /c &quot;;&#xD;
+  args[ii++]=&quot;cmd.exe&quot;;&#xD;
+  args[ii++]=&quot;/c&quot;;&#xD;
+}&#xD;
+command = command + &quot;bcp  \&quot;%x{$query}x%\&quot; QUERYOUT \&quot;&quot; + dataFilePath + &quot;\&quot;&quot;;&#xD;
+command = command + &quot; -c &quot;;&#xD;
+if  ('%x{md:paramValue($this,'useTrustedConnection')}x%') {&#xD;
+	command = command + &quot;-T &quot;;&#xD;
+	}else{	&#xD;
+		command = command + &quot;-U %x{$REF/ref:source()/tech:jdbcUser()}x% &quot;;&#xD;
+	command = command + &quot;-P %x{$REF/ref:source()/tech:jdbcPassword()}x% &quot;; }&#xD;
+command = command + &quot;-S \&quot;%x{replace($REF/ref:source()/tech:serverName(),&quot;\\&quot;,&quot;\\\\&quot;)}x%\&quot; &quot;;&#xD;
+command = command + &quot;-t \&quot;%x{$xslFieldSeparator}x%\&quot; &quot;;&#xD;
+command = command + &quot;-r \&quot;%x{$xslRowSeparator}x%\&quot; &quot;;&#xD;
+%x{md:encloseIfNotEmpty(md:paramValue($this, 'maximumNumberOfErrors'), 'command = command + &quot;-m ', ' &quot;; ')}x%&#xD;
+&#xD;
+command = command.replace(/\n/g, &quot;\\n&quot;);&#xD;
+&#xD;
+&#xD;
+&#xD;
+&#xD;
+args[ii++]=&quot;bcp&quot;;&#xD;
+args[ii++]=&quot;\&quot;%x{$query}x%\&quot;&quot;;&#xD;
+args[ii++]=&quot;QUERYOUT&quot;;&#xD;
+args[ii++]=&quot;dataFilePath&quot;;&#xD;
+args[ii++]=&quot;-c&quot;;&#xD;
+&#xD;
+if  ('%x{md:paramValue($this,'useTrustedConnection')}x%' == 'true') {&#xD;
+	args[ii++]=&quot;-T&quot;;&#xD;
+}else{&#xD;
+	args[ii++]=&quot;-U&quot;;&#xD;
+	args[ii++]=&quot;%x{$REF/ref:source()/tech:jdbcUser()}x%&quot;;&#xD;
+	args[ii++]=&quot;-P&quot;;&#xD;
+	args[ii++]=&quot;%x{$REF/ref:source()/tech:jdbcPassword()}x%&quot;;&#xD;
+}&#xD;
+args[ii++]=&quot;-S&quot;;&#xD;
+args[ii++]=&quot;%x{replace($REF/ref:source()/tech:serverName(),&quot;\\&quot;,&quot;\\\\&quot;)}x%&quot;;&#xD;
+args[ii++]=&quot;-t&quot;;&#xD;
+args[ii++]=&quot;\&quot;%x{$xslFieldSeparator}x%\&quot;&quot;;&#xD;
+args[ii++]=&quot;-r&quot;;&#xD;
+args[ii++]=&quot;\&quot;%x{$xslRowSeparator}x%\&quot;&quot;;&#xD;
+&#xD;
+if  ('%x{md:paramValue($this,'maximumNumberOfErrors')}x%') {&#xD;
+	args[ii++]=&quot;-m&quot;;&#xD;
+	args[ii++]=&quot;%x{md:paramValue($this,'maximumNumberOfErrors')}x%&quot;;&#xD;
+}&#xD;
+&#xD;
+&#xD;
+&#xD;
+__ctx__.publishVariable(&quot;./BCP_COMMAND&quot;,args, true);&#xD;
+__ctx__.publishVariable(&quot;./BCP_COMMAND2&quot;,command, true);&#xD;
+&#xD;
+var psr;&#xD;
+try{&#xD;
+osRuntime = Runtime.getRuntime();&#xD;
+osProc=osRuntime.exec(command, null, new File(tempFolder));&#xD;
+//osProc=osRuntime.exec(args, null, new File(tempFolder));&#xD;
+&#xD;
+_in = new java.lang.StringBuffer();&#xD;
+_err = new java.lang.StringBuffer();&#xD;
+&#xD;
+psr=com.indy.engine.common.tools.ProcessWrapper.wrap(osProc);&#xD;
+psr.setInputStringBuffer(_in,-1);&#xD;
+psr.setErrorStringBuffer(_err,-1);&#xD;
+ret=psr.waitFor();&#xD;
+&#xD;
+if (_err.length()>0){&#xD;
+	__ctx__.publishVariable(&quot;./BCP_ERROR&quot;,_err.toString(), true);&#xD;
+}&#xD;
+&#xD;
+&#xD;
+if (_in.length()>0){&#xD;
+	str_out = _in.toString();&#xD;
+	__ctx__.publishVariable(&quot;./BCP_STDOUT&quot;,str_out, true);&#xD;
+}&#xD;
+&#xD;
+if (ret!= 0) {&#xD;
+	throw &quot;The SQL Server BCP utility raised an error.&quot;;&#xD;
+}&#xD;
+}finally{&#xD;
+	if (psr!=null) {&#xD;
+		psr.destroy();&#xD;
+	}&#xD;
+	if (str_out != null){&#xD;
+		str_exp_label = new java.lang.String(&quot; lignes copi&quot;);&#xD;
+		indexOfStart = str_out.lastIndexOf(&quot;\n&quot;,str_out.indexOf(str_exp_label))+1;&#xD;
+		/*__ctx__.publishVariable(&quot;./IndexStart&quot;,str_out.lastIndexOf(&quot;\n&quot;,str_out.indexOf(str_exp_label))+2, true);*/&#xD;
+		__ctx__.publishVariable(&quot;./SQL_NB_ROWS&quot;,str_out.slice(indexOfStart,str_out.indexOf(&quot; &quot;,indexOfStart)), &quot;Integer&quot;, true);&#xD;
+	}&#xD;
+&#xD;
+}&#xD;
+&#xD;
+</code>
+    </actionCode>
+    <templateType>I-TP.RDBMS.INTEGRATING</templateType>
+    <xslVariable id="_Zn-9FBS-EemJ-PVUNWIcUA" code="%x{&#xD;&#xA;if (md:paramValue($this,'fileFormat')!='')&#xD;&#xA;then &#xD;&#xA;&#x9;if (md:paramValue($this,'fileFormat')='DELIMITED') then 'variable' else 'fixed' &#xD;&#xA;else &#xD;&#xA;&#x9;if($REF/ref:target()/@type='DELIMITED') then 'variable' else 'fixed'}x%" name="xslFileFormat" type="xsl"/>
+    <xslVariable id="_Zn-9FRS-EemJ-PVUNWIcUA" description="" code="%x{&#xD;&#xA;if (md:paramValue($this,'fieldSeparator')!='')&#xD;&#xA;then &#xD;&#xA;&#x9;md:paramValue($this,'fieldSeparator')&#xD;&#xA;else &#xD;&#xA;&#x9;$REF/ref:target()/tech:asciiFieldSeparator()&#xD;&#xA;}x%" name="xslFieldSeparator" type="xsl"/>
+    <xslVariable id="_Zn-9FhS-EemJ-PVUNWIcUA" code="%x{&#xD;&#xA;if (md:paramValue($this,'rowSeparator')!='')&#xD;&#xA;then &#xD;&#xA;&#x9;md:paramValue($this,'rowSeparator')&#xD;&#xA;else &#xD;&#xA;&#x9;$REF/ref:target()/tech:asciiLineSeparator()&#xD;&#xA;}x%" name="xslRowSeparator" type="xsl"/>
+    <xslVariable id="_Zn-9FxS-EemJ-PVUNWIcUA" description="" code="%x{&#xD;&#xA;if (md:paramValue($this,'generateHeader')!='')&#xD;&#xA;then &#xD;&#xA;&#x9;if (md:paramValue($this,'generateHeader') = 'true') then 'true' else 'false'&#xD;&#xA;else &#xD;&#xA;&#x9;if($REF/ref:target()/@header!=0) then 'true' else 'false'&#xD;&#xA;}x%&#xD;&#xA;%message{md:paramValue($this,'generateHeader')}%" name="xslGenerateHeader" type="xsl"/>
+    <xslVariable id="_Zn-9GBS-EemJ-PVUNWIcUA" description="" code="%x{&#xD;&#xA;if (md:paramValue($this,'stringDelimiter')!='')&#xD;&#xA;then &#xD;&#xA;&#x9;md:paramValue($this,'stringDelimiter')&#xD;&#xA;else &#xD;&#xA;&#x9;$REF/ref:target()/@stringDelimiter&#xD;&#xA;}x%" name="xslStringDelimiter" type="xsl"/>
+    <xslVariable id="_Zn-9GRS-EemJ-PVUNWIcUA" description="" code="%x{&#xD;&#xA;if (md:paramValue($this,'rowSepOnLastRow')!='')&#xD;&#xA;then &#xD;&#xA;&#x9;if (md:paramValue($this,'rowSepOnLastRow') = 'true') then 'true' else 'false'&#xD;&#xA;else &#xD;&#xA;&#x9;'false'&#xD;&#xA;}x%&#xD;&#xA;" name="xslRowSepOnLastRow" type="xsl"/>
+    <xslVariable id="_Zn-9GhS-EemJ-PVUNWIcUA" description="" code="%x{&#xD;&#xA;if (md:paramValue($this,'fileEncoding')!='')&#xD;&#xA;then &#xD;&#xA;&#x9;md:paramValue($this,'fileEncoding')&#xD;&#xA;else &#xD;&#xA;&#x9;$REF/ref:target()/@charsetName&#xD;&#xA;}x%" name="xslFileEncoding" type="xsl"/>
+    <xslVariable id="_Zn-9GxS-EemJ-PVUNWIcUA" description="" code="%x{&#xD;&#xA;if (md:paramValue($this,'decimalSeparator')!='')&#xD;&#xA;then &#xD;&#xA;&#x9;md:paramValue($this,'decimalSeparator')&#xD;&#xA;else &#xD;&#xA;&#x9;$REF/ref:target()/tech:asciiDecimalSeparator()&#xD;&#xA;}x%" name="xslDecimalSeparator" type="xsl"/>
+    <xslVariable id="_MKmboBTHEemJ-PVUNWIcUA" code="%xsl{SELECT %x{if (md:paramValue($this,'useDistinct')='true') then 'DISTINCT ' else ''}x% %x{md:patternList($REF/ref:columns()[not(tech:onTrg())],concat(md:ifEmpty(md:paramValue($this,'expression'),'[expression]'),' [columnAliasWord] [name]'), ',')}x% FROM&#x9;%x{$REF/tech:fromPart()}x% WHERE&#x9;(1=1)%xsl{ %x{$REF/tech:joinPart()}x% %x{$REF/tech:filterPart()}x% %x{$REF/ref:from()/tech:cdcFilterPart($this)}x% %x{$REF/tech:groupByPart()}x% %x{$REF/tech:havingPart()}x%}xsl% %x{if (md:paramValue($this,'orderByExpression')!='') then concat('order by ',md:paramValue($this,'orderByExpression')) else ''}x%}xsl%" name="query" order="1" type="xsl"/>
+  </subProcess>
+  <templateType>I-TP.RDBMS</templateType>
+</proc:process>

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:UUID="java.util.UUID" xmlns:common="http://exslt.org/common" xmlns:mdj="java:com.indy.xsl.global.Functions" xmlns:proc="http://www.example.org/proc" xmlns:saxon="http://saxon.sf.net/" id="_pI3i5sxnEeiiHcERelnphQ" description="This template is used to load data from any database into Informix.&#xD;&#xA;&#xD;&#xA;A query is executed on the source database and the resulting data is first fetched by the Runtime before being inserted into the Load table.&#xD;&#xA;As a consequence, the memory settings of the Runtime must be sufficient to store the data of each fetch.&#xD;&#xA;&#xD;&#xA;Refer to the description of each Parameter for more information.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;16/06/2020&#x9;Bug fix: the 'Cdc Subscriber' parameter is ignored when querying the source data&#xD;&#xA;16/06/2020&#x9;New Parameter 'Unlock Cdc Table'&#xD;&#xA;10/10/2018  Initialize template history" isBeginAction="false" nbCycles="-1" toleratedError="false">
+  <parameter id="_pI3i58xnEeiiHcERelnphQ" description="If true, an index is created on the load table for each column having a tag starting with IDX.&#xD;&#xA;This tag must be defined on the columns in the Mapping using the load template.&#xD;&#xA;&#xD;&#xA;For instance:&#xD;&#xA;If the Load template is involving the following columns:&#xD;&#xA;CUS_ID: IDX_01&#xD;&#xA;CUS_FIRST_NAME: IDX_02&#xD;&#xA;CUS_LAST_NAME: IDX_02&#xD;&#xA;CUS_ADDRESS: &lt;Not Tag Specified>&#xD;&#xA;&#xD;&#xA;The following indexes will be created:&#xD;&#xA;IDX_01 on CUS_ID&#xD;&#xA;IDX_02 on CUS_FIRST_NAME and CUS_LAST_NAME" name="createLoadIndexes" type="Boolean" value="false"/>
+  <parameter id="_pI3i6MxnEeiiHcERelnphQ" description="If true, the temporary objects created during the load are removed at the end of the process." name="cleanTemporaryObjects" type="Boolean" value="true"/>
+  <parameter id="_pI3i6cxnEeiiHcERelnphQ" description="If true, a DISTINCT statement will be added on the query inserting data in the load table.&#xD;&#xA;This is used to avoid having duplicates." name="useDistinct" type="Boolean" value="false"/>
+  <parameter id="_pI3i6sxnEeiiHcERelnphQ" description="When a source table is used as CDC a lock is performed on it. It makes the changed data available in the Mapping.&#xD;&#xA;If set to false, the Lock must have been performed as part of a previous Mapping." name="lockCdcTable" type="Boolean" value="true"/>
+  <parameter id="_pI3i68xnEeiiHcERelnphQ" description="If true, the operations on the load tables will be executed through a transaction in NOCOMMIT mode.&#xD;&#xA;If false, the actions will be in AUTOCOMMIT mode." name="useTransactionOnWorkTables" type="Boolean" value="false"/>
+  <parameter id="_pI3i7MxnEeiiHcERelnphQ" description="If true and if one source table is used as CDC the template will wait until a certain amount of data is available in the changed table.&#xD;&#xA;This can be useful to avoid running a Mapping with too few data or empty tables.&#xD;&#xA;&#xD;&#xA;Refer to the description of the following parameters for more information on the settings:&#xD;&#xA;- Cdc Wait Poll Interval&#xD;&#xA;- Cdc Wait Rows Number&#xD;&#xA;- Cdc Wait Timout" name="cdcWaitMode" type="Boolean" value="false"/>
+  <parameter id="_pI3i7cxnEeiiHcERelnphQ" description="Name of the transaction when Transaction Mode is set to true." name="transactionName" type="String" value="T1"/>
+  <parameter id="_pI3i7sxnEeiiHcERelnphQ" description="JDBC Fetch size (number of lines) used when querying the source database.&#xD;&#xA;Larger values provide better performance but consume more memory in the Runtime as the data is stored in the Memory before being sent to the Load table.&#xD;&#xA;When this value is empty, the Fetch Size specified in the Metadata of the source Server is used." name="fetchSize" type="Integer" value=""/>
+  <parameter id="_pI3i78xnEeiiHcERelnphQ" description="JDBC Batch size (number of lines) used when inserting the data into the Load table.&#xD;&#xA;Larger values provide better performance but consume more memory in the Runtime as the data is stored in the Memory before being sent to the Load table.&#xD;&#xA;When this value is empty, the Batch Size specified in the Metadata of the target Server is used." name="batchSize" type="Integer" value=""/>
+  <parameter id="_pI3i8MxnEeiiHcERelnphQ" description="Defines the isolation level used for the transactions operating on the source table.&#xD;&#xA;The database default value is used if not set.&#xD;&#xA;&#xD;&#xA;The available isolation levels are:&#xD;&#xA;- TRANSACTION_NONE&#xD;&#xA;- TRANSACTION_READ_COMMITTED&#xD;&#xA;- TRANSACTION_READ_UNCOMMITTED&#xD;&#xA;- TRANSACTION_REPEATABLE_READ&#xD;&#xA;- TRANSACTION_SERIALIZABLE" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;TRANSACTION_NONE&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;TRANSACTION_READ_COMMITTED&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;TRANSACTION_READ_UNCOMMITTED&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;TRANSACTION_REPEATABLE_READ&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;TRANSACTION_SERIALIZABLE&quot;/>" name="sourceTransactionIsolation" type="String" value=""/>
+  <parameter id="_pI3i8cxnEeiiHcERelnphQ" description="Used to specify options on the load table.&#xD;&#xA;They are added at the end of the create table statement." name="workTableOption" type="String"/>
+  <parameter id="_pI3i8sxnEeiiHcERelnphQ" description="Set this option to 2 or more to enable parallel load of the source.&#xD;&#xA;This option requires that a numeric column on the source has a tag 'SPLIT_BY' defined in its metadata file.&#xD;&#xA;&#xD;&#xA;If both these conditions are met, multiple loads are executed in parallel. Each load selects the source data adding a filter criteria that selects only rows for certain values of the source.&#xD;&#xA;For instance, if the SPLIT_BY column is a month value and Split Parallel degree is set to 4, 4 SELECT statements will be executed in parallel:&#xD;&#xA;- first statement loads months 1, 2 and 3&#xD;&#xA;- second statement loads months 4, 5 and 6&#xD;&#xA;- third statement loads months 7, 8 and 9&#xD;&#xA;- fourth statement loads months 10, 11 and 12&#xD;&#xA;&#xD;&#xA;Performance may be better when the SPLIT_BY column meets the following conditions:&#xD;&#xA;- Data in the source table is well distributed on these values&#xD;&#xA;- The SPLIT_BY column is indexed in the database&#xD;&#xA;&#xD;&#xA;Note: Given that multiple selects are executed in parallel, it is required to ensure that the source data does not change during the execution of the loads." name="splitParallelDegree" type="String" value="0"/>
+  <parameter id="_pI3i88xnEeiiHcERelnphQ" description="Timeout when Cdc Wait Mode is set to true.&#xD;&#xA;If this timeout is reached, the Mapping is executed, even when not enough data has been detected in the Changed Table." name="cdcWaitTimout" type="Integer" value="-1"/>
+  <parameter id="_pI3i9MxnEeiiHcERelnphQ" description="Polling interval used between each check on the Changed Table when Cdc Wait Mode is set to true." name="cdcWaitPollInterval" type="Integer" value="5000"/>
+  <parameter id="_pI3i9cxnEeiiHcERelnphQ" description="Number of rows to wait for when Cdc Wait Mode is set to true." name="cdcWaitRowsNumber" type="Integer" value="1"/>
+  <parameter id="_pI3i9sxnEeiiHcERelnphQ" description="CDC Subscriber to use when CDC has been enabled on a source table." name="cdcSubscriber" type="String"/>
+  <parameter id="_jXZfMLCsEeqAJL64qj9Gxw" description="When a source table is used as CDC an unlock is performed on it after processing. It marks the changed data as consumed.&#xD;&#xA;If set to false, the Unlock must be performed as part of an upcoming Mapping." name="unlockCdcTable" type="Boolean" value="true"/>
+  <subProcess id="_pI3i98xnEeiiHcERelnphQ" generationCondition="" name="load">
+    <link id="_pI3i-MxnEeiiHcERelnphQ" executionType="OK" generationType="OK" mandatory="1" targetId="_pI3jTcxnEeiiHcERelnphQ?fileId=_pI3i5sxnEeiiHcERelnphQ$type=proc$name=Clean?"/>
+    <actionCode id="_pI3i-cxnEeiiHcERelnphQ" generationCondition="" isBeginAction="false" name="Drop of load table" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_pI3i-sxnEeiiHcERelnphQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_pI3i_8xnEeiiHcERelnphQ"/>
+      <parameter id="_pI3i-8xnEeiiHcERelnphQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_pI3i_MxnEeiiHcERelnphQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_pI3i_cxnEeiiHcERelnphQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_pI3i_sxnEeiiHcERelnphQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <parameter id="_CLt8UMxoEeiiHcERelnphQ" name="SQL_MULTI_QUERYS" type="Boolean" value="true"/>
+      <code>DATABASE %x{$REF/ref:target()/ref:schema()/ref:work()/tech:catalogName()}x%;&#xD;
+%x{$REF/ref:target()/tech:dropTableIfExists(md:physicalPath($REF,'workName'))}x%;&#xD;
+DATABASE %x{$REF/ref:target()/ref:schema()/tech:catalogName()}x%;&#xD;
+</code>
+    </actionCode>
+    <actionCode id="_pI3i_8xnEeiiHcERelnphQ" generationCondition="" isBeginAction="false" name="Creation of load table" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_pI3jAMxnEeiiHcERelnphQ" generationCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_pI3jCsxnEeiiHcERelnphQ"/>
+      <parameter id="_pI3jAcxnEeiiHcERelnphQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_pI3jAsxnEeiiHcERelnphQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_pI3jA8xnEeiiHcERelnphQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_pI3jBMxnEeiiHcERelnphQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <parameter id="_F3_ZwMxoEeiiHcERelnphQ" name="SQL_MULTI_QUERYS" type="Boolean" value="true"/>
+      <code>DATABASE %x{$REF/ref:target()/ref:schema()/ref:work()/tech:catalogName()}x%;&#xD;
+create table %x{md:physicalPath($REF,'workName')}x%&#xD;
+(&#xD;
+	%x{md:patternList($REF/ref:columns(),'[workName]\t[targetWritableType] [targetNullWord]',',\n\t')}x%&#xD;
+	%x{if ($REF/tech:hasCdc()) then ', CDC_CHANGE_TYPE CHAR(1)' else ''}x%&#xD;
+)&#xD;
+%x{md:paramValue($this,'workTableOption')}x%;&#xD;
+DATABASE %x{$REF/ref:target()/ref:schema()/tech:catalogName()}x%;</code>
+    </actionCode>
+    <actionCode id="_pI3jBcxnEeiiHcERelnphQ" generationCondition="not(md:paramValue($this, 'lockCdcTable')='false')" isBeginAction="false" name="Lock of CDC table" nbCycles="-1" repetitionMode="Parallelize" repetitionQuery="mdj:xpath($REF,'FROM_REF')[mdj:xpath(.,'IS_CDC')]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_pI3jBsxnEeiiHcERelnphQ" generationCondition="count($REF/ref:sources()/ref:columns()[tech:tag()='SPLIT_BY'])=0 or number(md:ifEmpty(md:paramValue($this,'splitParallelDegree'),'1')) &lt;= 1" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_pI3jPMxnEeiiHcERelnphQ?fileId=_pI3i5sxnEeiiHcERelnphQ$type=proc$name=For%20simple%20table?"/>
+      <link id="_pI3jB8xnEeiiHcERelnphQ" generationCondition="count($REF/ref:sources()/ref:columns()[tech:tag()='SPLIT_BY'])>0 and number(md:ifEmpty(md:paramValue($this,'splitParallelDegree'),'1')) > 1" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_pI3jGcxnEeiiHcERelnphQ?fileId=_pI3i5sxnEeiiHcERelnphQ$type=proc$name=For%20split%20table?"/>
+      <parameter id="_pI3jCMxnEeiiHcERelnphQ" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_pI3jCcxnEeiiHcERelnphQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <code>update 	%x{$CDC/ref:target()/tech:cdcTablePath()}x%&#xD;
+set 	CDC_CONSUMMATION = '1'&#xD;
+where	(1=1)&#xD;
+%x{$CDC/tech:cdcFilterPart($this)}x%</code>
+    </actionCode>
+    <actionCode id="_pI3jCsxnEeiiHcERelnphQ" generationCondition="'${cdcWaitMode}$'='true'" isBeginAction="false" name="Select Count(*) on CDC" nbCycles="-1" repetitionMode="Parallelize" repetitionQuery="mdj:xpath($REF,'FROM_REF')[mdj:xpath(.,'IS_CDC')]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_pI3jC8xnEeiiHcERelnphQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_pI3jBcxnEeiiHcERelnphQ"/>
+      <parameter id="_pI3jDMxnEeiiHcERelnphQ" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_pI3jDcxnEeiiHcERelnphQ" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+      <parameter id="_pI3jDsxnEeiiHcERelnphQ" name="SQL_WAIT_DATA" ref="LOAD%20Rdbms%20to%20Rdbms.tp.proc#_pI3i7MxnEeiiHcERelnphQ" type="Boolean"/>
+      <parameter id="_pI3jD8xnEeiiHcERelnphQ" name="SQL_WAIT_POLL_INTERVAL" ref="LOAD%20Rdbms%20to%20Rdbms.tp.proc#_pI3i9MxnEeiiHcERelnphQ" type="Integer"/>
+      <parameter id="_pI3jEMxnEeiiHcERelnphQ" name="SQL_WAIT_TIMEOUT" ref="LOAD%20Rdbms%20to%20Rdbms.tp.proc#_pI3i88xnEeiiHcERelnphQ" type="Integer"/>
+      <parameter id="_pI3jEcxnEeiiHcERelnphQ" name="SQL_WAIT_NB_ROWS" ref="LOAD%20Rdbms%20to%20Rdbms.tp.proc#_pI3i9cxnEeiiHcERelnphQ" type="Integer"/>
+      <parameter id="_pI3jEsxnEeiiHcERelnphQ" name="SQL_WAIT_COUNT_SELECT" type="String" value="Select count(*) from %x{$REF/ref:source()/tech:cdcTablePath()}x% &#xD;&#xA;where (1=1) %x{$CDC/tech:cdcFilterPart($this)}x%"/>
+      <parameter id="_pI3jE8xnEeiiHcERelnphQ" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code></code>
+    </actionCode>
+    <actionCode id="_pI3jFMxnEeiiHcERelnphQ" generationCondition="'${createLoadIndexes}$'='true'" isBeginAction="false" name="Creation of load table indexes" nbCycles="-1" repetitionQuery="$indexNames/index" repetitionVariableName="IDX" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter id="_pI3jFcxnEeiiHcERelnphQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_pI3jFsxnEeiiHcERelnphQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_pI3jF8xnEeiiHcERelnphQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_pI3jGMxnEeiiHcERelnphQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <parameter id="_WRjpMMxoEeiiHcERelnphQ" name="SQL_MULTI_QUERYS" type="Boolean" value="true"/>
+      <code>DATABASE %x{$REF/ref:target()/ref:schema()/ref:work()/tech:catalogName()}x%;&#xD;
+create index %x{$IDX/@name}x%_%x{$REF/tech:workName()}x% on %x{md:physicalPath($REF,'workName')}x%&#xD;
+(&#xD;
+	%x{md:patternList($REF/ref:columns()[tech:tag()=$IDX/@name],'[workName]',',\n\t')}x%&#xD;
+);&#xD;
+DATABASE %x{$REF/ref:target()/ref:schema()/tech:catalogName()}x%;&#xD;
+&#xD;
+</code>
+    </actionCode>
+    <subProcess id="_pI3jGcxnEeiiHcERelnphQ" generationCondition="" enable="true" isBeginAction="false" name="For split table" nbCycles="-1" toleratedError="false">
+      <link id="_pI3jGsxnEeiiHcERelnphQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_pI3jFMxnEeiiHcERelnphQ"/>
+      <actionCode id="_pI3jG8xnEeiiHcERelnphQ" isBeginAction="false" name="Format MIN_VALUE" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+        <link id="_pI3jHMxnEeiiHcERelnphQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_pI3jK8xnEeiiHcERelnphQ?fileId=_pI3i5sxnEeiiHcERelnphQ$type=proc$name=Load%20Data?"/>
+        <parameter id="_pI3jHcxnEeiiHcERelnphQ" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+        <parameter id="_pI3jHsxnEeiiHcERelnphQ" name="SCRIPTING_CONNECTION" type="String" value="${CORE_ACTION_ID}$"/>
+        <code>var minValue = new java.lang.String(__ctx__.getVariableValue(&quot;../MIN_VALUE&quot;));&#xD;
+if(!minValue.contains(&quot;.&quot;)) {&#xD;
+	__ctx__.publishVariable(&quot;../MIN_VALUE&quot;,minValue+&quot;.0&quot;);&#xD;
+}&#xD;
+</code>
+      </actionCode>
+      <actionCode id="_pI3jH8xnEeiiHcERelnphQ" isBeginAction="false" name="getMin" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+        <link id="_pI3jIMxnEeiiHcERelnphQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_pI3jG8xnEeiiHcERelnphQ"/>
+        <parameter id="_pI3jIcxnEeiiHcERelnphQ" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+        <parameter id="_pI3jIsxnEeiiHcERelnphQ" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+        <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;../MIN_VALUE&quot; type=&quot;String&quot; failsIfNoRecord=&quot;false&quot; defaultValue=&quot;0&quot;>&#xD;
+select	&#xD;
+min(%x{$splitSource/tech:alias()}x%.%x{$splitColumn/tech:name()}x%)&#xD;
+from	%x{$splitSource/tech:from()}x%&#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters></code>
+      </actionCode>
+      <actionCode id="_pI3jI8xnEeiiHcERelnphQ" isBeginAction="false" name="Format MAX_VALUE" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+        <link id="_pI3jJMxnEeiiHcERelnphQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_pI3jK8xnEeiiHcERelnphQ?fileId=_pI3i5sxnEeiiHcERelnphQ$type=proc$name=Load%20Data?"/>
+        <parameter id="_pI3jJcxnEeiiHcERelnphQ" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+        <parameter id="_pI3jJsxnEeiiHcERelnphQ" name="SCRIPTING_CONNECTION" type="String" value="${CORE_ACTION_ID}$"/>
+        <code>var maxValue = new java.lang.String(__ctx__.getVariableValue(&quot;../MAX_VALUE&quot;));&#xD;
+if(!maxValue.contains(&quot;.&quot;)) {&#xD;
+	__ctx__.publishVariable(&quot;../MAX_VALUE&quot;,maxValue+&quot;.0&quot;);&#xD;
+}&#xD;
+</code>
+      </actionCode>
+      <actionCode id="_pI3jJ8xnEeiiHcERelnphQ" isBeginAction="false" name="getMax" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+        <link id="_pI3jKMxnEeiiHcERelnphQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_pI3jI8xnEeiiHcERelnphQ"/>
+        <parameter id="_pI3jKcxnEeiiHcERelnphQ" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+        <parameter id="_pI3jKsxnEeiiHcERelnphQ" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+        <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;../MAX_VALUE&quot; type=&quot;String&quot; failsIfNoRecord=&quot;false&quot; defaultValue=&quot;0&quot;>&#xD;
+select	&#xD;
+max(%x{$splitSource/tech:alias()}x%.%x{$splitColumn/tech:name()}x%)&#xD;
+from	%x{$splitSource/tech:from()}x%&#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters></code>
+      </actionCode>
+      <subProcess id="_pI3jK8xnEeiiHcERelnphQ" isBeginAction="false" name="Load Data" nbCycles="-1" repetitionMode="Parallelize" repetitionQuery="$split/split" repetitionVariableName="CUR_SPLIT" toleratedError="false">
+        <actionCode id="_pI3jLMxnEeiiHcERelnphQ" generationCondition="" enable="true" isBeginAction="false" name="Load data (TRG)" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+          <link id="_pI3jLcxnEeiiHcERelnphQ" executionType="OK" generationType="OK" mandatory="1"/>
+          <parameter id="_pI3jLsxnEeiiHcERelnphQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+          <parameter id="_pI3jL8xnEeiiHcERelnphQ" name="SQL_ACTION_TYPE" type="String" value="INSERT"/>
+          <parameter id="_pI3jMMxnEeiiHcERelnphQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+          <parameter id="_pI3jMcxnEeiiHcERelnphQ" name="SQL_BATCH_SIZE" type="String" value="%x{md:paramValue($this,'batchSize')}x%"/>
+          <parameter id="_pI3jMsxnEeiiHcERelnphQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+          <code>insert into %x{md:physicalPath($REF,'workName')}x%&#xD;
+(%x{md:patternList($REF/ref:columns(),'[workName]', ', ')}x%%x{if ($REF/tech:hasCdc()) then ', CDC_CHANGE_TYPE' else '' }x%)&#xD;
+values&#xD;
+(%x{md:patternList($REF/ref:columns(),':{{[workName]}}:', ', ')}x%%x{if ($REF/tech:hasCdc()) then ', :{CDC_CHANGE_TYPE}:' else '' }x%)</code>
+        </actionCode>
+        <actionCode id="_pI3jM8xnEeiiHcERelnphQ" generationCondition="" enable="true" isBeginAction="false" name="Load data (SRC)" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+          <bindLink id="_pI3jNMxnEeiiHcERelnphQ" bindType="DirectBind" executionType="OK" targetId="_pI3jLMxnEeiiHcERelnphQ"/>
+          <parameter id="_pI3jNcxnEeiiHcERelnphQ" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+          <parameter id="_pI3jNsxnEeiiHcERelnphQ" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+          <parameter id="_pI3jN8xnEeiiHcERelnphQ" name="SQL_FETCH_SIZE" type="String" value="%x{md:paramValue($this,'fetchSize')}x%"/>
+          <parameter id="_pI3jOMxnEeiiHcERelnphQ" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+          <code>select		%x{if (md:paramValue($this,'useDistinct')='true') then 'DISTINCT' else ''}x%&#xD;
+			%x{md:patternList($REF/ref:columns(),'[expression] [columnAliasWord] [workName]', ',\n\t\t\t')}x%&#xD;
+			%x{if ($REF/tech:hasCdc()) then ', CDC_CHANGE_TYPE' else '' }x%&#xD;
+from	%x{$REF/tech:fromPart()}x%&#xD;
+where	(1=1)&#xD;
+and (&#xD;
+%x{if($CUR_SPLIT/@name='1') then '1=1' else concat($splitSource/tech:workName(),'.',$splitColumn/tech:name(),' &amp;gt;  (${../../MIN_VALUE}$) + ((${../../MAX_VALUE}$)-(${../../MIN_VALUE}$))/',md:paramValue($this,'splitParallelDegree'),'*(',$CUR_SPLIT/@name,'-1)')}x% &#xD;
+%x{if($CUR_SPLIT/@name=md:paramValue($this,'splitParallelDegree')) then concat('or ',$splitSource/tech:workName(),'.',$splitColumn/tech:name(),' is null') else concat('and ',$splitSource/tech:workName(),'.',$splitColumn/tech:name(),' &amp;lt;= (${../../MIN_VALUE}$) + ((${../../MAX_VALUE}$)-(${../../MIN_VALUE}$))/',md:paramValue($this,'splitParallelDegree'),'*(',$CUR_SPLIT/@name,'  )')}x%&#xD;
+)&#xD;
+%x{$REF/tech:joinPart()}x%&#xD;
+%x{$REF/tech:filterPart()}x%&#xD;
+%x{$REF/tech:cdcFilterPart2($this)}x%&#xD;
+%x{$REF/tech:groupByPart()}x%&#xD;
+%x{$REF/tech:havingPart()}x%</code>
+        </actionCode>
+      </subProcess>
+      <xslVariable id="_pI3jOcxnEeiiHcERelnphQ" code="%xsl{&#xD;&#xA;&lt;xsl:for-each select=&quot;1 to md:ifEmpty(md:paramValue($this,'splitParallelDegree'),'4')&quot;>&#xD;&#xA;&lt;split name=&quot;{.}&quot;/>&#xD;&#xA;&lt;/xsl:for-each>&#xD;&#xA;}xsl%" name="split" type="xsl"/>
+      <xslVariable id="_pI3jOsxnEeiiHcERelnphQ" code="($REF/ref:sources()/ref:columns()[tech:tag()='SPLIT_BY'])[1]" name="splitColumn" type="xpath"/>
+      <xslVariable id="_pI3jO8xnEeiiHcERelnphQ" code="$REF/source[ref:target()/ref:columns()/@id=$splitColumn/@id]" name="splitSource" order="1" type="xpath"/>
+    </subProcess>
+    <subProcess id="_pI3jPMxnEeiiHcERelnphQ" generationCondition="" isBeginAction="false" name="For simple table" nbCycles="-1" toleratedError="false">
+      <link id="_pI3jPcxnEeiiHcERelnphQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_pI3jFMxnEeiiHcERelnphQ"/>
+      <actionCode id="_pI3jPsxnEeiiHcERelnphQ" generationCondition="" isBeginAction="false" name="Select on source table (SRC)" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+        <bindLink id="_pI3jP8xnEeiiHcERelnphQ" bindType="DirectBind" executionType="OK" targetId="_pI3jRMxnEeiiHcERelnphQ"/>
+        <parameter id="_pI3jQMxnEeiiHcERelnphQ" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+        <parameter id="_pI3jQcxnEeiiHcERelnphQ" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+        <parameter id="_pI3jQsxnEeiiHcERelnphQ" name="SQL_FETCH_SIZE" ref="LOAD%20Rdbms%20to%20Rdbms.tp.proc#_pI3i7sxnEeiiHcERelnphQ" type="String" value="1000"/>
+        <parameter id="_pI3jQ8xnEeiiHcERelnphQ" name="SQL_TRANSACTION_ISOLATION" type="String" value="%x{md:paramValue($this,'sourceTransactionIsolation')}x%"/>
+        <code>%x{if($REF/ref:source()/tech:mappingSelectQuerySupport()) &#xD;
+then  $REF/ref:source()/tech:mappingSelectQuery($REF) &#xD;
+else $select }x%</code>
+      </actionCode>
+      <actionCode id="_pI3jRMxnEeiiHcERelnphQ" generationCondition="" isBeginAction="false" name="Load of data (TRG)" nbCycles="-1" repetitionQuery="" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+        <link id="_pI3jRcxnEeiiHcERelnphQ" executionType="OK" generationType="OK" mandatory="1"/>
+        <parameter id="_pI3jRsxnEeiiHcERelnphQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+        <parameter id="_pI3jR8xnEeiiHcERelnphQ" name="SQL_ACTION_TYPE" type="String" value="INSERT"/>
+        <parameter id="_pI3jSMxnEeiiHcERelnphQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+        <parameter id="_pI3jScxnEeiiHcERelnphQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+        <parameter id="_pI3jSsxnEeiiHcERelnphQ" name="SQL_BATCH_SIZE" ref="LOAD%20Rdbms%20to%20Rdbms.tp.proc#_pI3i78xnEeiiHcERelnphQ" type="String" value="1000"/>
+        <code>insert into %x{md:physicalPath($REF,'workName')}x%&#xD;
+(%x{md:patternList($REF/ref:columns(),'[workName]', ', ')}x%%x{if ($REF/tech:hasCdc()) then ', CDC_CHANGE_TYPE' else '' }x%)&#xD;
+values&#xD;
+(%x{md:patternList($REF/ref:columns(),':{{[workName]}}:', ', ')}x%%x{if ($REF/tech:hasCdc()) then ', :{CDC_CHANGE_TYPE}:' else '' }x%)</code>
+      </actionCode>
+      <xslVariable id="_pI3jS8xnEeiiHcERelnphQ" code="select&#x9;&#x9;%x{if (md:paramValue($this,'useDistinct')='true') then 'DISTINCT' else ''}x%&#xD;&#xA;&#x9;&#x9;&#x9;%x{md:patternList($REF/ref:columns(),'[expression] [columnAliasWord] [workName]', ',\n\t\t\t')}x%&#xD;&#xA;&#x9;&#x9;&#x9;%x{if ($REF/tech:hasCdc()) then ', CDC_CHANGE_TYPE ' else '' }x%&#xD;&#xA;from&#x9;%x{$REF/tech:fromPart()}x%&#xD;&#xA;where&#x9;(1=1)%xsl{&#xD;&#xA;%x{$REF/tech:joinPart()}x%&#xD;&#xA;%x{$REF/tech:filterPart()}x%&#xD;&#xA;%x{$REF/tech:cdcFilterPart2($this)}x%&#xD;&#xA;%x{$REF/tech:groupByPart()}x%&#xD;&#xA;%x{$REF/tech:havingPart()}x%}xsl%" name="select" type="xsl"/>
+    </subProcess>
+    <templateType>L-TP.RDBMS.LOADING</templateType>
+    <xslVariable id="_pI3jTMxnEeiiHcERelnphQ" code="%xsl{&lt;xsl:for-each &#xD;&#xA;select=&quot;distinct-values($REF/ref:columns()/tech:tag()[starts-with(.,'IDX')])&quot;>&#xD;&#xA;&lt;index name=&quot;{.}&quot;/>&#xD;&#xA;&lt;/xsl:for-each>}%" name="indexNames" type="xsl"/>
+  </subProcess>
+  <subProcess id="_pI3jTcxnEeiiHcERelnphQ" generationCondition="" name="Clean">
+    <actionCode id="_pI3jTsxnEeiiHcERelnphQ" generationCondition="not(md:paramValue($this, 'unlockCdcTable')='false')" isBeginAction="false" name="Unlock of CDC table" nbCycles="-1" repetitionMode="Parallelize" repetitionQuery="mdj:xpath($REF,'FROM_REF')[mdj:xpath(.,'IS_CDC')]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_pI3jT8xnEeiiHcERelnphQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_pI3jU8xnEeiiHcERelnphQ"/>
+      <parameter id="_pI3jUMxnEeiiHcERelnphQ" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_pI3jUcxnEeiiHcERelnphQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_pI3jUsxnEeiiHcERelnphQ" name="SQL_MULTI_QUERYS" type="String" value="true"/>
+      <code>%x{$CDC/ref:target()/tech:cdcDeleteDml()}x%&#xD;
+Where	CDC_CONSUMMATION = '1'&#xD;
+%x{$CDC/tech:cdcFilterPart($this)}x%</code>
+    </actionCode>
+    <actionCode id="_pI3jU8xnEeiiHcERelnphQ" generationCondition="'${cleanTemporaryObjects}$'='true'" isBeginAction="false" name="Drop of load table" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_pI3jVMxnEeiiHcERelnphQ" executionType="OK" generationType="OK_KO" mandatory="1"/>
+      <parameter id="_pI3jVcxnEeiiHcERelnphQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_pI3jVsxnEeiiHcERelnphQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_pI3jV8xnEeiiHcERelnphQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_pI3jWMxnEeiiHcERelnphQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <parameter id="_X8qgIMxoEeiiHcERelnphQ" name="SQL_MULTI_QUERYS" type="Boolean" value="true"/>
+      <code>DATABASE %x{$REF/ref:target()/ref:schema()/ref:work()/tech:catalogName()}x%;&#xD;
+drop table %x{md:physicalPath($REF,'workName')}x%;&#xD;
+DATABASE %x{$REF/ref:target()/ref:schema()/tech:catalogName()}x%;</code>
+    </actionCode>
+    <templateType>L-TP.RDBMS.CLEANING</templateType>
+  </subProcess>
+  <templateType>L-TP.RDBMS</templateType>
+</proc:process>

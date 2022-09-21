@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="7938da9c-4c5a-4f0b-aba6-b923e490e77a">
+  <actionCode id="a7342662-01e9-40d2-8cec-a52ee399fab2" isBeginAction="false" name="Start" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="143b0eae-f1b7-4dce-9aa2-a2ffb5e7660a" generationCondition="exists($TARGET_SCHEMA)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="0d9740cb-74a6-49d3-86a6-d9cfdbea145e"/>
+  </actionCode>
+  <actionCode id="0d9740cb-74a6-49d3-86a6-d9cfdbea145e" isBeginAction="false" name="ExistsSchema" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="518c777c-4980-4b54-b1f9-9322cf8c64e8" executionType="OK" generationType="OK_KO" mandatory="1" targetId="ce09d2de-3f5f-4452-9c86-dc79d7f66069"/>
+  </actionCode>
+  <actionCode id="ce09d2de-3f5f-4452-9c86-dc79d7f66069" isBeginAction="false" name="SELECT process logged " nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <bindLink id="17c05613-e9bf-422b-88bf-01a72fc11e61" bindType="DirectBind" targetId="1365ebde-2e33-4069-9e91-bc52df1da376"/>
+    <bindLink id="57d0a402-80b5-4e8c-8027-ab5651870257" bindType="DirectBind" targetId="6e1a0862-2373-4049-a796-d64ba1e7b29d"/>
+    <bindLink id="8ef371a0-c3b1-4d9e-a602-33c749eaf5bf" bindType="DirectBind" targetId="a5d0bc30-9769-4919-8e70-59d97ea0e928"/>
+    <bindLink id="38deef2f-207a-4ee7-bdef-17deb2e66828" bindType="DirectBind" targetId="2d609d9f-5798-48d8-8172-2ed627dedc06"/>
+    <parameter id="694e18a5-1ae0-4663-b89c-375a466e14e4" name="SQL_CONNECTION" type="String" value="%targetConnection{$TARGET_SCHEMA}%"/>
+    <parameter id="1c6a0d71-a4a5-4ca8-a687-6f993b6e8408" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+    <code>SELECT pl.session_id,pl.process_name,pl.session_begin,pl.session_end,pl.session_durat,&#xD;
+       CASE WHEN pl.process_statu='E' THEN 'Ended normally' ELSE 'Ended in error' END process_statu,pl.process_ins,pl.process_upd,pl.process_del,pl.process_rej,mlp.mailing_list &#xD;
+FROM       %x{md:objectPath($TARGET_SCHEMA/ref:schema(), 'PROCESS_LOG')}x% pl &#xD;
+INNER JOIN %x{md:objectPath($TARGET_SCHEMA/ref:schema(), 'MAILING_LIST_PROCESS')}x% mlp &#xD;
+        ON pl.process_name=mlp.process_name&#xD;
+WHERE pl.process_statu IN ('E','X') AND pl.mail_sent IS NULL&#xD;
+AND   (    mlp.last_scan IS NULL&#xD;
+       OR (    mlp.last_scan IS NOT NULL &#xD;
+           AND ABS(CASE WHEN mlp.SCAN_PERIOD='minute' THEN DATEDIFF('minute',session_end,last_scan)&#xD;
+                        WHEN mlp.SCAN_PERIOD='hour' THEN DATEDIFF('hour',session_end,last_scan)&#xD;
+                        WHEN mlp.SCAN_PERIOD='day' THEN DATEDIFF('day',session_end,last_scan)&#xD;
+                        WHEN mlp.SCAN_PERIOD='month' THEN DATEDIFF('month',session_end,last_scan)&#xD;
+                        WHEN mlp.SCAN_PERIOD='year' THEN DATEDIFF('year',session_end,last_scan)&#xD;
+                        END) >1))</code>
+  </actionCode>
+  <actionCode id="1365ebde-2e33-4069-9e91-bc52df1da376" generationCondition="exists($TARGET_MESSAGE)" enable="true" isBeginAction="false" name="SendMail with message" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SendMailActionCodeI">
+    <link id="d6176bb8-823f-47c1-a423-7b09f77e16e5" executionType="OK" generationType="OK_KO" mandatory="1" targetId="6e1a0862-2373-4049-a796-d64ba1e7b29d"/>
+    <parameter description="SMTP Host name" id="da987d68-88e8-4518-9f4f-f5bcf23eac40" name="MAIL_HOSTNAME" type="String" value="%x{$TARGET_MESSAGE/tech:hostName()}x%"/>
+    <parameter description="Mail sender" id="d6818c6a-f798-49a4-8422-c3cce2d0c4db" name="MAIL_FROM" type="String" value="%x{$TARGET_MESSAGE/tech:user()}x%"/>
+    <parameter id="015221ec-e9f4-4496-9c27-cc9703bfc6a9" name="MAIL_TO" type="String" value=":{mailing_list}:"/>
+    <parameter id="6e4b4ee8-cf3a-4fd4-ac99-42c4f9e4e1c3" name="MAIL_SUBJECT" type="String" value="Process :{process_name}: Session :{session_id}: :{process_statu}:"/>
+    <parameter id="299a46d4-4695-4bd6-90bc-7ed988ef521b" name="MAIL_PORT" type="String" value="%x{$TARGET_MESSAGE/tech:port()}x%"/>
+    <parameter id="79a136f2-2943-4ca3-ad69-037b9ca1bfb3" name="MAIL_USER" type="String" value="%x{$TARGET_MESSAGE/tech:user()}x%"/>
+    <parameter id="a1c989e3-d792-4d9d-851c-0e1cef8c4b75" name="MAIL_PASSWORD" type="String" value="%x{$TARGET_MESSAGE/tech:password()}x%"/>
+    <parameter id="5f59ad80-c394-4bf7-a0a2-c3586b0ee22d" name="MAIL_SSL_PROTOCOL" type="String" value="%x{$TARGET_MESSAGE/tech:sslProtocol()}x%"/>
+    <parameter id="50bdad87-2d67-455f-af67-e7c9cc4607d0" name="MAIL_USE_SSL" type="String" value="%x{$TARGET_MESSAGE/tech:useSsl()}x%"/>
+    <parameter id="f8e96c82-fa50-47c9-acc9-1d9be241c3c1" name="MAIL_HTML_MODE" type="String" value="true"/>
+    <parameter id="a5fb3355-7463-448b-a41e-c81226ea3589" name="MAIL_CONTENT_FILE" type="String" value="${/CORE_TEMPORARY_FOLDER}$/:{process_name}:.html"/>
+    <code>Process : :{process_name}:&#xD;
+Session : :{session_id}:&#xD;
+Start   : :{session_begin}:&#xD;
+End     : :{session_end}:&#xD;
+Duration : :{session_durat}:&#xD;
+Status   : :{process_statu}:&#xD;
+Stat ins : :{process_ins}:&#xD;
+Stat upd : :{process_upd}:&#xD;
+Stat del : :{process_del}:&#xD;
+Stat rej : :{process_rej}:&#xD;
+</code>
+  </actionCode>
+  <actionCode id="6e1a0862-2373-4049-a796-d64ba1e7b29d" isBeginAction="false" name="Update Process_log" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="ba5118c8-0875-4200-92d2-3b9d20edb842" executionType="OK" generationType="OK_KO" mandatory="1" targetId="a5d0bc30-9769-4919-8e70-59d97ea0e928"/>
+    <parameter id="3e23dd4c-10eb-436c-a9ea-d133a6640b73" name="SQL_CONNECTION" type="String" value="%targetConnection{$TARGET_SCHEMA}%"/>
+    <parameter id="aaff755a-d18c-43a8-8f95-b73b1ca03cb6" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <code>UPDATE %x{md:objectPath($TARGET_SCHEMA/ref:schema(), 'PROCESS_LOG')}x%&#xD;
+SET    mail_sent='t'&#xD;
+WHERE session_id=':{session_id}:'</code>
+  </actionCode>
+  <actionCode id="a5d0bc30-9769-4919-8e70-59d97ea0e928" isBeginAction="false" name="Update mailing_list_process" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <parameter id="79814520-fbcf-4cb9-9701-9d691f922983" name="SQL_CONNECTION" type="String" value="%targetConnection{$TARGET_SCHEMA}%"/>
+    <parameter id="ab171fb9-e824-4907-9ca2-3ff51283421d" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <code>UPDATE %x{md:objectPath($TARGET_SCHEMA/ref:schema(), 'MAILING_LIST_PROCESS')}x%&#xD;
+SET    last_scan=current_timestamp&#xD;
+WHERE process_name=':{process_name}:'</code>
+  </actionCode>
+  <actionCode id="2d609d9f-5798-48d8-8172-2ed627dedc06" isBeginAction="false" name="WriteTxtFile" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+    <link id="629e6d2d-062b-4535-b8f4-eabfbfb95a62" executionType="OK" generationType="OK_KO" mandatory="1" targetId="1365ebde-2e33-4069-9e91-bc52df1da376"/>
+    <parameter id="67332a62-b9f6-43c2-a948-b14f919340da" name="TXT_WRITE_FILENAME" type="String" value="${/CORE_TEMPORARY_FOLDER}$/:{process_name}:.html"/>
+    <code>&lt;h1> Execution follow up &lt;/h1>&#xD;
+&lt;br> &#xD;
+&lt;br>&#xD;
+&lt;table BORDER=&quot;3&quot;>&#xD;
+ &lt;caption>Process log&lt;/caption>&#xD;
+&#xD;
+   &lt;tr>&#xD;
+       &lt;th>Data type&lt;/th>&#xD;
+       &lt;th>Value&lt;/th>&#xD;
+   &lt;/tr>&#xD;
+&#xD;
+   &lt;tr>&#xD;
+       &lt;td>Process&lt;/td>&#xD;
+       &lt;td>:{process_name}:&lt;/td>&#xD;
+   &lt;/tr>&#xD;
+   &lt;tr>&#xD;
+       &lt;td>Session&lt;/td>&#xD;
+       &lt;td>:{session_id}:&lt;/td>&#xD;
+   &lt;/tr>&#xD;
+   &lt;tr>&#xD;
+       &lt;td>Start&lt;/td>&#xD;
+       &lt;td>:{session_begin}:&lt;/td>&#xD;
+   &lt;/tr>&#xD;
+   &lt;tr>&#xD;
+       &lt;td>End&lt;/td>&#xD;
+       &lt;td>:{session_end}:&lt;/td>&#xD;
+   &lt;/tr>&#xD;
+   &lt;tr>&#xD;
+       &lt;td>Duration&lt;/td>&#xD;
+       &lt;td>:{session_durat}:&lt;/td>&#xD;
+   &lt;/tr>&#xD;
+   &lt;tr>&#xD;
+       &lt;td>Status&lt;/td>&#xD;
+       &lt;td>:{process_statu}:&lt;/td>&#xD;
+   &lt;/tr>&#xD;
+   &lt;tr>&#xD;
+       &lt;td>Stat ins&lt;/td>&#xD;
+       &lt;td>:{process_ins}:&lt;/td>&#xD;
+   &lt;/tr>&#xD;
+   &lt;tr>&#xD;
+       &lt;td>Stat upd&lt;/td>&#xD;
+       &lt;td>:{process_upd}:&lt;/td>&#xD;
+   &lt;/tr>&#xD;
+   &lt;tr>&#xD;
+       &lt;td>Stat del&lt;/td>&#xD;
+       &lt;td>:{process_del}:&lt;/td>&#xD;
+   &lt;/tr>&#xD;
+   &lt;tr>&#xD;
+       &lt;td>Stat rej&lt;/td>&#xD;
+       &lt;td>:{process_rej}:&lt;/td>&#xD;
+   &lt;/tr>   &#xD;
+&lt;/table>&#xD;
+&#xD;
+&#xD;
+</code>
+  </actionCode>
+  <xslVariable description="How to use it ?&#xD;&#xA;----------------&#xD;&#xA;1-Drag &amp; Drop this template at the top (main) level of a process&#xD;&#xA;2-Drag &amp; Drop a RDBMS schema in this template&#xD;&#xA;3-Link the end of the process to this template with a &quot;Unsuccessful Link&quot;&#xD;&#xA;4-Define the properties of the template&#xD;&#xA;&#xD;&#xA;What will be done ?&#xD;&#xA;---------------------&#xD;&#xA;The template will try to CREATE the STB_ERROR_LOG table in the schema &#xD;&#xA;The template will INSERT error properties in the STB_ERROR_LOG table , one record per error&#xD;&#xA;At the end, an error is generated to keep the process in error&#xD;&#xA;&#xD;&#xA;What are your options ?&#xD;&#xA;-------------------------&#xD;&#xA;You can add a process reference/code, different to the process name. It will work even if there is no value&#xD;&#xA;You can choose to drop the STB_ERROR_LOG table at the begin of the template&#xD;&#xA;You can choose to insert also the TOLERATED errors in the table&#xD;&#xA;&#xD;&#xA;mdj:getMetaDataRef($this/metaDataLink[1])" id="b2d045d9-036a-4715-b81f-cfb5eb1b9f91" code="($this/metaDataLink/mdj:getMetaDataRef(.)[@defType='com.stambia.rdbms.schema'])[1]" name="TARGET_SCHEMA" type="xpath" visibility="current"/>
+  <xslVariable description="How to use it ?&#xD;&#xA;----------------&#xD;&#xA;1-Drag &amp; Drop this template at the top (main) level of a process&#xD;&#xA;2-Drag &amp; Drop a RDBMS schema in this template&#xD;&#xA;3-Link the end of the process to this template with a &quot;Unsuccessful Link&quot;&#xD;&#xA;4-Define the properties of the template&#xD;&#xA;&#xD;&#xA;What will be done ?&#xD;&#xA;---------------------&#xD;&#xA;The template will try to CREATE the STB_ERROR_LOG table in the schema &#xD;&#xA;The template will INSERT error properties in the STB_ERROR_LOG table , one record per error&#xD;&#xA;At the end, an error is generated to keep the process in error&#xD;&#xA;&#xD;&#xA;What are your options ?&#xD;&#xA;-------------------------&#xD;&#xA;You can add a process reference/code, different to the process name. It will work even if there is no value&#xD;&#xA;You can choose to drop the STB_ERROR_LOG table at the begin of the template&#xD;&#xA;You can choose to insert also the TOLERATED errors in the table&#xD;&#xA;&#xD;&#xA;mdj:getMetaDataRef($this/metaDataLink[1])" id="40d00616-6f1c-4f63-8459-19c0f5f6351b" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='message'][1]" name="TARGET_MESSAGE" type="xpath"/>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.2/notation#/?fileId=7938da9c-4c5a-4f0b-aba6-b923e490e77a?" xmi:id="_RxmAAJUqEeqoVKx9DRezyg" type="Proc" measurementUnit="Pixel">
+  <children xmi:type="notation:Node" xmi:id="_mflAEJUsEeqoVKx9DRezyg" type="2007">
+    <children xmi:type="notation:Node" xmi:id="_mfmOMJUsEeqoVKx9DRezyg" type="5007"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_mflAEZUsEeqoVKx9DRezyg" fontName="Segoe UI"/>
+    <element xmi:type="proc:XslVariable" href="../../TOOL_scanProcessLog.proc#b2d045d9-036a-4715-b81f-cfb5eb1b9f91?fileId=7938da9c-4c5a-4f0b-aba6-b923e490e77a$type=proc?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_mflAEpUsEeqoVKx9DRezyg" x="858" y="60"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_rZLMQJUsEeqoVKx9DRezyg" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_rZTIEJUsEeqoVKx9DRezyg" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_rZTIEZUsEeqoVKx9DRezyg" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_rZTvIJUsEeqoVKx9DRezyg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_rZTvIZUsEeqoVKx9DRezyg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_rZTvIpUsEeqoVKx9DRezyg"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_rZUWMJUsEeqoVKx9DRezyg" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_rZUWMZUsEeqoVKx9DRezyg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_rZUWMpUsEeqoVKx9DRezyg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_rZUWM5UsEeqoVKx9DRezyg"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_rZLMQZUsEeqoVKx9DRezyg" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_scanProcessLog.proc#a7342662-01e9-40d2-8cec-a52ee399fab2?fileId=7938da9c-4c5a-4f0b-aba6-b923e490e77a$type=proc$name=Start?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_rZLMQpUsEeqoVKx9DRezyg" x="492" y="30"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_vW_ssJUsEeqoVKx9DRezyg" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_vXElMJUsEeqoVKx9DRezyg" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_vXFMQJUsEeqoVKx9DRezyg" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_vXFMQZUsEeqoVKx9DRezyg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_vXFMQpUsEeqoVKx9DRezyg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_vXFMQ5UsEeqoVKx9DRezyg"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vXFMRJUsEeqoVKx9DRezyg" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_vXFMRZUsEeqoVKx9DRezyg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_vXFMRpUsEeqoVKx9DRezyg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_vXFMR5UsEeqoVKx9DRezyg"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_vW_ssZUsEeqoVKx9DRezyg" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_scanProcessLog.proc#0d9740cb-74a6-49d3-86a6-d9cfdbea145e?fileId=7938da9c-4c5a-4f0b-aba6-b923e490e77a$type=proc$name=ExistsSchema?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vW_sspUsEeqoVKx9DRezyg" x="468" y="132"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_VX1bkJWmEeqi4I9zkaUtjw" type="2007">
+    <children xmi:type="notation:Node" xmi:id="_VX2psJWmEeqi4I9zkaUtjw" type="5007"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_VX1bkZWmEeqi4I9zkaUtjw" fontName="Segoe UI"/>
+    <element xmi:type="proc:XslVariable" href="../../TOOL_scanProcessLog.proc#40d00616-6f1c-4f63-8459-19c0f5f6351b?fileId=7938da9c-4c5a-4f0b-aba6-b923e490e77a$type=proc?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_VX1bkpWmEeqi4I9zkaUtjw" x="858" y="36"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_SyP5YJWmEeqi4I9zkaUtjw" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_SyQgcJWmEeqi4I9zkaUtjw" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_SyQgcZWmEeqi4I9zkaUtjw" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_SyQgcpWmEeqi4I9zkaUtjw" collapsed="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_SyQgc5WmEeqi4I9zkaUtjw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_SyQgdJWmEeqi4I9zkaUtjw"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_SyRHgJWmEeqi4I9zkaUtjw" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_SyRHgZWmEeqi4I9zkaUtjw"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_SyRHgpWmEeqi4I9zkaUtjw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_SyRHg5WmEeqi4I9zkaUtjw"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_SyP5YZWmEeqi4I9zkaUtjw" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_scanProcessLog.proc#1365ebde-2e33-4069-9e91-bc52df1da376?fileId=7938da9c-4c5a-4f0b-aba6-b923e490e77a$type=proc$name=SendMail%20with%20message?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_SyP5YpWmEeqi4I9zkaUtjw" x="216" y="456"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_h5LcQJWmEeqi4I9zkaUtjw" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_h5MqYJWmEeqi4I9zkaUtjw" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_h5MqYZWmEeqi4I9zkaUtjw" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_h5MqYpWmEeqi4I9zkaUtjw" collapsed="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_h5MqY5WmEeqi4I9zkaUtjw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_h5MqZJWmEeqi4I9zkaUtjw"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_h5MqZZWmEeqi4I9zkaUtjw" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_h5MqZpWmEeqi4I9zkaUtjw"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_h5MqZ5WmEeqi4I9zkaUtjw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_h5MqaJWmEeqi4I9zkaUtjw"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_h5LcQZWmEeqi4I9zkaUtjw" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_scanProcessLog.proc#6e1a0862-2373-4049-a796-d64ba1e7b29d?fileId=7938da9c-4c5a-4f0b-aba6-b923e490e77a$type=proc$name=Update%20Process_log?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_h5LcQpWmEeqi4I9zkaUtjw" x="420" y="558"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_4dORYJUsEeqoVKx9DRezyg" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_4dTw8JUsEeqoVKx9DRezyg" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_4dTw8ZUsEeqoVKx9DRezyg" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_4dTw8pUsEeqoVKx9DRezyg" collapsed="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_4dTw85UsEeqoVKx9DRezyg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_4dTw9JUsEeqoVKx9DRezyg"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_4dUYAJUsEeqoVKx9DRezyg" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_4dUYAZUsEeqoVKx9DRezyg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_4dUYApUsEeqoVKx9DRezyg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_4dUYA5UsEeqoVKx9DRezyg"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_4dORYZUsEeqoVKx9DRezyg" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_scanProcessLog.proc#ce09d2de-3f5f-4452-9c86-dc79d7f66069?fileId=7938da9c-4c5a-4f0b-aba6-b923e490e77a$type=proc$name=SELECT%20process%20logged%20?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_4dORYpUsEeqoVKx9DRezyg" x="432" y="240"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_mX3lkJXcEeqi4I9zkaUtjw" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_mX3lkZXcEeqi4I9zkaUtjw" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_mX3lkpXcEeqi4I9zkaUtjw" type="7001">
+      <children xmi:type="notation:Node" xmi:id="_mX3llpXcEeqi4I9zkaUtjw" type="3001">
+        <element xmi:type="proc:Parameter" href="../../TOOL_scanProcessLog.proc#79814520-fbcf-4cb9-9701-9d691f922983?fileId=7938da9c-4c5a-4f0b-aba6-b923e490e77a$type=proc$name=SQL_CONNECTION?"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_mX3ll5XcEeqi4I9zkaUtjw"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_mX3lmJXcEeqi4I9zkaUtjw" type="3001">
+        <element xmi:type="proc:Parameter" href="../../TOOL_scanProcessLog.proc#ab171fb9-e824-4907-9ca2-3ff51283421d?fileId=7938da9c-4c5a-4f0b-aba6-b923e490e77a$type=proc$name=SQL_ACTION_TYPE?"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_mX3lmZXcEeqi4I9zkaUtjw"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_mX3lk5XcEeqi4I9zkaUtjw" collapsed="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_mX3llJXcEeqi4I9zkaUtjw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_mX3llZXcEeqi4I9zkaUtjw"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_mX3lmpXcEeqi4I9zkaUtjw" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_mX3lm5XcEeqi4I9zkaUtjw"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_mX3lnJXcEeqi4I9zkaUtjw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_mX3lnZXcEeqi4I9zkaUtjw"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_mX3lnpXcEeqi4I9zkaUtjw" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_scanProcessLog.proc#a5d0bc30-9769-4919-8e70-59d97ea0e928?fileId=7938da9c-4c5a-4f0b-aba6-b923e490e77a$type=proc$name=Update%20mailing_list_process?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_mX3ln5XcEeqi4I9zkaUtjw" x="606" y="660"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_AWZkIJXdEeqi4I9zkaUtjw" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_AWayQJXdEeqi4I9zkaUtjw" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_AWayQZXdEeqi4I9zkaUtjw" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_AWayQpXdEeqi4I9zkaUtjw" collapsed="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_AWayQ5XdEeqi4I9zkaUtjw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_AWayRJXdEeqi4I9zkaUtjw"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_AWayRZXdEeqi4I9zkaUtjw" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_AWayRpXdEeqi4I9zkaUtjw"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_AWayR5XdEeqi4I9zkaUtjw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_AWaySJXdEeqi4I9zkaUtjw"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_AWZkIZXdEeqi4I9zkaUtjw" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_scanProcessLog.proc#2d609d9f-5798-48d8-8172-2ed627dedc06?fileId=7938da9c-4c5a-4f0b-aba6-b923e490e77a$type=proc$name=WriteTxtFile?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_AWZkIpXdEeqi4I9zkaUtjw" x="30" y="336"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_RxmAAZUqEeqoVKx9DRezyg"/>
+  <element xmi:type="proc:ActionProcess" href="../../TOOL_scanProcessLog.proc#7938da9c-4c5a-4f0b-aba6-b923e490e77a?fileId=7938da9c-4c5a-4f0b-aba6-b923e490e77a$type=proc$name=TOOL_scanProcessLog?"/>
+  <edges xmi:type="notation:Edge" xmi:id="_wdVCoJUsEeqoVKx9DRezyg" type="4001" source="_rZLMQJUsEeqoVKx9DRezyg" target="_vW_ssJUsEeqoVKx9DRezyg">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_wdVCoZUsEeqoVKx9DRezyg"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_wdVCopUsEeqoVKx9DRezyg" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="../../TOOL_scanProcessLog.proc#143b0eae-f1b7-4dce-9aa2-a2ffb5e7660a?fileId=7938da9c-4c5a-4f0b-aba6-b923e490e77a$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_wdVCo5UsEeqoVKx9DRezyg" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_wdYtAJUsEeqoVKx9DRezyg" id="(0.5,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_f7a9QJUxEeqoVKx9DRezyg" id="(0.49635036496350365,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_4y-e8JUsEeqoVKx9DRezyg" type="4001" source="_vW_ssJUsEeqoVKx9DRezyg" target="_4dORYJUsEeqoVKx9DRezyg">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_4y-e8ZUsEeqoVKx9DRezyg"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_4y-e8pUsEeqoVKx9DRezyg" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="../../TOOL_scanProcessLog.proc#518c777c-4980-4b54-b1f9-9322cf8c64e8?fileId=7938da9c-4c5a-4f0b-aba6-b923e490e77a$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_4y-e85UsEeqoVKx9DRezyg" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_4zCJUJUsEeqoVKx9DRezyg" id="(0.49635036496350365,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_f7bkUJUxEeqoVKx9DRezyg" id="(0.5,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_TQHhIJWmEeqi4I9zkaUtjw" type="4002" source="_4dORYJUsEeqoVKx9DRezyg" target="_SyP5YJWmEeqi4I9zkaUtjw">
+    <children xmi:type="notation:Node" xmi:id="_TQIvQJWmEeqi4I9zkaUtjw" type="6001">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_TQIvQZWmEeqi4I9zkaUtjw" y="40"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_TQHhIZWmEeqi4I9zkaUtjw"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_TQHhIpWmEeqi4I9zkaUtjw" fontName="Segoe UI"/>
+    <element xmi:type="proc:BindLink" href="../../TOOL_scanProcessLog.proc#17c05613-e9bf-422b-88bf-01a72fc11e61?fileId=7938da9c-4c5a-4f0b-aba6-b923e490e77a$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_TQHhI5WmEeqi4I9zkaUtjw" points="[0, 0, 145, -180]$[-145, 60, 0, -120]$[-145, 180, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_TQSgQJWmEeqi4I9zkaUtjw" id="(0.3317307692307692,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_TQTHUJWmEeqi4I9zkaUtjw" id="(0.6938775510204082,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_xr7jUJWmEeqi4I9zkaUtjw" type="4002" source="_4dORYJUsEeqoVKx9DRezyg" target="_h5LcQJWmEeqi4I9zkaUtjw">
+    <children xmi:type="notation:Node" xmi:id="_xr7jVJWmEeqi4I9zkaUtjw" type="6001">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_xr7jVZWmEeqi4I9zkaUtjw" y="40"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_xr7jUZWmEeqi4I9zkaUtjw"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_xr7jUpWmEeqi4I9zkaUtjw" fontName="Segoe UI"/>
+    <element xmi:type="proc:BindLink" href="../../TOOL_scanProcessLog.proc#57d0a402-80b5-4e8c-8027-ab5651870257?fileId=7938da9c-4c5a-4f0b-aba6-b923e490e77a$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_xr7jU5WmEeqi4I9zkaUtjw" points="[0, 0, 0, -281]$[0, 281, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_xr8xcJWmEeqi4I9zkaUtjw" id="(0.5,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_k5D4UZWnEeqi4I9zkaUtjw" id="(0.6494252873563219,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_ykdGwJWmEeqi4I9zkaUtjw" type="4001" source="_SyP5YJWmEeqi4I9zkaUtjw" target="_h5LcQJWmEeqi4I9zkaUtjw">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_ykdGwZWmEeqi4I9zkaUtjw"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_ykdGwpWmEeqi4I9zkaUtjw" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="../../TOOL_scanProcessLog.proc#d6176bb8-823f-47c1-a423-7b09f77e16e5?fileId=7938da9c-4c5a-4f0b-aba6-b923e490e77a$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_ykdGw5WmEeqi4I9zkaUtjw" points="[0, 0, -161, -60]$[161, 60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_ykfjAJWmEeqi4I9zkaUtjw" id="(0.5,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_k5D4UJWnEeqi4I9zkaUtjw" id="(0.3218390804597701,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_m42ywJXcEeqi4I9zkaUtjw" type="4002" source="_4dORYJUsEeqoVKx9DRezyg" target="_mX3lkJXcEeqi4I9zkaUtjw">
+    <children xmi:type="notation:Node" xmi:id="_m42yxJXcEeqi4I9zkaUtjw" type="6001">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_m42yxZXcEeqi4I9zkaUtjw" y="40"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_m42ywZXcEeqi4I9zkaUtjw"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_m42ywpXcEeqi4I9zkaUtjw" fontName="Segoe UI"/>
+    <element xmi:type="proc:BindLink" href="../../TOOL_scanProcessLog.proc#8ef371a0-c3b1-4d9e-a602-33c749eaf5bf?fileId=7938da9c-4c5a-4f0b-aba6-b923e490e77a$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_m42yw5XcEeqi4I9zkaUtjw" points="[0, 0, -128, -382]$[128, 60, 0, -322]$[128, 382, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_m43Z0JXcEeqi4I9zkaUtjw" id="(0.75,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_B7OM45XdEeqi4I9zkaUtjw" id="(0.4955357142857143,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_nWBP4JXcEeqi4I9zkaUtjw" type="4001" source="_h5LcQJWmEeqi4I9zkaUtjw" target="_mX3lkJXcEeqi4I9zkaUtjw">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_nWBP4ZXcEeqi4I9zkaUtjw"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_nWBP4pXcEeqi4I9zkaUtjw" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="../../TOOL_scanProcessLog.proc#ba5118c8-0875-4200-92d2-3b9d20edb842?fileId=7938da9c-4c5a-4f0b-aba6-b923e490e77a$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_nWBP45XcEeqi4I9zkaUtjw" points="[0, 0, -150, -60]$[150, 60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_nWB28JXcEeqi4I9zkaUtjw" id="(0.5,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_B7OM4ZXdEeqi4I9zkaUtjw" id="(0.24553571428571427,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_A6hk4JXdEeqi4I9zkaUtjw" type="4002" source="_4dORYJUsEeqoVKx9DRezyg" target="_AWZkIJXdEeqi4I9zkaUtjw">
+    <children xmi:type="notation:Node" xmi:id="_A6hk5JXdEeqi4I9zkaUtjw" type="6001">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_A6hk5ZXdEeqi4I9zkaUtjw" y="40"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_A6hk4ZXdEeqi4I9zkaUtjw"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_A6hk4pXdEeqi4I9zkaUtjw" fontName="Segoe UI"/>
+    <element xmi:type="proc:BindLink" href="../../TOOL_scanProcessLog.proc#38deef2f-207a-4ee7-bdef-17deb2e66828?fileId=7938da9c-4c5a-4f0b-aba6-b923e490e77a$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_A6hk45XdEeqi4I9zkaUtjw" points="[0, 0, 333, -60]$[-333, 60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_A6iL8JXdEeqi4I9zkaUtjw" id="(0.16346153846153846,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_B7OM4pXdEeqi4I9zkaUtjw" id="(0.5,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_BacbEJXdEeqi4I9zkaUtjw" type="4001" source="_AWZkIJXdEeqi4I9zkaUtjw" target="_SyP5YJWmEeqi4I9zkaUtjw">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_BacbEZXdEeqi4I9zkaUtjw"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_BacbEpXdEeqi4I9zkaUtjw" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="../../TOOL_scanProcessLog.proc#629e6d2d-062b-4535-b8f4-eabfbfb95a62?fileId=7938da9c-4c5a-4f0b-aba6-b923e490e77a$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_BacbE5XdEeqi4I9zkaUtjw" points="[0, 0, -155, -60]$[155, 60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_BadpMJXdEeqi4I9zkaUtjw" id="(0.5,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_B7OM4JXdEeqi4I9zkaUtjw" id="(0.3469387755102041,0.0)"/>
+  </edges>
+</notation:Diagram>
+]]></diagram>
+</proc:process>

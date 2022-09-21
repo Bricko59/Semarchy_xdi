@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:geo="http://stambia.org/samples/geography" targetNamespace="http://stambia.org/samples/geography" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xs:complexType name="City">
+		<xs:attribute name="cityName" type="xs:string"/>
+		<xs:attribute name="zipCode" type="xs:string"/>
+	</xs:complexType>
+	<xs:complexType name="State">
+		<xs:sequence>
+			<xs:element name="city" type="geo:City" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="code" type="xs:string"/>
+		<xs:attribute name="upperCaseName" type="xs:string"/>
+		<xs:attribute name="stateName" type="xs:string"/>
+	</xs:complexType>
+	<xs:element name="geography">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="state" type="geo:State" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" description="This template is used to load a file into MySQL.&#xD;&#xA;&#xD;&#xA;It is using the MySQL specific loader to enhance performances (&quot;LOAD  DATA INFILE&quot; statement).&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;29/06/2020   Add Create Load Indexes option&#xD;&#xA;14/06/2018   Now takes into account string delimiter specified on the Source File Metadata&#xD;&#xA;15/02/2017&#x9; Fix missing xslTargetFtp on clean step&#xD;&#xA;15/02/2017   Initialize template history" id="_FZ8DsGjLEeSogYjG_2p6lw" isBeginAction="false" name="LOAD File to MySQL (with LOAD)" nbCycles="-1" toleratedError="false">
+  <parameter description="Set this option to true when you want to process the file through the JDBC driver.&#xD;&#xA;This is particularly useful when the file is not located on the machine where the target MySQL database is installed.&#xD;&#xA;In this situation, make sure to set this option to true for the JDBC driver to read the file from the local machine where the Runtime is installed.&#xD;&#xA;&#xD;&#xA;Note that it can slow down performances as the file is read through the network.&#xD;&#xA;&#xD;&#xA;If the local mode is set to false, the file MUST be located on the same machine as the target MySQL database.&#xD;&#xA;Otherwise the load command will not be able to find it.&#xD;&#xA;In this situation, you could send it by FTP or SCP before executing the Mapping, for instance." id="_FZ8Du2jLEeSogYjG_2p6lw" name="localMode" type="Boolean" value="true"/>
+  <parameter description="If true, the temporary objects created during the load are removed at the end of the process." id="_FZ8DuWjLEeSogYjG_2p6lw" name="cleanTemporaryObjects" type="Boolean" value="true"/>
+  <parameter description="If true, an index is created on the load table for each column having a tag starting with IDX.&#xD;&#xA;This tag must be defined on the columns in the Mapping using the load template.&#xD;&#xA;&#xD;&#xA;For instance:&#xD;&#xA;If the Load template is involving the following columns:&#xD;&#xA;CUS_ID: IDX_01&#xD;&#xA;CUS_FIRST_NAME: IDX_02&#xD;&#xA;CUS_LAST_NAME: IDX_02&#xD;&#xA;CUS_ADDRESS: &lt;Not Tag Specified>&#xD;&#xA;&#xD;&#xA;The following indexes will be created:&#xD;&#xA;IDX_01 on CUS_ID&#xD;&#xA;IDX_02 on CUS_FIRST_NAME and CUS_LAST_NAME" id="fa67a754-3918-4582-bbee-0c003044db8f" name="createLoadIndexes" type="Boolean" value="false"/>
+  <subProcess id="_FZ8DvmjLEeSogYjG_2p6lw" name="Load">
+    <link id="_FZ8Dv2jLEeSogYjG_2p6lw" executionType="OK" generationType="OK" mandatory="1" targetId="_FZ8D12jLEeSogYjG_2p6lw?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc$name=Clean?"/>
+    <parameter id="_FZ8DwGjLEeSogYjG_2p6lw" name="realPathOnServer" type="String" value="%x{&#xD;&#xA;if (not(exists($xslTargetFtp)))&#xD;&#xA;&#x9;then md:paramValue($this,'workFolder')&#xD;&#xA; &#x9;else md:ifEmpty(md:paramValue($this,'pathOnServer'),$xslTargetFtp/tech:systemPath())&#xD;&#xA;}x%"/>
+    <actionCode id="_FZ8DwWjLEeSogYjG_2p6lw" generationCondition="'${localMode}$'='false'" isBeginAction="false" name="Load into target" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_FZ8DwmjLEeSogYjG_2p6lw" executionType="OK" generationType="OK" mandatory="1"/>
+      <link id="3ff6d742-a8fc-4024-80e7-ea4a93367189" executionType="OK" generationType="OK_KO" mandatory="0" targetId="86b0b8d4-c194-4aae-80da-bed518a7a3f0"/>
+      <parameter id="_FZ8Dw2jLEeSogYjG_2p6lw" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_FZ8DxGjLEeSogYjG_2p6lw" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_FZ8DxWjLEeSogYjG_2p6lw" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>LOAD DATA INFILE '${../realPathOnServer}$/data_%x{$REF/tech:workName()}x%.dat'
+INTO TABLE 	%x{md:physicalPath($REF,'workName')}x%
+CHARACTER SET '%x{md:paramValue($this,'fileEncoding')}x%'
+FIELDS		TERMINATED BY '%x{md:paramValue($this,'fieldSeparator')}x%'
+LINES 		TERMINATED BY '\n'
+</code>
+    </actionCode>
+    <actionCode id="_FZ8DxmjLEeSogYjG_2p6lw" generationCondition="'${localMode}$'='true'" isBeginAction="false" name="Load Local into target" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_FZ8Dx2jLEeSogYjG_2p6lw" executionType="OK" generationType="OK" mandatory="1"/>
+      <link id="a3ae13c1-27db-474c-8f94-54514086ab07" executionType="OK" generationType="OK_KO" mandatory="0" targetId="86b0b8d4-c194-4aae-80da-bed518a7a3f0"/>
+      <parameter id="_FZ8DyGjLEeSogYjG_2p6lw" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_FZ8DyWjLEeSogYjG_2p6lw" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_FZ8DymjLEeSogYjG_2p6lw" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>LOAD  DATA LOCAL INFILE '%x{replace($REF/tech:sourceRef()/tech:filePath(),'\\','/')}x%'
+INTO TABLE 	%x{md:ifEmpty(md:physicalPath($REF,'workName'),$REF/tech:sourceRef())}x%
+CHARACTER SET '%x{md:ifEmpty(md:paramValue($this,'fileEncoding'),$REF/ref:source()/@charsetName,'UTF8')}x%'
+FIELDS		TERMINATED BY '%x{$REF/tech:sourceRef()/tech:asciiFieldSeparator()}x%'
+OPTIONALLY ENCLOSED BY '%x{$REF/tech:sourceRef()/tech:asciiStringDelimiter()}x%'
+LINES 		TERMINATED BY '%x{$REF/tech:sourceRef()/tech:asciiRowDelimiter()}x%'
+IGNORE  %x{md:ifEmpty($REF/tech:sourceRef()/tech:header(),'0')}x% LINES
+(%x{md:list($cols/col/@workName,',')}x%)</code>
+    </actionCode>
+    <actionCode id="_FZ8Dy2jLEeSogYjG_2p6lw" isBeginAction="false" name="FileExists" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileWaitActionCodeI">
+      <link id="_FZ8DzGjLEeSogYjG_2p6lw" executionCondition="${FileExists/NB_FILES}$==0" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_FZ8D02jLEeSogYjG_2p6lw"/>
+      <link id="_FZ8DzWjLEeSogYjG_2p6lw" executionCondition="${FileExists/NB_FILES}$==1" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_FZ8DwWjLEeSogYjG_2p6lw"/>
+      <link id="_FZ8DzmjLEeSogYjG_2p6lw" executionCondition="${FileExists/NB_FILES}$==1" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_FZ8DxmjLEeSogYjG_2p6lw"/>
+      <parameter id="_FZ8Dz2jLEeSogYjG_2p6lw" name="WAIT_FILE" type="String" value="%x{$REF/tech:sourceRef()/tech:filePath()}x%"/>
+      <parameter id="_FZ8D0GjLEeSogYjG_2p6lw" name="WAIT_FILE_NB_FILES" type="String" value="1"/>
+      <parameter id="_FZ8D0WjLEeSogYjG_2p6lw" name="WAIT_FILE_POLLINT" type="String" value="0"/>
+      <parameter id="_FZ8D0mjLEeSogYjG_2p6lw" name="WAIT_FILE_TIMEOUT" type="String" value="0"/>
+    </actionCode>
+    <actionCode id="_FZ8D02jLEeSogYjG_2p6lw" isBeginAction="false" name="NoFile" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI"/>
+    <actionCode id="_UGzEQGjMEeSogYjG_2p6lw" generationCondition="" isBeginAction="false" name="Creation of load table" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_VJ6HEGjMEeSogYjG_2p6lw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_FZ8Dy2jLEeSogYjG_2p6lw"/>
+      <parameter id="_UGzEQ2jMEeSogYjG_2p6lw" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_UGzERGjMEeSogYjG_2p6lw" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_UGzERWjMEeSogYjG_2p6lw" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>create table %x{md:physicalPath($REF,'workName')}x%
+(
+	%x{md:patternList($REF/ref:columns(),'[workName]\t[targetWritableType] [targetNullWord]',',\n\t')}x%	
+)
+%x{md:paramValue($this,'loadTableCreationOptions')}x%</code>
+    </actionCode>
+    <actionCode id="_UGzERmjMEeSogYjG_2p6lw" generationCondition="" isBeginAction="false" name="Drop of load table" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_UGzER2jMEeSogYjG_2p6lw" generationCondition="" executionType="OK" generationType="OK" mandatory="1" targetId="_UGzEQGjMEeSogYjG_2p6lw"/>
+      <parameter id="_UGzrUGjMEeSogYjG_2p6lw" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_UGzrUWjMEeSogYjG_2p6lw" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_UGzrUmjMEeSogYjG_2p6lw" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>drop table %x{md:physicalPath($REF,'workName')}x%</code>
+    </actionCode>
+    <actionCode id="86b0b8d4-c194-4aae-80da-bed518a7a3f0" generationCondition="'${createLoadIndexes}$'='true'" isBeginAction="false" name="Creation of load table indexes" nbCycles="-1" repetitionQuery="$indexNames/index" repetitionVariableName="IDX" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter id="80769504-b018-4bfd-a5e7-c4e3ac5f0130" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="1662e72f-2a95-4b3a-976d-776531185610" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <code>create index %x{$IDX/@name}x%_%x{$REF/tech:workName()}% on %x{md:physicalPath($REF,'workName')}x%&#xD;
+(&#xD;
+	%x{md:patternList($REF/ref:columns()[tech:tag()=$IDX/@name],'[workName]',',\n\t')}x%&#xD;
+)&#xD;
+&#xD;
+</code>
+    </actionCode>
+    <templateType>L-TP.RDBMS.LOADING</templateType>
+    <xslVariable id="_FZ8D1mjLEeSogYjG_2p6lw" code="$REF/ref:target()/mdj:xpath('$TARGET_FTP')" name="xslTargetFtp" type="xpath"/>
+    <xslVariable id="_WomlwGjkEeSsnct_8UjLgg" code="%xsl{&#xD;&#xA;&lt;xsl:variable name=&quot;cols&quot; select=&quot;$REF/ref:columns()&quot;/>&#xD;&#xA;&lt;xsl:variable name=&quot;srcCols&quot; select=&quot;$cols[1]/ref:sources()[1]/../ref:fields()&quot;/>&#xD;&#xA;&lt;xsl:for-each select=&quot;$srcCols&quot;>&lt;xsl:sort select=&quot;number(@position)&quot; data-type=&quot;number&quot;/>&#xD;&#xA;&#x9;&#x9;&lt;xsl:variable name=&quot;map&quot; select=&quot;$cols[ref:sources()[1]/@id=current()/@id]&quot;/>&#xD;&#xA;&#x9;&#x9;&lt;xsl:choose>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:when test=&quot;exists($map)&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;col &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;workName=&quot;{$map/tech:workName()}&quot;/>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;/xsl:when>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:otherwise>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;col &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;workName=&quot;@ignore&quot;/>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;/xsl:otherwise>&#xD;&#xA;&#x9;&#x9;&lt;/xsl:choose>&#xD;&#xA;&lt;/xsl:for-each>&#xD;&#xA;}%" name="cols" type="xsl"/>
+    <xslVariable id="546764a4-34ef-46b8-a2cd-5dbe465a62c8" code="%xsl{&lt;xsl:for-each &#xD;&#xA;select=&quot;distinct-values($REF/ref:columns()/tech:tag()[starts-with(.,'IDX')])&quot;>&#xD;&#xA;&lt;index name=&quot;{.}&quot;/>&#xD;&#xA;&lt;/xsl:for-each>}%" name="indexNames" type="xsl"/>
+  </subProcess>
+  <subProcess id="_FZ8D12jLEeSogYjG_2p6lw" name="Clean">
+    <actionProcessRef id="_FZ8D2GjLEeSogYjG_2p6lw" isBeginAction="false" name="Clean" nbCycles="-1" toleratedError="false" targetName="../../../templates.generic/templates.generic/Rdbms/UNLOAD%20Rdbms%20to%20File.proc#_kxpJFJThEd-tv7v5yj0V3Q?fileId=_kxpI0pThEd-tv7v5yj0V3Q$type=proc$name=Clean?"/>
+    <templateType>L-TP.RDBMS.CLEANING</templateType>
+    <xslVariable id="_BZi6cPN0EeamFOsXkV_lPA" code="$REF/ref:target()/mdj:xpath('$TARGET_FTP')" name="xslTargetFtp" type="xpath"/>
+  </subProcess>
+  <templateType>L-TP.RDBMS</templateType>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.2/notation#/?fileId=_FZ8DsGjLEeSogYjG_2p6lw?">
+  <notation:Diagram xmi:id="__spfILoQEeq4jvi5EX2BAQ" type="Proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="__tEV4LoQEeq4jvi5EX2BAQ" type="2004">
+      <children xmi:type="notation:Node" xmi:id="__tE88LoQEeq4jvi5EX2BAQ" type="5004"/>
+      <children xmi:type="notation:Node" xmi:id="__tE88boQEeq4jvi5EX2BAQ" type="7005">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="__tE88roQEeq4jvi5EX2BAQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="__tE887oQEeq4jvi5EX2BAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="__tE89LoQEeq4jvi5EX2BAQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__tE89boQEeq4jvi5EX2BAQ" type="7006">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="__tE89roQEeq4jvi5EX2BAQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="__tE897oQEeq4jvi5EX2BAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="__tE8-LoQEeq4jvi5EX2BAQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="__tEV4boQEeq4jvi5EX2BAQ" fontName="Segoe UI"/>
+      <styles xmi:type="notation:HintedDiagramLinkStyle" xmi:id="__tEV4roQEeq4jvi5EX2BAQ"/>
+      <element xmi:type="proc:SubActionProcess" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#_FZ8DvmjLEeSogYjG_2p6lw?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc$name=Load?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="__tEV47oQEeq4jvi5EX2BAQ" x="24" y="60"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="__tE8-boQEeq4jvi5EX2BAQ" type="2004">
+      <children xmi:type="notation:Node" xmi:id="__tE8_boQEeq4jvi5EX2BAQ" type="5004"/>
+      <children xmi:type="notation:Node" xmi:id="__tE8_roQEeq4jvi5EX2BAQ" type="7005">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="__tE8_7oQEeq4jvi5EX2BAQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="__tE9ALoQEeq4jvi5EX2BAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="__tE9AboQEeq4jvi5EX2BAQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__tE9AroQEeq4jvi5EX2BAQ" type="7006">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="__tE9A7oQEeq4jvi5EX2BAQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="__tE9BLoQEeq4jvi5EX2BAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="__tE9BboQEeq4jvi5EX2BAQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="__tE8-roQEeq4jvi5EX2BAQ" fontName="Segoe UI"/>
+      <styles xmi:type="notation:HintedDiagramLinkStyle" xmi:id="__tE8-7oQEeq4jvi5EX2BAQ"/>
+      <element xmi:type="proc:SubActionProcess" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#_FZ8D12jLEeSogYjG_2p6lw?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc$name=Clean?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="__tE8_LoQEeq4jvi5EX2BAQ" x="24" y="168"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="__tE9BroQEeq4jvi5EX2BAQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="__tFkALoQEeq4jvi5EX2BAQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="__tE9B7oQEeq4jvi5EX2BAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#_FZ8Du2jLEeSogYjG_2p6lw?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc$name=localMode?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="__tE9CLoQEeq4jvi5EX2BAQ" x="120" y="84"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="__tFkAboQEeq4jvi5EX2BAQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="__tFkBLoQEeq4jvi5EX2BAQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="__tFkAroQEeq4jvi5EX2BAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#_FZ8DuWjLEeSogYjG_2p6lw?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc$name=cleanTemporaryObjects?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="__tFkA7oQEeq4jvi5EX2BAQ" x="120" y="24"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_FLOnsLoREeq4jvi5EX2BAQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_FLPOwLoREeq4jvi5EX2BAQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_FLOnsboREeq4jvi5EX2BAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#fa67a754-3918-4582-bbee-0c003044db8f?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc$name=createLoadIndexes?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_FLOnsroREeq4jvi5EX2BAQ" x="120" y="60"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="__spfIboQEeq4jvi5EX2BAQ"/>
+    <element xmi:type="proc:ActionProcess" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#_FZ8DsGjLEeSogYjG_2p6lw?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc$name=LOAD%20File%20to%20MySQL%20(with%20LOAD)?"/>
+    <edges xmi:type="notation:Edge" xmi:id="_rLUEIAyFEeuSEqt1wrTu5Q" type="4001" source="__tEV4LoQEeq4jvi5EX2BAQ" target="__tE8-boQEeq4jvi5EX2BAQ">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_rLUEIQyFEeuSEqt1wrTu5Q"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_rLUEIgyFEeuSEqt1wrTu5Q" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#_FZ8Dv2jLEeSogYjG_2p6lw?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_rLUEIwyFEeuSEqt1wrTu5Q" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_sApJoAyFEeuSEqt1wrTu5Q" id="(0.5,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_sApJoQyFEeuSEqt1wrTu5Q" id="(0.5,0.0)"/>
+    </edges>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="__spfIroQEeq4jvi5EX2BAQ" type="Proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_GHvTQLoREeq4jvi5EX2BAQ" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_GHwhYLoREeq4jvi5EX2BAQ" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_GHwhYboREeq4jvi5EX2BAQ" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_GHwhYroREeq4jvi5EX2BAQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_GHwhY7oREeq4jvi5EX2BAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_GHwhZLoREeq4jvi5EX2BAQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_GHwhZboREeq4jvi5EX2BAQ" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_GHwhZroREeq4jvi5EX2BAQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_GHwhZ7oREeq4jvi5EX2BAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_GHwhaLoREeq4jvi5EX2BAQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GHvTQboREeq4jvi5EX2BAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#_FZ8DwWjLEeSogYjG_2p6lw?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc$name=Load%20into%20target?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GHvTQroREeq4jvi5EX2BAQ" x="24" y="360"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GHwhaboREeq4jvi5EX2BAQ" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_GHxIcLoREeq4jvi5EX2BAQ" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_GHxIcboREeq4jvi5EX2BAQ" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_GHxIcroREeq4jvi5EX2BAQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_GHxIc7oREeq4jvi5EX2BAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_GHxIdLoREeq4jvi5EX2BAQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_GHxIdboREeq4jvi5EX2BAQ" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_GHxIdroREeq4jvi5EX2BAQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_GHxId7oREeq4jvi5EX2BAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_GHxIeLoREeq4jvi5EX2BAQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GHwharoREeq4jvi5EX2BAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#_FZ8DxmjLEeSogYjG_2p6lw?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc$name=Load%20Local%20into%20target?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GHwha7oREeq4jvi5EX2BAQ" x="216" y="360"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GHxIeboREeq4jvi5EX2BAQ" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_GHxIfLoREeq4jvi5EX2BAQ" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_GHxIfboREeq4jvi5EX2BAQ" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_GHxIfroREeq4jvi5EX2BAQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_GHxIf7oREeq4jvi5EX2BAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_GHxIgLoREeq4jvi5EX2BAQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_GHxIgboREeq4jvi5EX2BAQ" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_GHxIgroREeq4jvi5EX2BAQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_GHxIg7oREeq4jvi5EX2BAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_GHxIhLoREeq4jvi5EX2BAQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GHxIeroREeq4jvi5EX2BAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#_FZ8Dy2jLEeSogYjG_2p6lw?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc$name=FileExists?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GHxIe7oREeq4jvi5EX2BAQ" x="252" y="264"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GHxIhboREeq4jvi5EX2BAQ" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_GHxvgLoREeq4jvi5EX2BAQ" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_GHxvgboREeq4jvi5EX2BAQ" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_GHxvgroREeq4jvi5EX2BAQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_GHxvg7oREeq4jvi5EX2BAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_GHxvhLoREeq4jvi5EX2BAQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_GHxvhboREeq4jvi5EX2BAQ" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_GHxvhroREeq4jvi5EX2BAQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_GHxvh7oREeq4jvi5EX2BAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_GHxviLoREeq4jvi5EX2BAQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GHxIhroREeq4jvi5EX2BAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#_FZ8D02jLEeSogYjG_2p6lw?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc$name=NoFile?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GHxIh7oREeq4jvi5EX2BAQ" x="432" y="360"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GHxviboREeq4jvi5EX2BAQ" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_GHxvjLoREeq4jvi5EX2BAQ" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_GHxvjboREeq4jvi5EX2BAQ" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_GHxvjroREeq4jvi5EX2BAQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_GHxvj7oREeq4jvi5EX2BAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_GHxvkLoREeq4jvi5EX2BAQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_GHxvkboREeq4jvi5EX2BAQ" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_GHxvkroREeq4jvi5EX2BAQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_GHxvk7oREeq4jvi5EX2BAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_GHxvlLoREeq4jvi5EX2BAQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GHxviroREeq4jvi5EX2BAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#_UGzEQGjMEeSogYjG_2p6lw?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc$name=Creation%20of%20load%20table?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GHxvi7oREeq4jvi5EX2BAQ" x="216" y="168"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GHxvlboREeq4jvi5EX2BAQ" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_GHyWkLoREeq4jvi5EX2BAQ" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_GHyWkboREeq4jvi5EX2BAQ" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_GHyWkroREeq4jvi5EX2BAQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_GHyWk7oREeq4jvi5EX2BAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_GHyWlLoREeq4jvi5EX2BAQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_GHyWlboREeq4jvi5EX2BAQ" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_GHyWlroREeq4jvi5EX2BAQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_GHyWl7oREeq4jvi5EX2BAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_GHyWmLoREeq4jvi5EX2BAQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GHxvlroREeq4jvi5EX2BAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#_UGzERmjMEeSogYjG_2p6lw?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc$name=Drop%20of%20load%20table?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GHxvl7oREeq4jvi5EX2BAQ" x="216" y="60"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GHyWmboREeq4jvi5EX2BAQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_GHyWnLoREeq4jvi5EX2BAQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GHyWmroREeq4jvi5EX2BAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#_FZ8DwGjLEeSogYjG_2p6lw?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc$name=realPathOnServer?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GHyWm7oREeq4jvi5EX2BAQ" x="528" y="24"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GHy9oLoREeq4jvi5EX2BAQ" type="2007">
+      <children xmi:type="notation:Node" xmi:id="_GHy9o7oREeq4jvi5EX2BAQ" type="5007"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GHy9oboREeq4jvi5EX2BAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:XslVariable" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#_FZ8D1mjLEeSogYjG_2p6lw?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GHy9oroREeq4jvi5EX2BAQ" x="1092" y="84"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GHy9pLoREeq4jvi5EX2BAQ" type="2007">
+      <children xmi:type="notation:Node" xmi:id="_GHy9p7oREeq4jvi5EX2BAQ" type="5007"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GHy9pboREeq4jvi5EX2BAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:XslVariable" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#_WomlwGjkEeSsnct_8UjLgg?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GHy9proREeq4jvi5EX2BAQ" x="1092" y="24"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_JPzQYLoREeq4jvi5EX2BAQ" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_JPz3cLoREeq4jvi5EX2BAQ" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_JPz3cboREeq4jvi5EX2BAQ" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_JPz3croREeq4jvi5EX2BAQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_JPz3c7oREeq4jvi5EX2BAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_JPz3dLoREeq4jvi5EX2BAQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_JPz3dboREeq4jvi5EX2BAQ" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_JPz3droREeq4jvi5EX2BAQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_JPz3d7oREeq4jvi5EX2BAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_JPz3eLoREeq4jvi5EX2BAQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_JPzQYboREeq4jvi5EX2BAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#86b0b8d4-c194-4aae-80da-bed518a7a3f0?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc$name=Creation%20of%20load%20table%20indexes?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_JPzQYroREeq4jvi5EX2BAQ" x="84" y="468"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vxgboLoREeq4jvi5EX2BAQ" type="2007">
+      <children xmi:type="notation:Node" xmi:id="_vxgbo7oREeq4jvi5EX2BAQ" type="5007"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vxgboboREeq4jvi5EX2BAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:XslVariable" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#546764a4-34ef-46b8-a2cd-5dbe465a62c8?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vxgboroREeq4jvi5EX2BAQ" x="1092" y="60"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="__spfI7oQEeq4jvi5EX2BAQ"/>
+    <element xmi:type="proc:SubActionProcess" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#_FZ8DvmjLEeSogYjG_2p6lw?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc$name=Load?"/>
+    <edges xmi:type="notation:Edge" xmi:id="_GIGfoLoREeq4jvi5EX2BAQ" type="4001" source="_GHxIeboREeq4jvi5EX2BAQ" target="_GHxIhboREeq4jvi5EX2BAQ">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_GIGfoboREeq4jvi5EX2BAQ"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_GIGforoREeq4jvi5EX2BAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#_FZ8DzGjLEeSogYjG_2p6lw?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_GIGfo7oREeq4jvi5EX2BAQ" points="[0, 0, -157, -60]$[157, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_GIbPxLoREeq4jvi5EX2BAQ" id="(0.7419354838709677,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_GIbPxboREeq4jvi5EX2BAQ" id="(0.5,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_GIHtwLoREeq4jvi5EX2BAQ" type="4001" source="_GHxIeboREeq4jvi5EX2BAQ" target="_GHvTQLoREeq4jvi5EX2BAQ">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_GIHtwboREeq4jvi5EX2BAQ"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_GIHtwroREeq4jvi5EX2BAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#_FZ8DzWjLEeSogYjG_2p6lw?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_GIHtw7oREeq4jvi5EX2BAQ" points="[0, 0, 181, -60]$[-181, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_GIbPwroREeq4jvi5EX2BAQ" id="(0.24731182795698925,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_GIbPw7oREeq4jvi5EX2BAQ" id="(0.49606299212598426,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_GII74LoREeq4jvi5EX2BAQ" type="4001" source="_GHxIeboREeq4jvi5EX2BAQ" target="_GHwhaboREeq4jvi5EX2BAQ">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_GIJi8LoREeq4jvi5EX2BAQ"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_GIJi8boREeq4jvi5EX2BAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#_FZ8DzmjLEeSogYjG_2p6lw?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_GIJi8roREeq4jvi5EX2BAQ" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_GIbPwLoREeq4jvi5EX2BAQ" id="(0.4946236559139785,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_GIbPwboREeq4jvi5EX2BAQ" id="(0.5,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_GIKKALoREeq4jvi5EX2BAQ" type="4001" source="_GHxviboREeq4jvi5EX2BAQ" target="_GHxIeboREeq4jvi5EX2BAQ">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_GIKKAboREeq4jvi5EX2BAQ"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_GIKKAroREeq4jvi5EX2BAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#_VJ6HEGjMEeSogYjG_2p6lw?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_GIKKA7oREeq4jvi5EX2BAQ" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_GIbPxroREeq4jvi5EX2BAQ" id="(0.5,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_GIbPx7oREeq4jvi5EX2BAQ" id="(0.4946236559139785,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_GILYILoREeq4jvi5EX2BAQ" type="4001" source="_GHxvlboREeq4jvi5EX2BAQ" target="_GHxviboREeq4jvi5EX2BAQ">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_GILYIboREeq4jvi5EX2BAQ"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_GILYIroREeq4jvi5EX2BAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#_UGzER2jMEeSogYjG_2p6lw?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_GILYI7oREeq4jvi5EX2BAQ" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_GIbPyLoREeq4jvi5EX2BAQ" id="(0.5,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_GIbPyboREeq4jvi5EX2BAQ" id="(0.5,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_LoipYLoREeq4jvi5EX2BAQ" type="4001" source="_GHvTQLoREeq4jvi5EX2BAQ" target="_JPzQYLoREeq4jvi5EX2BAQ">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_LoipYboREeq4jvi5EX2BAQ"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_LoipYroREeq4jvi5EX2BAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#3ff6d742-a8fc-4024-80e7-ea4a93367189?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_LoipY7oREeq4jvi5EX2BAQ" points="[0, 0, -100, -60]$[100, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Loj3gLoREeq4jvi5EX2BAQ" id="(0.49606299212598426,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Loj3gboREeq4jvi5EX2BAQ" id="(0.48826291079812206,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_MSgzcLoREeq4jvi5EX2BAQ" type="4001" source="_GHwhaboREeq4jvi5EX2BAQ" target="_JPzQYLoREeq4jvi5EX2BAQ">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_MSgzcboREeq4jvi5EX2BAQ"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_MSgzcroREeq4jvi5EX2BAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#a3ae13c1-27db-474c-8f94-54514086ab07?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_MSgzc7oREeq4jvi5EX2BAQ" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_MSiBkLoREeq4jvi5EX2BAQ" id="(0.5,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_w3tOsLoREeq4jvi5EX2BAQ" id="(0.9765258215962441,0.0)"/>
+    </edges>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="__spfJLoQEeq4jvi5EX2BAQ" type="Proc" measurementUnit="Pixel">
+    <styles xmi:type="notation:DiagramStyle" xmi:id="__spfJboQEeq4jvi5EX2BAQ"/>
+    <element xmi:type="proc:SubActionProcess" href="../../LOAD%20File%20to%20MySQL%20(with%20LOAD).proc#_FZ8D12jLEeSogYjG_2p6lw?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc$name=Clean?"/>
+  </notation:Diagram>
+</xmi:XMI>
+]]></diagram>
+</proc:process>

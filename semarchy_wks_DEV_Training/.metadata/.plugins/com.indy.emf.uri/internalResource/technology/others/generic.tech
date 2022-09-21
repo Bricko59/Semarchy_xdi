@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" description="" id="UUID_TECH_GENERIC" name="Generic" ref="resource.md#UUID_MD_SUPER_TYPE?fileId=UUID_MD_SUPER_TYPE$type=md$name=super?">
+  <level icon="icons/full/custom/com.stambia.generic.level.png" xmlName="element" xpathDisplayName="if (@type!='') then concat(@type,': ',@name) else @name" code="com.stambia.generic.element" displayName="Element" isFile="false" orderType="Natural" position="1">
+    <icons name="Element" xpath="'icons/full/custom/com.stambia.generic.level.png'"/>
+    <icons name="Tag" xpath="if (boolean(tag) or boolean(userProperties)) then 'icons/full/custom/rdbms.tag.png' else ''"/>
+    <attribute icon="" xmlName="type" code="type" defaultValue="" displayName="Type"/>
+    <attribute xmlName="description" category="" code="description" displayName="Description" multiLine="true"/>
+    <attribute xmlName="tag" xpathCondition="" category="" code="tag" displayName="Tags" unbounded="true"/>
+    <attribute xmlName="userProperties" xpathCondition="" category="" code="userProperties" displayName="User Properties" keyValue="true" unbounded="true"/>
+    <parent>com.stambia.generic.element</parent>
+    <parent>com.stambia.generic.root</parent>
+    <xPathExpression expression="element[@type=md:ifEmpty($p1,@type) and @name=md:ifEmpty($p2,@name)]">
+      <code>ELEMENT_REF</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="''" name="p2"/>
+    </xPathExpression>
+    <xPathExpression expression="if ($p1!='') then attribute[@name=$p1][1]/@value else ''">
+      <code>VALUE</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/com.stambia.generic.attribute.png" xmlName="attribute" xpathDisplayName="if (@value!='') then concat(@name,': ',@value) else @name" code="com.stambia.generic.attribute" displayName="Attribute" position="-1">
+    <attribute xmlName="value" xpathCondition="" code="value" defaultValue="" displayName="Value"/>
+    <attribute xmlName="description" category="" code="description" displayName="Description" multiLine="true"/>
+    <parent>com.stambia.generic.element</parent>
+    <parent>com.stambia.generic.root</parent>
+    <xPathExpression expression="@value">
+      <code>INTERNAL_NATIVE_MDLINK_RESOLUTION</code>
+      <code>COLUMN_NAME</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/com.stambia.generic.level.png" xmlName="element" code="com.stambia.generic.root" displayName="Element" isFile="true">
+    <icons name="Element" xpath="'icons/full/custom/com.stambia.generic.level.png'"/>
+    <icons name="Tag" xpath="if (boolean(tag) or boolean(userProperties)) then 'icons/full/custom/rdbms.tag.png' else ''"/>
+    <attribute xmlName="description" category="" code="description" displayName="Description" multiLine="true"/>
+    <attribute xmlName="tag" xpathCondition="" category="" code="tag" displayName="Tags" unbounded="true"/>
+    <attribute xmlName="userProperties" xpathCondition="" category="" code="userProperties" displayName="User Properties" keyValue="true" unbounded="true"/>
+    <xPathExpression expression="if ($p1!='') then attribute[@name=$p1][1]/@value else ''">
+      <code>VALUE</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+    <xPathExpression expression="element[@type=md:ifEmpty($p1,@type) and @name=md:ifEmpty($p2,@name)]">
+      <code>ELEMENT_REF</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="''" name="p2"/>
+    </xPathExpression>
+  </level>
+  <xPathExpression expression="if (string-length($p1)=0) then tag else not(empty(tag[.=$p1]))">
+    <code>TAG</code>
+    <xPathParameter defaultValue="''"/>
+  </xPathExpression>
+  <xPathExpression expression="if (string-length($p1)=0) &#xD;&#xA;&#x9;then userProperties&#xD;&#xA;&#x9;else if (string-length($p2)=0) &#xD;&#xA;&#x9;&#x9;then userProperties[@key=$p1]&#xD;&#xA;&#x9;&#x9;else (userProperties[@key=$p1]=$p2)">
+    <code>USER_PROPERTY</code>
+    <xPathParameter defaultValue="''"/>
+    <xPathParameter defaultValue="''" name="p2"/>
+  </xPathExpression>
+  <xPathExpression expression="userProperties/@key">
+    <code>USER_PROPERTY_KEYS</code>
+  </xPathExpression>
+</tech:tech>

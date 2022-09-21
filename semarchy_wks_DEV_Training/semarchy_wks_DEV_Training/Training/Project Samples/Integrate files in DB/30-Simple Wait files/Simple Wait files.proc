@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_4FjdENh6EeiHBZdKZ0VXqw">
+  <actionCode id="_S2PJgNj4EeiHBZdKZ0VXqw" isBeginAction="false" name="FileWait" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileWaitActionCodeI">
+    <bindLink id="_ArmIkNj5EeiHBZdKZ0VXqw" bindType="DirectBind" targetId="_-wixINj4EeiHBZdKZ0VXqw"/>
+    <metaDataLink id="_S2UpENj4EeiHBZdKZ0VXqw" name="Multiple_Files_Folder" target="../20-Metadata/FILE_Server.md#_e7FNsNjzEeiHBZdKZ0VXqw?fileId=_exiQINjzEeiHBZdKZ0VXqw$type=md$name=Multiple_Files_Folder?"/>
+    <parameter id="_aHUKcNj4EeiHBZdKZ0VXqw" name="WAIT_FILE_INCLUDES" type="String" value="*.txt"/>
+    <parameter id="_cPILgNj4EeiHBZdKZ0VXqw" name="WAIT_FILE_NB_FILES" type="Integer" value="-1"/>
+  </actionCode>
+  <actionCode id="_-wixINj4EeiHBZdKZ0VXqw" isBeginAction="false" name="ExecuteDelivery" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ExecDeliveryActionCodeI">
+    <parameter id="_Oet6MNj5EeiHBZdKZ0VXqw" name="p_file_name" type="String" value=":{file_name}:"/>
+    <parameter id="_d_7lUNj5EeiHBZdKZ0VXqw" name="DELIV_NAME" type="String" value="Mapping with single wait files"/>
+    <parameter id="_iVhFgNj5EeiHBZdKZ0VXqw" name="DELIV_SESSION_NAME" type="String" value="treatment of the file :{file_name}:"/>
+  </actionCode>
+</proc:process>

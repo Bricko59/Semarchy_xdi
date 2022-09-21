@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_Tb6boRgmEeapFfTHA28Ggw">
+  <parameter id="_Tb6bohgmEeapFfTHA28Ggw" input="true" name="id_demande" type="Integer" value="2"/>
+  <parameter id="_Tb6boxgmEeapFfTHA28Ggw" input="true" name="date_demande" type="String" value="2016-05-11 15:43:07:614"/>
+  <parameter id="_Tb6bpBgmEeapFfTHA28Ggw" input="true" name="nom_demandeur" type="String" value="Souchard"/>
+  <parameter id="_Tb6bpRgmEeapFfTHA28Ggw" input="true" name="prenom_demandeur" type="String" value="Jean"/>
+  <parameter id="_Tb6bphgmEeapFfTHA28Ggw" input="true" name="prenom_enfant" type="String" value="Juliette"/>
+  <parameter id="_Tb6bpxgmEeapFfTHA28Ggw" input="true" name="date_naissance_enfant" type="String" value="2015-05-11"/>
+  <parameter id="_Tb6bqBgmEeapFfTHA28Ggw" output="true" name="id_inscription" type="Integer" value="1"/>
+  <parameter id="_Tb6bqRgmEeapFfTHA28Ggw" output="true" name="niveau_confirmation" type="Integer" value="2"/>
+  <parameter id="_Tb6bqhgmEeapFfTHA28Ggw" output="true" name="date_confirmation_inscription" type="String" value="2016-05-11 15:43:07:614"/>
+  <actionCode id="_Tb6bqxgmEeapFfTHA28Ggw" enable="true" isBeginAction="false" name="Sql To Parameters id_inscription" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+    <link id="_Tb6brBgmEeapFfTHA28Ggw" executionCondition="%e(rhino){ (${~/id_inscription}$ != 0) }e(rhino)% " executionType="OK" generationType="OK_KO" mandatory="1" targetId="_Tb6brhgmEeapFfTHA28Ggw"/>
+    <metaDataLink id="_Z9NlcBgmEeapFfTHA28Ggw" name="INSCRIPTION" target="../00_Metadata/HSQL_Creche.md#_Y22_cRd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=INSCRIPTION?"/>
+    <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;~/id_inscription&quot; type=&quot;Integer&quot;>&#xD;
+SELECT MAX(id_inscription) id_inscription&#xD;
+FROM   (SELECT id_inscription FROM TASSIN.INSCRIPTION &#xD;
+        WHERE  id_demande=${~/id_demande}$ &#xD;
+        UNION &#xD;
+        SELECT 0 id_inscription FROM (VALUES(0)))&#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters> </code>
+  </actionCode>
+  <actionCode id="_Tb6brhgmEeapFfTHA28Ggw" enable="true" isBeginAction="false" name="Sql To Parameters niveau_creche" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+    <link id="_Tb6brxgmEeapFfTHA28Ggw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_Tb6bsRgmEeapFfTHA28Ggw"/>
+    <metaDataLink id="_e6JZgBgmEeapFfTHA28Ggw" name="INSCRIPTION" target="../00_Metadata/HSQL_Creche.md#_Y22_cRd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=INSCRIPTION?"/>
+    <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;~/niveau_confirmation&quot; type=&quot;Integer&quot;>&#xD;
+SELECT niveau_confirmation FROM tassin.inscription&#xD;
+WHERE id_demande=${~/id_demande}$&#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters> </code>
+  </actionCode>
+  <actionCode id="_Tb6bsRgmEeapFfTHA28Ggw" enable="true" isBeginAction="false" name="Sql To Parameters current_date" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+    <metaDataLink id="_fODM8BgmEeapFfTHA28Ggw" name="INSCRIPTION" target="../00_Metadata/HSQL_Creche.md#_Y22_cRd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=INSCRIPTION?"/>
+    <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;~/date_confirmation_inscription&quot; type=&quot;String&quot;>&#xD;
+SELECT date_confirmation_inscription FROM tassin.inscription&#xD;
+WHERE id_demande=${~/id_demande}$&#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters> </code>
+  </actionCode>
+  <actionProcessRef id="_WBnSkBgmEeapFfTHA28Ggw" isBeginAction="false" name="Load inscription in Tassin DB" nbCycles="-1" toleratedError="false" processMap="true" targetName="Load%20inscription%20in%20Tassin%20DB.map#_HiOQ0BgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$name=Load%20inscription%20in%20Tassin%20DB$type=map?">
+    <link id="_Tb6btBgmEeapFfTHA28Ggw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_Tb6bqxgmEeapFfTHA28Ggw"/>
+  </actionProcessRef>
+</proc:process>

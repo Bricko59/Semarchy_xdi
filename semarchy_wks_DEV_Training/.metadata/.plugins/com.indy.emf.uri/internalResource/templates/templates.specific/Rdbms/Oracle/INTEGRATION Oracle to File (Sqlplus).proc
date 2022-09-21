@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:proc="http://www.example.org/proc" xmlns:xs="http://www.w3.org/2001/XMLSchema" description="This template is used to generate flat files out of Oracle using SQL*Plus.&#xD;&#xA;&#xD;&#xA;It requires that SQL*Plus utility is referenced in the PATH.&#xD;&#xA;It supports only String fields in the target file and any formating must be performed in the mapping expressions of each field.&#xD;&#xA;When a field of the target file is not mapped it will be generated as an empty String.&#xD;&#xA;The record separator is ignored and defaults to SQL*Plus record separator.&#xD;&#xA;&#xD;&#xA;Refer to the description of each Parameter for more information.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;02/12/2021&#x9;Allow this template to be used with Transparent Staging Areas&#xD;&#xA;13/10/2021&#x9;Template creation" id="_S4fzICpvEeyn2YXZgvDpkw" metaInf="&lt;template-feature-support name=&quot;stagingArea&quot; enable=&quot;true&quot; evaluation=&quot;NATIVE&quot;/>" nbCycles="-1">
+  <parameter description="Number of records that will be retrieved at a single time from the database.&#xD;&#xA;Larger values may provide better performance but will consume more memory." id="_S4fzISpvEeyn2YXZgvDpkw" label="" name="fetchSize" type="String" value="100"/>
+  <parameter description="If true, the temporary objects created during integration are removed at the end of the process." id="17db196a-54a2-47c6-9a37-c5f5486d0108" name="cleanTemporaryObjects" type="Boolean" value="true"/>
+  <parameter description="This parameter allows to override the linesize calculated by default.&#xD;&#xA;Leave empty to let the template decide what should be the line size based on the file definition." id="ca63bb6d-7aac-451e-948f-10e42306af91" label="" name="lineSize" type="String"/>
+  <subProcess id="_S4fzLSpvEeyn2YXZgvDpkw" name="Integration" nbCycles="-1">
+    <actionCode id="_S4fzQCpvEeyn2YXZgvDpkw" name="Create SQL Plus Script" nbCycles="-1" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+      <link id="_S4fzQSpvEeyn2YXZgvDpkw" generationType="OK_KO" mandatory="1" targetId="d3e83c72-5e62-4fbc-8d5f-4b82d91d7cb9"/>
+      <parameter id="_S4fzRCpvEeyn2YXZgvDpkw" name="TXT_WRITE_FILENAME" type="String" value="%x{$REF/ref:target()/ref:directory()/ref:work()/tech:path()}x%/%x{$REF/ref:target()/tech:physicalName()}x%.sql"/>
+      <code>whenever sqlerror exit       SQL.SQLCODE;
+whenever oserror  exit       100;
+set sqlblanklines            on
+set linesize                 %x{md:ifEmpty(md:paramValue($this,'lineSize'),string(sum($REF/ref:target()/ref:columns()/tech:size()) + ((count($REF/ref:target()/ref:columns())-1)*(string-length($REF/ref:target()/tech:fieldSeparator())))))}x%
+set pagesize                 0
+set echo                     off
+set termout                  off
+set underline                off
+set feedback                 off
+set arraysize                %x{md:paramValue($this,'fetchSize')}x% 
+set trimspool                %x{if($REF/ref:target()/tech:type() = 'P') then 'off' else 'on'}x%
+set sqlprompt                ''
+set colsep                   ''
+
+%x{md:list($columns/col/format,'\n')}x%
+
+spool %x{$REF/ref:target()/tech:filePath()}x%
+
+select   %x{if (md:paramValue($this,'useDistinct')='true') then 'DISTINCT' else ''}x%
+	%x{md:list($columns/col/expression, concat(if ($REF/ref:target()/tech:type() = 'P') then ',' else concat('||''',$REF/ref:target()/tech:asciiFieldSeparator(), '''||'),'\n\t'))}x%
+from	%x{md:ifEmpty($REF/tech:fromPart(), 'dual')}x%
+where	(1=1)
+%x{$REF/tech:joinPart()}x%
+%x{$REF/tech:filterPart()}x%
+%x{$REF/tech:cdcFilterPart2($this)}x%
+%x{$REF/tech:groupByPart()}x%
+%x{$REF/tech:havingPart()}x%;
+
+spool off
+exit</code>
+    </actionCode>
+    <actionCode id="d3e83c72-5e62-4fbc-8d5f-4b82d91d7cb9" isBeginAction="false" name="SQL Plus call" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.BeanScriptingActionCodeI">
+      <link id="974b26d8-14bc-44cc-9273-3552ddb92634" executionType="OK" generationType="OK_KO" mandatory="1" targetId="341f2d81-89dc-41a0-9554-3e3bc043792f"/>
+      <parameter id="52940288-80d6-4908-92c8-9e0140d9accf" name="SCRIPTING_LANGUAGE" type="String" value="beanshell"/>
+      <parameter id="1f3d3b26-2c6e-4e50-8fae-56071cf3cfc3" name="SCRIPTING_CONNECTION" type="String" value="%x{$this/@id}x%"/>
+      <code>import java.lang.Runtime;&#xD;
+import java.lang.Process;&#xD;
+import java.lang.StringBuffer;&#xD;
+import java.util.ArrayList;&#xD;
+import com.indy.engine.common.tools.ProcessWrapper;&#xD;
+&#xD;
+&#xD;
+ArrayList args=new ArrayList();&#xD;
+&#xD;
+args.add(&quot;sqlplus&quot;);&#xD;
+args.add(&quot;-S&quot;);&#xD;
+args.add(&quot;%x{$REF/ref:source()/tech:jdbcUser()}x%/%x{$REF/ref:source()/tech:jdbcPassword()}x%%x{md:encloseIfNotEmpty($REF/ref:source()/tech:serverName(), '@', '')}x%&quot;);&#xD;
+args.add(&quot;@%x{$REF/ref:target()/ref:directory()/ref:work()/tech:path()}x%/%x{$REF/ref:target()/tech:physicalName()}x%.sql&quot;);&#xD;
+&#xD;
+String[] argsArray = new String[args.size()];&#xD;
+for(int i=0; i &lt; args.size(); i++) {&#xD;
+	argsArray[i] = (String) (args.get(i));&#xD;
+}&#xD;
+&#xD;
+Process proc = Runtime.getRuntime().exec(argsArray);&#xD;
+StringBuffer _in = new StringBuffer();&#xD;
+StringBuffer _err = new StringBuffer();&#xD;
+ProcessWrapper psr=ProcessWrapper.wrap(proc);&#xD;
+&#xD;
+psr.setInputStringBuffer(_in,-1);&#xD;
+psr.setErrorStringBuffer(_err,-1);&#xD;
+&#xD;
+int i=psr.waitFor();&#xD;
+__ctx__.publishVariable(&quot;OUT&quot;,_in.toString());&#xD;
+if (i!=0){&#xD;
+	__ctx__.publishVariable(&quot;ERROR&quot;,_err.toString());&#xD;
+	&#xD;
+	throw new Exception(_err.toString());&#xD;
+}</code>
+    </actionCode>
+    <actionCode id="341f2d81-89dc-41a0-9554-3e3bc043792f" generationCondition="md:paramValue($this, 'cleanTemporaryObjects')='true'" isBeginAction="false" name="Delete SQL Plus Script" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+      <parameter id="1c3a8474-ef2a-4b69-ad1f-f2f037dfa8f5" name="DEL_FILE" type="String" value="%x{$REF/ref:target()/ref:directory()/ref:work()/tech:path()}x%/%x{$REF/ref:target()/tech:physicalName()}x%.sql"/>
+    </actionCode>
+    <templateType>I-TP.RDBMS.INTEGRATING</templateType>
+    <xslVariable id="31de2fd4-3d7b-4e35-9750-a09ef55138b2" code="%xsl{&#xD;&#xA;&lt;xsl:for-each select=&quot;$REF/ref:target()/ref:columns()&quot;>&lt;xsl:sort select=&quot;tech:fieldPosition()&quot; data-type=&quot;number&quot;/>&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;curColumn&quot; select=&quot;.&quot; />&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;mappedColumn&quot; select=&quot;$REF/ref:columns()[ref:target()/@id = $curColumn/@id]&quot; />&#xD;&#xA;&#x9;&lt;xsl:choose>&#xD;&#xA;&#x9;&#x9;&lt;xsl:when test=&quot;$REF/ref:target()/tech:type() = 'P'&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:choose>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;xsl:when test=&quot;exists($mappedColumn)&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;col>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;expression>%x{concat($mappedColumn/tech:expression(), ' ', $curColumn/tech:name())}x%&lt;/expression>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;format>%x{concat('COLUMN ', $curColumn/tech:name(), ' FORMAT A',$curColumn/tech:size())}x% &lt;/format>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;/col>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;/xsl:when>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;xsl:otherwise>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;col>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;expression>%x{concat('NULL ', $curColumn/tech:name())}x%&lt;/expression>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;format>%x{concat('COLUMN ', $curColumn/tech:name(), ' FORMAT A',$curColumn/tech:size())}x% &lt;/format>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;/col>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;/xsl:otherwise>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;/xsl:choose>&#xD;&#xA;&#x9;&#x9;&lt;/xsl:when>&#xD;&#xA;&#x9;&#x9;&lt;xsl:otherwise>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:choose>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;xsl:when test=&quot;exists($mappedColumn)&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;col>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;expression>%x{$mappedColumn/tech:expression()}x%&lt;/expression>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;/col>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;/xsl:when>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;xsl:otherwise>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;col>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;expression>NULL&lt;/expression>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;/col>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;/xsl:otherwise>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;/xsl:choose>&#xD;&#xA;&#x9;&#x9;&lt;/xsl:otherwise>&#xD;&#xA;&#x9;&lt;/xsl:choose>&#xD;&#xA;&lt;/xsl:for-each>&#xD;&#xA;}xsl%" name="columns" type="xsl"/>
+  </subProcess>
+  <templateType>I-TP.RDBMS</templateType>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.2/notation#/?fileId=_S4fzICpvEeyn2YXZgvDpkw?">
+  <notation:Diagram xmi:id="_vHBtUCqOEeyz_L3qtZMJAQ" type="Proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_vHjRwCqOEeyz_L3qtZMJAQ" type="2004">
+      <children xmi:type="notation:Node" xmi:id="_vHj40CqOEeyz_L3qtZMJAQ" type="5004"/>
+      <children xmi:type="notation:Node" xmi:id="_vHj40SqOEeyz_L3qtZMJAQ" type="7005">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_vHj40iqOEeyz_L3qtZMJAQ"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_vHj40yqOEeyz_L3qtZMJAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_vHj41CqOEeyz_L3qtZMJAQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_vHj41SqOEeyz_L3qtZMJAQ" type="7006">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_vHj41iqOEeyz_L3qtZMJAQ"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_vHj41yqOEeyz_L3qtZMJAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_vHj42CqOEeyz_L3qtZMJAQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vHjRwSqOEeyz_L3qtZMJAQ" fontName="Segoe UI"/>
+      <styles xmi:type="notation:HintedDiagramLinkStyle" xmi:id="_vHjRwiqOEeyz_L3qtZMJAQ"/>
+      <element xmi:type="proc:SubActionProcess" href="resource.proc#_S4fzLSpvEeyn2YXZgvDpkw?fileId=_S4fzICpvEeyn2YXZgvDpkw$type=proc$name=Integration?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vHjRwyqOEeyz_L3qtZMJAQ" x="24" y="60"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vHlG9CqOEeyz_L3qtZMJAQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_vHlG9yqOEeyz_L3qtZMJAQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vHlG9SqOEeyz_L3qtZMJAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_S4fzISpvEeyn2YXZgvDpkw?fileId=_S4fzICpvEeyn2YXZgvDpkw$type=proc$name=fetchSize?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vHlG9iqOEeyz_L3qtZMJAQ" x="144" y="60"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_8PvaUCsuEeyUnKxSqyqKbA" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_8PzEsCsuEeyUnKxSqyqKbA" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_8PvaUSsuEeyUnKxSqyqKbA" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#17db196a-54a2-47c6-9a37-c5f5486d0108?fileId=_S4fzICpvEeyn2YXZgvDpkw$type=proc$name=cleanTemporaryObjects?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_8PvaUisuEeyUnKxSqyqKbA" x="144" y="24"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_YL86MDMJEeyUhba_v0MbvQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_YL-IUDMJEeyUhba_v0MbvQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_YL86MTMJEeyUhba_v0MbvQ" fontName="Courier New"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#ca63bb6d-7aac-451e-948f-10e42306af91?fileId=_S4fzICpvEeyn2YXZgvDpkw$type=proc$name=lineSize?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_YL86MjMJEeyUhba_v0MbvQ" x="144" y="108"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_vHBtUSqOEeyz_L3qtZMJAQ"/>
+    <element xmi:type="proc:ActionProcess" href="resource.proc#_S4fzICpvEeyn2YXZgvDpkw?fileId=_S4fzICpvEeyn2YXZgvDpkw$type=proc$name=INTEGRATION%20Oracle%20to%20File%20(Sqlplus)?"/>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_vHCUYCqOEeyz_L3qtZMJAQ" type="Proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_oylLYCqcEeyz_L3qtZMJAQ" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_oyqD4CqcEeyz_L3qtZMJAQ" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_oyqD4SqcEeyz_L3qtZMJAQ" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_oyqD4iqcEeyz_L3qtZMJAQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_oyqD4yqcEeyz_L3qtZMJAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_oyqD5CqcEeyz_L3qtZMJAQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_oyqD5SqcEeyz_L3qtZMJAQ" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_oyqD5iqcEeyz_L3qtZMJAQ"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_oyqD5yqcEeyz_L3qtZMJAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_oyqD6CqcEeyz_L3qtZMJAQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_oylLYSqcEeyz_L3qtZMJAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#d3e83c72-5e62-4fbc-8d5f-4b82d91d7cb9?fileId=_S4fzICpvEeyn2YXZgvDpkw$type=proc$name=SQL%20Plus%20call?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_oylLYiqcEeyz_L3qtZMJAQ" x="60" y="168"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_8dU2sCqnEeyz_L3qtZMJAQ" type="2007">
+      <children xmi:type="notation:Node" xmi:id="_8dYhECqnEeyz_L3qtZMJAQ" type="5007"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_8dU2sSqnEeyz_L3qtZMJAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:XslVariable" href="resource.proc#31de2fd4-3d7b-4e35-9750-a09ef55138b2?fileId=_S4fzICpvEeyn2YXZgvDpkw$type=proc?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_8dU2siqnEeyz_L3qtZMJAQ" x="228" y="24"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_ABfqbCqPEeyz_L3qtZMJAQ" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_ABgRcCqPEeyz_L3qtZMJAQ" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_ABgRcSqPEeyz_L3qtZMJAQ" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_ABgRciqPEeyz_L3qtZMJAQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_ABgRcyqPEeyz_L3qtZMJAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_ABgRdCqPEeyz_L3qtZMJAQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_ABgRdSqPEeyz_L3qtZMJAQ" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_ABgRdiqPEeyz_L3qtZMJAQ"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_ABgRdyqPEeyz_L3qtZMJAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_ABgReCqPEeyz_L3qtZMJAQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_ABfqbSqPEeyz_L3qtZMJAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_S4fzQCpvEeyn2YXZgvDpkw?fileId=_S4fzICpvEeyn2YXZgvDpkw$type=proc$name=Create%20SQL%20Plus%20Script?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ABfqbiqPEeyz_L3qtZMJAQ" x="24" y="60"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_VlKrkCqtEeyz_L3qtZMJAQ" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_VlO9ACqtEeyz_L3qtZMJAQ" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_VlO9ASqtEeyz_L3qtZMJAQ" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_VlO9AiqtEeyz_L3qtZMJAQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_VlO9AyqtEeyz_L3qtZMJAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_VlO9BCqtEeyz_L3qtZMJAQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_VlO9BSqtEeyz_L3qtZMJAQ" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_VlO9BiqtEeyz_L3qtZMJAQ"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_VlO9ByqtEeyz_L3qtZMJAQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_VlO9CCqtEeyz_L3qtZMJAQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_VlKrkSqtEeyz_L3qtZMJAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#341f2d81-89dc-41a0-9554-3e3bc043792f?fileId=_S4fzICpvEeyn2YXZgvDpkw$type=proc$name=Delete%20SQL%20Plus%20Script?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_VlKrkiqtEeyz_L3qtZMJAQ" x="36" y="264"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_vHCUYSqOEeyz_L3qtZMJAQ"/>
+    <element xmi:type="proc:SubActionProcess" href="resource.proc#_S4fzLSpvEeyn2YXZgvDpkw?fileId=_S4fzICpvEeyn2YXZgvDpkw$type=proc$name=Integration?"/>
+    <edges xmi:type="notation:Edge" xmi:id="_AB7vQCqPEeyz_L3qtZMJAQ" type="4001" source="_ABfqbCqPEeyz_L3qtZMJAQ" target="_oylLYCqcEeyz_L3qtZMJAQ">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_AB7vQSqPEeyz_L3qtZMJAQ"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_AB7vQiqPEeyz_L3qtZMJAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_S4fzQSpvEeyn2YXZgvDpkw?fileId=_S4fzICpvEeyn2YXZgvDpkw$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_AB7vQyqPEeyz_L3qtZMJAQ" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_ACM1ACqPEeyz_L3qtZMJAQ" id="(0.5,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_ACM1ASqPEeyz_L3qtZMJAQ" id="(0.4956521739130435,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_V0eS4CqtEeyz_L3qtZMJAQ" type="4001" source="_oylLYCqcEeyz_L3qtZMJAQ" target="_VlKrkCqtEeyz_L3qtZMJAQ">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_V0eS4SqtEeyz_L3qtZMJAQ"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_V0eS4iqtEeyz_L3qtZMJAQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#974b26d8-14bc-44cc-9273-3552ddb92634?fileId=_S4fzICpvEeyn2YXZgvDpkw$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_V0eS4yqtEeyz_L3qtZMJAQ" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_V0e58CqtEeyz_L3qtZMJAQ" id="(0.4956521739130435,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_arP0kCqtEeyz_L3qtZMJAQ" id="(0.49700598802395207,0.0)"/>
+    </edges>
+  </notation:Diagram>
+</xmi:XMI>
+]]></diagram>
+</proc:process>

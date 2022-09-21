@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map:map xmlns:map="http://www.indy.com/v2/map" id="_jEWPh_cLEeihDLFmfbLxVA" internalVersion="8" tech="resource.tech#_waYSMH8VEd2__Mzb_dB76A?fileId=_waYSMH8VEd2__Mzb_dB76A$type=tech$name=flow?">
+  <datastore id="_jEWPiPcLEeihDLFmfbLxVA" alias="T_PMT2" dataset="_jEWPmvcLEeihDLFmfbLxVA" ref="resource.md#_uWWaEfcJEeihDLFmfbLxVA?fileId=_N9VnAPbrEeihWtdVUY4U1Q$type=md$name=T_PMT2?">
+    <field id="_jEWPifcLEeihDLFmfbLxVA" fullAlias="PMT_NAME" name="PMT_NAME" ref="resource.md#_uWhZN_cJEeihDLFmfbLxVA?fileId=_N9VnAPbrEeihWtdVUY4U1Q$type=md$name=PMT_NAME?"/>
+    <field id="_jEWPivcLEeihDLFmfbLxVA" fullAlias="PMT_DESCRIPTION" name="PMT_DESCRIPTION" ref="resource.md#_uWhZPvcJEeihDLFmfbLxVA?fileId=_N9VnAPbrEeihWtdVUY4U1Q$type=md$name=PMT_DESCRIPTION?"/>
+    <field id="_jEWPi_cLEeihDLFmfbLxVA" fullAlias="PMT_CODE" name="PMT_CODE" ref="resource.md#_uWhZMPcJEeihDLFmfbLxVA?fileId=_N9VnAPbrEeihWtdVUY4U1Q$type=md$name=PMT_CODE?" updateKey="true"/>
+    <field id="_jEWPjPcLEeihDLFmfbLxVA" fullAlias="PMT_ACTIVE" name="PMT_ACTIVE" ref="resource.md#_uWiAQPcJEeihDLFmfbLxVA?fileId=_N9VnAPbrEeihWtdVUY4U1Q$type=md$name=PMT_ACTIVE?"/>
+    <constraint id="_p7hioPcLEeihDLFmfbLxVA" name="PK_T_PMT2" ref="resource.md#_uWjOYPcJEeihDLFmfbLxVA?fileId=_N9VnAPbrEeihWtdVUY4U1Q$type=md$name=PK_T_PMT2?" reject="true"/>
+  </datastore>
+  <datastore id="_jEWPjvcLEeihDLFmfbLxVA" alias="DIM_PMT2" dataset="_jEWPm_cLEeihDLFmfbLxVA" ref="resource.md#_A-rAEfcKEeihDLFmfbLxVA?fileId=_UhZw8PbrEeihWtdVUY4U1Q$type=md$name=DIM_PMT2?" subExpression="[A]">
+    <field id="_jEWPj_cLEeihDLFmfbLxVA" enable="true" insert="true" name="PMT_NAME" ref="resource.md#_A-0xEPcKEeihDLFmfbLxVA?fileId=_UhZw8PbrEeihWtdVUY4U1Q$type=md$name=PMT_NAME?" update="true">
+      <expression id="_jEWPkPcLEeihDLFmfbLxVA" setDescriptorRef="_jEWPlvcLEeihDLFmfbLxVA">
+        <expression>T_PMT2.PMT_NAME</expression>
+      </expression>
+    </field>
+    <field id="_jEWPkfcLEeihDLFmfbLxVA" enable="true" insert="true" name="PMT_DESCRIPTION" ref="resource.md#_A-0xF_cKEeihDLFmfbLxVA?fileId=_UhZw8PbrEeihWtdVUY4U1Q$type=md$name=PMT_DESCRIPTION?" update="true">
+      <expression id="_jEWPkvcLEeihDLFmfbLxVA" setDescriptorRef="_jEWPlvcLEeihDLFmfbLxVA">
+        <expression>T_PMT2.PMT_DESCRIPTION</expression>
+      </expression>
+    </field>
+    <field id="_jEWPk_cLEeihDLFmfbLxVA" enable="true" insert="true" name="PMT_CODE" ref="resource.md#_A-0KAPcKEeihDLFmfbLxVA?fileId=_UhZw8PbrEeihWtdVUY4U1Q$type=md$name=PMT_CODE?" update="true" updateKey="true">
+      <expression id="_jEWPlPcLEeihDLFmfbLxVA" setDescriptorRef="_jEWPlvcLEeihDLFmfbLxVA">
+        <expression>T_PMT2.PMT_CODE</expression>
+      </expression>
+    </field>
+    <constraint id="_qyauYPcLEeihDLFmfbLxVA" name="PK_DIM_PMT2" ref="resource.md#_A-1YIPcKEeihDLFmfbLxVA?fileId=_UhZw8PbrEeihWtdVUY4U1Q$type=md$name=PK_DIM_PMT2?" reject="true"/>
+    <setDescriptor id="_jEWPlvcLEeihDLFmfbLxVA" label="A"/>
+  </datastore>
+  <filter description="CASE '${~/genereFilter}$'&#xD;&#xA;     WHEN 'true' THEN T_PAYMENT_TYPE.PMT_DESCRIPTION IS NOT NULL &#xD;&#xA;     ELSE 1=1&#xD;&#xA;END&#xD;&#xA;AND T_PAYMENT_TYPE.PMT_ACTIVE = 1" id="_jEWPl_cLEeihDLFmfbLxVA" location="SRC">
+    <expression><![CDATA[${~/generatedFilter}$
+AND T_PMT2.PMT_ACTIVE = 1]]></expression>
+  </filter>
+  <template id="_jEWPmPcLEeihDLFmfbLxVA" name="L1_DIM_PMT2" process="resource.proc#_aafbe681-11ab-4ebc-ab56-de794128c580?fileId=_aafbe681-11ab-4ebc-ab56-de794128c580$type=proc$name=LOAD%20Rdbms%20to%20Rdbms?" sourceId="_jEWPiPcLEeihDLFmfbLxVA" targetId="_jEWPjvcLEeihDLFmfbLxVA"/>
+  <template id="_jEWPmfcLEeihDLFmfbLxVA" name="I_DIM_PMT2" process="resource.proc#_HFOfdjEZEd-WZe6cNi2k2w?fileId=_HFOfdjEZEd-WZe6cNi2k2w$type=proc$name=INTEGRATION%20Hsql?" targetId="_jEWPjvcLEeihDLFmfbLxVA"/>
+  <dataSet id="_jEWPmvcLEeihDLFmfbLxVA">
+    <container>_jEWPiPcLEeihDLFmfbLxVA</container>
+  </dataSet>
+  <dataSet id="_jEWPm_cLEeihDLFmfbLxVA">
+    <container>_jEWPjvcLEeihDLFmfbLxVA</container>
+  </dataSet>
+  <hint>
+    <usedField>#_jEWPifcLEeihDLFmfbLxVA</usedField>
+    <usedField>#_jEWPivcLEeihDLFmfbLxVA</usedField>
+    <usedField>#_jEWPi_cLEeihDLFmfbLxVA</usedField>
+    <usedField>#_jEWPjPcLEeihDLFmfbLxVA</usedField>
+  </hint>
+</map:map>

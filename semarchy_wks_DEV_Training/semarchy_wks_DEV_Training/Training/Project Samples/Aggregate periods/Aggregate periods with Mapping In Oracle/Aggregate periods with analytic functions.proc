@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_5bjEEf7kEeiObZtfDY_bvQ">
+  <actionCode id="_L_SFAP7lEeiObZtfDY_bvQ" isBeginAction="false" name="SqlOperation INSERT into job_history" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_oKZn8AH7EemNL-9oVsp3Bg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_n6BCkAH7EemNL-9oVsp3Bg"/>
+    <metaDataLink id="_N_21oP7lEeiObZtfDY_bvQ" name="JOB_HISTORY" target="Oracle%20-%20Hotel.md#_cS-Bof6zEei_Z8ilfPg9pw?fileId=_BpwosNtkEeiZEKbbzoNoqw$type=md$name=JOB_HISTORY?"/>
+    <parameter id="_L_SFA_7lEeiObZtfDY_bvQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_77MSIP7rEeiObZtfDY_bvQ" name="SQL_MULTI_QUERYS" type="Boolean" value="true"/>
+    <code>INSERT INTO %x{$JOB_HISTORY/tech:physicalPath()}x% VALUES ('00001',TO_DATE('2001-01-01','YYYY-MM-DD'),TO_DATE('2001-12-31','YYYY-MM-DD'),'job01'); &#xD;
+INSERT INTO %x{$JOB_HISTORY/tech:physicalPath()}x% VALUES ('00001',TO_DATE('2002-01-01','YYYY-MM-DD'),TO_DATE('2002-10-31','YYYY-MM-DD'),'job01'); &#xD;
+INSERT INTO %x{$JOB_HISTORY/tech:physicalPath()}x% VALUES ('00001',TO_DATE('2002-11-01','YYYY-MM-DD'),TO_DATE('2002-11-30','YYYY-MM-DD'),'job01'); &#xD;
+INSERT INTO %x{$JOB_HISTORY/tech:physicalPath()}x% VALUES ('00001',TO_DATE('2002-12-01','YYYY-MM-DD'),TO_DATE('2003-01-19','YYYY-MM-DD'),'job01');  &#xD;
+INSERT INTO %x{$JOB_HISTORY/tech:physicalPath()}x% VALUES ('00001',TO_DATE('2003-01-20','YYYY-MM-DD'),NULL                              ,'job01'); &#xD;
+INSERT INTO %x{$JOB_HISTORY/tech:physicalPath()}x% VALUES ('00002',TO_DATE('2002-01-01','YYYY-MM-DD'),TO_DATE('2002-12-31','YYYY-MM-DD'),'job02'); &#xD;
+INSERT INTO %x{$JOB_HISTORY/tech:physicalPath()}x% VALUES ('00002',TO_DATE('2003-01-01','YYYY-MM-DD'),TO_DATE('2003-12-31','YYYY-MM-DD'),'job03'); &#xD;
+INSERT INTO %x{$JOB_HISTORY/tech:physicalPath()}x% VALUES ('00002',TO_DATE('2004-01-01','YYYY-MM-DD'),TO_DATE('2004-10-31','YYYY-MM-DD'),'job03'); &#xD;
+INSERT INTO %x{$JOB_HISTORY/tech:physicalPath()}x% VALUES ('00002',TO_DATE('2004-11-01','YYYY-MM-DD'),TO_DATE('2004-11-30','YYYY-MM-DD'),'job03'); &#xD;
+INSERT INTO %x{$JOB_HISTORY/tech:physicalPath()}x% VALUES ('00002',TO_DATE('2004-12-01','YYYY-MM-DD'),TO_DATE('2004-12-31','YYYY-MM-DD'),'job02');</code>
+  </actionCode>
+  <actionProcessRef id="_6eqG4P7kEeiObZtfDY_bvQ" isBeginAction="false" name="TOOL_resetSchema" nbCycles="-1" toleratedError="false" targetName="../../../global/components/Training/TOOL_resetSchema.proc#_mbXZ0SCBEeWkpdwlbgb5vw?fileId=_mbXZ0SCBEeWkpdwlbgb5vw$type=proc$name=TOOL_resetSchema?">
+    <link id="_M5x-YP7lEeiObZtfDY_bvQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_L_SFAP7lEeiObZtfDY_bvQ"/>
+    <metaDataLink id="_7o5FYP7kEeiObZtfDY_bvQ" name="HOTEL_DATAMART" target="Oracle%20-%20Hotel.md#_S69gUN69Eeigr-DIqVP22A?fileId=_BpwosNtkEeiZEKbbzoNoqw$type=md$name=HOTEL_DATAMART?"/>
+  </actionProcessRef>
+  <actionProcessRef id="_n6BCkAH7EemNL-9oVsp3Bg" isBeginAction="false" name="Aggregate periods with analytic functions" nbCycles="-1" toleratedError="false" processMap="true" targetName="Aggregate%20periods%20with%20analytic%20functions.map#_AVmAoAH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map$name=Aggregate%20periods%20with%20analytic%20functions?"/>
+</proc:process>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map:map xmlns:map="http://www.indy.com/v2/map" id="_ytRpAME_Eeq6L8zfnBksuA" internalVersion="8" tech="resource.tech#_waYSMH8VEd2__Mzb_dB76A?fileId=_waYSMH8VEd2__Mzb_dB76A$type=tech$name=flow?">
+  <datastore id="_ytRpAcE_Eeq6L8zfnBksuA" alias="Time" dataset="_ytSQJsE_Eeq6L8zfnBksuA" ref="resource.md#_ysjQbsE_Eeq6L8zfnBksuA?fileId=_ysipMME_Eeq6L8zfnBksuA$type=md$name=Time?">
+    <field id="_ytRpAsE_Eeq6L8zfnBksuA" expand="true" name="Time" ref="resource.md#_ysjQbsE_Eeq6L8zfnBksuA?fileId=_ysipMME_Eeq6L8zfnBksuA$type=md$name=Time?" updateKey="true"/>
+    <field id="_ytRpA8E_Eeq6L8zfnBksuA" fullAlias="DAY_DATE" name="DAY_DATE" parent="_ytRpAsE_Eeq6L8zfnBksuA" ref="resource.md#_ysjQecE_Eeq6L8zfnBksuA?fileId=_ysipMME_Eeq6L8zfnBksuA$type=md$name=DAY_DATE?"/>
+  </datastore>
+  <datastore id="_ytRpBME_Eeq6L8zfnBksuA" alias="DIM_TIME" dataset="_ytSQJ8E_Eeq6L8zfnBksuA" ref="resource.md#_ysmTrsE_Eeq6L8zfnBksuA?fileId=_yskeYME_Eeq6L8zfnBksuA$type=md$name=DIM_TIME?" subExpression="[A]">
+    <field id="_ytSQEME_Eeq6L8zfnBksuA" enable="true" insert="true" name="TIME_MONTH_DAY" ref="resource.md#_ysmTv8E_Eeq6L8zfnBksuA?fileId=_yskeYME_Eeq6L8zfnBksuA$type=md$name=TIME_MONTH_DAY?" update="true">
+      <expression id="_ytSQEcE_Eeq6L8zfnBksuA" location="WRK" setDescriptorRef="_ytSQI8E_Eeq6L8zfnBksuA">
+        <expression>convert(substr(Time.DAY_DATE,1,2),NUMERIC)</expression>
+      </expression>
+    </field>
+    <field id="_ytSQEsE_Eeq6L8zfnBksuA" enable="true" insert="true" name="TIME_QUARTER" ref="resource.md#_ysmT5cE_Eeq6L8zfnBksuA?fileId=_yskeYME_Eeq6L8zfnBksuA$type=md$name=TIME_QUARTER?" update="true">
+      <expression id="_ytSQE8E_Eeq6L8zfnBksuA" location="WRK" setDescriptorRef="_ytSQI8E_Eeq6L8zfnBksuA">
+        <expression>quarter(convert(substr(Time.DAY_DATE,7,4) + '-' + substr(Time.DAY_DATE,4,2) + '-' + substr(Time.DAY_DATE,1,2) + ' 00:00:00',TIMESTAMP))</expression>
+      </expression>
+    </field>
+    <field id="_ytSQFME_Eeq6L8zfnBksuA" enable="true" insert="true" name="TIME_KEY_DAY" ref="resource.md#_ysmTscE_Eeq6L8zfnBksuA?fileId=_yskeYME_Eeq6L8zfnBksuA$type=md$name=TIME_KEY_DAY?" update="true" updateKey="true">
+      <expression id="_ytSQFcE_Eeq6L8zfnBksuA" location="WRK" setDescriptorRef="_ytSQI8E_Eeq6L8zfnBksuA">
+        <expression>substr(Time.DAY_DATE,7,4) + '/' + substr(Time.DAY_DATE,4,2) + '/' + substr(Time.DAY_DATE,1,2)</expression>
+      </expression>
+    </field>
+    <field id="_ytSQFsE_Eeq6L8zfnBksuA" enable="true" insert="true" name="TIME_DAY_NAME" ref="resource.md#_ysmTz8E_Eeq6L8zfnBksuA?fileId=_yskeYME_Eeq6L8zfnBksuA$type=md$name=TIME_DAY_NAME?" update="true">
+      <expression id="_ytSQF8E_Eeq6L8zfnBksuA" location="WRK" setDescriptorRef="_ytSQI8E_Eeq6L8zfnBksuA">
+        <expression>dayname(convert(substr(Time.DAY_DATE,7,4) + '-' + substr(Time.DAY_DATE,4,2) + '-' + substr(Time.DAY_DATE,1,2) + ' 00:00:00',TIMESTAMP))</expression>
+      </expression>
+    </field>
+    <field id="_ytSQGME_Eeq6L8zfnBksuA" enable="true" insert="true" name="TIME_MONTH_NAME" ref="resource.md#_ysmT3sE_Eeq6L8zfnBksuA?fileId=_yskeYME_Eeq6L8zfnBksuA$type=md$name=TIME_MONTH_NAME?" update="true">
+      <expression id="_ytSQGcE_Eeq6L8zfnBksuA" location="WRK" setDescriptorRef="_ytSQI8E_Eeq6L8zfnBksuA">
+        <expression>monthname(convert(substr(Time.DAY_DATE,7,4) + '-' + substr(Time.DAY_DATE,4,2) + '-' + substr(Time.DAY_DATE,1,2) + ' 00:00:00',TIMESTAMP))</expression>
+      </expression>
+    </field>
+    <field id="_ytSQGsE_Eeq6L8zfnBksuA" enable="true" insert="true" name="TIME_YEAR" ref="resource.md#_ysmT7cE_Eeq6L8zfnBksuA?fileId=_yskeYME_Eeq6L8zfnBksuA$type=md$name=TIME_YEAR?" update="true">
+      <expression id="_ytSQG8E_Eeq6L8zfnBksuA" location="WRK" setDescriptorRef="_ytSQI8E_Eeq6L8zfnBksuA">
+        <expression>convert(substr(Time.DAY_DATE,7,4),NUMERIC)</expression>
+      </expression>
+    </field>
+    <field id="_ytSQHME_Eeq6L8zfnBksuA" enable="true" insert="true" name="TIME_WEEK_DAY" ref="resource.md#_ysmTx8E_Eeq6L8zfnBksuA?fileId=_yskeYME_Eeq6L8zfnBksuA$type=md$name=TIME_WEEK_DAY?" update="true">
+      <expression id="_ytSQHcE_Eeq6L8zfnBksuA" location="WRK" setDescriptorRef="_ytSQI8E_Eeq6L8zfnBksuA">
+        <expression>dayofweek(convert(substr(Time.DAY_DATE,7,4) + '-' + substr(Time.DAY_DATE,4,2) + '-' + substr(Time.DAY_DATE,1,2) + ' 00:00:00',TIMESTAMP))</expression>
+      </expression>
+    </field>
+    <field id="_ytSQHsE_Eeq6L8zfnBksuA" enable="true" insert="true" name="TIME_MONTH" ref="resource.md#_ysmT1sE_Eeq6L8zfnBksuA?fileId=_yskeYME_Eeq6L8zfnBksuA$type=md$name=TIME_MONTH?" update="true">
+      <expression id="_ytSQH8E_Eeq6L8zfnBksuA" location="WRK" setDescriptorRef="_ytSQI8E_Eeq6L8zfnBksuA">
+        <expression>convert(substr(Time.DAY_DATE,4,2),NUMERIC)</expression>
+      </expression>
+    </field>
+    <field id="_ytSQIME_Eeq6L8zfnBksuA" enable="true" insert="true" name="TIME_DATE" ref="resource.md#_ysmTuME_Eeq6L8zfnBksuA?fileId=_yskeYME_Eeq6L8zfnBksuA$type=md$name=TIME_DATE?" update="true">
+      <expression id="_ytSQIcE_Eeq6L8zfnBksuA" location="WRK" setDescriptorRef="_ytSQI8E_Eeq6L8zfnBksuA">
+        <expression>convert(substr(Time.DAY_DATE,7,4) + '-' + substr(Time.DAY_DATE,4,2) + '-' + substr(Time.DAY_DATE,1,2) + ' 00:00:00',TIMESTAMP)</expression>
+      </expression>
+    </field>
+    <constraint id="_ytSQIsE_Eeq6L8zfnBksuA" name="PK_DIM_TIME" ref="resource.md#_ysm6pME_Eeq6L8zfnBksuA?fileId=_yskeYME_Eeq6L8zfnBksuA$type=md$name=PK_DIM_TIME?" reject="true"/>
+    <setDescriptor id="_ytSQI8E_Eeq6L8zfnBksuA" label="A"/>
+  </datastore>
+  <template id="_ytSQJME_Eeq6L8zfnBksuA" name="I_DIM_TIME" process="resource.proc#_HFOfdjEZEd-WZe6cNi2k2w?fileId=_HFOfdjEZEd-WZe6cNi2k2w$type=proc$name=INTEGRATION%20Hsql?" targetId="_ytRpBME_Eeq6L8zfnBksuA"/>
+  <template id="_ytSQJcE_Eeq6L8zfnBksuA" name="L1_DIM_TIME" process="resource.proc#_a-mEoaIhEd68f8w2ej5O-w?fileId=_a-mEoaIhEd68f8w2ej5O-w$type=proc$name=LOAD%20File%20to%20Rdbms?" sourceId="_ytRpAcE_Eeq6L8zfnBksuA" targetId="_ytRpBME_Eeq6L8zfnBksuA"/>
+  <dataSet id="_ytSQJsE_Eeq6L8zfnBksuA">
+    <container>_ytRpAcE_Eeq6L8zfnBksuA</container>
+  </dataSet>
+  <dataSet id="_ytSQJ8E_Eeq6L8zfnBksuA">
+    <container>_ytRpBME_Eeq6L8zfnBksuA</container>
+  </dataSet>
+  <hint>
+    <usedField>#_ytRpA8E_Eeq6L8zfnBksuA</usedField>
+  </hint>
+  <diagram><![CDATA[<?xml version="1.0" ?><notation:Diagram xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmi:version="2.0" type="Map" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmi:id="1cf5972a-2b55-4f42-8a27-bd8ba03bd631" measurementUnit="Pixel"><children fontName="Segoe UI" xmi:type="notation:Shape" type="2004" xmi:id="353ffd63-4bcc-464e-aebf-673a05e1e9d2"><children xmi:type="notation:DecorationNode" type="5005" xmi:id="4478071d-0646-4094-b2f9-3bb4c142993a"></children><children xmi:type="notation:DecorationNode" type="7003" xmi:id="109e8603-ee73-41bf-86f8-173ec6880a95"></children><children xmi:type="notation:DecorationNode" type="7009" xmi:id="e3b0edf5-94ad-4113-8d32-2ca3c23bd31e"></children><children xmi:type="notation:BasicCompartment" type="7004" xmi:id="d57bb064-999d-4c28-83a3-50adf80f9c39"><styles xmi:type="notation:SortingStyle" xmi:id="eba8486c-3349-4119-8a82-da58f28235b1"></styles><styles xmi:type="notation:FilteringStyle" xmi:id="25d2c9d3-7bbf-4d7f-b669-c7de845d8c86"></styles></children><children xmi:type="notation:DecorationNode" type="5009" xmi:id="8aaac8ee-eabd-4b83-bc4e-f25dd205f9b9"><styles xmi:type="notation:DrawerStyle" xmi:id="16f22ef2-af78-449a-9a8d-41540e741a5f"></styles></children><children xmi:type="notation:DecorationNode" type="7005" xmi:id="f37f7456-3afa-4a00-974e-0556124f7ad6"><styles xmi:type="notation:SortingStyle" xmi:id="7c745056-e113-4d66-ac86-af2476f55ddf"></styles><styles xmi:type="notation:FilteringStyle" xmi:id="2f1d00a2-d9ab-49e6-bebb-b23c1af5b089"></styles></children><children xmi:type="notation:BasicCompartment" type="7007" xmi:id="51ed94cd-4104-4eb8-9575-26bc1168e8f7"></children><element xmi:type="map:Datastore" href="foo#_ytRpAcE_Eeq6L8zfnBksuA?fileId=_ytRpAME_Eeq6L8zfnBksuA?"></element><layoutConstraint xmi:type="notation:Bounds" y="71" xmi:id="208eee63-37af-4fd5-9104-d8f366c6a87e"></layoutConstraint></children><children fontName="Segoe UI" xmi:type="notation:Shape" type="2004" xmi:id="e7b27238-0fa0-4e82-8927-12e3db07b86d"><children xmi:type="notation:DecorationNode" type="5005" xmi:id="ef3d8778-9eb1-4ba0-8f66-42a06f85bddc"></children><children xmi:type="notation:DecorationNode" type="7003" xmi:id="7ae27baf-49ae-41d7-8685-81ec1032eed0"></children><children xmi:type="notation:DecorationNode" type="7009" xmi:id="edd8de1f-d9d4-47c3-a19e-ba163bd59a40"></children><children xmi:type="notation:BasicCompartment" type="7004" xmi:id="9b6ead59-7138-40b6-aeb9-43b264005fee"><styles xmi:type="notation:SortingStyle" xmi:id="179b36b6-4c8b-4b91-b2b1-d6ae384ccf4f"></styles><styles xmi:type="notation:FilteringStyle" xmi:id="cbb90f26-c9c1-46fa-855c-f6e8d257bdf9"></styles></children><children xmi:type="notation:DecorationNode" type="5009" xmi:id="5362a09d-6195-4822-aca7-5d9c4e990771"><styles xmi:type="notation:DrawerStyle" xmi:id="07784754-c7ae-4334-b449-eb0f03606c54"></styles></children><children xmi:type="notation:DecorationNode" type="7005" xmi:id="687f7f7d-c5b9-405b-bcc5-570abd6a286b"><styles xmi:type="notation:SortingStyle" xmi:id="38586894-b4cf-41ef-8394-cd86f2f82518"></styles><styles xmi:type="notation:FilteringStyle" xmi:id="6b949d81-2be0-4c14-8c9a-63a5af02ff8b"></styles></children><children xmi:type="notation:BasicCompartment" type="7007" xmi:id="46dd1c8a-12f7-4997-99f8-c6b553d4b4f9"></children><element xmi:type="map:Datastore" href="foo#_ytRpBME_Eeq6L8zfnBksuA?fileId=_ytRpAME_Eeq6L8zfnBksuA?"></element><layoutConstraint x="231" xmi:type="notation:Bounds" xmi:id="1fc28648-eea8-49b5-91db-9175aed837a2"></layoutConstraint></children><styles xmi:type="notation:DiagramStyle" xmi:id="56d80977-f1f1-4a44-a83c-9a3bb904f5ca"></styles><element xmi:type="map:Map" href="foo#_ytRpAME_Eeq6L8zfnBksuA?fileId=_ytRpAME_Eeq6L8zfnBksuA?"></element><edges xmi:type="notation:Edge" source="e7b27238-0fa0-4e82-8927-12e3db07b86d" type="targetLink" xmi:id="8546d03b-7267-4ed6-8f49-59e717fe0a36" target="353ffd63-4bcc-464e-aebf-673a05e1e9d2"><element xsi:nil="true"></element><bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="d886bb61-a478-423c-9ecf-a2ee5167da19" points="[0, 0, 60, 0]$[-60, 0, 0, 0]"></bendpoints><sourceAnchor xmi:type="notation:IdentityAnchor" id="(0.0,0.49777777777777776)" xmi:id="9981268e-4fe4-4f5b-87c0-2644da64cc5e"></sourceAnchor><targetAnchor xmi:type="notation:IdentityAnchor" id="(1.0,0.4939759036144578)" xmi:id="8b547e07-b8f9-45d6-827d-9363d3fdcc2c"></targetAnchor></edges><edges xmi:type="notation:Edge" source="e7b27238-0fa0-4e82-8927-12e3db07b86d" type="targetDataSetLink" xmi:id="bb545f38-70f0-466a-86af-d58dfa7b04c0" target="e7b27238-0fa0-4e82-8927-12e3db07b86d"><element xmi:type="map:DataSet" href="foo#_ytSQJsE_Eeq6L8zfnBksuA?fileId=_ytRpAME_Eeq6L8zfnBksuA?"></element><bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="878e8edd-2985-41cc-b144-3abb2d8a4127" points="[0, 0, 0, 0]$[0, 0, 0, 0]"></bendpoints></edges><edges xmi:type="notation:Edge" source="e7b27238-0fa0-4e82-8927-12e3db07b86d" type="targetSetLink" xmi:id="cea523c9-6dfa-47ae-9bf1-5d4db861438b" target="e7b27238-0fa0-4e82-8927-12e3db07b86d"><element xmi:type="map:SetDescriptor" href="foo#_ytSQI8E_Eeq6L8zfnBksuA?fileId=_ytRpAME_Eeq6L8zfnBksuA?"></element><bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="8dbbab1c-a917-45df-a0db-de7d7597f930" points="[0, 0, 0, 0]$[0, 0, 0, 0]"></bendpoints></edges></notation:Diagram>]]></diagram>
+</map:map>

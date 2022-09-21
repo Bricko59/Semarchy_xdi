@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_cZZRwRtMEeaSVI_PvVjHMg">
+  <parameter id="_gkq_YBtMEeaSVI_PvVjHMg" input="true" output="false" name="id_inscription" type="Integer" value="1"/>
+  <parameter id="_1zfGgBtMEeaSVI_PvVjHMg" output="true" name="inscription_supprimee" type="Boolean" value="true"/>
+  <actionCode id="_kfnK8BtMEeaSVI_PvVjHMg" isBeginAction="false" name="SqlOperation DELETE" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_7RckABtMEeaSVI_PvVjHMg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_7ACq8BtMEeaSVI_PvVjHMg"/>
+    <metaDataLink id="_ysgugBtMEeaSVI_PvVjHMg" name="INSCRIPTION" target="../00_Metadata/HSQL_Creche.md#_Y22_cRd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=INSCRIPTION?"/>
+    <parameter id="_kfoZEBtMEeaSVI_PvVjHMg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_kfoZERtMEeaSVI_PvVjHMg" name="SQL_CONNECTION" type="String"/>
+    <code>DELETE FROM TASSIN.INSCRIPTION&#xD;
+WHERE  ID_INSCRIPTION=${~/id_inscription}$</code>
+  </actionCode>
+  <actionCode id="_7ACq8BtMEeaSVI_PvVjHMg" isBeginAction="false" name="Sql To Parameters" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+    <metaDataLink id="_kLrwEBtREeaSVI_PvVjHMg" name="TASSIN" target="../00_Metadata/HSQL_Creche.md#_vADykBd1Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=TASSIN?"/>
+    <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;~/inscription_supprimee&quot; type=&quot;Boolean&quot;>&#xD;
+SELECT 'true' AS inscription_supprimee&#xD;
+FROM   (VALUES(0))&#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters> </code>
+  </actionCode>
+</proc:process>

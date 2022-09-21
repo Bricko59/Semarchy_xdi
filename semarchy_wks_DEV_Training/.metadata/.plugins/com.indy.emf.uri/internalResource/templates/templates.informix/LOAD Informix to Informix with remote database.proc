@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_82ff1f99-0731-4b68-8fa2-4e846ae1743b" isBeginAction="false" name="LOAD Informix to Informix with remote database" nbCycles="-1" toleratedError="false">
+  <parameter id="_FHodkRJdEd-EuLULXEfZnQ" name="cleanTemporaryObjects" type="Boolean" value="true"/>
+  <altId id="_FHodkhJdEd-EuLULXEfZnQ" origin="snps" value="_73000"/>
+  <subProcess id="_82ff1f99-0731-4b68-8fa2-4e846ae1743b_BEFORE" name="Load">
+    <link id="_FHodkxJdEd-EuLULXEfZnQ" executionType="OK" generationType="OK" mandatory="1" targetId="_82ff1f99-0731-4b68-8fa2-4e846ae1743b_AFTER?fileId=_82ff1f99-0731-4b68-8fa2-4e846ae1743b$type=proc$name=Clean?"/>
+    <actionCode id="_82ff1f99-0731-4b68-8fa2-4e846ae1743b_41" generationCondition="" isBeginAction="false" name="Drop of synonym on target" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_FHodlBJdEd-EuLULXEfZnQ" executionType="OK" generationType="OK" mandatory="1" targetId="_82ff1f99-0731-4b68-8fa2-4e846ae1743b_51"/>
+      <parameter id="_FHodlRJdEd-EuLULXEfZnQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_FHodlhJdEd-EuLULXEfZnQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <code>drop synonym %x{md:physicalPath($REF,'workName')}x%</code>
+    </actionCode>
+    <actionCode id="_82ff1f99-0731-4b68-8fa2-4e846ae1743b_51" generationCondition="" isBeginAction="false" name="Drop of select view on source" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_FHyOkBJdEd-EuLULXEfZnQ" executionType="OK" generationType="OK" mandatory="1" targetId="_82ff1f99-0731-4b68-8fa2-4e846ae1743b_71"/>
+      <parameter id="_FHyOkRJdEd-EuLULXEfZnQ" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_FHyOkhJdEd-EuLULXEfZnQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <code>drop view  %x{md:physicalPath($REF,'workName','workName','SOURCE_SCHEMA_REF')}x%_viw</code>
+    </actionCode>
+    <actionCode id="_82ff1f99-0731-4b68-8fa2-4e846ae1743b_71" generationCondition="" isBeginAction="false" name="Creation of select view on source" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_zsyscBJeEd-EuLULXEfZnQ" executionType="OK" generationType="OK" mandatory="1" targetId="_82ff1f99-0731-4b68-8fa2-4e846ae1743b_81"/>
+      <parameter id="_FHyOlBJdEd-EuLULXEfZnQ" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_FHyOlRJdEd-EuLULXEfZnQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <code>create view %x{md:physicalPath($REF,'workName','workName','SOURCE_SCHEMA_REF')}x%_viw
+(
+	%x{md:patternList($REF/ref:columns(),'[workName]',',\n\t')}x%
+	%x{if ($REF/tech:hasCdc()) then ', CDC_CHANGE_TYPE' else ''}x%
+)
+as 
+select	%x{if (md:paramValue($this,'useDistinct')='true') then 'DISTINCT' else ''}x%
+		%x{md:patternList($REF/ref:columns(),'[expression] [columnAliasWord] [workName]', ',\n\t\t')}x%
+		%x{if ($REF/tech:hasCdc()) then ', CDC_CHANGE_TYPE' else ''}x%
+from	%x{$REF/tech:fromPart()}x%
+where	(1=1)%xsl{
+%x{$REF/tech:joinPart()}x%
+%x{$REF/tech:filterPart()}x%
+%x{$REF/tech:cdcFilterPart2($this)}x%
+%x{$REF/tech:groupByPart()}x%
+%x{$REF/tech:havingPart()}x%}xsl%</code>
+    </actionCode>
+    <actionCode id="_82ff1f99-0731-4b68-8fa2-4e846ae1743b_81" generationCondition="" isBeginAction="false" name="Creation of synonym on target" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_FHyOlhJdEd-EuLULXEfZnQ" executionType="OK" generationType="OK" mandatory="1"/>
+      <parameter id="_FHyOlxJdEd-EuLULXEfZnQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_FHyOmBJdEd-EuLULXEfZnQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <code>/* 	Create public synonym SYNONYM_NAME&#xD;
+	For DATABASE_NAME@SERVER_NAME:SCHEMA.TABLE&#xD;
+*/&#xD;
+&#xD;
+create public synonym %x{md:physicalPath($REF,'workName')}x%&#xD;
+for %x{$REF/ref:source()/../ref:work()/tech:catalogName()}%@%x{$REF/ref:source()/tech:serverName()}x%:%x{$REF/ref:source()/../ref:work()/tech:schemaName()}%.%x{$REF/tech:workName()}%_viw</code>
+    </actionCode>
+    <templateType>L-TP.RDBMS.LOADING</templateType>
+  </subProcess>
+  <subProcess id="_82ff1f99-0731-4b68-8fa2-4e846ae1743b_AFTER" name="Clean">
+    <actionCode id="_82ff1f99-0731-4b68-8fa2-4e846ae1743b_101" generationCondition="'${cleanTemporaryObjects}$'='true'" isBeginAction="false" name="Drop of synonym on target" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_FHyOmhJdEd-EuLULXEfZnQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_82ff1f99-0731-4b68-8fa2-4e846ae1743b_111"/>
+      <parameter id="_FHyOmxJdEd-EuLULXEfZnQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_FHyOnBJdEd-EuLULXEfZnQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <code>drop synonym %x{md:physicalPath($REF,'workName')}x%</code>
+    </actionCode>
+    <actionCode id="_82ff1f99-0731-4b68-8fa2-4e846ae1743b_111" generationCondition="'${cleanTemporaryObjects}$'='true'" isBeginAction="false" name="Drop of select view on source" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_FHyOnhJdEd-EuLULXEfZnQ" executionType="OK" generationType="OK_KO" mandatory="1"/>
+      <parameter id="_FHyOnxJdEd-EuLULXEfZnQ" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_FHyOoBJdEd-EuLULXEfZnQ" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+      <code>drop view  %x{md:physicalPath($REF,'workName','workName','SOURCE_SCHEMA_REF')}x%_viw</code>
+    </actionCode>
+    <templateType>L-TP.RDBMS.CLEANING</templateType>
+  </subProcess>
+  <templateType>L-TP.RDBMS</templateType>
+</proc:process>

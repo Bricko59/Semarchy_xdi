@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_K7q_AcXLEeWrK74KTDH4dA">
+  <parameter id="_K7q_AsXLEeWrK74KTDH4dA" name="column_size" type="Integer" value="60"/>
+  <actionCode id="_K7q_A8XLEeWrK74KTDH4dA" isBeginAction="false" name="Scripting" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <parameter id="_K7q_BMXLEeWrK74KTDH4dA" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+    <code>function rpad(width, string, padding) &#xD;
+{ &#xD;
+  return (width &lt;= string.length) ? string.substr(0,width) : rpad(width, string + padding , padding);&#xD;
+}&#xD;
+function lpad(width, string, padding) &#xD;
+{ &#xD;
+  return (width &lt;= string.length) ? string.substr(0,width) : lpad(width, padding + string , padding);&#xD;
+}&#xD;
+function xpathDisplay(lineTitle,xpath,xpathString,col_size) &#xD;
+{&#xD;
+    return (rpad(30,lineTitle,&quot; &quot;)+&quot; &quot;+rpad(col_size,xpath,&quot; &quot;)+&quot; &quot;+rpad(col_size,xpathString,&quot; &quot;)+&quot; &quot;+String.fromCharCode(37)+&quot;x&quot;+String.fromCharCode(123)+&quot;$METADATA_LINK/&quot;+xpath+String.fromCharCode(125)+&quot;x&quot;+String.fromCharCode(37)+&quot;\n&quot;);&#xD;
+}&#xD;
+{&#xD;
+	column_size = %x{md:paramValue($this,'column_size')}x%;&#xD;
+&#xD;
+	title=&quot;*** Xpath treatment for &lt;${../CORE_NAME}$> ***&quot;;&#xD;
+	print(&quot;\n&quot;+rpad((column_size*3+30+2-title.length)/2,&quot;&quot;,&quot; &quot;)+title+&quot;\n&quot;+rpad((column_size*3+30+2-title.length)/2,&quot;&quot;,&quot; &quot;)+Array(title.length+1).join('*')+&quot;\n&quot;);&#xD;
+	print(rpad(31,&quot;Description&quot;,&quot; &quot;)+rpad(column_size+1,&quot;Xpath expression&quot;,&quot; &quot;)+rpad(column_size+1,&quot;Result&quot;,&quot; &quot;)+&quot;Stambia substitution xpath expression\n&quot;);&#xD;
+	print(rpad(30,&quot;&quot;,&quot;-&quot;)+&quot; &quot;+rpad(column_size,&quot;&quot;,&quot;-&quot;)+&quot; &quot;+rpad(column_size,&quot;&quot;,&quot;-&quot;)+&quot; &quot;+rpad(column_size,&quot;&quot;,&quot;-&quot;)+&quot;\n&quot;);&#xD;
+&#xD;
+	productCode = &quot;%x{$METADATA_LINK/tech:productCode()}x%&quot;;&#xD;
+	objectType =&quot;%x{$METADATA_LINK/name()}x%&quot;;&#xD;
+&#xD;
+	print(xpathDisplay(&quot;Product code&quot;,&quot;tech:productCode()&quot;,productCode,column_size));&#xD;
+	print(xpathDisplay(&quot;Product ancestor&quot;,&quot;ancestor::product/@name&quot;,&quot;%x{$METADATA_LINK/ancestor::product/@name}x%&quot;,column_size));&#xD;
+	print(xpathDisplay(&quot;Name&quot;,&quot;tech:name()&quot;,&quot;%x{$METADATA_LINK/tech:name()}x%&quot;,column_size));&#xD;
+	print(xpathDisplay(&quot;Name&quot;,&quot;@name&quot;,&quot;%x{$METADATA_LINK/@name}x%&quot;,column_size));&#xD;
+	print(xpathDisplay(&quot;Object type&quot;,&quot;name()&quot;,objectType,column_size));&#xD;
+	print(xpathDisplay(&quot;Ancestors types&quot;,&quot;md:list(ancestor-or-self::*/name(),'>')&quot;,&quot;%x{md:list($METADATA_LINK/ancestor-or-self::*/name(),'>')}x%&quot;,column_size));&#xD;
+	print(xpathDisplay(&quot;Father (name [type])&quot;,&quot;../concat(@name,' [',name(),']')&quot;,&quot;%x{$METADATA_LINK/../concat(@name,' [',name(),']')}x%&quot;,column_size));&#xD;
+	print(xpathDisplay(&quot;Grandfather (name [type])&quot;,&quot;../../concat(@name,' [',name(),']')&quot;,&quot;%x{$METADATA_LINK/../../concat(@name,' [',name(),']')}x%&quot;,column_size));&#xD;
+	print(xpathDisplay(&quot;Descendants types&quot;,&quot;md:list(distinct-values(descendant::*/name()),',')&quot;,&quot;%x{md:list(distinct-values($METADATA_LINK/descendant::*/name()),',')}x%&quot;,column_size));&#xD;
+	print(xpathDisplay(&quot;Sons types&quot;,&quot;distinct-values(./child::*/name())&quot;,&quot;%x{distinct-values($METADATA_LINK/child::*/name())}x%&quot;,column_size));&#xD;
+	print(xpathDisplay(&quot;First son (name [type])&quot;,&quot;../child::*[1]/concat(@name,' [',name(),']') &quot;,&quot;%x{$METADATA_LINK/child::*[1]/concat(@name,' [',name(),']') }x%&quot;,column_size));&#xD;
+&#xD;
+	switch ( objectType ) &#xD;
+	{&#xD;
+		case &quot;datastore&quot; : &#xD;
+    		print(xpathDisplay(&quot;Schema.table&quot;,&quot;tech:physicalPath()&quot;,&quot;%x{$METADATA_LINK/tech:physicalPath()}x%&quot;,column_size));&#xD;
+    		break;&#xD;
+		case &quot;directory&quot; : &#xD;
+         	print(xpathDisplay(&quot;Directory path&quot;,&quot;tech:path()&quot;,&quot;%x{$METADATA_LINK/tech:path()}x%&quot;,column_size));&#xD;
+    		break;&#xD;
+	} &#xD;
+}   </code>
+  </actionCode>
+  <xslVariable id="_K7q_BcXLEeWrK74KTDH4dA" code="$this/metaDataLink/mdj:getMetaDataRef(.)[1]" name="METADATA_LINK" type="xpath"/>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.2/notation#/?fileId=_K7q_AcXLEeWrK74KTDH4dA?" xmi:id="_mfVaYMRBEeWrK74KTDH4dA" type="Proc" measurementUnit="Pixel">
+  <children xmi:type="notation:Node" xmi:id="_wEzN4MRDEeWrK74KTDH4dA" type="2007">
+    <children xmi:type="notation:Node" xmi:id="_wEz08MRDEeWrK74KTDH4dA" type="5007"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_wEzN4cRDEeWrK74KTDH4dA" fontName="Segoe UI"/>
+    <element xmi:type="proc:XslVariable" href="../../TOOL_xpathIntrospection.proc#_K7q_BcXLEeWrK74KTDH4dA?fileId=_K7q_AcXLEeWrK74KTDH4dA$type=proc?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_wEzN4sRDEeWrK74KTDH4dA" x="265" y="15"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_hNb5wMR_EeWrK74KTDH4dA" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_hNdu8MR_EeWrK74KTDH4dA" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_hNeWAMR_EeWrK74KTDH4dA" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_hNeWAcR_EeWrK74KTDH4dA"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_hNeWAsR_EeWrK74KTDH4dA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_hNeWA8R_EeWrK74KTDH4dA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_hNe9EMR_EeWrK74KTDH4dA" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_hNe9EcR_EeWrK74KTDH4dA"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_hNe9EsR_EeWrK74KTDH4dA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_hNe9E8R_EeWrK74KTDH4dA"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_hNb5wcR_EeWrK74KTDH4dA" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_xpathIntrospection.proc#_K7q_A8XLEeWrK74KTDH4dA?fileId=_K7q_AcXLEeWrK74KTDH4dA$type=proc$name=Scripting?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_hNb5wsR_EeWrK74KTDH4dA" x="43" y="59"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_AeCUwMXGEeWrK74KTDH4dA" type="2005">
+    <children xmi:type="notation:Node" xmi:id="_AeDi4MXGEeWrK74KTDH4dA" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_AeCUwcXGEeWrK74KTDH4dA" fontName="Segoe UI"/>
+    <element xmi:type="proc:Parameter" href="../../TOOL_xpathIntrospection.proc#_K7q_AsXLEeWrK74KTDH4dA?fileId=_K7q_AcXLEeWrK74KTDH4dA$type=proc$name=column_size?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_AeCUwsXGEeWrK74KTDH4dA" x="276" y="52"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_mfVaYcRBEeWrK74KTDH4dA"/>
+  <element xmi:type="proc:ActionProcess" href="../../TOOL_xpathIntrospection.proc#_K7q_AcXLEeWrK74KTDH4dA?fileId=_K7q_AcXLEeWrK74KTDH4dA$type=proc$name=TOOL_xpathIntrospection?"/>
+</notation:Diagram>
+]]></diagram>
+</proc:process>

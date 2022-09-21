@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="UUID_TECH_HTTPREST" name="HttpRest" ref="resource.md#UUID_MD_HTTPREST?fileId=UUID_MD_HTTPREST$type=md$name=product?">
+  <level icon="icons/full/custom/16x16/http.api.png" xmlName="httprest" xpathCondition="" code="com.stambia.http.rest" connection="true" displayName="HTTP Rest API" isFile="true" wizardBundleName="com.indy.addons.httprest" wizardClass="com.indy.addons.httprest.wizard.HttpRestWizard">
+    <attribute xmlName="defaultConnectionTimeout" xpathCondition="" category="Advanced: Default Invocation Properties" code="defaultConnectionTimeout" default="" displayName="Default Connection Timeout" initialValue="" toolTip="Defines the default connection timeout that should be used when trying to invoke this REST API. Note that It can be overriden on each operation and also in Mappings through Template parameters." type="integer"/>
+    <attribute xmlName="defaultReadTimeout" category="Advanced: Default Invocation Properties" code="defaultReadTimeout" default="" displayName="Default Read Timeout" initialValue="" toolTip="Defines the default read timeout that should be used when invoking this REST API. Note that It can be overriden on each operation and also in Mappings through Template parameters." type="integer"/>
+    <attribute xmlName="module" code="module" displayName="Module" type="list">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.valueprovider.className" value="com.stambia.md.diagram.custom.properties.ModuleListValueProvider"/>
+    </attribute>
+    <attribute xmlName="url" xpathCondition="" code="url" displayName="Endpoint Base URL" externalize="true" toolTip="URL of the endpoint. Must include http(s) protocol." unbounded="false"/>
+    <attribute xmlName="security" category="Standard:Security" code="security" displayName="HTTP Security" mdXpathAccess="(internal:getReferencableNodes('com.stambia.security.basic'),&#xA;internal:getReferencableNodes('com.stambia.security.oauth'),&#xA;internal:getReferencableNodes('com.stambia.security.oauth2'),&#xA;internal:getReferencableNodes('com.stambia.security.ntlm'))" toolTip="HTTP Security Metadata used to connect to the server. Select here a security node or drag and drop it directly from an HTTP Security Metadata." type="reference">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.dnd.emfMetaInf" value="http://www.stambia.com/md;MdNode"/>
+    </attribute>
+    <attribute xmlName="reverseUrl" xpathCondition="" code="reverseUrl" displayName="Reverse URL" toolTip="URL of the Open API schema." unbounded="false"/>
+    <attribute xmlName="recursivityDepth" xpathCondition="" xpathDisplayName="" xpathIcon="" category="" code="recursivityDepth" default="3" displayName="Recursivity Depth" initialValue="" mdDefaultXpath="" nullable="true" reverseCode="" reverseUpdateXpathQuery="" toolTip="Maximum recursivity depth, must be stricly positive. Used to limite JSON schema volume." type="integer" unbounded="false"/>
+    <attribute xmlName="enableHostnameVerification" category="Advanced: Default Certificate Properties" code="enableHostnameVerification" default="true" displayName="Enable Hostname Verification" toolTip="When set to false, the runtime will not verify that the certificate given by the server matches its hostname. " type="boolean"/>
+    <attribute xmlName="enableCertificateVerification" category="Advanced: Default Certificate Properties" code="enableCertificateVerification" default="true" displayName="Enable Certificate Verification" toolTip="When set to false, the runtime will not verify that the certificate given by the server is valid." type="boolean"/>
+    <attribute xmlName="proxy" category="Standard:Security" code="proxy" displayName="HTTP Proxy" mdXpathAccess="internal:getReferencableNodes('com.stambia.proxy')" toolTip="Proxy Metadata used to connect to the server. Select here a proxy node or drag and drop it directly from a Proxy Metadata." type="reference">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.dnd.emfMetaInf" value="http://www.stambia.com/md;MdNode"/>
+    </attribute>
+    <xPathExpression description="" expression="@url">
+      <code>DEFAULT</code>
+      <code>PHYSICAL_NAME</code>
+      <code>CHECKED_NAME</code>
+      <code>WORK_NAME</code>
+      <code>TABLE_NAME</code>
+      <code>NAME</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathVariable expression="'DEFAULT'" name="defaultParentKind"/>
+      <xPathVariable expression="mdj:xpath(.,'PARENT_REF')" name="defaultParentRef"/>
+      <xPathVariable expression="@URL" name="name2"/>
+      <xPathVariable expression="if ($p2='upper') then upper-case($name2) else if ($p2='lower') then lower-case($name2) else $name2" name="name"/>
+    </xPathExpression>
+    <xPathExpression expression="@security/mdj:getRef(.)">
+      <code>SECURITY_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="(internal:getReferencableNodes('com.stambia.security.basic'),&#xA;internal:getReferencableNodes('com.stambia.security.oauth'),&#xA;internal:getReferencableNodes('com.stambia.security.oauth2'),&#xA;internal:getReferencableNodes('com.stambia.security.ntlm'))">
+      <code>INTERNAL_AVAILABLE_SECURITY_CREDENTIALS_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="@enableCertificateVerification">
+      <code>ENABLE_CERTIFICATE_VERIFICATION</code>
+    </xPathExpression>
+    <xPathExpression expression="@enableHostnameVerification">
+      <code>ENABLE_HOSTNAME_VERIFICATION</code>
+    </xPathExpression>
+    <xPathExpression expression="@proxy/mdj:getRef(.)">
+      <code>PROXY_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="internal:getReferencableNodes('com.stambia.proxy')">
+      <code>INTERNAL_AVAILABLE_PROXY_REF</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/16x16/window-code-3.png" xmlName="path" xpathDisplayName="if (@summary != '') then concat(@path,' (',@summary,')') else @path" code="com.stambia.http.rest.path" displayName="Path" hasName="false">
+    <attribute iconBundleName="" xmlName="path" category="" code="path" default="" displayName="Path" toolTip="Path of the resource. It gets appended to the endpoint URL to get the request URL. Supports dynamic values by putting them between braces (like : {id}) and adding the corresponding path parameter."/>
+    <attribute xmlName="summary" code="summary" displayName="Summary" toolTip="A small summary to describe the purpose of this path."/>
+    <attribute xmlName="description" code="description" displayName="Description" multiLine="true" toolTip="Complete description to describe the purpose of this path."/>
+    <parent>com.stambia.http.rest</parent>
+    <parent>com.stambia.http.rest.path</parent>
+    <xPathExpression expression="$p1/mdj:xpath(.,'ADD_DELIMITER',$path) ">
+      <code>DEFAULT</code>
+      <code>PHYSICAL_NAME</code>
+      <code>CHECKED_NAME</code>
+      <code>WORK_NAME</code>
+      <code>TABLE_NAME</code>
+      <code>NAME</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathVariable expression="'DEFAULT'" name="defaultParentKind"/>
+      <xPathVariable expression="mdj:xpath(.,'PARENT_REF')" name="defaultParentRef"/>
+      <xPathVariable expression="md:applyObjectNameMask(@defType,@TABLE_NAME) " name="name2"/>
+      <xPathVariable expression="if ($p2='upper') then upper-case($name2) else if ($p2='lower') then lower-case($name2) else $name2" name="name"/>
+    </xPathExpression>
+    <xPathExpression expression="@path">
+      <code>FULL_PATH</code>
+    </xPathExpression>
+    <hint key="com.stambia.md.custom.IncrementalReverser.ReverseMode.attribute" value="path"/>
+  </level>
+  <level icon="icons/full/custom/16x16/operation.png" xmlName="operation" xpathDisplayName="if(string-length(string(@method))=0) then '&lt;Please select a method>' else @method" xpathIcon="" code="com.stambia.http.rest.operation" displayName="Operation" hasName="false" orderType="Position">
+    <attribute iconBundleName="" xmlName="method" category="" code="method" defaultValue="" displayName="Method" mdXpathAccess="tokenize('GET POST PUT PATCH DELETE HEAD OPTIONS TRACE',' ')" toolTip="HTTP Method used for the request." type="list"/>
+    <attribute xmlName="summary" code="summary" displayName="Summary" toolTip="A small summary to describe the purpose of this operation."/>
+    <attribute xmlName="operationId" code="operationId" displayName="Operation Id" toolTip="Optional unique string used to identify an operation, used only for informational purposes."/>
+    <attribute xmlName="description" code="description" displayName="Description" multiLine="true" toolTip="Complete description to describe the purpose of this operation."/>
+    <attribute xmlName="defaultConnectionTimeout" category="Advanced: Default Invocation Properties" code="defaultConnectionTimeout" displayName="Default Connection Timeout" initialValue="" mdDefaultXpath="ancestor-or-self::httprest/@defaultConnectionTimeout" toolTip="Defines the default connection timeout that should be used when trying to invoke this REST API operation. Note that it defaults to the timeout specified on the root node. Note also that it can be overriden in Mappings through Template parameters." type="integer"/>
+    <attribute xmlName="defaultReadTimeout" category="Advanced: Default Invocation Properties" code="defaultReadTimeout" displayName="Default Read Timeout" initialValue="" mdDefaultXpath="ancestor-or-self::httprest/@defaultReadTimeout" toolTip="Defines the default read timeout that should be used when invoking this REST API operation. Note that it defaults to the timeout specified on the root node. Note also that it can be overriden in Mappings through Template parameters." type="integer"/>
+    <parent>com.stambia.http.rest.path</parent>
+    <xPathExpression expression="'Map'">
+      <code>JAVA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="true()">
+      <code>INTERNAL_USE_AS_KEY</code>
+    </xPathExpression>
+    <xPathExpression expression="tech:mdToJson()">
+      <code>METADATA_TO_JSON</code>
+    </xPathExpression>
+    <xPathExpression expression="@method">
+      <code>INTERNAL_MAPPING_OBJECT_NAME</code>
+    </xPathExpression>
+    <xPathExpression description="" expression="@defaultReadTimeout">
+      <code>DEFAULT_READ_TIMEOUT</code>
+    </xPathExpression>
+    <xPathExpression expression="@defaultConnectionTimeout">
+      <code>DEFAULT_CONNECTION_TIMEOUT</code>
+    </xPathExpression>
+    <xPathExpression expression="'STRING'">
+      <code>TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="'string'">
+      <code>SUPER_TYPE_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression=".">
+      <code>DATA_TYPE_REF</code>
+    </xPathExpression>
+    <mappingType>Source</mappingType>
+    <mappingType>Target</mappingType>
+    <mappingType>Mapping</mappingType>
+    <hint key="com.stambia.md.custom.IncrementalReverser.ReverseMode.attribute" value="method"/>
+  </level>
+  <level icon="icons/full/custom/16x16/parameters.png" iconBundleName="" xmlName="parameters" code="com.stambia.http.rest.parameters" displayName="Parameters" hasName="false" position="10" reverseBundleName="">
+    <parent>com.stambia.http.rest.operation</parent>
+    <xPathExpression expression="'Map'">
+      <code>JAVA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="name()">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/16x16/parameter.png" iconBundleName="" xmlName="parameter" code="com.stambia.http.rest.parameter" displayName="Parameter">
+    <attribute xmlName="location" xpathCondition="" code="location" displayName="Location" mdXpathAccess="tokenize('path query header cookie', ' ')" refreshPropertiesCompositeOnValueChange="true" toolTip="This attribute sets where the parameter will be sent." type="list"/>
+    <attribute xmlName="default" code="default" displayName="Default value" toolTip="Default value of the parameter. Used when no value is mapped in the Mapping for a &quot;required&quot; parameter."/>
+    <attribute icon="" xmlName="required" xpathCondition="" xpathDisplayName="" code="required" default="false" displayName="Required" mdDefaultXpath="if (@location = 'path') then true() else false()" refreshPropertiesCompositeOnValueChange="false" toolTip="Defines if this parameter is required. When it is defined as required, it is mandatory to define it when performing the invocation of this operation. Note that parameters with &quot;path&quot; location MUST be defined as required." type="boolean"/>
+    <attribute xmlName="deprecated" code="deprecated" default="false" displayName="Deprecated" toolTip="Allows to define if this parameter is deprecated. This attribute is only for informational purposes when working with the API, to inform when working with the Metadata that the parameter is deprecated on the remote REST API." type="boolean"/>
+    <attribute icon="" xmlName="allowEmptyValue" xpathCondition="" xpathDisplayName="" code="allowEmptyValue" default="false" displayName="Allow Empty Value" mdDefaultXpath="" refreshPropertiesCompositeOnValueChange="false" toolTip="Allows to indicates if a &quot;query&quot; parameter supports being sent with an empty value. This attribute is only for informational purposes for now when working with the API, it is not used at execution." type="boolean"/>
+    <attribute xmlName="description" code="description" displayName="Description" multiLine="true" toolTip="Complete description to describe the purpose of this parameter."/>
+    <parent>com.stambia.http.rest.parameters</parent>
+    <xPathExpression expression="'String'">
+      <code>JAVA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="'com.stambia.json.value'">
+      <code>XML_DEF_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="'STRING'">
+      <code>TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="'string'">
+      <code>SUPER_TYPE_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression=".">
+      <code>DATA_TYPE_REF</code>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/16x16/input.png" iconBundleName="" xmlName="requestbody" code="com.stambia.http.rest.requestbody" displayName="Request Body" hasName="false" position="20">
+    <attribute xmlName="required" category="Advanced" code="required" default="false" displayName="Required" initialValue="" toolTip="Defines if this request body is mandatory. It is used only for informational purposes for now and has no impact at execution." type="boolean"/>
+    <parent>com.stambia.http.rest.operation</parent>
+    <xPathExpression expression="'Map'">
+      <code>JAVA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="name()">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="concat(&#xA;&#x9;'{',&#xA;&#x9;md:list($attributes/concat('&quot;',name(),'&quot;:&quot;',replace(.,'&quot;','\\\\&quot;'),'&quot;'),','),',',&#xA;&#x9;$content/concat('&quot;content&quot;:',tech:mdToJson(),','),&#xA;&#x9;$multipart/concat('&quot;multipart&quot;:',tech:mdToJson()),&#xA;&#x9;'}') &#x9;">
+      <code>MD_TO_JSON</code>
+      <xPathVariable expression="*[name() = 'content']" name="content"/>
+      <xPathVariable expression="*[name() = 'multipart']" name="multipart"/>
+      <xPathVariable expression="@*[.!='' and name()!='id' and name()!='defType' and name()!='name']" name="attributes"/>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/16x16/http.headers.png" xmlName="headers" code="com.stambia.http.rest.headers" displayName="Headers" hasName="false" position="20">
+    <parent>com.stambia.http.rest.response</parent>
+    <xPathExpression expression="'Map'">
+      <code>JAVA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="name()">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/16x16/http.header.png" xmlName="header" code="com.stambia.http.rest.header" displayName="Header" position="2">
+    <attribute xmlName="description" code="description" displayName="Description" multiLine="true" toolTip="Complete description to describe the purpose of this header."/>
+    <parent>com.stambia.http.rest.headers</parent>
+    <xPathExpression expression="'String'">
+      <code>JAVA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="@name">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/16x16/message.png" xmlName="content" xpathDisplayName="@mediaType" code="com.stambia.http.rest.content" connectionBundleName="" displayName="Content" hasName="false" position="30" positionReverseCode="5">
+    <attribute icon="" xmlName="mediaType" xpathCondition="" code="mediaType" displayName="Media Type" mdXpathAccess="if (../name() = 'requestbody' or ../@mediaType = 'MULTIPART') then tokenize('JSON XML TEXT FORM BINARY',' ') else tokenize('JSON XML TEXT FORM BINARY',' ')" refreshPropertiesCompositeOnValueChange="true" toolTip="This attribute defines how Stambia will interpret the body data." type="list"/>
+    <attribute iconBundleName="" xmlName="contentType" xpathCondition="../name() = 'requestbody' or ../name() = 'part'" code="contentType" default="" displayName="Content-Type Header" displayOrder="1" editable="true" initialValue="" mdDefaultXpath="if (@mediaType = 'JSON') then 'application/json' else if (@mediaType = 'FORM') then 'application/x-www-form-urlencoded' else if (@mediaType = 'BINARY') then 'application/octet-stream' else if (@mediaType = 'XML') then 'application/xml' else if (@mediaType = 'MULTIPART') then 'multipart/form-data' else 'text/plain'" mdXpathAccess="tokenize('application/octet-stream application/x-www-form-urlencoded application/json application/xml text/plain', ' ')" refreshPropertiesCompositeOnValueChange="false" toolTip="The value of the Content-Type header sent alongside the Request. Can be overriden dynamically by adding a header parameter." type="list"/>
+    <parent>com.stambia.http.rest.requestbody</parent>
+    <parent>com.stambia.http.rest.response</parent>
+    <parent>com.stambia.http.rest.part</parent>
+    <xPathExpression expression="if (@mediaType = 'TEXT') then 'String' else if (@mediaType = 'BINARY') then 'byte[]' else 'Map'">
+      <code>JAVA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="if(../name() = 'response') then name() else @id">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <xPathExpression description="" expression="if (@mediaType = 'BINARY') then 'base64Binary' else 'string'">
+      <code>XML_TYPE</code>
+    </xPathExpression>
+    <xPathExpression description="" expression="@mediaType">
+      <code>INTERNAL_MAPPING_OBJECT_NAME</code>
+    </xPathExpression>
+    <xPathExpression description="" expression="concat(&#xA;&#x9;'{',&#xA;&#x9;md:list($attributes/concat('&quot;',name(),'&quot;:&quot;',replace(.,'&quot;','\\\\&quot;'),'&quot;'),','),&#xA;&#x9;if ($children and $attributes) then  ',' else '',&#xA;&#x9; md:list($children/concat('&quot;',tech:xmlName(),'&quot;:',tech:mdToJson()),',') ,&#xA;&#x9;'}') &#x9;">
+      <code>MD_TO_JSON</code>
+      <xPathVariable expression="@*[.!='' and name()!='defType' and name()!='name']" name="attributes"/>
+      <xPathVariable expression="*[tech:javaType()!='']" name="children"/>
+    </xPathExpression>
+    <xPathExpression expression="if (../name() = 'response') then 'SourceMapping' else 'MAPPING'">
+      <code>INTERNAL_MAPPING_TYPE</code>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/16x16/message-multi.png" xmlName="multipart" code="com.stambia.http.rest.multipart" displayName="Multipart" hasName="false" position="30">
+    <attribute xmlName="boundary" xpathCondition="" code="boundary" displayName="Multipart boundary" mdDefaultXpath="@id" toolTip="The boundary used between different parts of a multipart request.&#xA;&#xA;This is mandatory for multipart requests, and it defaults to the id of the current multipart node.&#xA;&#xA;Refer to multipart RFC for further information:&#xA;https://www.w3.org/Protocols/rfc1341/7_2_Multipart.html"/>
+    <attribute iconBundleName="" xmlName="contentType" xpathCondition="" code="contentType" default="multipart/form-data" displayName="Content-Type Header" displayOrder="1" editable="true" initialValue="" mdDefaultXpath="" mdXpathAccess="tokenize('multipart/form-data multipart/mixed multipart/digest multipart/alternative', ' ')" refreshPropertiesCompositeOnValueChange="false" toolTip="The value of the Content-Type header sent alongside the Request." type="list"/>
+    <parent>com.stambia.http.rest.requestbody</parent>
+    <parent>com.stambia.http.rest.part</parent>
+    <xPathExpression description="" expression="'Map'">
+      <code>JAVA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="@id">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="concat(&#xA;&#x9;'{',&#xA;&#x9;md:list($attributes/concat('&quot;',name(),'&quot;:&quot;',replace(.,'&quot;','\\\\&quot;'),'&quot;'),','),',',&#xA;&#x9;'&quot;parts&quot;:[',md:list($parts/tech:mdToJson(),','),']',&#xA;&#x9;'}') &#x9;">
+      <code>MD_TO_JSON</code>
+      <xPathVariable expression="@*[.!='' and name()!='defType' and name()!='name']" name="attributes"/>
+      <xPathVariable expression="*[tech:javaType()!='' and name() = 'part']" name="parts"/>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/16x16/part.png" xmlName="part" xpathDisplayName="concat('Part (',@partName,')')" code="com.stambia.http.rest.part" displayName="" hasName="false">
+    <attribute xmlName="partName" xpathCondition="" xpathDisplayName="" category="" code="partName" displayName="Part Name" displayOrder="2" mdDefaultXpath="@id" toolTip="The name of this part in the multipart request body.&#xA;&#xA;Some APIs require the part to be named with a specific name: this allows to define it.&#xA;&#xA;It defaults to the id of the current part node.&#xA;&#xA;=> Note that you can also define it dynamically in Mappings by using the extra fields which can be added on the Part Node.&#xA;=> In your Mapping, add the &quot;partName' extra field on your Part, and you will then be able to map it with a value."/>
+    <attribute xmlName="partFilename" xpathCondition="" xpathDisplayName="" category="" code="partFilename" displayName="Part Filename" displayOrder="2" mdDefaultXpath="" refreshPropertiesCompositeOnValueChange="false" toolTip="Optional filename of the part, used when the content of that part is a file.&#xA;&#xA;Some APIs require the filename property to be defined on the part when sending files: this allows to define it.&#xA;&#xA;=> Note that you can also define it dynamically in Mappings by using the extra fields which can be added on the Part Node.&#xA;=> In your Mapping, add the &quot;partFilename&quot; extra field on your Part, and you'll then be able to map it with a value."/>
+    <parent>com.stambia.http.rest.multipart</parent>
+    <xPathExpression expression="concat(&#xA;&#x9;'{',&#xA;&#x9;md:list($attributes/concat('&quot;',name(),'&quot;:&quot;',replace(.,'&quot;','\\\\&quot;'),'&quot;'),','),',',&#xA;&#x9;if(content) then concat('&quot;part&quot;:',content/tech:mdToJson()) else&#xA;&#x9; if (multipart) then concat('&quot;multipart&quot;:',multipart/tech:mdToJson()) else '',&#xA;&#x9;'}') &#x9;">
+      <code>MD_TO_JSON</code>
+      <xPathVariable expression="@*[.!='' and name()!='defType' and name()!='name']" name="attributes"/>
+    </xPathExpression>
+    <xPathExpression expression="@partName">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <xPathExpression description="" expression="'Map'">
+      <code>JAVA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression description="" expression="@partName">
+      <code>INTERNAL_MAPPING_OBJECT_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="ancestor-or-self::httpProduct[1]/property[level[.=&quot;com.stambia.http.rest.part&quot;]]">
+      <code>INTERNAL_EXTRA_FIELDS</code>
+    </xPathExpression>
+    <xPathExpression expression="-1">
+      <code>XML_MAX_OCCURS</code>
+    </xPathExpression>
+    <xPathExpression expression="true()">
+      <code>INTERNAL_USE_AS_KEY</code>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/16x16/output.png" xmlName="responses" code="com.stambia.http.rest.responses" displayName="Responses" hasName="false" position="30">
+    <parent>com.stambia.http.rest.operation</parent>
+    <xPathExpression expression="'List'">
+      <code>JAVA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="name()">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="if(descendant::content/@mediatype = '') then &#xD;&#xA;(descendant::content/@none | descendant::response/@name)&#xD;&#xA;else (descendant::content/@mediatype |  descendant::response/@name)">
+      <code>TYPES_FOR_CODE</code>
+    </xPathExpression>
+    <xPathExpression expression="ancestor-or-self::httpProduct[1]/property[level[.=&quot;com.stambia.http.rest.responses&quot;]]">
+      <code>INTERNAL_EXTRA_FIELDS</code>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/16x16/window-code-2.png" xmlName="response" xpathDisplayName="@code" code="com.stambia.http.rest.response" displayName="Response" hasName="false">
+    <attribute xmlName="code" code="code" displayName="Code" toolTip="HTTP response code. This can be set to &quot;default&quot; to catch all responses."/>
+    <attribute xmlName="description" code="description" displayName="Description" multiLine="true" toolTip="Complete description to describe the purpose of this response."/>
+    <parent>com.stambia.http.rest.responses</parent>
+    <xPathExpression expression="'Map'">
+      <code>JAVA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="concat('A',@code)">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="@code">
+      <code>INTERNAL_MAPPING_OBJECT_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="ancestor-or-self::httpProduct[1]/property[level[.=&quot;com.stambia.http.rest.response&quot;]]">
+      <code>INTERNAL_EXTRA_FIELDS</code>
+    </xPathExpression>
+    <xPathExpression expression="concat(&#xA;&#x9;'{',&#xA;&#x9;md:list($attributes/concat('&quot;',name(),'&quot;:&quot;',replace(.,'&quot;','\\\\&quot;'),'&quot;'),','),&#xA;&#x9;if ($children and $attributes) then  ',' else '',&#xA;&#x9; md:list($children/concat('&quot;',tech:xmlName(),'&quot;:',tech:mdToJson()),',') ,&#xA;&#x9;if ($children or $attributes) then ',' else '',&#xA;&#x9;'&quot;headers&quot;:{',md:list($headers/concat('&quot;',tech:xmlName(),'&quot;:',tech:mdToJson()),',') ,'}',&#xA;&#x9;',',&#xA;&#x9;'&quot;cookies&quot;:{',md:list($cookies/concat('&quot;',@name,'&quot;:',tech:mdToJson()),',') ,'}',&#xA;&#x9;'}')">
+      <code>MD_TO_JSON</code>
+      <xPathVariable expression="*[tech:javaType()!='' and name() != 'headers']" name="children"/>
+      <xPathVariable expression="@*[.!='' and name()!='id' and name()!='defType' and name()!='name']" name="attributes"/>
+      <xPathVariable expression="headers/*[name() = 'header']" name="headers"/>
+      <xPathVariable expression="headers/*[name() = 'cookie']" name="cookies"/>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+    <hint key="com.stambia.md.custom.IncrementalReverser.ReverseMode.attribute" value="code"/>
+  </level>
+  <level icon="icons/full/custom/16x16/cookie.png" xmlName="cookie" code="com.stambia.http.rest.header.cookie" displayName="Cookie" position="1">
+    <attribute xmlName="cookieName" category="Standard:Cookie properties" code="cookieName" displayName="Cookie Name" toolTip="Name of the cookie to retrieve.&#xA;&#xA;You must specify here the exact name of the cookie to retrieve."/>
+    <attribute xmlName="valueSelectorRegexp" category="Standard:Cookie properties" code="valueSelectorRegexp" displayName="Value Selector Regexp" toolTip="This allows to filter the cookie to retrieve based on its value, by defining a regular expression that it should match.&#xA;&#xA;Cookies often have some attributes attached with their value such as the domain or path on which they apply, etc.&#xA;&#xA;Sometimes multiple cookies with the same name might be returned as response, differentiated only from those extra attributes.&#xA;&#xA;=> you can use the regular expression to filter the cookie to retrieve when being in this situation&#xA;&#xA;=> when multiple cookies are matching the 'Cookie Name' and Regular expression defined, the last one is returned."/>
+    <attribute xmlName="valueFormat" xpathCondition="" category="Standard:Cookie properties" code="valueFormat" displayName="Value format" mdDefaultXpath="'value only'" mdXpathAccess="tokenize('value only;value with attributes',';')" toolTip="Cookies often have some attributes with their value such as the domain or path on which they apply, etc.&#xA;&#xA;This allows to define which part of the cookie should be returned when reading it.&#xA;&#xA;- value only: only the value of the cookie will be returned&#xA;- value with attributes: the value and the extra attributes will be returned" type="list"/>
+    <parent>com.stambia.http.rest.headers</parent>
+    <xPathExpression expression="'String'">
+      <code>JAVA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="concat('_',@name)">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="'@[OBJECT]'">
+      <code>INTERNAL_OBJECT_MASK</code>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level code="com.stambia.xml.element" override="true">
+    <parent>com.stambia.http.rest.content</parent>
+    <xPathExpression expression="'element'">
+      <code>XML_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="@defType">
+      <code>XML_DEF_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="@name">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="if (boolean(ancestor::requestbody)) then 'MAPPING' else 'SourceMapping'">
+      <code>INTERNAL_MAPPING_TYPE</code>
+    </xPathExpression>
+  </level>
+  <level code="com.stambia.xml.sequence" override="true">
+    <xPathExpression expression="@defType">
+      <code>XML_DEF_TYPE</code>
+    </xPathExpression>
+    <xPathExpression description="" expression="'sequence'">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="'sequence'">
+      <code>XML_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="'sequence'">
+      <code>XML_FORM</code>
+    </xPathExpression>
+  </level>
+  <level code="com.stambia.xml.choice" override="true">
+    <xPathExpression expression="'element'">
+      <code>XML_TYPE</code>
+    </xPathExpression>
+  </level>
+  <level code="com.stambia.xml.all" override="true">
+    <xPathExpression expression="'element'">
+      <code>XML_TYPE</code>
+    </xPathExpression>
+  </level>
+  <level code="com.stambia.xml.namespace" filtered="false" override="true">
+    <parent>com.stambia.http.rest</parent>
+    <xPathExpression expression="'namespace'">
+      <code>XML_TYPE</code>
+    </xPathExpression>
+    <xPathExpression description="" expression="@name">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <xPathExpression description="" expression="'String'">
+      <code>JAVA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression description="" expression="com.stambia.xml.namespace">
+      <code>XML_DEF_TYPE</code>
+    </xPathExpression>
+  </level>
+  <level icon="" xmlName="" code="com.stambia.xml.attribute" displayName="" override="true" position="0">
+    <xPathExpression expression="'element'">
+      <code>XML_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="@defType">
+      <code>XML_DEF_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="@name">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="if (boolean(ancestor::requestbody)) then 'MAPPING' else 'SourceMapping'">
+      <code>INTERNAL_MAPPING_TYPE</code>
+    </xPathExpression>
+  </level>
+  <level icon="" xmlName="" code="com.stambia.xml.root" displayName="" isFile="false" override="true" position="1" wizardClass="">
+    <xPathExpression expression="'element'">
+      <code>XML_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="@defType">
+      <code>XML_DEF_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="@name">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="if (boolean(ancestor::requestbody)) then 'MAPPING' else 'SourceMapping'">
+      <code>INTERNAL_MAPPING_TYPE</code>
+    </xPathExpression>
+  </level>
+  <level code="com.stambia.json.rootObject" override="true" wizardClass="">
+    <parent>com.stambia.http.rest.content</parent>
+    <xPathExpression description="" expression="'Map'">
+      <code>JAVA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="if (boolean(ancestor::requestbody)) then 'MAPPING' else 'SourceMapping'">
+      <code>INTERNAL_MAPPING_TYPE</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/16x16/information.multiple.png" xmlName="respinfos" xpathDisplayName="" activeDisplayName="true" code="com.stambia.http.rest.respinfos" displayName="Response Information" hasName="false" position="10">
+    <parent>com.stambia.http.rest.response</parent>
+    <xPathExpression description="" expression="'Map'">
+      <code>JAVA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="name()">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/16x16/information.png" xmlName="respinfo" xpathDisplayName="if (@type != '') then @type else '&lt;Please select a response information type>'" activeDisplayName="true" code="com.stambia.http.rest.respinfo" displayName="ResponseInfo" hasName="false">
+    <attribute iconBundleName="" xmlName="type" code="type" displayName="Type" mdXpathAccess="tokenize('statusCode reasonPhrase protocolVersion', ' ')" toolTip="Defines which response information must be retrieved from the http response status line." type="list"/>
+    <parent>com.stambia.http.rest.respinfos</parent>
+    <xPathExpression expression="'String'">
+      <code>JAVA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="@type">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="@type">
+      <code>INTERNAL_MAPPING_OBJECT_NAME</code>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+    <hint key="com.stambia.md.custom.IncrementalReverser.ReverseMode.attribute" value="type"/>
+  </level>
+  <level icon="icons/full/custom/json.string.gif" xmlName="formvalue" xpathCondition="" xpathDisplayName="@name" code="com.stambia.http.rest.formvalue" displayName="Form value">
+    <parent>com.stambia.http.rest.content</parent>
+    <xPathExpression expression="'String'">
+      <code>JAVA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="@name">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="if (boolean(ancestor::requestbody)) then 'MAPPING' else 'SourceMapping'">
+      <code>INTERNAL_MAPPING_TYPE</code>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level xmlName="" code="com.stambia.json.rootArray" override="true" wizardClass="">
+    <parent>com.stambia.http.rest.content</parent>
+    <xPathExpression description="" expression="'List'">
+      <code>JAVA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="if (boolean(ancestor::requestbody)) then 'MAPPING' else 'SourceMapping'">
+      <code>INTERNAL_MAPPING_TYPE</code>
+    </xPathExpression>
+  </level>
+  <level xmlName="" code="com.stambia.json.array" override="true" wizardClass="">
+    <xPathExpression description="" expression="'List'">
+      <code>JAVA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="if (boolean(ancestor::requestbody)) then 'MAPPING' else 'SourceMapping'">
+      <code>INTERNAL_MAPPING_TYPE</code>
+    </xPathExpression>
+  </level>
+  <action bundleName="com.indy.addons.webservice" className="com.indy.addons.webservice.rest.ui.InvokeWSAction" code="reverse_rest" description="" displayName="Reverse REST" modificatingAction="true">
+    <executableLevel>#com.stambia.http.rest.operation</executableLevel>
+  </action>
+  <action bundleName="com.indy.addons.httprest" className="com.indy.addons.httprest.ReverseOpenApiAction" code="reverse_openapi" description="" displayName="Reverse OpenAPI" modificatingAction="true">
+    <executableLevel>#com.stambia.http.rest</executableLevel>
+  </action>
+  <action bundleName="com.indy.addons.httprest" className="com.indy.addons.httprest.XmlWizardAction" code="launch_element_wizard" description="" displayName="Launch Element wizard">
+    <executableLevel>#com.stambia.http.rest.content</executableLevel>
+  </action>
+  <xPathExpression expression="'HTTPREST'">
+    <code>INTERN_PRODUCT_CODE_GUI</code>
+    <code>PRODUCT_CODE</code>
+    <code>TECH_CODE</code>
+  </xPathExpression>
+  <xPathExpression expression="'com.sun.xml.internal.stream.XMLOutputFactoryImpl'">
+    <code>XML_OUTPUT_FACTORY_CLASS</code>
+  </xPathExpression>
+  <xPathExpression expression="'org.apache.xerces.parsers.SAXParser'">
+    <code>XML_READER_CLASS</code>
+  </xPathExpression>
+  <xPathExpression expression="replace(replace(if (tech:javaType()!='List') then &#xA;&#xA;&#x9;concat(&#xA;&#x9;'{',&#xA;&#x9;md:list($attributes/concat('&quot;',name(),'&quot;:&quot;',replace(.,'&quot;','\\\\&quot;'),'&quot;'),','),&#xA;&#x9;if ($children and $attributes) then  ',' else '',&#xA;&#x9; md:list($children/concat('&quot;',tech:xmlName(),'&quot;:',tech:mdToJson()),',') ,&#xA;&#x9;'}') &#x9;&#xA;&#xA;else&#xA;if (tech:javaType()='List') then concat('[', md:list(*[tech:javaType()]/tech:mdToJson(),','),']')&#xA;else '', '\n','\\n'),'\r','')">
+    <code>MD_TO_JSON</code>
+    <xPathVariable expression="*[tech:javaType()!='']" name="children"/>
+    <xPathVariable expression="@*[.!='' and name()!='id' and name()!='defType' and name()!='name']" name="attributes"/>
+  </xPathExpression>
+  <xPathExpression expression="md:ifEmpty(@filePath,concat('${/CORE_JAVA_TEMPORARY_FOLDER}$/',@id,'.xml'))">
+    <code>XML_FILE_PATH</code>
+    <code>IO_META_DATA_RESOURCE</code>
+  </xPathExpression>
+  <xPathExpression description="" expression="ancestor-or-self::httprest/@module">
+    <code>MODULE</code>
+  </xPathExpression>
+  <xPathExpression description="" expression="'com.indy.baseModule.httprest'">
+    <code>INTERNAL_BASE_MODULE</code>
+  </xPathExpression>
+  <xPathExpression description="" expression="ancestor-or-self::httprest/@module">
+    <code>INTERNAL_MODULE</code>
+  </xPathExpression>
+  <xPathExpression description="" expression="'module'">
+    <code>INTERNAL_MODULE_ATTRIBUTE_NAME</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::httpProduct[1]/property">
+    <code>INTERNAL_EXTRA_FIELDS</code>
+    <code>ALL_EXTRA_FIELDS_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::*/namespace">
+    <code>NAMESPACE_REF</code>
+  </xPathExpression>
+  <metaDataLinkType name="Default_Timeouts">
+    <parameter name="DEFAULT_CONNECTION_TIMEOUT" value="tech:defaultConnectionTimeout()"/>
+    <parameter name="DEFAULT_READ_TIMEOUT" value="tech:defaultReadTimeout()"/>
+    <technology>com.indy.engine.actionCodes.JdbcToXmlActionCodeI</technology>
+    <level>#com.stambia.http.rest.operation</level>
+  </metaDataLinkType>
+  <contributedRegistryID>com.indy.ui.custom.out.services.registry.ModuleRequirment[@defType=com.stambia.http.rest]</contributedRegistryID>
+</tech:tech>

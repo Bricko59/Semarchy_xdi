@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="UUID_TECH_VARIABLE" name="Variable">
+  <level icon="icons/full/custom/com.stambia.variable.set.png" xmlName="set" code="com.stambia.variable.set" displayName="Set" isFile="true">
+    <attribute iconBundleName="" xmlName="savingConnection" code="savingConnection" displayName="Default Saving Connection" mdXpathAccess="connection" type="reference"/>
+    <attribute xmlName="refreshConnection" code="refreshConnection" defaultValue="" displayName="Default Refresh Connection" mdXpathAccess="connection" type="reference"/>
+  </level>
+  <level icon="icons/full/custom/Variables16x16.png" xmlName="variable" code="com.stambia.variable.variable" displayName="Variable" position="2">
+    <icons name="Variable" xpath="'icons/full/custom/Variables16x16.png'"/>
+    <icons name="Tag" xpath="if (boolean(tag) or boolean(userProperties)) then 'icons/full/custom/rdbms.tag.png' else ''"/>
+    <attribute xmlName="query" code="query" displayName="Refresh Query" multiLine="true"/>
+    <attribute xmlName="defaultValue" code="defaultValue" displayName="Default Value" reverseCode=""/>
+    <attribute xmlName="nativeXpathExpression" code="nativeXpathExpression" defaultValue="false" displayName="Use native Xpath Expression" type="boolean"/>
+    <attribute iconBundleName="" xmlName="savingConnection" code="savingConnection" displayName="Saving Connection" mdXpathAccess="../connection" type="reference"/>
+    <attribute xmlName="refreshConnection" code="refreshConnection" defaultValue="" displayName="Refresh Connection" mdXpathAccess="../connection" type="reference"/>
+    <attribute xmlName="type" category="" code="type" displayName="Type" mdXpathAccess="tokenize('String Integer Boolean Float',' ')" type="list"/>
+    <attribute xmlName="defaultOperation" code="defaultOperation" defaultValue="" displayName="Default Operation" mdXpathAccess="tokenize('RefreshValue SetToDefaultValue SetToSavedValue',' ')" type="list"/>
+    <attribute xmlName="dontSave" code="dontSave" displayName="Disable Saving (default)" type="boolean"/>
+    <attribute xmlName="description" category="Description" code="description" displayName="Description" multiLine="true"/>
+    <attribute xmlName="tag" xpathCondition="" category="Customization" code="tag" displayName="Tags" unbounded="true"/>
+    <attribute xmlName="userProperties" xpathCondition="" category="Customization" code="userProperties" displayName="User Properties" keyValue="true" unbounded="true"/>
+    <parent>com.stambia.variable.set</parent>
+    <xPathExpression expression="if ($query!='') then&#xD;&#xA;if (@nativeXpathExpression='true') then ref:refresh()/mdj:xpath($query) else ref:refresh()/mdj:pattern($query)&#xD;&#xA;else None">
+      <code>QUERY</code>
+      <xPathVariable expression="@query" name="query"/>
+    </xPathExpression>
+    <xPathExpression expression="concat('/',@name,'(',@id,')')">
+      <code>DEFAULT</code>
+    </xPathExpression>
+    <xPathExpression expression="md:ifEmpty(@type,'String')">
+      <code>TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="@defaultValue">
+      <code>DFLT_VALUE</code>
+      <code>DEFAULT_VALUE</code>
+    </xPathExpression>
+    <xPathExpression expression="concat('${',mdj:xpath(.,'DEFAULT'),'}$')">
+      <code>COLUMN_NAME</code>
+      <code>CALL</code>
+    </xPathExpression>
+    <xPathExpression expression="@defaultOperation">
+      <code>DEFAULT_OPERATION</code>
+    </xPathExpression>
+    <xPathExpression expression="@dontSave">
+      <code>DONT_SAVE</code>
+    </xPathExpression>
+    <xPathExpression expression="if (string-length($p1)=0) then tag else not(empty(tag[.=$p1]))">
+      <code>TAG</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+    <xPathExpression expression="if (string-length($p1)=0) &#xD;&#xA;&#x9;then userProperties&#xD;&#xA;&#x9;else if (string-length($p2)=0) &#xD;&#xA;&#x9;&#x9;then userProperties[@key=$p1]&#xD;&#xA;&#x9;&#x9;else (userProperties[@key=$p1]=$p2)">
+      <code>USER_PROPERTY</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="''" name="p2"/>
+    </xPathExpression>
+    <xPathExpression expression="userProperties/@key">
+      <code>USER_PROPERTY_KEYS</code>
+    </xPathExpression>
+    <mappingType>Variable</mappingType>
+  </level>
+  <level icon="icons/full/custom/com.stambia.variable.connection.png" xmlName="connection" code="com.stambia.variable.connection" displayName="Connection" position="3">
+    <parent>com.stambia.variable.set</parent>
+  </level>
+  <xPathExpression expression="ref:refresh()/ref:connection()">
+    <code>REFRESH_CONNECTION_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="if (md:ifEmpty(@savingConnection,../@savingConnection)!='') then $savingConnection[metaDataLink[1]]/mdj:getMdRef(metaDataLink[1])&#xD;&#xA;else None">
+    <code>SAVE_REF</code>
+    <xPathVariable expression="mdj:getRef(if (@savingConnection!='') then @savingConnection else ../@savingConnection)" name="savingConnection"/>
+  </xPathExpression>
+  <xPathExpression expression="if (md:ifEmpty(@refreshConnection,../@refreshConnection)!='') then $refreshConnection[metaDataLink[1]]/mdj:getMdRef(metaDataLink[1]) else None ">
+    <code>REFRESH_REF</code>
+    <xPathVariable expression="mdj:getRef(if (@refreshConnection!='') then @refreshConnection else ../@refreshConnection)" name="refreshConnection"/>
+  </xPathExpression>
+  <xPathExpression expression="ref:save()/ref:connection()">
+    <code>SAVE_CONNECTION_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:save()/ref:schema()">
+    <code>SAVE_SCHEMA_REF</code>
+  </xPathExpression>
+  <metaDataLinkType createAction="true" name="VariableRefreshAndSave">
+    <parameter name="VAR_NAME" value="tech:default()"/>
+    <parameter name="VAR_TYPE" value="tech:type()"/>
+    <parameter name="VAR_REFRESH_SQL" value="tech:query()"/>
+    <parameter name="VAR_REFRESH_CONNECTION" value="ref:refreshConnection()"/>
+    <parameter name="VAR_DEFAULT_VALUE" value="tech:defaultValue()"/>
+    <parameter name="VAR_SAVE_CONNECTION" value="ref:saveConnection()"/>
+    <parameter name="VAR_SAVE_SCHEMA_NAME" value="ref:saveSchema()/tech:default()"/>
+    <parameter name="VAR_OPERATION" value="tech:defaultOperation()"/>
+    <parameter name="VAR_DONT_SAVE" value="tech:dontSave()"/>
+    <technology>com.indy.engine.actionCodes.VariableManagerActionCodeI</technology>
+    <level>#com.stambia.variable.variable</level>
+  </metaDataLinkType>
+</tech:tech>

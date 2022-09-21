@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_vMm9AqjeEeKTW_R2FPXghA" description="This template is used to load hierarchical files with the file driver.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;16/06/2020&#x9;New Parameters 'Unlock Cdc Table' and 'Lock Cdc Table'&#xD;&#xA;23/03/2018&#x9;Remove some unusued parameters&#xD;&#xA;16/03/2017&#x9;New 'Cdc Subscriber' parameter&#xD;&#xA;16/03/2017&#x9;Fix incorrect CDC filter part&#xD;&#xA;09/02/2017&#x9;New parameter to generate header line: &quot;Generate Header&quot;&#xD;&#xA;09/02/2017&#x9;Reorganize the parameters display order&#xD;&#xA;09/02/2017  Initialize template history" name="INTEGRATION Hierarchical File">
+  <parameter id="_vMm9BKjeEeKTW_R2FPXghA" description="If true, a DISTINCT statement will be added on the query retrieving source data.&#xD;&#xA;This is used to avoid having duplicates in the target table." name="DISTINCT" type="Boolean" value="true"/>
+  <parameter id="_vMm9EKjeEeKTW_R2FPXghA" description="Set it to true to delete the files create on previous execution.&#xD;&#xA;&#xD;&#xA;Note that this will not remove the files created when using an 'Out File Mask', as the name can be in this case dynamic and dependent of source data." name="deletePreviousFiles" type="Boolean" value="true"/>
+  <parameter id="_vMm9C6jeEeKTW_R2FPXghA" name="WRITE_XML_DESCRIPTOR" type="Boolean" value="false"/>
+  <parameter id="_vMm9DajeEeKTW_R2FPXghA" name="XML_COMMIT" type="Boolean" value="true"/>
+  <parameter id="_vMm9A6jeEeKTW_R2FPXghA" description="This parameter can be used to specify manually the path of the file to be written.&#xD;&#xA;If it is not set it will be retrieved from the target Metadata.&#xD;&#xA;&#xD;&#xA;E.g. D:/files/customers.txt&#xD;&#xA;&#xD;&#xA;Note that 'Out File Name' and 'Out File Mask' parameters cannot be used together, you should only use one of them." name="OUT_FILE_NAME" type="String"/>
+  <parameter id="_vMm9CajeEeKTW_R2FPXghA" description="Used to specify an output file path mask, with the possibility to define dynamic names based on field value.&#xD;&#xA;&#xD;&#xA;To use the value of a field in the mask, simply add a tag on this field on the Mapping, and use it then in the mask with the [tagName] syntax.&#xD;&#xA;&#xD;&#xA;This offers the possibility to create multiple files dynamically at write, based on a value retrieved from the source.&#xD;&#xA;&#xD;&#xA;For instance:&#xD;&#xA;D:/files/customer_[CUS_NAME].txt&#xD;&#xA;-> With CUS_NAME being a tag defined on a column of the target file in the Mapping&#xD;&#xA;&#xD;&#xA;Note:&#xD;&#xA;When using masks, the template will need to know what is the key to iterate on, in order to define what file to create.&#xD;&#xA;Therefore, make sure to have the record or root file node mapped, depending on your needs, otherwise no files will be created.&#xD;&#xA;" name="OUT_FILE_MASK" type="String" value=""/>
+  <parameter id="_vMm9BajeEeKTW_R2FPXghA" description="Defines the encoding to use for the exported file." metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;UTF-8&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;ISO-8859-1&quot;/>" name="OUT_FILE_ENCODING" type="String"/>
+  <parameter id="_vMm9EqjeEeKTW_R2FPXghA" name="outFileNameVar" type="String" value="OUT_FILE_NAME"/>
+  <parameter id="_PxU7sO67Eea21IdkVJJSiA" description="Specifies if a header line containing the columns' name should be generated and written in the target file, and when.&#xD;&#xA;&#xD;&#xA;- true: the header is always generated and written before data rows&#xD;&#xA;- false: the header is never generated, data is appended directly to the file&#xD;&#xA;- OnFileCreation: the header is generated only at file's creation&#xD;&#xA;" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;true&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;false&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;onFileCreation&quot;/>" name="generateHeader" type="String" value="false"/>
+  <parameter id="_GbumUDfqEeO9AZF9seCRmw" description="Defines the behavior to follow when source data is larger than the size expected in the target file Metadata.&#xD;&#xA;&#xD;&#xA;- true: the driver will simply accept the data overflow and write it into the file, even if it is larger than the expected size on the field.&#xD;&#xA;&#xD;&#xA;- false: when source data is larger than expected for a field, an error is thrown&#xD;&#xA;&#xD;&#xA;- leftTruncation: when source data is larger than expected for a field, the value will be truncated from the left&#xD;&#xA;&#xD;&#xA;- rightTruncation: when source data is larger than expected for a field, the value will be truncated from the right" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;true&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;false&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;leftTruncation&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;rightTruncation&quot;/>" name="acceptDataOverflow" type="String" value="false"/>
+  <parameter id="_iDheYGQAEeOwTZVnXRqLlw" description="Defines if the file should be written even if there is no source data returned.&#xD;&#xA;&#xD;&#xA;- deleteExistingFile: the file is deleted if it already exists&#xD;&#xA;- createEmptyFile: an empty file is created&#xD;&#xA;- raiseException: an exception is raised" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;deleteExistingFile&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;createEmptyFile&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;raiseException&quot;/>" name="noDataBehaviour" type="String" value="deleteExistingFile"/>
+  <parameter id="_MpbQAHvhEeSUJoUKnQ02IQ" description="Offers the possibility to override the expression generated in the query selecting source data for each mapped column in the target file.&#xD;&#xA;&#xD;&#xA;Note:&#xD;&#xA;- the syntax to use is XPath and the [expression] keyword can be used as a replacement for the mapping value.&#xD;&#xA;- this will impact all columns mapped in the target file.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;For instance:&#xD;&#xA;In the mapping, you have two fields that are mapped on the target file with the following expressions:&#xD;&#xA;- T_CUSTOMER.CUS_FIRST_NAME&#xD;&#xA;- T_CUSTOMER.CUS_LAST_NAME&#xD;&#xA;&#xD;&#xA;Then, this parameter is configured with the following value:&#xD;&#xA;LOWER([expression])&#xD;&#xA;&#xD;&#xA;At generation, the select query retrieving source data will looks like this:&#xD;&#xA;select (LOWER(T_CUSTOMER.CUS_FIRST_NAME), LOWER(T_CUSTOMER.CUS_LAST_NAME)) from [...]&#xD;&#xA;Note that the [expression] is automatically substituted with the mapping expression&#xD;&#xA;&#xD;&#xA;" name="expression" type="String" value=""/>
+  <parameter id="_vMm9EajeEeKTW_R2FPXghA" metaInf="&lt;metaInf id=&quot;value&quot; value=&quot;manual&quot;/>&#xD;&#xA;&lt;!--&lt;metaInf id=&quot;value&quot; value=&quot;auto&quot;/>-->&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;off&quot;/>" name="sourceSetOptimization" type="String" value="off"/>
+  <parameter id="_vMm9D6jeEeKTW_R2FPXghA" description="Allows to specify a select keyword / hint that will be used in the query extracting source data." name="integrationSelectHint" type="String" value=""/>
+  <parameter id="_vMm9DKjeEeKTW_R2FPXghA" description="JDBC Fetch size (number of lines) used when querying the source database.&#xD;&#xA;Larger values provide better performance but consume more memory in the Runtime as the data is stored in the Memory before being sent." name="SQL_FECTH_SIZE" type="Integer" value=""/>
+  <parameter id="_4DCpwApLEeeAC4zIM1Voag" description="CDC Subscriber to use when CDC has been enabled on a source table." name="cdcSubscriber" type="String"/>
+  <parameter id="_csOiYK_VEeqGH6AaH3PDiA" description="When a source table is used as CDC a lock is performed on it. It makes the changed data available in the Mapping.&#xD;&#xA;If set to false, the Lock must have been performed as part of a previous Mapping." name="lockCdcTable" type="Boolean" value="true"/>
+  <parameter id="_csg2QK_VEeqGH6AaH3PDiA" description="When a source table is used as CDC an unlock is performed on it after processing. It marks the changed data as consumed.&#xD;&#xA;If set to false, the Unlock must be performed as part of an upcoming Mapping." name="unlockCdcTable" type="Boolean" value="true"/>
+  <subProcess id="_vMm9FKjeEeKTW_R2FPXghA" isBeginAction="false" name="INT" nbCycles="-1" toleratedError="false">
+    <actionCode id="_vMm9FajeEeKTW_R2FPXghA" enable="true" isBeginAction="false" name="SqlToXml" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcToFileActionCodeI">
+      <link id="_vMm9FqjeEeKTW_R2FPXghA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_vMm9LqjeEeKTW_R2FPXghA"/>
+      <parameter id="_vMm9F6jeEeKTW_R2FPXghA" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_vMm9GKjeEeKTW_R2FPXghA" name="OUT_FILE_NAME" type="String" value="%x{$fileName}x%"/>
+      <parameter id="_vMm9HajeEeKTW_R2FPXghA" name="OUT_FILE_MASK" ref="#_vMm9CajeEeKTW_R2FPXghA" type="String" value=""/>
+      <parameter id="_vMm9H6jeEeKTW_R2FPXghA" name="WRITE_XML_DESCRIPTOR" ref="#_vMm9C6jeEeKTW_R2FPXghA" type="Boolean" value="false"/>
+      <parameter id="_vMm9IKjeEeKTW_R2FPXghA" name="SQL_FETCH_SIZE" ref="#_vMm9DKjeEeKTW_R2FPXghA" type="Integer"/>
+      <parameter id="_vMm9IajeEeKTW_R2FPXghA" name="XML_COMMIT" type="Boolean" value="%x{md:ifEmpty(md:paramValue($this,'XML_COMMIT',3),md:paramValue($this,'XML_COMMIT',2))}x%"/>
+      <parameter id="_vMm9I6jeEeKTW_R2FPXghA" name="OUT_FILE_NAME_VAR" type="String" value="%xsl preserveSpace=&quot;false&quot;{&#xD;&#xA;&lt;xsl:variable name=&quot;tmp&quot; select=&quot;md:ifEmpty(md:paramValue($this,'outFileNameVar'),'OUT_FILE_NAME')&quot;/>&#xD;&#xA;&lt;xsl:choose>&#xD;&#xA;&lt;xsl:when test=&quot;$tmp!='' and (starts-with($tmp,'/') or starts-with($tmp,'~'))&quot;>&#xD;&#xA;&#x9;&#x9;&lt;xsl:value-of select=&quot;$tmp&quot;/>&#xD;&#xA;&lt;/xsl:when>&#xD;&#xA;&lt;xsl:when test=&quot;$tmp!=''&quot;>../../&lt;xsl:value-of select=&quot;$tmp&quot;/>&#xD;&#xA;&lt;/xsl:when>&#xD;&#xA;&lt;/xsl:choose>&#xD;&#xA;}xsl%"/>
+      <parameter id="_vUCR8K2EEeKHI4Lzcn081w" name="INSERT_METADATA" type="String" value="%xsl{&#xD;&#xA;&amp;lt;inserts>&#xD;&#xA;&lt;xsl:for-each select=&quot;distinct-values($REF/ref:columns()/ref:target()/../@id)&quot;>&#xD;&#xA;&lt;xsl:variable name=&quot;id&quot; select=&quot;.&quot;/>&#xD;&#xA;&#xD;&#xA;&lt;xsl:variable name=&quot;columns&quot; select=&quot;$REF/ref:columns()[ref:target()[name()!='record' and name()!='propertyField']/../@id=$id]&quot;/>&#xD;&#xA;&#xD;&#xA;&lt;xsl:variable name=&quot;parent&quot; select=&quot;$columns[1]/ref:target()/..&quot;/>&#xD;&#xA;&lt;xsl:variable name=&quot;parents&quot; select=&quot;$parent/ancestor-or-self::*[name()='file' or name()='record']&quot;/>&#xD;&#xA;&lt;xsl:variable name=&quot;path&quot;>&#xD;&#xA;&#x9;&lt;xsl:for-each select=&quot;$parents&quot;>/%x{tech:name()}x%&lt;/xsl:for-each> &#xD;&#xA;&lt;/xsl:variable>&#xD;&#xA;&lt;xsl:if test=&quot;$columns and $path!=''&quot;>&#xD;&#xA;&amp;lt;insert path=&quot;%x{$path}x%&quot;>&#xD;&#xA; /* &amp;amp;lt;properties generateHeader=&quot;%x{md:ifEmpty(md:paramValue($this,'generateHeader'),'false')}x%&quot;>&amp;amp;lt;/properties> */&#xD;&#xA;&#xD;&#xA;insert into %x{$parent/tech:name()}x%&#xD;&#xA;(&#xD;&#xA;&#x9;%x{md:list(md:sortedList($columns/ref:target()/concat(tech:fieldPosition(),' ',tech:name())), ',\n\t')}x%&#xD;&#xA;)&#xD;&#xA;values&#xD;&#xA;(&#xD;&#xA;&#x9;%x{md:list(md:sortedList($columns/concat(ref:target()/tech:fieldPosition(),if (tech:onSrc()) then concat(' :{',tech:workName(),'}:') else concat(' ',tech:expression()))), ',\n\t')}x%&#xD;&#xA;)&#xD;&#xA;&amp;lt;/insert>&#xD;&#xA;&lt;/xsl:if>&#xD;&#xA;&lt;/xsl:for-each>&#xD;&#xA;&amp;lt;/inserts>&#xD;&#xA;&#xD;&#xA;}xsl%"/>
+      <parameter id="_EdPfQLDFEeKZYqv3JSADUA" name="FILE_METADATA" type="String" value="%x{$REF/ref:target()/tech:xmlMetadata()}x%"/>
+      <parameter id="_Wh8t4DfoEeO9AZF9seCRmw" name="FILE_VERIFY_LENGTH" type="String" value="%x{if (md:paramValue($this,'acceptDataOverflow')='false') &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;then 'true' &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;else if (md:paramValue($this,'acceptDataOverflow')='true') &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;then 'false' &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;else md:paramValue($this,'acceptDataOverflow')}x%"/>
+      <parameter id="_jjtewGQAEeOwTZVnXRqLlw" name="NO_DATA_BEHAVIOUR" ref="#_iDheYGQAEeOwTZVnXRqLlw" type="String"/>
+      <code>&lt;sqlToXml:descriptor xmlns:sqlToXml=&quot;http://www.stambia.com/sqlToXml&quot;>&#xD;
+%xsl{&#xD;
+&#xD;
+&lt;xsl:variable name=&quot;sourceSets&quot;>&#xD;
+	&lt;xsl:for-each select=&quot;($REF/tech:sourceSets())&quot;>&#xD;
+		&lt;sourceSet name=&quot;{.}&quot; distinct=&quot;{md:paramValue($this,'DISTINCT')}&quot; integrationSelectHint=&quot;{md:paramValue($this,'integrationSelectHint')}&quot;>&#xD;
+		&lt;xsl:for-each select=&quot;$REF/ref:fields()[tech:sourceSet()=current() or (not(tech:sourceSet()!='')) and tech:onSrc()]&quot;>&#xD;
+			&lt;xsl:sort select=&quot;@position&quot; data-type=&quot;number&quot;/>&#xD;
+			&lt;field isKey=&quot;{tech:isUk()}&quot; id=&quot;{ref:target()/@id}&quot; alias=&quot;{replace(replace(tech:workName(),'-','_'),':','_')}&quot; aliasWord=&quot;{tech:columnAliasWord()}&quot; isAggregate=&quot;{tech:isAggregate()}&quot; location=&quot;{tech:location()}&quot; forceIsNillable=&quot;{if (tech:tag()='IS_NILLABLE') then 'true' else if (tech:tag()='IS_NOT_NILLABLE') then 'false' else ''}&quot; sortOrder=&quot;{if (tech:tag()='SORT_ASC') then 'ASC' else if (tech:tag()='SORT_DESC' ) then 'DESC' else ''}&quot;>&#xD;
+				&lt;xsl:variable name=&quot;exp&quot; select=&quot;md:ifEmpty(md:paramValue($this,'expression'),'[expression]')&quot;/>	&#xD;
+				&lt;xsl:value-of select=&quot;mdj:pattern($exp)&quot;/>&#xD;
+			&lt;xsl:copy-of select=&quot;tag&quot;/>&#xD;
+			&lt;xsl:for-each select=&quot;./ref:froms()&quot;>&#xD;
+				&lt;from>&lt;xsl:value-of select=&quot;tech:from()&quot;/>&lt;/from>&#xD;
+			&lt;/xsl:for-each>&#xD;
+		&#xD;
+			&lt;/field>&#xD;
+		&lt;/xsl:for-each>&#xD;
+		&lt;xsl:if test=&quot;.!=''&quot;>&#xD;
+		&lt;query>&#xD;
+			&lt;xsl:choose>&#xD;
+			&#xD;
+				&lt;xsl:when test=&quot;md:paramValue($this,'sourceSetOptimization')='manual'&quot;>&#xD;
+					&lt;xsl:variable name=&quot;joins&quot;>&#xD;
+						&lt;explicitJoins bracket=&quot;{$REF/ref:srcProduct()/tech:hasExplicitJoinInBracket()}&quot;>&#xD;
+						&lt;xsl:call-template name=&quot;rdbms:fromPart&quot;>&#xD;
+							&lt;xsl:with-param select=&quot;$REF&quot; name=&quot;context&quot;/>&#xD;
+							&lt;xsl:with-param name=&quot;sourceSet&quot; select=&quot;current()&quot;/>&#xD;
+							&lt;xsl:with-param name=&quot;mode&quot; select=&quot;'NODE'&quot;/>&#xD;
+						&lt;/xsl:call-template>&#xD;
+						&lt;/explicitJoins>&#xD;
+						&lt;implicitJoins>&#xD;
+						&lt;xsl:for-each select=&quot;$REF/ref:implicitJoin(current())&quot;>&#xD;
+							&lt;join>&#xD;
+								&lt;expr>&lt;xsl:value-of select=&quot;tech:implicitExpression()&quot;/>&lt;/expr>&#xD;
+								&lt;xsl:for-each select=&quot;./ref:froms()&quot;>&#xD;
+										&lt;from>&lt;xsl:value-of select=&quot;tech:from()&quot;/>&lt;/from>&#xD;
+								&lt;/xsl:for-each>&#xD;
+							&lt;/join>&#xD;
+						&lt;/xsl:for-each>&#xD;
+						&lt;/implicitJoins>&#xD;
+					&lt;/xsl:variable>&#xD;
+					&lt;xsl:copy-of select=&quot;$joins&quot;/>&#xD;
+					&lt;xsl:for-each select=&quot;$REF/ref:froms()/tech:from()&quot;>&#xD;
+						&lt;xsl:if test=&quot;.!=$joins//from&quot;>&#xD;
+							&lt;from>&lt;xsl:value-of select=&quot;.&quot;/>&lt;/from>&#xD;
+						&lt;/xsl:if>&#xD;
+					&lt;/xsl:for-each>&#xD;
+				&lt;/xsl:when>&#xD;
+				&lt;xsl:otherwise>&#xD;
+					&lt;from>&#xD;
+						&lt;xsl:value-of select=&quot;$REF/tech:fromPart(current())&quot;/>&#xD;
+					&lt;/from>&#xD;
+				&lt;/xsl:otherwise>&#xD;
+			&lt;/xsl:choose>	&#xD;
+		&lt;where>&#xD;
+		&lt;xsl:value-of select=&quot;$REF/tech:joinPart(current())&quot;/>&#xD;
+		&lt;xsl:value-of select=&quot;$REF/tech:filterPart(current())&quot;/>&#xD;
+		&lt;xsl:value-of select=&quot;$REF/tech:havingPart(current())&quot;/>&#xD;
+		&lt;xsl:value-of select=&quot;$REF/ref:from()/tech:cdcFilterPart($this)&quot;/>&#xD;
+&#xD;
+&lt;!--		&lt;xsl:value-of select=&quot;$REF/tech:groupByPart(current())&quot;/>-->&#xD;
+&lt;!-- calculé automatiquement-->&#xD;
+		&lt;/where>&#xD;
+		&lt;/query>&#xD;
+		&lt;/xsl:if>&#xD;
+		&lt;/sourceSet>&#xD;
+	&lt;/xsl:for-each>&#xD;
+&lt;/xsl:variable>&#xD;
+&amp;lt;data targetNamespace=&quot;%x{$REF/ref:target()/../@targetNamespace}%&quot;>&#xD;
+	&lt;xsl:apply-templates select=&quot;$sourceSets&quot; mode=&quot;xmlToText&quot;/>&#xD;
+	&lt;xsl:apply-templates select=&quot;$REF/ref:target()&quot; mode=&quot;xmlToText&quot;>&#xD;
+			&lt;xsl:with-param name=&quot;filters&quot; tunnel=&quot;yes&quot;>name()='md:ref'&lt;/xsl:with-param>&#xD;
+			&lt;xsl:with-param name=&quot;indent&quot; tunnel=&quot;yes&quot;> &lt;/xsl:with-param>&#xD;
+			&lt;xsl:with-param name=&quot;useXmlForm&quot; tunnel=&quot;yes&quot; select=&quot;true()&quot;/>&#xD;
+	&lt;/xsl:apply-templates>&#xD;
+	&lt;xsl:apply-templates select=&quot;$REF/ref:target()/ref:namespace()&quot; mode=&quot;xmlToText&quot;/>&#xD;
+&amp;lt;/data>&#xD;
+&#xD;
+&#xD;
+}xsl%&#xD;
+&lt;/sqlToXml:descriptor></code>
+    </actionCode>
+    <actionCode id="_vMm9JqjeEeKTW_R2FPXghA" generationCondition="'${deletePreviousFiles}$'='true'" isBeginAction="false" name="FileDelete" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+      <link id="_vMm9J6jeEeKTW_R2FPXghA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_vMm9FajeEeKTW_R2FPXghA"/>
+      <parameter id="_vMm9KKjeEeKTW_R2FPXghA" name="DEL_FILE" type="String" value="%x{$fileName}x%"/>
+    </actionCode>
+    <actionCode id="_vMm9KajeEeKTW_R2FPXghA" generationCondition="not(md:paramValue($this, 'lockCdcTable')='false')" isBeginAction="false" name="Lock of CDC table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$REF/ref:from()[tech:isCDC() and not(tech:isLoaded())]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_vMm9KqjeEeKTW_R2FPXghA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_vMm9JqjeEeKTW_R2FPXghA"/>
+      <parameter id="_vMm9K6jeEeKTW_R2FPXghA" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_vMm9LKjeEeKTW_R2FPXghA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_vMm9LajeEeKTW_R2FPXghA" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>update 	%x{md:physicalPath($CDC,'cdcTableName')}x%
+set 	CDC_CONSUMMATION = '1'
+where	(1=1)
+%x{$CDC/tech:cdcFilterPart($this)}x%</code>
+    </actionCode>
+    <actionCode id="_vMm9LqjeEeKTW_R2FPXghA" generationCondition="not(md:paramValue($this, 'unlockCdcTable')='false')" isBeginAction="false" name="Unlock of CDC table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$REF/ref:from()[tech:isCDC() and not(tech:isLoaded())]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter id="_vMm9L6jeEeKTW_R2FPXghA" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_vMm9MKjeEeKTW_R2FPXghA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_vMm9MajeEeKTW_R2FPXghA" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>Delete 	from 	%x{md:physicalPath($CDC,'cdcTableName')}x%
+Where	CDC_CONSUMMATION = '1'
+%x{$CDC/tech:cdcFilterPart($this)}x%</code>
+    </actionCode>
+    <templateType>I-TP.RDBMS.INTEGRATING</templateType>
+    <xslVariable id="_vMm9MqjeEeKTW_R2FPXghA" code="md:ifEmpty(md:paramValue($this,'OUT_FILE_NAME'),$REF/ref:target()/tech:filePath(),concat('${/CORE_TEMPORARY_FOLDER}$/',$REF/ref:target()/@id,'.dat'))" name="fileName" type="xpath"/>
+  </subProcess>
+  <templateType>I-TP.RDBMS</templateType>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.2/notation#/?fileId=_vMm9AqjeEeKTW_R2FPXghA?">
+  <notation:Diagram xmi:id="_EX87YPmxEeqJePcjJfnxvA" type="Proc" measurementUnit="Pixel">
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_EX87YfmxEeqJePcjJfnxvA"/>
+    <element xmi:type="proc:ActionProcess" href="../../INTEGRATION%20Hierarchical%20File.tp.proc#_vMm9AqjeEeKTW_R2FPXghA?fileId=_vMm9AqjeEeKTW_R2FPXghA$type=proc$name=INTEGRATION%20Hierarchical%20File?"/>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_EX-JgPmxEeqJePcjJfnxvA" type="Proc" measurementUnit="Pixel">
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_EX-JgfmxEeqJePcjJfnxvA"/>
+    <element xmi:type="proc:SubActionProcess" href="../../INTEGRATION%20Hierarchical%20File.tp.proc#_vMm9FKjeEeKTW_R2FPXghA?fileId=_vMm9AqjeEeKTW_R2FPXghA$type=proc$name=INT?"/>
+  </notation:Diagram>
+</xmi:XMI>
+]]></diagram>
+</proc:process>

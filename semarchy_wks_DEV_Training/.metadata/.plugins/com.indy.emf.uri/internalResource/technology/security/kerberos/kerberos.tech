@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="UUID_TECH_KERBEROS" name="Kerberos">
+  <level icon="icons/full/custom/file.host" xmlName="server" code="com.stambia.kerberos.server" displayName="Kerberos Server" isFile="true">
+    <attribute xmlName="kerberosKrb5ConfFile" category="Standard: Configurations Files" code="kerberosKrb5ConfFile" defaultValue="" displayName="Kerberos Configuration File Path (krb5.conf)" externalize="true"/>
+    <attribute icon="" xmlName="kerberosDebug" category="Standard: Debug Logs" code="kerberosDebug" defaultValue="" displayName="Enable Kerberos Debug" externalize="true" type="boolean"/>
+    <attribute xmlName="javaSecurityDebug" category="Standard: Debug Logs" code="javaSecurityDebug" displayName="Java Security Debug Properties (java.security.debug)" externalize="true"/>
+    <attribute xmlName="kerberosDisable" category="Standard: Enable / Disable Kerberos" code="kerberosDisable" displayName="Disable Kerberos Authentication" externalize="true" type="boolean"/>
+    <xPathExpression expression="@kerberosKrb5ConfFile">
+      <code>KERBEROS_KRB_CONF_FILE</code>
+    </xPathExpression>
+    <xPathExpression expression="@kerberosDebug">
+      <code>KERBEROS_DEBUG</code>
+    </xPathExpression>
+    <xPathExpression expression="@javaSecurityDebug">
+      <code>JAVA_SECURITY_DEBUG</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/rdbms.pk.png" iconBundleName="" xmlName="security" code="com.stambia.kerberos.security" displayName="Kerberos Principal">
+    <attribute xmlName="kerberosPrincipal" category="Standard: Kerberos Principal Properties" code="kerberosPrincipal" displayName="Kerberos Principal" externalize="true"/>
+    <attribute icon="" xmlName="kerberosKeytabFile" category="Standard: Kerberos Principal Properties" code="kerberosKeytabFile" displayName="Kerberos Local Keytab File Path" externalize="true"/>
+    <attribute xmlName="kerberosRemoteKeytabFile" category="Standard: Kerberos Principal Properties" code="kerberosRemoteKeytabFile" displayName="Kerberos Remote Keytab File Path (Optional)" externalize="true"/>
+    <parent>com.stambia.kerberos.server</parent>
+    <xPathExpression expression="@kerberosPrincipal">
+      <code>KERBEROS_PRINCIPAL</code>
+    </xPathExpression>
+    <xPathExpression expression="@kerberosKeytabFile">
+      <code>KERBEROS_KEYTAB_FILE</code>
+    </xPathExpression>
+    <xPathExpression expression="md:ifEmpty(@kerberosRemoteKeytabFile,tech:kerberosKeytabFile())">
+      <code>KERBEROS_REMOTE_KEYTAB_FILE</code>
+    </xPathExpression>
+    <xPathExpression expression="replace(concat(&#xD;&#xA;'¤KERBEROS_USER=',tech:kerberosPrincipal(),&#xD;&#xA;';¤KERBEROS_KEY_TAB_FILE=',tech:kerberosKeytabFile(),&#xD;&#xA;';¤KERBEROS_KRB5_CONF=',tech:kerberosKrbConfFile(),&#xD;&#xA;';¤KERBEROS_KRB5_DEBUG=',tech:kerberosDebug(),&#xD;&#xA;';¤KERBEROS_SECURITY_DEBUG=',tech:javaSecurityDebug(),&#xD;&#xA;if(tech:kerberosDisable() = 'true') then ';¤KERBEROS_DISABLE=true' else ''&#xD;&#xA;),'¤',$p1)&#xD;&#xA;">
+      <code>AUTHENTICATION_STRING</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+  </level>
+  <xPathExpression expression="ancestor-or-self::server">
+    <code>SERVER_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="'KERBEROS'">
+    <code>PRODUCT_CODE</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@kerberosKrb5ConfFile">
+    <code>KERBEROS_KRB_CONF_FILE</code>
+  </xPathExpression>
+  <xPathExpression expression="md:ifEmpty(ref:server()/@kerberosDebug,'false')='true'">
+    <code>KERBEROS_DEBUG</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@javaSecurityDebug">
+    <code>JAVA_SECURITY_DEBUG</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@kerberosDisable">
+    <code>KERBEROS_DISABLE</code>
+  </xPathExpression>
+</tech:tech>

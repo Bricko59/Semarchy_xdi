@@ -1,0 +1,30 @@
+*** Step 1 ***
+**************
+
+Code of the xsl variabel named TARGET_FOLDER
+--------------------------------------------
+    $this/metaDataLink/mdj:getMetaDataRef(.)[name()='directory'][1]
+	
+*** Step 2 ***
+**************
+
+Code of the xsl variabel named TARGET_TABLE
+-------------------------------------------
+    $this/metaDataLink/mdj:getMetaDataRef(.)[name()='datastore'][1]
+	
+*** Step 4 ***
+**************
+
+Expression Editor of the SQLFileExport action
+---------------------------------------------
+	${../pre_from_sql_clause}$
+	FROM %x{$TARGET_TABLE/tech:physicalPath()}x%
+	${../post_from_sql_clause}$
+	
+SQL Exp Filename property of the SQLFileExport action
+--------------------------------------------
+	%x{$TARGET_FOLDER/tech:path()}x%/Query %x{$TARGET_TABLE/tech:physicalName()}x% number${../StartLoop/CORE_NB_EXECUTIONS}$.csv	
+
+SQL Connection property of the SQLFileExport action
+---------------------------------------------------
+	%targetConnection{$TARGET_TABLE}%

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cross:root xmlns:cross="http://www.stambia.com/cross" id="_h0mCELk8EeuevZq3ZGZbnA?fileId=_h0mCELk8EeuevZq3ZGZbnA?" type="PROCESS" modelVersion="1.0">
+  <property key="name" value="Bind link"/>
+  <ref id="_50xksJMhEeymq6fNOAxqGA?fileId=_50xksJMhEeymq6fNOAxqGA?" type="METADATA">
+    <property key="containerLevel" value="SERVER"/>
+    <property key="name" value="datamart"/>
+    <property key="level" value="com.stambia.rdbms.server"/>
+    <property key="fullPath" value="datamart"/>
+    <property key="productCode" value="POSTGRESSQL"/>
+  </ref>
+  <ref id="_h0mCG7k8EeuevZq3ZGZbnA?fileId=_h0mCELk8EeuevZq3ZGZbnA?" type="METADATA_LINK">
+    <property key="name" value="Outlook_message"/>
+    <property key="level" value="com.stambia.mail.message"/>
+    <property key="fullPath" value="Bind link/SendMail/Outlook_message"/>
+  </ref>
+  <ref id="_ognLuigUEeuUE48NtByOaw?fileId=_ogkIUCgUEeuUE48NtByOaw?" type="METADATA">
+    <property key="name" value="Outlook_message"/>
+    <property key="level" value="com.stambia.mail.message"/>
+    <property key="fullPath" value="MailServer/Outlook_message"/>
+    <property key="productCode"/>
+    <target>_h0mCG7k8EeuevZq3ZGZbnA?fileId=_h0mCELk8EeuevZq3ZGZbnA?</target>
+  </ref>
+  <ref id="_RwuYcJb8EeytipfABCJWjQ?fileId=_50xksJMhEeymq6fNOAxqGA?" type="METADATA">
+    <property key="containerLevel" value="SCHEMA"/>
+    <property key="name" value="datamart.hotel_datamart"/>
+    <property key="level" value="com.stambia.rdbms.schema"/>
+    <property key="fullPath" value="datamart/datamart.hotel_datamart"/>
+    <property key="productCode" value="POSTGRESSQL"/>
+    <container>_50xksJMhEeymq6fNOAxqGA?fileId=_50xksJMhEeymq6fNOAxqGA?</container>
+  </ref>
+  <ref id="_h0mpIbk8EeuevZq3ZGZbnA?fileId=_h0mCELk8EeuevZq3ZGZbnA?" type="METADATA_LINK">
+    <property key="name" value="Send_mail_folder"/>
+    <property key="level" value="com.stambia.file.directory"/>
+    <property key="fullPath" value="Bind link/WriteTxtFile/Send_mail_folder"/>
+  </ref>
+  <ref id="_b6SCYZb8EeytipfABCJWjQ?fileId=_50xksJMhEeymq6fNOAxqGA?" type="METADATA">
+    <property key="name" value="dim_customer"/>
+    <property key="level" value="com.stambia.rdbms.datastore"/>
+    <property key="fullPath" value="datamart/datamart.hotel_datamart/dim_customer"/>
+    <property key="productCode" value="POSTGRESSQL"/>
+    <target>_h0mCErk8EeuevZq3ZGZbnA?fileId=_h0mCELk8EeuevZq3ZGZbnA?</target>
+    <container>_RwuYcJb8EeytipfABCJWjQ?fileId=_50xksJMhEeymq6fNOAxqGA?</container>
+  </ref>
+  <ref id="_DLjaOKx6Eeq1Uvhuu_dvcw?fileId=_DLiywKx6Eeq1Uvhuu_dvcw?" type="METADATA">
+    <property key="name" value="Send_mail_folder"/>
+    <property key="level" value="com.stambia.file.directory"/>
+    <property key="fullPath" value="null/Send_mail_folder"/>
+    <property key="productCode" value="FILE"/>
+    <target>_h0mCG7k8EeuevZq3ZGZbnA?fileId=_h0mCELk8EeuevZq3ZGZbnA?</target>
+    <target>_h0mpIbk8EeuevZq3ZGZbnA?fileId=_h0mCELk8EeuevZq3ZGZbnA?</target>
+  </ref>
+  <ref id="_h0mCErk8EeuevZq3ZGZbnA?fileId=_h0mCELk8EeuevZq3ZGZbnA?" type="METADATA_LINK">
+    <property key="name" value="dim_customer"/>
+    <property key="level" value="com.stambia.rdbms.datastore"/>
+    <property key="fullPath" value="Bind link/SqlOperation/dim_customer"/>
+  </ref>
+</cross:root>

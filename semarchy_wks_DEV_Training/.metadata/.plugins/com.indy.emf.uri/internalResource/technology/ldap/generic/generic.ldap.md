@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<md:node xmlns:md="http://www.stambia.com/md" defType="com.stambia.ldap.product" id="UUID_MD_GENERIC_LDAP" name="Generic Ldap" md:ref="../ldap.tech#UUID_STAMBIA_TECH_LDAP?fileId=UUID_STAMBIA_TECH_LDAP$type=tech$name=Generic?"/>

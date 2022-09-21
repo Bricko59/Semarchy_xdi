@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_MhOzQVfAEem34vJR1a7WCA">
+  <parameter id="_e3IXEFfBEem34vJR1a7WCA" metaInf="&lt;xslVariableName>genFileName&lt;/xslVariableName>" name="genFileName" type="String" value="warehouse_delivery_order"/>
+  <parameter id="_0js7wFfCEem34vJR1a7WCA" metaInf="&lt;xslVariableName>maxHour&lt;/xslVariableName>" name="maxHour" type="Integer" value="10"/>
+  <parameter id="_JXJ8kFfDEem34vJR1a7WCA" metaInf="&lt;xslVariableName>nbRecordToGen&lt;/xslVariableName>" name="nbRecordToGen" type="Integer" value="1000"/>
+  <parameter id="_JkZ28FfaEemPFZ5tyi-nXQ" metaInf="&lt;xslVariableName>minHour&lt;/xslVariableName>" name="minHour" type="Integer" value="5"/>
+  <parameter id="_i0nWsFh5EemPFZ5tyi-nXQ" metaInf="&lt;xslVariableName>listWarehouseWithoutOrder&lt;/xslVariableName>" label="List of warehouse code without order generated" name="listWarehouseWithoutOrder" type="String" value=""/>
+  <actionCode id="_QJSfEFfAEem34vJR1a7WCA" isBeginAction="false" name="SQLFileExport" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SqlFileExportActionCodeI">
+    <link id="_VE0UMFfcEemPFZ5tyi-nXQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_Usc3gFfcEemPFZ5tyi-nXQ"/>
+    <parameter id="_QJc3IFfAEem34vJR1a7WCA" name="SQL_EXP_FILENAME" type="String" value="%x{$folder_to_gen_file/tech:path()}x%/%x{md:paramValue($this,'genFileName')}x%_%x{md:paramValue($this,'minHour')}x%_%x{md:paramValue($this,'maxHour')}x%.txt"/>
+    <parameter id="_HoXxcFfBEem34vJR1a7WCA" name="SQL_CONNECTION" type="String" value="%connection{$warehouse_datastore}%"/>
+    <parameter id="_fTgD0FfeEemPFZ5tyi-nXQ" name="SQL_EXP_GENERATE_HEADER" type="Boolean" value="true"/>
+    <code>WITH   wd AS (&#xD;
+select row_number() over (order by warehouse_id)-1 warehouse_id,warehouse_cod &#xD;
+from postgres.alert_flow.warehouse&#xD;
+%x{if (md:paramValue($this,'listWarehouseWithoutOrder')='') then '' &#xD;
+    else concat(&quot;where warehouse_cod not in ('&quot;,replace(md:paramValue($this,'listWarehouseWithoutOrder'),&quot;,&quot;,&quot;','&quot;),&quot;')&quot;)}x%&#xD;
+)&#xD;
+SELECT LPAD(CAST(generate_series AS VARCHAR),7,'0') delivery_order_number,&#xD;
+       date_trunc('day',current_timestamp) + (interval '1 hour' * (%x{md:paramValue($this,'minHour')}x%+hour_num)) +(interval '1 minute' * min_num) delivery_timestamp,&#xD;
+       wd.warehouse_cod&#xD;
+FROM   (SELECT generate_series,CAST(floor(random()*(SELECT COUNT(*) &#xD;
+                                                    FROM wd)) AS INTEGER) AS warehouse_id,&#xD;
+               CAST(floor(random()*(%x{md:paramValue($this,'maxHour')}x%-%x{md:paramValue($this,'minHour')}x%)) AS INTEGER) as hour_num,&#xD;
+               CAST(floor(random()*60) AS INTEGER) as min_num &#xD;
+        FROM generate_series(1,%x{md:paramValue($this,'nbRecordToGen')}x%)) rand_num&#xD;
+INNER  JOIN wd ON rand_num.warehouse_id=wd.warehouse_id</code>
+  </actionCode>
+  <actionCode id="_Usc3gFfcEemPFZ5tyi-nXQ" isBeginAction="false" name="Sql To Parameters" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+    <link id="_K7u44FngEemPFZ5tyi-nXQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_KSS6UFngEemPFZ5tyi-nXQ"/>
+    <parameter id="_FIb6kFfdEemPFZ5tyi-nXQ" name="SQL_CONNECTION" type="String" value="%connection{$warehouse_datastore}%"/>
+    <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;~/current_timestamp&quot; type=&quot;String&quot; failsIfNoRecord=&quot;false&quot; dateTimeFormat=&quot;yyyy/MM/dd hh:mm:ss&quot;>&#xD;
+SELECT date_trunc('day',current_timestamp) + (interval '1 hour' * (%x{md:paramValue($this,'maxHour')}x%))&#xD;
+&lt;/parameter>&#xD;
+&lt;parameter name=&quot;~/previous_timestamp&quot; type=&quot;String&quot; failsIfNoRecord=&quot;false&quot; dateTimeFormat=&quot;yyyy/MM/dd hh:mm:ss&quot;>&#xD;
+SELECT date_trunc('day',current_timestamp) + (interval '1 hour' * (%x{md:paramValue($this,'minHour')}x%))&#xD;
+&lt;/parameter>&#xD;
+&lt;parameter name=&quot;~/current_file&quot; type=&quot;String&quot; failsIfNoRecord=&quot;false&quot; dateTimeFormat=&quot;yyyy/MM/dd hh:mm:ss&quot;>&#xD;
+SELECT '%x{md:paramValue($this,&quot;genFileName&quot;)}x%_%x{md:paramValue($this,&quot;minHour&quot;)}x%_%x{md:paramValue($this,&quot;maxHour&quot;)}x%.txt'&#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters> &#xD;
+</code>
+  </actionCode>
+  <actionCode id="_N6ZCYFngEemPFZ5tyi-nXQ" isBeginAction="false" name="SendMail" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SendMailActionCodeI">
+    <link id="_N6ZCYVngEemPFZ5tyi-nXQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_N6ZCaFngEemPFZ5tyi-nXQ"/>
+    <metaDataLink id="_N6ZCYlngEemPFZ5tyi-nXQ" name="Information_message" target="MAIL_Server.md#_o-ZnFVk3EemPFZ5tyi-nXQ?fileId=_o-YY8Fk3EemPFZ5tyi-nXQ$type=md$name=Information_message?"/>
+    <parameter id="_N6ZCY1ngEemPFZ5tyi-nXQ" name="MAIL_TO" type="String" value=":{warehouse_alert_mail_address}:"/>
+    <parameter id="_N6ZCZFngEemPFZ5tyi-nXQ" name="MAIL_SUBJECT" type="String" value="Alert :{warehouse_alert_cod}: on warehouse :{warehouse_cod}:"/>
+    <parameter id="_VxZa4FngEemPFZ5tyi-nXQ" name="MAIL_HTML_MODE" type="Boolean" value="true"/>
+    <parameter id="_XYCokFngEemPFZ5tyi-nXQ" name="MAIL_CONTENT_FILE" type="String" value="%x{$folder_to_gen_file/tech:path()}x%/:{warehouse_cod}:.html"/>
+    <parameter id="_tr3P8FngEemPFZ5tyi-nXQ" name="MAIL_HOSTNAME" type="String" value="%x{$message/tech:hostName()}x%"/>
+    <parameter id="_w5UqcFngEemPFZ5tyi-nXQ" name="MAIL_PORT" type="Integer" value="%x{$message/tech:port()}x%"/>
+    <parameter id="_z-GqEFngEemPFZ5tyi-nXQ" name="MAIL_FROM" type="String" value="%x{$message/tech:user()}x%"/>
+    <parameter id="_3Bm3UFngEemPFZ5tyi-nXQ" name="MAIL_USER" type="String" value="%x{$message/tech:user()}x%"/>
+    <parameter id="_5ps68FngEemPFZ5tyi-nXQ" name="MAIL_PASSWORD" type="String" value="%x{$message/tech:password()}x%"/>
+    <parameter id="_9Kh9YFngEemPFZ5tyi-nXQ" name="MAIL_SSL_PROTOCOL" type="String" value="%x{$message/tech:sslProtocol()}x%"/>
+    <code></code>
+  </actionCode>
+  <actionCode id="_N6ZCZVngEemPFZ5tyi-nXQ" isBeginAction="false" name="SqlOperation SELECT alert" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <bindLink id="_PBiQoFngEemPFZ5tyi-nXQ" bindType="DirectBind" targetId="_N6ZCa1ngEemPFZ5tyi-nXQ"/>
+    <bindLink id="_PZKtgFngEemPFZ5tyi-nXQ" bindType="DirectBind" targetId="_N6ZCYFngEemPFZ5tyi-nXQ"/>
+    <bindLink id="_P88wAFngEemPFZ5tyi-nXQ" bindType="DirectBind" targetId="_N6ZCaFngEemPFZ5tyi-nXQ"/>
+    <parameter id="_N6ZCZlngEemPFZ5tyi-nXQ" name="SQL_CONNECTION" type="String" value="%connection{$warehouse_datastore}%"/>
+    <parameter id="_N6ZCZ1ngEemPFZ5tyi-nXQ" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+    <code>SELECT *&#xD;
+FROM   postgres.alert_flow.alert&#xD;
+WHERE  not(sent_alert_flag)</code>
+  </actionCode>
+  <actionCode id="_N6ZCaFngEemPFZ5tyi-nXQ" isBeginAction="false" name="SqlOperation UPDATE alert" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <parameter id="_N6ZCaVngEemPFZ5tyi-nXQ" name="SQL_CONNECTION" type="String" value="%connection{$warehouse_datastore}%"/>
+    <parameter id="_N6ZCalngEemPFZ5tyi-nXQ" name="SQL_ACTION_TYPE" type="String" value="UPDATE"/>
+    <code>UPDATE postgres.alert_flow.alert SET sent_alert_flag=true&#xD;
+WHERE  warehouse_cod=:{warehouse_cod}:&#xD;
+AND    timestamp_alert=:{timestamp_alert}:</code>
+  </actionCode>
+  <actionCode id="_N6ZCa1ngEemPFZ5tyi-nXQ" isBeginAction="false" name="WriteTxtFile gen HTML file" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+    <link id="_N6ZCbFngEemPFZ5tyi-nXQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_N6ZCYFngEemPFZ5tyi-nXQ"/>
+    <parameter id="_N6ZCbVngEemPFZ5tyi-nXQ" name="TXT_WRITE_FILENAME" type="String" value="%x{$folder_to_gen_file/tech:path()}x%/:{warehouse_cod}:.html"/>
+    <code>&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;>&#xD;
+&lt;title>Warehouse alert&lt;/title>&#xD;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>&#xD;
+&lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;>&#xD;
+ &lt;tbody>&lt;tr>&#xD;
+  &lt;td align=&quot;center&quot;>&#xD;
+   &lt;a>&#xD;
+    &lt;img src=&quot;attention.jpeg&quot; align=&quot;center&quot; alt=&quot;Warehouse alert&quot; width=&quot;75&quot; height=&quot;75&quot; style=&quot;display: block;&quot;>&#xD;
+   &lt;/a>&#xD;
+  &lt;/td>&#xD;
+  &lt;td style=&quot;font-size: 26px; line-height: 0;&quot; width=&quot;60&quot;> &lt;/td>&#xD;
+  &lt;td>&#xD;
+   &lt;a>&#xD;
+    &lt;b>Warehouse alert code :{warehouse_alert_cod}: On warehouse :{warehouse_cod}:&lt;/b>&#xD;
+   &lt;/a>&#xD;
+  &lt;/td>&#xD;
+   &lt;td style=&quot;font-size: 0; line-height: 0;&quot; width=&quot;60&quot;> &lt;/td>&#xD;
+   &lt;td align=&quot;center&quot;>&#xD;
+   &lt;a>&#xD;
+    &lt;img src=&quot;mail.png&quot; align=&quot;center&quot; alt=&quot;Warehouse alert&quot; width=&quot;75&quot; height=&quot;75&quot; style=&quot;display: block;&quot;>&#xD;
+   &lt;/a>&#xD;
+  &lt;/td>&#xD;
+ &lt;/tr>&#xD;
+&lt;/tbody>&#xD;
+&lt;/table>&#xD;
+&lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; width=&quot;500&quot;>&#xD;
+ &lt;tbody>&#xD;
+ &lt;tr>&#xD;
+  &lt;td>&#xD;
+    &amp;nbsp;&#xD;
+  &lt;/td>&#xD;
+  &lt;td>&#xD;
+    &amp;nbsp;&#xD;
+  &lt;/td>&#xD;
+ &lt;/tr>&#xD;
+ &lt;tr>&#xD;
+  &lt;td>&#xD;
+  &lt;a>&#xD;
+   &lt;img src=&quot;scan warehouse.png&quot; align=&quot;center&quot; alt=&quot;Warehouse alert&quot; width=&quot;300&quot; height=&quot;100&quot;>&#xD;
+   &lt;/a>&#xD;
+   &lt;/td>&#xD;
+   &lt;td>&#xD;
+     &lt;img src=&quot;warehouse activity.png&quot; align=&quot;center&quot; alt=&quot;Warehouse activity&quot; width=&quot;300&quot; height=&quot;100&quot;>&#xD;
+  &lt;/td>&#xD;
+ &lt;/tr>&#xD;
+ &lt;tr>&#xD;
+  &lt;td>&#xD;
+    &amp;nbsp;&#xD;
+  &lt;/td>&#xD;
+  &lt;td>&#xD;
+    &amp;nbsp;&#xD;
+  &lt;/td>&#xD;
+ &lt;/tr>&#xD;
+  &lt;tr>&#xD;
+  &lt;td>&#xD;
+   Begin check period  &#xD;
+  &lt;/td>&#xD;
+  &lt;td>&#xD;
+   : :{timestamp_begin_period}: &#xD;
+  &lt;/td>&#xD;
+  &lt;/tr>&#xD;
+   &lt;tr>&#xD;
+  &lt;td>&#xD;
+   End check period &#xD;
+  &lt;/td>&#xD;
+  &lt;td>&#xD;
+   : :{timestamp_alert}:&#xD;
+  &lt;/td>&#xD;
+ &lt;/tr>&#xD;
+  &lt;tr>&#xD;
+  &lt;td>&#xD;
+   Threshold quantity for the period  &#xD;
+  &lt;/td>&#xD;
+  &lt;td>&#xD;
+   : :{warehouse_alert_threshold_qty}: &#xD;
+  &lt;/td>&#xD;
+ &lt;/tr>&#xD;
+  &lt;tr>&#xD;
+  &lt;td>&#xD;
+   Cumulative quantity for the period  &#xD;
+  &lt;/td>&#xD;
+  &lt;td>&#xD;
+   : :{cumulative_period_quantity}:&#xD;
+  &lt;/td>&#xD;
+ &lt;/tr>&#xD;
+  &lt;tr>&#xD;
+  &lt;td>&#xD;
+   Quantity during the last hour &#xD;
+  &lt;/td>&#xD;
+  &lt;td>&#xD;
+   : :{hour_quantity}: &#xD;
+  &lt;/td>&#xD;
+ &lt;/tr>&#xD;
+ &lt;tr>&#xD;
+  &lt;td>&#xD;
+   &lt;img src=&quot;verification.jpeg&quot; align=&quot;center&quot; alt=&quot;Warehouse alert&quot; width=&quot;300&quot; height=&quot;100&quot; style=&quot;display: block;&quot;>&#xD;
+  &lt;/td>&#xD;
+ &lt;/tr>&#xD;
+&lt;/tbody>&#xD;
+&lt;/table>&#xD;
+&lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;>&#xD;
+ &lt;tbody>&lt;tr>&#xD;
+  &lt;td style=&quot;font-size: 0; line-height: 0;&quot; width=&quot;400&quot;> &lt;/td>&#xD;
+  &lt;td>&#xD;
+   &lt;a href=&quot;http://www.twitter.com/&quot;>&#xD;
+    &lt;img src=&quot;twitter.png&quot; alt=&quot;Twitter&quot; width=&quot;40&quot; height=&quot;40&quot; style=&quot;display: block;&quot; border=&quot;0&quot;>&#xD;
+   &lt;/a>&#xD;
+  &lt;/td>&#xD;
+  &lt;td style=&quot;font-size: 0; line-height: 0;&quot; width=&quot;20&quot;> &lt;/td>&#xD;
+  &lt;td>&#xD;
+   &lt;a href=&quot;http://www.linkedin.com/&quot;>&#xD;
+    &lt;img src=&quot;linkedin.png&quot; alt=&quot;LinkedIn&quot; width=&quot;38&quot; height=&quot;38&quot; style=&quot;display: block;&quot; border=&quot;0&quot;>&#xD;
+   &lt;/a>&#xD;
+  &lt;/td>&#xD;
+  &lt;td style=&quot;font-size: 0; line-height: 0;&quot; width=&quot;20&quot;> &lt;/td>&#xD;
+  &lt;td>&#xD;
+   &lt;a href=&quot;http://www.google.com/&quot;>&#xD;
+    &lt;img src=&quot;google+.png&quot; alt=&quot;Google&quot; width=&quot;38&quot; height=&quot;38&quot; style=&quot;display: block;&quot; border=&quot;0&quot;>&#xD;
+   &lt;/a>&#xD;
+  &lt;/td>&#xD;
+ &lt;/tr>&#xD;
+&lt;/tbody>&lt;/table></code>
+  </actionCode>
+  <actionProcessRef id="_KSS6UFngEemPFZ5tyi-nXQ" isBeginAction="false" name="Aggregate activity" nbCycles="-1" toleratedError="false" processMap="true" targetName="Aggregate%20activity.map#_68tjsFerEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=Aggregate%20activity?">
+    <link id="_RD80UFngEemPFZ5tyi-nXQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_N6ZCZVngEemPFZ5tyi-nXQ"/>
+  </actionProcessRef>
+  <xslVariable id="_0SYNIFfAEem34vJR1a7WCA" code="($this/metaDataLink/mdj:getMetaDataRef(.)[name()='datastore'][tech:productCode()!='MICROSOFT_EXCEL'])[1]" name="warehouse_datastore" type="xpath"/>
+  <xslVariable id="_SZd8gFfBEem34vJR1a7WCA" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='directory'][1]" name="folder_to_gen_file" type="xpath"/>
+  <xslVariable id="_mnt3wFngEemPFZ5tyi-nXQ" description="How to use it ?&#xD;&#xA;----------------&#xD;&#xA;1-Drag &amp; Drop this template at the top (main) level of a process&#xD;&#xA;2-Drag &amp; Drop a RDBMS schema in this template&#xD;&#xA;3-Link the end of the process to this template with a &quot;Unsuccessful Link&quot;&#xD;&#xA;4-Define the properties of the template&#xD;&#xA;&#xD;&#xA;What will be done ?&#xD;&#xA;---------------------&#xD;&#xA;The template will try to CREATE the STB_ERROR_LOG table in the schema &#xD;&#xA;The template will INSERT error properties in the STB_ERROR_LOG table , one record per error&#xD;&#xA;At the end, an error is generated to keep the process in error&#xD;&#xA;&#xD;&#xA;What are your options ?&#xD;&#xA;-------------------------&#xD;&#xA;You can add a process reference/code, different to the process name. It will work even if there is no value&#xD;&#xA;You can choose to drop the STB_ERROR_LOG table at the begin of the template&#xD;&#xA;You can choose to insert also the TOLERATED errors in the table&#xD;&#xA;&#xD;&#xA;mdj:getMetaDataRef($this/metaDataLink[1])" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='message'][1]" name="message" type="xpath"/>
+</proc:process>

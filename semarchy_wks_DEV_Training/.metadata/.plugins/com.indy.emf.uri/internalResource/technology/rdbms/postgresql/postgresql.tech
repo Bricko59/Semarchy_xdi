@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="UUID_TECH_RDBMS_POSTGRESQL" name="PostGreSQL Technology" ref="resource.md#UUID_MD_RDBMS_DEFAULT?fileId=UUID_MD_RDBMS_DEFAULT$type=md$name=Rdbms%20MetaData?">
+  <level code="com.stambia.rdbms.column" override="true" positionReverseCode="">
+    <attribute xmlName="arrayType" xpathCondition="@TYPE_NAME='array'" code="arrayType" displayName="Array Type" mdXpathAccess="ancestor::product[1]/datatype/@name" reverseCode="ARRAY_TYPE_NAME" type="list"/>
+    <xPathExpression expression="@arrayType">
+      <code>ARRAY_TYPE</code>
+    </xPathExpression>
+  </level>
+  <xPathExpression description="string() est ajouté à la fin car lorsque des valeurs d'attribut sont mixées à des string (via replace) alors ca plante" expression="if (string($p2)='true') &#xD;&#xA;then upper-case(replace($p1,$regexp,'_'))&#xD;&#xA;else if (contains($mask,'[OBJECT]') and (matches($p1,$regexp) or not($p1=lower-case($p1)))) &#xD;&#xA;&#x9;then mdj:replaceAll($mask,'\[OBJECT\]',$p1) &#xD;&#xA;&#x9;else string($p1)">
+    <code>ADD_DELIMITER</code>
+    <xPathParameter defaultValue="''" name="p1"/>
+    <xPathParameter defaultValue="false()" name="p2"/>
+    <xPathParameter defaultValue="''" name="p3"/>
+    <xPathVariable expression="mdj:xpath(.,'OBJECT_DELIMITER_MASK')" name="mask"/>
+    <xPathVariable expression="md:ifEmpty(if ($p3='column') then $product/@defaultDelimiterRegexp else if ($p3='datastore')   then $product/@datastoreDelimiterRegexp else if ($p3='schema')   then $product/@schemaDelimiterRegexp else mdj:xpath(.,'OBJECT_DELIMITER_REGEXP'),'[^a-zA-Z0-9_.\$]')" name="regexp"/>
+    <xPathVariable expression="ancestor-or-self::product[1]" name="product"/>
+  </xPathExpression>
+</tech:tech>

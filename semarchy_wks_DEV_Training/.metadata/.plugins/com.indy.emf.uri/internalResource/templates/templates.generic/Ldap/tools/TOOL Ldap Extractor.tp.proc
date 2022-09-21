@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_oqx8Eix7EeSsjfiDGjc-JQ">
+  <parameter id="_oqx8FCx7EeSsjfiDGjc-JQ" name="classFilter" type="String" value=""/>
+  <parameter id="_C44gEC0eEeSEEdLmigCLWA" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;true&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;false&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;onFileCreation&quot;/>" name="generateHeader" type="String" value="false"/>
+  <parameter id="_C44gES0eEeSEEdLmigCLWA" name="truncateTargetFile" type="Boolean" value="false"/>
+  <parameter id="_C44gEi0eEeSEEdLmigCLWA" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;true&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;false&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;leftTruncation&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;rightTruncation&quot;/>" name="acceptDataOverflow" type="String" value="false"/>
+  <parameter id="_C44gEy0eEeSEEdLmigCLWA" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;before&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;after&quot;/>" name="fileSeparator" type="String" value="before"/>
+  <parameter id="_rQX4gC0vEeSv4_9BSBNusA" name="pathName" type="String" value="fullPath"/>
+  <parameter id="_SCMQcC09EeSw2osX6gjtWg" name="pathEndsWithFilter" type="String" value=""/>
+  <parameter id="_PfaUgFiKEeavZrY24_J1xQ" description="This parameter defines how the template matches the ldap attributes with the file's fields. &#xD;&#xA;- physical name: the template gets the ldap attributes which have the same name as the fields' physical names&#xD;&#xA;- logical name: the template gets the ldap attributes named as the field name (not physical)&#xD;&#xA;" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;physical name&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;logical name&quot;/>" name="matchLdapAttributesWith" type="String" value="physical name"/>
+  <actionCode id="_oqx8HSx7EeSsjfiDGjc-JQ" isBeginAction="false" name="Bean Scripting" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.BeanScriptingActionCodeI">
+    <bindLink id="_kpqhsC0YEeSHwtrZKd74hA" bindType="DirectBind" targetId="_g4L0IC0YEeSHwtrZKd74hA"/>
+    <bindLink id="_FL9LYC0dEeSEEdLmigCLWA" bindType="DirectBind" targetId="_CdmuwC0dEeSEEdLmigCLWA"/>
+    <parameter id="_oqx8Hix7EeSsjfiDGjc-JQ" description="Scripting language (groovy, jython)" name="SCRIPTING_LANGUAGE" type="String" value="beanshell"/>
+    <parameter id="_LGXtoC0YEeSHwtrZKd74hA" name="SCRIPTING_CONNECTION" type="String" value="T1"/>
+    <code>import java.io.IOException;&#xD;
+import java.sql.ResultSet;&#xD;
+import java.sql.SQLException;&#xD;
+import java.util.HashMap;&#xD;
+import java.util.Map;&#xD;
+import java.util.Properties;&#xD;
+&#xD;
+import javax.naming.Context;&#xD;
+import javax.naming.NamingException;&#xD;
+import javax.naming.ldap.InitialLdapContext;&#xD;
+&#xD;
+String filter = &quot;%x{md:paramValue($this,'classFilter')}x%&quot;;&#xD;
+String pathEndsWithFilter= &quot;%x{md:paramValue($this,'pathEndsWithFilter')}x%&quot;;&#xD;
+String providerURL=&quot;%x{$ldap/tech:providerURL()}x%&quot;;&#xD;
+String securityCredentials=&quot;%x{$ldap/tech:securityCredentials()}x%&quot;;&#xD;
+String securityPrincipal=&quot;%x{$ldap/tech:securityPrincipal()}x%&quot;;&#xD;
+String initialContextFactory=&quot;%x{$ldap/tech:initialContextFactory()}x%&quot;;&#xD;
+String pathName=&quot;${../pathName}$&quot;;&#xD;
+Properties props = new Properties();&#xD;
+props.put(Context.PROVIDER_URL,providerURL);&#xD;
+props.put(Context.INITIAL_CONTEXT_FACTORY,&quot;com.sun.jndi.ldap.LdapCtxFactory&quot;);&#xD;
+props.put(&quot;STB_ENCODED_PROPERTY:&quot;+Context.SECURITY_CREDENTIALS, securityCredentials);&#xD;
+props.put(Context.SECURITY_PRINCIPAL, securityPrincipal); &#xD;
+InitialLdapContext initialContext = __ctx__.getInitialContextManager().createInitialLdapContext(props,null);&#xD;
+ps=__ctx__.createBindedPreparedStatement();&#xD;
+&#xD;
+&#xD;
+Map fields=new HashMap();&#xD;
+index=1;&#xD;
+&#xD;
+%xsl{&#xD;
+&lt;xsl:for-each select=&quot;$file/ref:field()&quot;>&#xD;
+	fields.put(&quot;%x{if(md:paramValue($this,'matchLdapAttributesWith')='logical name') then @name else tech:name()}x%&quot;,index);&#xD;
+	ps.setColumn(index++, &quot;%x{tech:name()}x%&quot;);&#xD;
+&lt;/xsl:for-each>&#xD;
+}xsl%&#xD;
+&#xD;
+&#xD;
+new LdapExtractor(filter,fields,initialContext,ps,&quot;,&quot;,pathName,pathEndsWithFilter).select();</code>
+  </actionCode>
+  <actionCode id="_nbRjIC0XEeSHwtrZKd74hA" isBeginAction="false" name="DeclareClass" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.BeanScriptingActionCodeI">
+    <link id="_q8cj0C0XEeSHwtrZKd74hA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_oqx8HSx7EeSsjfiDGjc-JQ"/>
+    <parameter id="_nbRjIS0XEeSHwtrZKd74hA" description="Scripting language (groovy, jython)" name="SCRIPTING_LANGUAGE" type="String" value="beanshell"/>
+    <parameter id="_qJD_EC0XEeSHwtrZKd74hA" name="SCRIPTING_CONNECTION" type="String" value="T1"/>
+    <code>import java.io.IOException;&#xD;
+import java.lang.reflect.Array;&#xD;
+import java.sql.ParameterMetaData;&#xD;
+import java.sql.PreparedStatement;&#xD;
+import java.sql.SQLException;&#xD;
+import java.util.ArrayList;&#xD;
+import java.util.Arrays;&#xD;
+import java.util.Collections;&#xD;
+import java.util.Enumeration;&#xD;
+import java.util.HashMap;&#xD;
+import java.util.List;&#xD;
+import java.util.Map;&#xD;
+import javax.naming.NameClassPair;&#xD;
+import javax.naming.NamingEnumeration;&#xD;
+import javax.naming.NamingException;&#xD;
+import javax.naming.directory.Attribute;&#xD;
+import javax.naming.ldap.InitialLdapContext;&#xD;
+&#xD;
+public class LdapExtractor {&#xD;
+&#xD;
+	List classFilter = null;&#xD;
+&#xD;
+	Map parameters = null;&#xD;
+&#xD;
+	PreparedStatement ps;&#xD;
+&#xD;
+	private void visit(Enumeration _enum, String path)&#xD;
+			throws IOException {&#xD;
+&#xD;
+		try {&#xD;
+			Map values = new HashMap();&#xD;
+			List list=new ArrayList(classFilter.size());&#xD;
+			for (Object _tmp:classFilter){&#xD;
+				list.add(_tmp);&#xD;
+			}&#xD;
+			&#xD;
+			for (; _enum.hasMoreElements();) {&#xD;
+				Attribute attr = (Attribute) _enum.nextElement();&#xD;
+				&#xD;
+				String id = attr.getID();&#xD;
+				String val = null;&#xD;
+				&#xD;
+				if (attr.size() > 0) {&#xD;
+					for (int i = 0; i &lt; attr.size(); i++) {&#xD;
+						String tmp= attr.get(i).toString();&#xD;
+						if (val != null) {&#xD;
+							val += multiValueSeparator + tmp;&#xD;
+						} else {&#xD;
+							Object o = tmp;&#xD;
+							val = o.toString();&#xD;
+						}&#xD;
+						if (classFilter!=null &amp;&amp; id.equals(&quot;objectClass&quot;) &amp;&amp; tmp!=null &amp;&amp; list.contains(tmp)){&#xD;
+							list.remove(tmp);&#xD;
+						}&#xD;
+					}&#xD;
+				} else {&#xD;
+					val = (String) attr.get();&#xD;
+					if (classFilter!=null &amp;&amp; id.equals(&quot;objectClass&quot;) &amp;&amp; val!=null &amp;&amp; list.contains(val)){&#xD;
+						list.remove(val);&#xD;
+						&#xD;
+					}&#xD;
+				}&#xD;
+				&#xD;
+				values.put(attr.getID(), val);&#xD;
+			}&#xD;
+			if (list.isEmpty()) {&#xD;
+				ParameterMetaData pm = ps.getParameterMetaData();&#xD;
+				for (Object paramter : parameters.keySet()) {&#xD;
+					&#xD;
+					int position = (Integer) parameters.get((String)paramter);&#xD;
+					if (paramter.equals(pathName)){&#xD;
+						ps.setString(position, path);&#xD;
+					}else{&#xD;
+						ps.setString(position, (String) values.get(paramter));&#xD;
+					}&#xD;
+				}&#xD;
+				ps.executeUpdate();&#xD;
+			}&#xD;
+&#xD;
+		} catch (NamingException e) {&#xD;
+			e.printStackTrace();&#xD;
+		} catch (SQLException e) {&#xD;
+			e.printStackTrace();&#xD;
+		}&#xD;
+	}&#xD;
+&#xD;
+	public void select() throws NamingException, IOException {&#xD;
+&#xD;
+		visit(&quot;&quot;, null);&#xD;
+&#xD;
+	}&#xD;
+&#xD;
+	private void visit(String path, NameClassPair parentClass,&#xD;
+			NameClassPair curClass) throws IOException {&#xD;
+		Enumeration _enum;&#xD;
+		try {&#xD;
+			_enum = initialContext.getAttributes(path).getAll();&#xD;
+			visit(_enum, path);&#xD;
+		} catch (NamingException e) {&#xD;
+			e.printStackTrace();&#xD;
+		}&#xD;
+	}&#xD;
+&#xD;
+	private void visit(String pNodeName, NameClassPair parentClass)&#xD;
+			throws NamingException, IOException {&#xD;
+		String curClassName;&#xD;
+		NamingEnumeration childList = initialContext.list(pNodeName);&#xD;
+		while (childList.hasMore()) {&#xD;
+			NameClassPair curClass = (NameClassPair) childList.nextElement();&#xD;
+			if (pNodeName.equals(&quot;&quot;)) {&#xD;
+				curClassName = curClass.getName();&#xD;
+			} else {&#xD;
+				curClassName = curClass.getName() +multiValueSeparator + pNodeName;&#xD;
+			}&#xD;
+&#xD;
+			// if class Name has a / we have to enclose by double quote the expression&#xD;
+			curClassName=&quot;\&quot;&quot;+curClassName.replace(&quot;\&quot;&quot;,&quot;&quot;)+&quot;\&quot;&quot;;&#xD;
+&#xD;
+			if (pathEndsWith==null || pathEndsWith.isEmpty() || curClassName.endsWith(pathEndsWith)){&#xD;
+				visit(curClassName, parentClass, curClass);&#xD;
+			}&#xD;
+			if (initialContext.list(curClassName).hasMore()) {&#xD;
+				visit(curClassName, curClass);&#xD;
+			}&#xD;
+			&#xD;
+		}&#xD;
+	}&#xD;
+&#xD;
+	InitialLdapContext initialContext;&#xD;
+&#xD;
+	private String multiValueSeparator;&#xD;
+&#xD;
+	private String pathName;&#xD;
+&#xD;
+	private String pathEndsWith;&#xD;
+&#xD;
+	LdapExtractor(String classFilter, Map positions,&#xD;
+			InitialLdapContext initialContext, PreparedStatement ps, String multiValueSeparator, String pathName,String pathEndsWith) {&#xD;
+		super();&#xD;
+		this.pathName=pathName;&#xD;
+		this.pathEndsWith=pathEndsWith;&#xD;
+		if(pathName==null){&#xD;
+			this.pathName=&quot;uid&quot;;&#xD;
+		}&#xD;
+		this.multiValueSeparator=multiValueSeparator;&#xD;
+		if (classFilter!=null &amp;&amp; !classFilter.isEmpty()){&#xD;
+			this.classFilter=Arrays.asList(classFilter.split(&quot;\\+&quot;));&#xD;
+		}else{&#xD;
+			this.classFilter=new ArrayList();&#xD;
+		}&#xD;
+		this.parameters = positions;&#xD;
+		this.initialContext = initialContext;&#xD;
+		this.ps = ps;&#xD;
+	}&#xD;
+&#xD;
+}&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_g4L0IC0YEeSHwtrZKd74hA" enable="false" isBeginAction="false" name="Scripting" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <parameter id="_g4NCQC0YEeSHwtrZKd74hA" description="Scripting language (Rhino, Jython, etc.)" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+    <code>%xsl{&#xD;
+&lt;xsl:for-each select=&quot;$file/ref:field()&quot;>&#xD;
+	print(&quot; %x{tech:name()}x%: &quot;); &#xD;
+	print(&quot;:{%x{tech:name()}x%}:&quot;);&#xD;
+&#xD;
+&lt;/xsl:for-each>&#xD;
+}xsl%&#xD;
+	println();&#xD;
+&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_CdmuwC0dEeSEEdLmigCLWA" generationCondition="" isBeginAction="false" name="Load of data (TRG)" nbCycles="-1" repetitionQuery="" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_CdmuwS0dEeSEEdLmigCLWA" executionType="OK" generationType="OK" mandatory="1"/>
+    <parameter id="_Cdmuwy0dEeSEEdLmigCLWA" name="SQL_CONNECTION" type="String" value="%connection{$file}%"/>
+    <parameter id="_CdmuxC0dEeSEEdLmigCLWA" name="SQL_ACTION_TYPE" type="String" value="INSERT"/>
+    <parameter id="_CdmuxS0dEeSEEdLmigCLWA" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+    <code>insert into %x{$file/@name}x%&#xD;
+(&#xD;
+	%x{md:patternList($file/ref:field(),'[name]', ',\n\t')}x%&#xD;
+)&#xD;
+values&#xD;
+(&#xD;
+	%x{md:patternList($file/ref:field(),':{{[name]}}:', ',\n\t')}x%&#xD;
+)&#xD;
+&#xD;
+/* &lt;properties verifyLength=&quot;%x{if (md:paramValue($this,'acceptDataOverflow')='false') &#xD;
+									then 'true' &#xD;
+									else if (md:paramValue($this,'acceptDataOverflow')='true') &#xD;
+										then 'false' &#xD;
+										else md:paramValue($this,'acceptDataOverflow')}x%&quot; generateHeader=&quot;%x{if (md:paramValue($this,'truncateTargetFile')='false') then md:paramValue($this,'generateHeader') else 'false'}%&quot; lineSeparatorBefore=&quot;%x{md:paramValue($this,'fileSeparator')='before'}%&quot; lineSeparatorAfter=&quot;%x{md:paramValue($this,'fileSeparator')='after'}%&quot;>&lt;/properties> */&#xD;
+&#xD;
+%x{$file/tech:xmlMetadata()}x%</code>
+  </actionCode>
+  <actionCode id="_XD7dEC0eEeSEEdLmigCLWA" generationCondition="'${truncateTargetFile}$' = 'true'" isBeginAction="false" name="Create File" nbCycles="-1" repetitionQuery="" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_XD7dES0eEeSEEdLmigCLWA" executionType="OK" generationType="OK" mandatory="1"/>
+    <link id="_Xox2kC0eEeSEEdLmigCLWA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_oqx8HSx7EeSsjfiDGjc-JQ"/>
+    <parameter id="_XD7dEy0eEeSEEdLmigCLWA" name="SQL_CONNECTION" type="String" value="%connection{$file}%"/>
+    <parameter id="_XD7dFC0eEeSEEdLmigCLWA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_XD7dFS0eEeSEEdLmigCLWA" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+    <code>Truncate table %x{$file/@name}x%&#xD;
+&#xD;
+ /* &lt;properties generateHeader=&quot;%x{md:paramValue($this,'generateHeader')}%&quot;>&lt;/properties> */&#xD;
+&#xD;
+%x{$file/tech:xmlMetadata()}x%</code>
+  </actionCode>
+  <xslVariable id="_HwdrQC3oEeSB99I2LuHSFA" code="$this/metaDataLink/mdj:getMetaDataRef(.)[@defType='com.stambia.ldap.server'][1]" name="ldap" type="xpath"/>
+  <xslVariable id="_HwijwC3oEeSB99I2LuHSFA" code="$this/metaDataLink/mdj:getMetaDataRef(.)[@defType='com.stambia.file.file'][1]" name="file" type="xpath"/>
+</proc:process>

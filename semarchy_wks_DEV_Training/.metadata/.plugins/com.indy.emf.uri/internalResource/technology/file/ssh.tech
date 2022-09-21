@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" description="" id="UUID_STAMBIA_TECH_SSH" name="ssh">
+  <level icon="icons/full/custom/ftp.server.png" xmlName="server" code="com.stambia.ssh.server" displayName="SSH Server" isFile="true" positionReverseCode="" subMetaDataFileCapability="true">
+    <attribute xmlName="host" code="host" displayName="Host" externalize="true"/>
+    <attribute xmlName="port" code="port" displayName="Port" externalize="true"/>
+    <attribute xmlName="user" category="" code="user" displayName="User" externalize="true" type="string"/>
+    <attribute xmlName="password" code="password" displayName="Password" externalize="true" type="password"/>
+    <attribute xmlName="timeout" code="timeout" displayName="Timeout" externalize="true" type="integer"/>
+    <attribute xmlName="proxyHost" category="Standard:Proxy Server" code="proxyHost" displayName="Host" externalize="true"/>
+    <attribute xmlName="proxyPort" category="Standard:Proxy Server" code="proxyPort" displayName="Port" externalize="true"/>
+    <attribute xmlName="proxyUser" category="Standard:Proxy Server" code="proxyUser" displayName="User" externalize="true"/>
+    <attribute xmlName="proxyPassword" category="Standard:Proxy Server" code="proxyPassword" displayName="Password" externalize="true" type="password"/>
+    <attribute xmlName="privateKeyFile" category="Standard:Key File" code="privateKeyFile" displayName="Private Key File" externalize="true"/>
+    <attribute xmlName="passwordPhrase" category="Standard:Key File" code="passwordPhrase" displayName="Password Phrase" externalize="true" type="password"/>
+    <attribute xmlName="additionalConnectionProperties" code="additionalConnectionProperties" displayName="Additional Connection Properties" multiLine="true" toolTip="You can define in this parameter additional connection properties in the form of Java Properties. &#xA;(key=value lines separated with line returns)"/>
+  </level>
+  <level icon="icons/full/custom/file.folder.png" xmlName="directory" code="com.stambia.ssh.directory" displayName="Remote directory">
+    <attribute xmlName="path" code="path" displayName="Path" externalize="true"/>
+    <attribute iconBundleName="" xmlName="systemPath" code="systemPath" displayName="System Absolut Path" externalize="true"/>
+    <parent>com.stambia.ssh.server</parent>
+    <xPathExpression expression="@path">
+      <code>PATH</code>
+    </xPathExpression>
+    <xPathExpression expression="@systemPath">
+      <code>SYSTEM_PATH</code>
+    </xPathExpression>
+  </level>
+  <xPathExpression expression="ancestor-or-self::server[1]">
+    <code>SERVER_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="'SSH'">
+    <code>PRODUCT_CODE</code>
+  </xPathExpression>
+  <xPathExpression expression="'SSH'">
+    <code>TECH_CODE</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@host">
+    <code>HOST</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@port">
+    <code>PORT</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@user">
+    <code>USER</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@password">
+    <code>PASSWORD</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@proxyUser">
+    <code>PROXY_USER</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@proxyPassword">
+    <code>PROXY_PASSWORD</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@proxyHost">
+    <code>PROXY_HOST</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@proxyPort">
+    <code>PROXY_PORT</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@privateKeyFile">
+    <code>PRIVATE_KEY_FILE</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@passwordPhrase">
+    <code>PASSWORD_PHRASE</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@timeout">
+    <code>TIMEOUT</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@additionalConnectionProperties">
+    <code>ADDITIONAL_CONNECTION_PROPERTIES</code>
+  </xPathExpression>
+  <metaDataLinkType createAction="false" name="sshConnection">
+    <parameter name="SSH_HOST" value="tech:host()"/>
+    <parameter name="SSH_USER" value="tech:user()"/>
+    <parameter name="SSH_PASSWORD" value="tech:password()"/>
+    <parameter name="SSH_PORT" value="tech:port()"/>
+    <parameter name="PROXY_USER" value="tech:proxyUser()"/>
+    <parameter name="PROXY_PASSWORD" value="tech:proxyPassword()"/>
+    <parameter name="PROXY_HOST" value="tech:proxyHost()"/>
+    <parameter name="PROXY_PORT" value="tech:proxyPort()"/>
+    <parameter name="SSH_PRIVATE_KEY_FILE" value="tech:privateKeyFile()"/>
+    <parameter name="SSH_PASSWORD_PHRASE" value="tech:passwordPhrase()"/>
+    <parameter name="SSH_TIMEOUT" value="tech:timeout()"/>
+    <parameter name="SSH_ADDITIONAL_CONNECTION_PROPERTIES" value="tech:additionalConnectionProperties()"/>
+    <technology>com.indy.engine.actionCodes.ScpPutActionCodeI</technology>
+    <technology>com.indy.engine.actionCodes.ScpGetActionCodeI</technology>
+    <technology>com.indy.engine.actionCodes.SSHExecActionCodeI</technology>
+    <technology>com.indy.engine.actionCodes.SFtpExecActionCodeI</technology>
+    <level>#com.stambia.ssh.server</level>
+    <level>#com.stambia.ssh.directory</level>
+  </metaDataLinkType>
+  <metaDataLinkType createAction="false" name="ScpPutDirectory">
+    <parameter name="SCP_REMOTE_DIR" value="@path"/>
+    <technology>com.indy.engine.actionCodes.ScpPutActionCodeI</technology>
+    <level>#com.stambia.ssh.directory</level>
+  </metaDataLinkType>
+</tech:tech>

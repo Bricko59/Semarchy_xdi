@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tpc:conf xmlns:tpc="http://www.stambia.com/tpc" id="_xNFN0MufEeiqd6PSfmKw4g">
+  <case name="I-TP">
+    <propertyState name="TYPE" value="I-TP"/>
+    <case name="CMIS">
+      <or>
+        <propertyState name="trgTech" value="HTTPREST"/>
+      </or>
+      <case name="RDBMS">
+        <or>
+          <propertyState name="srcTech" value="JSON"/>
+          <propertyState name="srcTech" value="RDBMS"/>
+        </or>
+        <template id="_6cGs5MvFEeiRAvOrIMI3zg" ref="INTEGRATION%20Rdbms%20to%20Http.tp.proc#_4fRz0MvFEeiRAvOrIMI3zg?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=INTEGRATION%20Rdbms%20to%20Http.tp?"/>
+      </case>
+    </case>
+  </case>
+  <case name="L-TP">
+    <propertyState name="TYPE" value="L-TP"/>
+    <case name="HTTPREST">
+      <or>
+        <propertyState name="srcTech" value="HTTPREST"/>
+      </or>
+      <case name="RDBMS">
+        <propertyState name="trgTech" value="RDBMS"/>
+        <template id="_e9Xy4syhEeiZZpkha1hW6A" ref="../../addons/generic/templates/templates.generic/Xml/LOAD%20Xml%20to%20Rdbms.proc#_eNVMMrdDEd6wPMNq-9tkHw?fileId=_eNVMMrdDEd6wPMNq-9tkHw$type=proc$name=Load%20Xml%20to%20Rdbms?"/>
+        <template id="_-6mDpMyEEeiH7KY_HFiXiA" ref="INTEGRATION%20Rdbms%20to%20Http.tp.proc#_4fRz0MvFEeiRAvOrIMI3zg?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=INTEGRATION%20Rdbms%20to%20Http.tp?"/>
+      </case>
+    </case>
+  </case>
+</tpc:conf>

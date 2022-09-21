@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_Wzz7gVeuEem34vJR1a7WCA">
+  <actionProcessRef id="_zBh-YFfCEem34vJR1a7WCA" isBeginAction="false" name="TOOL_HourActivityTreatment from 5h to 6h" nbCycles="-1" toleratedError="false" targetName="TOOL_HourActivityTreatment.proc#_MhOzQVfAEem34vJR1a7WCA?fileId=_MhOzQVfAEem34vJR1a7WCA$type=proc$name=TOOL_HourActivityTreatment?">
+    <link id="_gWqwcFngEemPFZ5tyi-nXQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_nFXoMFffEemPFZ5tyi-nXQ"/>
+    <metaDataLink id="_VRtqEFfDEem34vJR1a7WCA" name="genAlert_Folder" target="FILE_Server.md#_PvVwAFeqEem34vJR1a7WCA?fileId=_PpMrwFeqEem34vJR1a7WCA$type=md$name=genAlert_Folder?"/>
+    <metaDataLink id="_ri95EFfYEemPFZ5tyi-nXQ" name="warehouse" target="PGSQL_SampleDB.md#_mE1HIFexEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse?"/>
+    <metaDataLink id="_eVUjwFngEemPFZ5tyi-nXQ" name="Information_message" target="MAIL_Server.md#_o-ZnFVk3EemPFZ5tyi-nXQ?fileId=_o-YY8Fk3EemPFZ5tyi-nXQ$type=md$name=Information_message?"/>
+    <parameter id="_xRt5sFfaEemPFZ5tyi-nXQ" name="maxHour" type="Integer" value="6"/>
+    <parameter id="_VvM7oFilEemPFZ5tyi-nXQ" name="listWarehouseWithoutOrder" type="String" value="Berlin,Madrid"/>
+  </actionProcessRef>
+  <actionProcessRef id="_nFXoMFffEemPFZ5tyi-nXQ" enable="true" isBeginAction="false" name="TOOL_HourActivityTreatment from 6h to 7h" nbCycles="-1" toleratedError="false" targetName="TOOL_HourActivityTreatment.proc#_MhOzQVfAEem34vJR1a7WCA?fileId=_MhOzQVfAEem34vJR1a7WCA$type=proc$name=TOOL_HourActivityTreatment?">
+    <link id="_7BNOgFniEemPFZ5tyi-nXQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_6qKAcFniEemPFZ5tyi-nXQ"/>
+    <metaDataLink id="_nFXoMlffEemPFZ5tyi-nXQ" name="genAlert_Folder" target="FILE_Server.md#_PvVwAFeqEem34vJR1a7WCA?fileId=_PpMrwFeqEem34vJR1a7WCA$type=md$name=genAlert_Folder?"/>
+    <metaDataLink id="_nFXoM1ffEemPFZ5tyi-nXQ" name="warehouse" target="PGSQL_SampleDB.md#_mE1HIFexEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse?"/>
+    <metaDataLink id="_g3UmcFngEemPFZ5tyi-nXQ" name="Information_message" target="MAIL_Server.md#_o-ZnFVk3EemPFZ5tyi-nXQ?fileId=_o-YY8Fk3EemPFZ5tyi-nXQ$type=md$name=Information_message?"/>
+    <parameter id="_nFXoNFffEemPFZ5tyi-nXQ" name="maxHour" type="Integer" value="7"/>
+    <parameter id="_rAoj4FffEemPFZ5tyi-nXQ" name="minHour" type="Integer" value="6"/>
+    <parameter id="_rjW2cFffEemPFZ5tyi-nXQ" name="nbRecordToGen" type="Integer" value="2000"/>
+    <parameter id="_PPrBgFinEemPFZ5tyi-nXQ" name="listWarehouseWithoutOrder" type="String" value="Berlin"/>
+  </actionProcessRef>
+  <actionProcessRef id="_6qKAcFniEemPFZ5tyi-nXQ" enable="true" isBeginAction="false" name="TOOL_HourActivityTreatment from 7h to 8h" nbCycles="-1" toleratedError="false" targetName="TOOL_HourActivityTreatment.proc#_MhOzQVfAEem34vJR1a7WCA?fileId=_MhOzQVfAEem34vJR1a7WCA$type=proc$name=TOOL_HourActivityTreatment?">
+    <link id="_J3S5AFnjEemPFZ5tyi-nXQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_JdHecFnjEemPFZ5tyi-nXQ"/>
+    <metaDataLink id="_6qKAcVniEemPFZ5tyi-nXQ" name="genAlert_Folder" target="FILE_Server.md#_PvVwAFeqEem34vJR1a7WCA?fileId=_PpMrwFeqEem34vJR1a7WCA$type=md$name=genAlert_Folder?"/>
+    <metaDataLink id="_6qKAclniEemPFZ5tyi-nXQ" name="warehouse" target="PGSQL_SampleDB.md#_mE1HIFexEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse?"/>
+    <metaDataLink id="_6qKAc1niEemPFZ5tyi-nXQ" name="Information_message" target="MAIL_Server.md#_o-ZnFVk3EemPFZ5tyi-nXQ?fileId=_o-YY8Fk3EemPFZ5tyi-nXQ$type=md$name=Information_message?"/>
+    <parameter id="_6qKAdFniEemPFZ5tyi-nXQ" name="maxHour" type="Integer" value="8"/>
+    <parameter id="_6qKAdVniEemPFZ5tyi-nXQ" name="minHour" type="Integer" value="7"/>
+    <parameter id="_6qKAdlniEemPFZ5tyi-nXQ" name="nbRecordToGen" type="Integer" value="2000"/>
+    <parameter id="_6qKAd1niEemPFZ5tyi-nXQ" name="listWarehouseWithoutOrder" type="String" value="Paris"/>
+  </actionProcessRef>
+  <actionProcessRef id="_JdHecFnjEemPFZ5tyi-nXQ" enable="true" isBeginAction="false" name="TOOL_HourActivityTreatment from 8h to 9h" nbCycles="-1" toleratedError="false" targetName="TOOL_HourActivityTreatment.proc#_MhOzQVfAEem34vJR1a7WCA?fileId=_MhOzQVfAEem34vJR1a7WCA$type=proc$name=TOOL_HourActivityTreatment?">
+    <metaDataLink id="_JdHecVnjEemPFZ5tyi-nXQ" name="genAlert_Folder" target="FILE_Server.md#_PvVwAFeqEem34vJR1a7WCA?fileId=_PpMrwFeqEem34vJR1a7WCA$type=md$name=genAlert_Folder?"/>
+    <metaDataLink id="_JdHeclnjEemPFZ5tyi-nXQ" name="warehouse" target="PGSQL_SampleDB.md#_mE1HIFexEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse?"/>
+    <metaDataLink id="_JdHec1njEemPFZ5tyi-nXQ" name="Information_message" target="MAIL_Server.md#_o-ZnFVk3EemPFZ5tyi-nXQ?fileId=_o-YY8Fk3EemPFZ5tyi-nXQ$type=md$name=Information_message?"/>
+    <parameter id="_JdHedFnjEemPFZ5tyi-nXQ" name="maxHour" type="Integer" value="9"/>
+    <parameter id="_JdHedVnjEemPFZ5tyi-nXQ" name="minHour" type="Integer" value="8"/>
+    <parameter id="_JdHedlnjEemPFZ5tyi-nXQ" name="nbRecordToGen" type="Integer" value="2000"/>
+    <parameter id="_JdHed1njEemPFZ5tyi-nXQ" name="listWarehouseWithoutOrder" type="String" value="Berlin,Paris"/>
+  </actionProcessRef>
+  <subProcess id="_HVHAkFoZEemPFZ5tyi-nXQ" isBeginAction="false" name="Init DB" nbCycles="-1" toleratedError="false">
+    <link id="_N-XMgFoZEemPFZ5tyi-nXQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_zBh-YFfCEem34vJR1a7WCA"/>
+    <actionCode id="_MK98QFoZEemPFZ5tyi-nXQ" isBeginAction="false" name="SqlOperation  INSERT into warehouse" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <metaDataLink id="_MK98QloZEemPFZ5tyi-nXQ" name="warehouse" target="PGSQL_SampleDB.md#_mE1HIFexEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse?"/>
+      <parameter id="_MK98Q1oZEemPFZ5tyi-nXQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <code>INSERT INTO alert_flow.warehouse VALUES (0,'London',2,'jm.souchard@gmail.com',10,'LON01');&#xD;
+INSERT INTO alert_flow.warehouse VALUES (1,'Paris',2,'jean-michel.souchard@stambia.com',20,'PAR01');&#xD;
+INSERT INTO alert_flow.warehouse VALUES (2,'Madrid',3,'jm.souchard@gmail.com',10,'MAD01');&#xD;
+INSERT INTO alert_flow.warehouse VALUES (3,'Berlin',2,'jm.souchard@gmail.com',20,'BER01');&#xD;
+INSERT INTO alert_flow.warehouse VALUES (4,'Dublin',3,'jean-michel.souchard@stambia.com',10,'DUB01');</code>
+    </actionCode>
+    <actionProcessRef id="_MK98RFoZEemPFZ5tyi-nXQ" isBeginAction="false" name="TOOL_resetSchema alert_flow" nbCycles="-1" toleratedError="false" targetName="../../global/components/Training/TOOL_resetSchema.proc#_mbXZ0SCBEeWkpdwlbgb5vw?fileId=_mbXZ0SCBEeWkpdwlbgb5vw$type=proc$name=TOOL_resetSchema?">
+      <link id="_MK98RVoZEemPFZ5tyi-nXQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_MK98QFoZEemPFZ5tyi-nXQ"/>
+      <metaDataLink id="_MK98RloZEemPFZ5tyi-nXQ" name="postgres_alert_flow" target="PGSQL_SampleDB.md#_gFiX0FepEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=postgres.alert_flow?"/>
+    </actionProcessRef>
+  </subProcess>
+</proc:process>

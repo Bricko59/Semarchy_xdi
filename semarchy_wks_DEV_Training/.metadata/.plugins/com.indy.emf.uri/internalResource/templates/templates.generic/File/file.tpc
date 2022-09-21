@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tpc:conf xmlns:tpc="http://www.stambia.com/tpc" id="_PrWUMFE4Ed-SQuyZS8LpiA">
+  <case name="I-TP">
+    <propertyState name="TYPE" value="I-TP"/>
+    <case name="FILE">
+      <propertyState name="trgTech" value="FILE"/>
+      <template id="_PrW7SVE4Ed-SQuyZS8LpiA" ref="INTEGRATION%20File.tp.proc#_4WVbt4c7Ed6NdYXLsd44UQ?fileId=_4WVbt4c7Ed6NdYXLsd44UQ$type=proc$name=INTEGRATION%20File?"/>
+      <template id="_qYClUajfEeKTW_R2FPXghA" ref="INTEGRATION%20Hierarchical%20File.tp.proc#_vMm9AqjeEeKTW_R2FPXghA?fileId=_vMm9AqjeEeKTW_R2FPXghA$type=proc$name=INTEGRATION%20Hierarchical%20File?"/>
+      <template id="_PrW7SFE4Ed-SQuyZS8LpiA" ref="INTEGRATION%20File%20(FileExport).tp.proc#_8V1w55CAEd6u7uzLmVWZbw?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=INTEGRATION%20File%20(FileExport)?"/>
+      <template id="_7d1cBPCFEeKvKsvzoKiC0Q" ref="../Xml/INTEGRATION%20Rdbms%20to%20Xml.proc#_brHmkaEoEd6xg_kipsVRYg?fileId=_brHmkaEoEd6xg_kipsVRYg$type=proc$name=INTEGRATION%20Rdbms%20to%20Xml?"/>
+    </case>
+  </case>
+  <case name="L-TP">
+    <propertyState name="TYPE" value="L-TP"/>
+    <case name="TRG_RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="SRC_FILE">
+        <propertyState name="srcTech" value="FILE"/>
+        <template id="_PrYwd1E4Ed-SQuyZS8LpiA" ref="LOAD%20File%20to%20Rdbms.tp.proc#_a-mEoaIhEd68f8w2ej5O-w?fileId=_a-mEoaIhEd68f8w2ej5O-w$type=proc$name=LOAD%20File%20to%20Rdbms?"/>
+      </case>
+    </case>
+  </case>
+</tpc:conf>

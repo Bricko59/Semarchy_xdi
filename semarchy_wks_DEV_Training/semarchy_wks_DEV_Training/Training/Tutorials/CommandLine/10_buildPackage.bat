@@ -1,0 +1,1 @@
+java -jar plugins/org.eclipse.equinox.launcher_1.5.100.v20180827-1352.jar  -application com.indy.shell.application -console –noSplash -data "C:\stb_wks\stambia_wks_DEV_Training" -script "C:/stb_wks/stambia_wks_DEV_Training/Training/Tutorials/CommandLine/10_buildPackage.txt" -logFile "C:/stb_wks/stambia_wks_DEV_Training/Training/Tutorials/CommandLine/10_buildPackage.log" 

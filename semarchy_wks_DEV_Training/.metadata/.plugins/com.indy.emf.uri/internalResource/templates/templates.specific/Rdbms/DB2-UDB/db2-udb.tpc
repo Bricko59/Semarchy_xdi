@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tpc:conf xmlns:tpc="http://www.stambia.com/tpc" id="_GuOY0O7eEeK3StQ0JH9kSQ">
+  <case name="I-TP">
+    <propertyState name="TYPE" value="I-TP"/>
+    <case name="RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="TRG DB2-UDB">
+        <propertyState name="trgProduct" value="IBM_DB2_UDB"/>
+        <template id="_Tpf8c-7eEeK3StQ0JH9kSQ" ref="INTEGRATION%20DB2-UDB.proc#_0qdjUe7bEeK3StQ0JH9kSQ?fileId=_0qdjUe7bEeK3StQ0JH9kSQ$type=proc$name=INTEGRATION%20DB2-UDB?"/>
+      </case>
+    </case>
+    <case name="FILE">
+      <propertyState name="trgTech" value="FILE"/>
+      <case name="SRC_DB2">
+        <propertyState name="srcProduct" value="IBM_DB2_UDB"/>
+        <template id="_Tm-Ks_OxEeKdwf4YQ4TajQ" ref="INTEGRATION%20File%20(DB2-UDB).proc#_C8FhwfOxEeKdwf4YQ4TajQ?fileId=_C8FhwfOxEeKdwf4YQ4TajQ$type=proc$name=INTEGRATION%20File%20(DB2-UDB)?"/>
+      </case>
+    </case>
+  </case>
+  <case name="C-TP">
+    <propertyState name="TYPE" value="C-TP"/>
+    <case name="RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="TRG DB2-UDB">
+        <propertyState name="trgProduct" value="IBM_DB2_UDB"/>
+        <template id="_nQl4t_BbEeKwspbpWqFSXw" ref="REJECT%20DB2-UDB.proc#_W7tn4fBOEeKADMdmsIYV5A?fileId=_W7tn4fBOEeKADMdmsIYV5A$type=proc$name=REJECT%20DB2-UDB?"/>
+      </case>
+    </case>
+  </case>
+  <case name="L-TP">
+    <propertyState name="TYPE" value="L-TP"/>
+    <case name="TRG_RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="SRC_RDBMS">
+        <or>
+          <propertyState name="srcTech" value="RDBMS"/>
+          <propertyState mode="CONTAINS" name="srcCompatibleTechList" value="RDBMS"/>
+        </or>
+        <case name="TRG DB2-UDB">
+          <propertyState name="trgProduct" value="IBM_DB2_UDB"/>
+          <template id="_xs3JdPKvEeKmQfQ4KsWO7g" ref="LOAD%20Rdbms%20to%20DB2-UDB.proc#_A4ayMfCCEeKwspbpWqFSXw?fileId=_A4ayMfCCEeKwspbpWqFSXw$type=proc$name=LOAD%20Rdbms%20to%20DB2-UDB?"/>
+        </case>
+      </case>
+      <case name="SRC_FILE">
+        <propertyState name="srcTech" value="FILE"/>
+        <case name="TRG DB2-UDB">
+          <propertyState name="trgProduct" value="IBM_DB2_UDB"/>
+          <template id="_bzq8pPOAEeKdwf4YQ4TajQ" ref="LOAD%20File%20to%20DB2-UDB.proc#_iw6N0vN7EeKdwf4YQ4TajQ?fileId=_iw6N0vN7EeKdwf4YQ4TajQ$type=proc$name=LOAD%20File%20to%20DB2-UDB?"/>
+        </case>
+      </case>
+    </case>
+  </case>
+  <case name="IS-TP">
+    <propertyState name="TYPE" value="IS-TP"/>
+    <case name="TRG_RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="TRG DB2-UDB">
+        <propertyState name="trgProduct" value="IBM_DB2_UDB"/>
+        <template id="_9qJvWFLvEeWq6Ivm3g-r1Q" ref="STAGING%20DB2-UDB%20As%20Table.proc#_HwkihlLsEeWq6Ivm3g-r1Q?fileId=_HwkihlLsEeWq6Ivm3g-r1Q$type=proc$name=STAGING+DB2-UDB+As+Table?"/>
+      </case>
+    </case>
+  </case>
+</tpc:conf>

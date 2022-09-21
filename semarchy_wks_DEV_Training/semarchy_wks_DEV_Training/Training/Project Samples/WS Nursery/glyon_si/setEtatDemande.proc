@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_Fu8UExtBEeaSVI_PvVjHMg">
+  <metaDataLink id="_Fu8UFBtBEeaSVI_PvVjHMg" output="true" name="creche" target="../00_Metadata/XML_etatDemande.md#_vLzhmRqAEeaSVI_PvVjHMg?fileId=_nDsK8BqAEeaSVI_PvVjHMg$type=md$name=creche?"/>
+  <parameter id="_Fu8UFRtBEeaSVI_PvVjHMg" input="true" name="id_demande" type="Integer" value="1"/>
+  <parameter id="_Fu8UFhtBEeaSVI_PvVjHMg" input="true" name="email_demandeur" type="String" value="jm.souchard@gmail.com"/>
+  <parameter id="_KWS5sBtBEeaSVI_PvVjHMg" input="true" name="confirmationInscription" type="Boolean" value="true"/>
+  <actionProcessRef id="_T6wAwBtoEeaSVI_PvVjHMg" isBeginAction="false" name="putXMLDemande" nbCycles="-1" toleratedError="false" processMap="true" targetName="putXMLDemande.map#_kWTNYBkcEeaSVI_PvVjHMg?fileId=_kWTNYBkcEeaSVI_PvVjHMg$name=putXMLDemande$type=map?">
+    <link id="_-hfqYBtKEeaSVI_PvVjHMg" generationCondition="" executionCondition="%e(rhino){ ('${~/confirmationInscription}$' == 'false')}e(rhino)% " executionType="OK" generationType="OK_KO" mandatory="1" targetId="_uRC_EBtoEeaSVI_PvVjHMg"/>
+  </actionProcessRef>
+  <actionProcessRef id="_uRC_EBtoEeaSVI_PvVjHMg" isBeginAction="false" name="Tentative_suppression_inscription" nbCycles="-1" toleratedError="false" processMap="true" targetName="Tentative_suppression_inscription.map#_UECT4BtNEeaSVI_PvVjHMg?fileId=_UECT4BtNEeaSVI_PvVjHMg$name=Tentative_suppression_inscription$type=map?"/>
+</proc:process>

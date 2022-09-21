@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ref:mapRef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:ref="http://www.indy.com/v2/ref" id="_pknd2pfgEeyNk-8PTn1xFw">
+  <dataModel>_o_7ioJb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=Integrate%20dim_bedroom?</dataModel>
+  <containerRef xsi:type="ref:RDatastore" id="_pknd25fgEeyNk-8PTn1xFw" countShownFields="10" hierarchical="false">
+    <dataModel>_rU4n0Jb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_pkoE4JfgEeyNk-8PTn1xFw" precision="0" size="10" type="numeric" mandatory="true" position="3">
+      <dataModel>_rU7EEZb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=bdr_id?</dataModel>
+      <expressionRef id="_pkpTAZfgEeyNk-8PTn1xFw" internalExpression="${t_bedroom.bdr_id}$">
+        <dataModel>_tStmcpb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map?</dataModel>
+        <sourceRef>_pkor8pfgEeyNk-8PTn1xFw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_pkoE4ZfgEeyNk-8PTn1xFw" precision="0" size="4" type="numeric" position="6">
+      <dataModel>_rU7rIJb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=bdr_number?</dataModel>
+      <expressionRef id="_pkor-pfgEeyNk-8PTn1xFw" internalExpression="${t_bedroom.bdr_number}$">
+        <dataModel>_tSs_YZb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map?</dataModel>
+        <sourceRef>_pkor95fgEeyNk-8PTn1xFw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_pkoE4pfgEeyNk-8PTn1xFw" precision="0" size="2" type="numeric" position="9">
+      <dataModel>_rU7rIZb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=bdr_floor?</dataModel>
+      <expressionRef id="_pkor-5fgEeyNk-8PTn1xFw" internalExpression="CASE WHEN LOWER(${t_bedroom.bdr_floor}$)='gf' THEN 0&#xA;     WHEN LOWER(${t_bedroom.bdr_floor}$)='1st' THEN 1&#xA;     WHEN LOWER(${t_bedroom.bdr_floor}$)='2nd' THEN 2&#xA;END">
+        <dataModel>_tStmcJb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map?</dataModel>
+        <sourceRef>_pkor85fgEeyNk-8PTn1xFw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_pkoE45fgEeyNk-8PTn1xFw" precision="0" size="1" type="numeric" position="12">
+      <dataModel>_rU7rIpb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=bdr_bath?</dataModel>
+      <expressionRef id="_pkpTBpfgEeyNk-8PTn1xFw" internalExpression="CAST(${t_bedroom.bdr_bath}$ AS INTEGER)">
+        <dataModel>_tSu0kJb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map?</dataModel>
+        <sourceRef>_pkor9JfgEeyNk-8PTn1xFw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_pkoE5JfgEeyNk-8PTn1xFw" precision="0" size="1" type="numeric" position="15">
+      <dataModel>_rU7rI5b_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=bdr_shower?</dataModel>
+      <expressionRef id="_pkpTB5fgEeyNk-8PTn1xFw" internalExpression="CAST(${t_bedroom.bdr_shower}$ AS INTEGER)">
+        <dataModel>_tSu0kZb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map?</dataModel>
+        <sourceRef>_pkor8JfgEeyNk-8PTn1xFw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_pkoE5ZfgEeyNk-8PTn1xFw" precision="0" size="1" type="numeric" position="18">
+      <dataModel>_rU7rJJb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=bdr_bar?</dataModel>
+      <expressionRef id="_pkpTAJfgEeyNk-8PTn1xFw" internalExpression="CAST(${t_bedroom.bdr_bar}$ AS INTEGER)">
+        <dataModel>_tStmcZb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map?</dataModel>
+        <sourceRef>_pkor8ZfgEeyNk-8PTn1xFw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_pkoE5pfgEeyNk-8PTn1xFw" precision="0" size="2" type="numeric" position="21">
+      <dataModel>_rU8SMJb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=bdr_bed_count?</dataModel>
+      <expressionRef id="_pkpTA5fgEeyNk-8PTn1xFw" internalExpression="CAST(${t_bedroom.bdr_bed_count}$ AS NUMERIC)">
+        <dataModel>_tSuNgJb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map?</dataModel>
+        <sourceRef>_pkor-JfgEeyNk-8PTn1xFw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_pkoE55fgEeyNk-8PTn1xFw" precision="0" size="3" type="varchar" position="24">
+      <dataModel>_rU8SMZb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=bdr_phone_number?</dataModel>
+      <expressionRef id="_pkpTApfgEeyNk-8PTn1xFw" internalExpression="${t_bedroom.bdr_phone_number}$">
+        <dataModel>_tStmc5b_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map?</dataModel>
+        <sourceRef>_pkor9pfgEeyNk-8PTn1xFw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_pkoE6JfgEeyNk-8PTn1xFw" precision="0" size="30" type="varchar" position="27">
+      <dataModel>_rU8SMpb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=bdr_type?</dataModel>
+      <expressionRef id="_pkpTBJfgEeyNk-8PTn1xFw" internalExpression="${t_bedroom.bdr_type}$">
+        <dataModel>_tSuNgZb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map?</dataModel>
+        <sourceRef>_pkor9ZfgEeyNk-8PTn1xFw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_pkoE6ZfgEeyNk-8PTn1xFw" precision="6" size="29" type="timestamp" position="30">
+      <dataModel>_rU8SM5b_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=update_date?</dataModel>
+      <expressionRef id="_pkpTBZfgEeyNk-8PTn1xFw" internalExpression="current_timestamp">
+        <dataModel>_tSuNgpb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <constraintRef id="_pks9YJfgEeyNk-8PTn1xFw" type="pk">
+      <dataModel>_rU8SNJb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=pk_dim_bedroom?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_pkoE6pfgEeyNk-8PTn1xFw" countShownFields="9" hierarchical="false">
+    <dataModel>_sIMUEJb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_pkor8JfgEeyNk-8PTn1xFw" precision="0" size="1" type="boolean" mandatory="true" position="15">
+      <dataModel>_sINiM5b_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=bdr_shower?</dataModel>
+      <usage>_pkpTB5fgEeyNk-8PTn1xFw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_pkor8ZfgEeyNk-8PTn1xFw" precision="0" size="1" type="boolean" mandatory="true" position="18">
+      <dataModel>_sINiNJb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=bdr_bar?</dataModel>
+      <usage>_pkpTAJfgEeyNk-8PTn1xFw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_pkor8pfgEeyNk-8PTn1xFw" precision="0" size="10" type="integer" mandatory="true" position="3">
+      <dataModel>_sIM7IZb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=bdr_id?</dataModel>
+      <usage>_pkpTAZfgEeyNk-8PTn1xFw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_pkor85fgEeyNk-8PTn1xFw" precision="0" size="3" type="varchar" position="9">
+      <dataModel>_sINiMZb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=bdr_floor?</dataModel>
+      <usage>_pkor-5fgEeyNk-8PTn1xFw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_pkor9JfgEeyNk-8PTn1xFw" precision="0" size="1" type="boolean" mandatory="true" position="12">
+      <dataModel>_sINiMpb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=bdr_bath?</dataModel>
+      <usage>_pkpTBpfgEeyNk-8PTn1xFw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_pkor9ZfgEeyNk-8PTn1xFw" precision="0" size="10" type="varchar" mandatory="true" position="27">
+      <dataModel>_sINiN5b_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=bdr_type?</dataModel>
+      <usage>_pkpTBJfgEeyNk-8PTn1xFw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_pkor9pfgEeyNk-8PTn1xFw" precision="0" size="3" type="varchar" position="24">
+      <dataModel>_sINiNpb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=bdr_phone_number?</dataModel>
+      <usage>_pkpTApfgEeyNk-8PTn1xFw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_pkor95fgEeyNk-8PTn1xFw" precision="0" size="10" type="integer" mandatory="true" position="6">
+      <dataModel>_sINiMJb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=bdr_number?</dataModel>
+      <usage>_pkor-pfgEeyNk-8PTn1xFw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_pkor-JfgEeyNk-8PTn1xFw" precision="0" size="5" type="smallint" mandatory="true" position="21">
+      <dataModel>_sINiNZb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=bdr_bed_count?</dataModel>
+      <usage>_pkpTA5fgEeyNk-8PTn1xFw</usage>
+    </fieldRef>
+    <constraintRef id="_pktkcJfgEeyNk-8PTn1xFw" type="pk">
+      <dataModel>_sINiOJb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=pk_t_bedroom?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <targetSetRef id="_pkqhJ5fgEeyNk-8PTn1xFw" sourceSet="_pkqhJpfgEeyNk-8PTn1xFw">
+    <container>_pknd25fgEeyNk-8PTn1xFw</container>
+  </targetSetRef>
+  <sourceSetRef id="_pkqhJpfgEeyNk-8PTn1xFw" targetSet="_pkqhJ5fgEeyNk-8PTn1xFw">
+    <dataSet xsi:type="map:DataSet">#_sIPXYJb_EeytipfABCJWjQ</dataSet>
+  </sourceSetRef>
+  <templateRef id="_pkpTDZfgEeyNk-8PTn1xFw" description="Integration : dim_bedroom" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=POSTGRESSQL;trgPath=server:datamart/schema:datamart.hotel_datamart/datastore:dim_bedroom;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=POSTGRESSQL">
+    <dataModel>_tSwpwJb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=I_dim_bedroom?</dataModel>
+    <problem id="_pktkcZfgEeyNk-8PTn1xFw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <targetRef>_rU4n0Jb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_pkp6FpfgEeyNk-8PTn1xFw" description="Load : t_bedroom" nodeCode="com.stambia.flow.step" templateCriteria="type=L-TP;trgProduct=POSTGRESSQL;trgPath=server:datamart/schema:datamart.hotel_datamart/datastore:dim_bedroom;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProduct=POSTGRESSQL;srcPath=server:hotel/schema:hotel.hotel_management/datastore:t_bedroom;srcWorkspaceCapability=true;srcMapCapability=true;srcFilterCapability=true;srcJoinCapability=true">
+    <dataModel>_tS7o4Jb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map$name=L1_dim_bedroom?</dataModel>
+    <problem id="_pktkcpfgEeyNk-8PTn1xFw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <load>_pkpTDJfgEeyNk-8PTn1xFw</load>
+    <targetRef>_rU4n0Jb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map?</targetRef>
+  </templateRef>
+  <loadSet id="_pkpTCpfgEeyNk-8PTn1xFw">
+    <container>_rU4n0Jb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map?</container>
+  </loadSet>
+  <loadSet id="_pkpTDJfgEeyNk-8PTn1xFw">
+    <container>_sIMUEJb_EeytipfABCJWjQ?fileId=_o_7ioJb_EeytipfABCJWjQ$type=map?</container>
+  </loadSet>
+</ref:mapRef>

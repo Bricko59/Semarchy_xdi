@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map:map xmlns:map="http://www.indy.com/v2/map" id="_HiOQ0BgmEeapFfTHA28Ggw" internalVersion="8" tech="resource.tech#_waYSMH8VEd2__Mzb_dB76A?fileId=_waYSMH8VEd2__Mzb_dB76A$type=tech$name=flow?">
+  <datastore id="_HiOQ0RgmEeapFfTHA28Ggw" alias="INSCRIPTION" dataset="_HiPfChgmEeapFfTHA28Ggw" ref="resource.md#_Y22_cRd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=INSCRIPTION?" subExpression="[A]">
+    <field id="_HiOQ0hgmEeapFfTHA28Ggw" enable="true" insert="true" name="DATE_CONFIRMATION_INSCRIPTION" ref="resource.md#_Y3KhcBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=DATE_CONFIRMATION_INSCRIPTION?" update="true">
+      <expression id="_HiOQ0xgmEeapFfTHA28Ggw" location="WRK" setDescriptorRef="_HiO37hgmEeapFfTHA28Ggw">
+        <expression>current_timestamp</expression>
+      </expression>
+    </field>
+    <field id="_HiOQ1BgmEeapFfTHA28Ggw" enable="true" insert="true" name="ID_DEMANDE" ref="resource.md#_Y3HeIBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=ID_DEMANDE?" update="true" updateKey="true">
+      <expression id="_HiOQ1RgmEeapFfTHA28Ggw" setDescriptorRef="_HiO37hgmEeapFfTHA28Ggw">
+        <expression>${~/id_demande}$ + stage.NB_PLACES - stage.NB_PLACES</expression>
+      </expression>
+    </field>
+    <field id="_HiO34BgmEeapFfTHA28Ggw" enable="true" insert="true" name="DATE_DEMANDE" ref="resource.md#_Y3IFMBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=DATE_DEMANDE?" update="true">
+      <expression id="_HiO34RgmEeapFfTHA28Ggw" setDescriptorRef="_HiO37hgmEeapFfTHA28Ggw">
+        <expression>TO_TIMESTAMP('${~/date_demande}$','YYYY-MM-DD HH:MI:SS:FFF')</expression>
+      </expression>
+    </field>
+    <field id="_HiO34hgmEeapFfTHA28Ggw" enable="true" insert="true" name="PRENOM_DEMANDEUR" ref="resource.md#_Y3IsRBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=PRENOM_DEMANDEUR?" update="true">
+      <expression id="_HiO34xgmEeapFfTHA28Ggw" setDescriptorRef="_HiO37hgmEeapFfTHA28Ggw">
+        <expression>'${~/prenom_demandeur}$'</expression>
+      </expression>
+    </field>
+    <field id="_HiO35BgmEeapFfTHA28Ggw" enable="true" insert="true" name="NIVEAU_CONFIRMATION" ref="resource.md#_Y3LIgBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=NIVEAU_CONFIRMATION?" update="true">
+      <expression id="_HiO35RgmEeapFfTHA28Ggw" setDescriptorRef="_HiO37hgmEeapFfTHA28Ggw">
+        <expression>stage.MAX_NIVEAU</expression>
+      </expression>
+    </field>
+    <field id="_HiO35hgmEeapFfTHA28Ggw" enable="true" insert="true" name="NOM_DEMANDEUR" ref="resource.md#_Y3IFNxd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=NOM_DEMANDEUR?" update="true">
+      <expression id="_HiO35xgmEeapFfTHA28Ggw" setDescriptorRef="_HiO37hgmEeapFfTHA28Ggw">
+        <expression>'${~/nom_demandeur}$'</expression>
+      </expression>
+    </field>
+    <field id="_HiO36BgmEeapFfTHA28Ggw" enable="true" insert="true" name="PRENOM_ENFANT" ref="resource.md#_Y3JTUhd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=PRENOM_ENFANT?" update="true">
+      <expression id="_HiO36RgmEeapFfTHA28Ggw" setDescriptorRef="_HiO37hgmEeapFfTHA28Ggw">
+        <expression>'${~/prenom_enfant}$'</expression>
+      </expression>
+    </field>
+    <field id="_HiO36hgmEeapFfTHA28Ggw" enable="true" insert="true" name="DATE_NAISSANCE_ENFANT" ref="resource.md#_Y3J6YBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=DATE_NAISSANCE_ENFANT?" update="true">
+      <expression id="_HiO36xgmEeapFfTHA28Ggw" setDescriptorRef="_HiO37hgmEeapFfTHA28Ggw">
+        <expression>TO_DATE('${~/date_naissance_enfant}$','YYYY-MM-DD')</expression>
+      </expression>
+    </field>
+    <field id="_HiO37BgmEeapFfTHA28Ggw" name="ID_INSCRIPTION" ref="resource.md#_Y3GQABd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=ID_INSCRIPTION?">
+      <expression id="_HiO37RgmEeapFfTHA28Ggw" setDescriptorRef="_HiO37hgmEeapFfTHA28Ggw"/>
+    </field>
+    <setDescriptor id="_HiO37hgmEeapFfTHA28Ggw" label="A"/>
+  </datastore>
+  <datastore id="_HiO37xgmEeapFfTHA28Ggw" alias="CRECHE" dataset="_HiPfCBgmEeapFfTHA28Ggw" ref="resource.md#_wMUKURd1Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=CRECHE?">
+    <field id="_HiO38BgmEeapFfTHA28Ggw" fullAlias="MOIS_FIN_NIVEAU" name="MOIS_FIN_NIVEAU" ref="resource.md#_wMl3Ihd1Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=MOIS_FIN_NIVEAU?"/>
+    <field id="_HiO38RgmEeapFfTHA28Ggw" fullAlias="NB_PLACES_NIVEAU" name="NB_PLACES_NIVEAU" ref="resource.md#_wMnFQRd1Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=NB_PLACES_NIVEAU?"/>
+    <field id="_HiO38hgmEeapFfTHA28Ggw" name="VILLE" ref="resource.md#_wMkB8Bd1Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=VILLE?"/>
+    <field id="_HiPe8BgmEeapFfTHA28Ggw" fullAlias="MOIS_DEBUT_NIVEAU" name="MOIS_DEBUT_NIVEAU" ref="resource.md#_wMlQERd1Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=MOIS_DEBUT_NIVEAU?"/>
+    <field id="_HiPe8RgmEeapFfTHA28Ggw" name="INTITULE_NIVEAU" ref="resource.md#_wMmeMhd1Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=INTITULE_NIVEAU?"/>
+    <field id="_HiPe8hgmEeapFfTHA28Ggw" fullAlias="NIVEAU" name="NIVEAU" ref="resource.md#_wMkpABd1Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=NIVEAU?"/>
+  </datastore>
+  <datastore id="_HiPe8xgmEeapFfTHA28Ggw" alias="INSCRIPTION_2" dataset="_5wZ6MBg6EeapFfTHA28Ggw" ref="resource.md#_Y22_cRd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=INSCRIPTION?">
+    <field id="_HiPe9BgmEeapFfTHA28Ggw" name="DATE_CONFIRMATION_INSCRIPTION" ref="resource.md#_Y3KhcBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=DATE_CONFIRMATION_INSCRIPTION?"/>
+    <field id="_HiPe9RgmEeapFfTHA28Ggw" name="ID_DEMANDE" ref="resource.md#_Y3HeIBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=ID_DEMANDE?"/>
+    <field id="_HiPe9hgmEeapFfTHA28Ggw" name="DATE_DEMANDE" ref="resource.md#_Y3IFMBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=DATE_DEMANDE?"/>
+    <field id="_HiPe9xgmEeapFfTHA28Ggw" name="PRENOM_DEMANDEUR" ref="resource.md#_Y3IsRBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=PRENOM_DEMANDEUR?"/>
+    <field id="_HiPe-BgmEeapFfTHA28Ggw" fullAlias="NIVEAU_CONFIRMATION" name="NIVEAU_CONFIRMATION" ref="resource.md#_Y3LIgBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=NIVEAU_CONFIRMATION?"/>
+    <field id="_HiPe-RgmEeapFfTHA28Ggw" name="NOM_DEMANDEUR" ref="resource.md#_Y3IFNxd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=NOM_DEMANDEUR?"/>
+    <field id="_HiPe-hgmEeapFfTHA28Ggw" name="PRENOM_ENFANT" ref="resource.md#_Y3JTUhd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=PRENOM_ENFANT?"/>
+    <field id="_HiPe-xgmEeapFfTHA28Ggw" name="DATE_NAISSANCE_ENFANT" ref="resource.md#_Y3J6YBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=DATE_NAISSANCE_ENFANT?"/>
+    <field id="_HiPe_BgmEeapFfTHA28Ggw" fullAlias="ID_INSCRIPTION" name="ID_INSCRIPTION" ref="resource.md#_Y3GQABd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=ID_INSCRIPTION?"/>
+  </datastore>
+  <join id="_63VtEBg6EeapFfTHA28Ggw" location="SRC" joinType="Left_Join" left="_mohqYBg6EeapFfTHA28Ggw" order="10" right="_HiPe8xgmEeapFfTHA28Ggw">
+    <expression>stage_2.NIVEAU = INSCRIPTION_2.NIVEAU_CONFIRMATION</expression>
+  </join>
+  <filter id="_HiPe_hgmEeapFfTHA28Ggw" location="SRC">
+    <expression>stage.NB_PLACES > 0</expression>
+  </filter>
+  <filter id="_HiPe_xgmEeapFfTHA28Ggw" location="SRC">
+    <expression>(current_date - TO_DATE('${~/date_naissance_enfant}$','YYYY-MM-DD'))/30 BETWEEN CRECHE.MOIS_DEBUT_NIVEAU AND CRECHE.MOIS_FIN_NIVEAU</expression>
+  </filter>
+  <template id="_HiPfABgmEeapFfTHA28Ggw" name="I_INSCRIPTION" process="resource.proc#_HFOfdjEZEd-WZe6cNi2k2w?fileId=_HFOfdjEZEd-WZe6cNi2k2w$type=proc$name=INTEGRATION%20Hsql?" targetId="_HiOQ0RgmEeapFfTHA28Ggw"/>
+  <template id="_5weysBg6EeapFfTHA28Ggw" name="I_stage_2" process="resource.proc#_v8JEkTNEEeSH5LKy1U4ptg?fileId=_v8JEkTNEEeSH5LKy1U4ptg$type=proc$name=STAGING%20Rdbms%20As%20SubQuery?" sourceId="_HiO37xgmEeapFfTHA28Ggw" targetId="_mohqYBg6EeapFfTHA28Ggw"/>
+  <template id="_T-fXsBg7EeapFfTHA28Ggw" name="I_stage_3" process="resource.proc#_v8JEkTNEEeSH5LKy1U4ptg?fileId=_v8JEkTNEEeSH5LKy1U4ptg$type=proc$name=STAGING%20Rdbms%20As%20SubQuery?" sourceId="_HiPe8xgmEeapFfTHA28Ggw _mohqYBg6EeapFfTHA28Ggw" targetId="_DT8tABg7EeapFfTHA28Ggw"/>
+  <template id="_jZ7yABg7EeapFfTHA28Ggw" name="I_stage" process="resource.proc#_v8JEkTNEEeSH5LKy1U4ptg?fileId=_v8JEkTNEEeSH5LKy1U4ptg$type=proc$name=STAGING%20Rdbms%20As%20SubQuery?" targetId="_HiPfAhgmEeapFfTHA28Ggw"/>
+  <query id="_HiPfAhgmEeapFfTHA28Ggw" alias="stage" dataset="_HiPfCRgmEeapFfTHA28Ggw" stagingArea="resource.md#_vADykBd1Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=TASSIN?" subExpression="[A]">
+    <field id="_HiPfAxgmEeapFfTHA28Ggw" name="NB_PLACES">
+      <expression id="_jZ4usBg7EeapFfTHA28Ggw" aggregate="true" setDescriptorRef="_jZ4HoBg7EeapFfTHA28Ggw">
+        <expression>SUM(stage_3.NB_PLACES_NIVEAU - stage_3.NB_INSCRIPTION)</expression>
+      </expression>
+    </field>
+    <field id="_HiPfBRgmEeapFfTHA28Ggw" name="MAX_NIVEAU">
+      <expression id="_jZ4usRg7EeapFfTHA28Ggw" aggregate="false" setDescriptorRef="_jZ4HoBg7EeapFfTHA28Ggw">
+        <expression>stage_3.NIVEAU</expression>
+      </expression>
+    </field>
+    <setDescriptor id="_jZ4HoBg7EeapFfTHA28Ggw" label="A"/>
+  </query>
+  <query id="_mohqYBg6EeapFfTHA28Ggw" alias="stage_2" dataset="_5wZ6MBg6EeapFfTHA28Ggw" stagingArea="resource.md#_vADykBd1Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=TASSIN?" subExpression="[A]">
+    <field id="_nQ1nkBg6EeapFfTHA28Ggw" name="NIVEAU">
+      <expression id="_nQ2OoBg6EeapFfTHA28Ggw" setDescriptorRef="_nQ1nkRg6EeapFfTHA28Ggw">
+        <expression>CRECHE.NIVEAU</expression>
+      </expression>
+    </field>
+    <field id="_nsFZIBg6EeapFfTHA28Ggw" name="NB_PLACES_NIVEAU">
+      <expression id="_nsGAMBg6EeapFfTHA28Ggw" setDescriptorRef="_nQ1nkRg6EeapFfTHA28Ggw">
+        <expression>CRECHE.NB_PLACES_NIVEAU</expression>
+      </expression>
+    </field>
+    <setDescriptor id="_nQ1nkRg6EeapFfTHA28Ggw" label="A"/>
+  </query>
+  <query id="_DT8tABg7EeapFfTHA28Ggw" alias="stage_3" dataset="_DT-iMBg7EeapFfTHA28Ggw" stagingArea="resource.md#_vADykBd1Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=TASSIN?" subExpression="[A]">
+    <field id="_T-TxgBg7EeapFfTHA28Ggw" name="NB_INSCRIPTION">
+      <expression id="_T-UYkRg7EeapFfTHA28Ggw" aggregate="true" setDescriptorRef="_T-UYkBg7EeapFfTHA28Ggw">
+        <expression>COUNT(INSCRIPTION_2.ID_INSCRIPTION)</expression>
+      </expression>
+    </field>
+    <field id="_0rG-4Bg7EeapFfTHA28Ggw" name="NB_PLACES_NIVEAU">
+      <expression id="_0rG-4Rg7EeapFfTHA28Ggw" setDescriptorRef="_T-UYkBg7EeapFfTHA28Ggw">
+        <expression>stage_2.NB_PLACES_NIVEAU</expression>
+      </expression>
+    </field>
+    <field id="_EeA28Bg8EeapFfTHA28Ggw" name="NIVEAU">
+      <expression id="_EeA28Rg8EeapFfTHA28Ggw" setDescriptorRef="_T-UYkBg7EeapFfTHA28Ggw">
+        <expression>stage_2.NIVEAU</expression>
+      </expression>
+    </field>
+    <setDescriptor id="_T-UYkBg7EeapFfTHA28Ggw" label="A"/>
+  </query>
+  <dataSet id="_HiPfCBgmEeapFfTHA28Ggw">
+    <container>_HiO37xgmEeapFfTHA28Ggw</container>
+  </dataSet>
+  <dataSet id="_HiPfCRgmEeapFfTHA28Ggw">
+    <container>_HiPfAhgmEeapFfTHA28Ggw</container>
+  </dataSet>
+  <dataSet id="_HiPfChgmEeapFfTHA28Ggw">
+    <container>_HiOQ0RgmEeapFfTHA28Ggw</container>
+  </dataSet>
+  <dataSet id="_5wZ6MBg6EeapFfTHA28Ggw">
+    <container>_HiPe8xgmEeapFfTHA28Ggw</container>
+    <container>_mohqYBg6EeapFfTHA28Ggw</container>
+  </dataSet>
+  <dataSet id="_DT-iMBg7EeapFfTHA28Ggw">
+    <container>_DT8tABg7EeapFfTHA28Ggw</container>
+  </dataSet>
+  <hint>
+    <usedField>#_HiO38BgmEeapFfTHA28Ggw</usedField>
+    <usedField>#_HiO38RgmEeapFfTHA28Ggw</usedField>
+    <usedField>#_HiPe8BgmEeapFfTHA28Ggw</usedField>
+    <usedField>#_HiPe8hgmEeapFfTHA28Ggw</usedField>
+    <usedField>#_HiPe-BgmEeapFfTHA28Ggw</usedField>
+    <usedField>#_HiPe_BgmEeapFfTHA28Ggw</usedField>
+  </hint>
+</map:map>

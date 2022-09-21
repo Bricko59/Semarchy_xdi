@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" description="" id="UUID_TECH_RDBMS_DB2_400" name="DB2/400 Technology" ref="resource.md#UUID_MD_RDBMS_DEFAULT?fileId=UUID_MD_RDBMS_DEFAULT$type=md$name=Rdbms%20MetaData?">
+  <level code="com.stambia.rdbms.datastore" override="true" positionReverseCode="">
+    <attribute iconBundleName="" xmlName="fileName" code="fileName" defaultValue="" displayName="Physical File Name" reverseCode="FILE_NAME"/>
+    <xPathExpression expression="md:ifEmpty(@fileName,tech:physicalName())">
+      <code>FILE_NAME</code>
+    </xPathExpression>
+  </level>
+  <level code="com.stambia.rdbms.column" override="true">
+    <attribute icon="" xmlName="ccsid" xpathDisplayName="" category="Advanced" code="ccsid" defaultValue="" displayName="CCSID" reverseCode="CCSID"/>
+    <xPathExpression expression="@ccsid">
+      <code>CCSID</code>
+    </xPathExpression>
+  </level>
+  <level code="com.stambia.rdbms.schema" displayName="" override="true">
+    <attribute xmlName="reverseCCSID" category="Advanced" code="reverseCCSID" displayName="Reverse CCSID" type="boolean"/>
+  </level>
+</tech:tech>

@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:UUID="java.util.UUID" xmlns:common="http://exslt.org/common" xmlns:mdj="java:com.indy.xsl.global.Functions" xmlns:proc="http://www.example.org/proc" xmlns:saxon="http://saxon.sf.net/" id="_946a4183-2772-439c-9dea-078288948f0e" description="This template is used for data integration on any database target table.&#xD;&#xA;&#xD;&#xA;Refer to the description of each Parameter for more information.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;16/06/2020&#x9;Bug fix: the 'Cdc Subscriber' parameter is ignored when querying the source data&#xD;&#xA;16/06/2020&#x9;New Parameter 'Cdc Subscriber'&#xD;&#xA;16/06/2020&#x9;Bug fix: the 'Cdc Subscriber' parameter is ignored on Lock/Unlock CDC steps&#xD;&#xA;25/05/2020&#x9;Add support for default storage clauses defined in the Metadata&#xD;&#xA;07/02/2019&#x9;Fix 'Recycle Previous Rejects' step which should use DISTINCT keyword to remove dupplicates&#xD;&#xA;26/06/2018&#x9;Reorganize the parameters display order&#xD;&#xA;29/02/2016&#x9;Initialize template history" isBeginAction="true" name="INTEGRATION Rdbms" nbCycles="-1" toleratedError="false">
+  <parameter id="_NjdRgJmXEd6w8uTj6_8B6Q" description="If true, all source rows are directly inserted in the target table. No update is performed in this mode." name="appendMode" type="Boolean" value="false"/>
+  <parameter id="_Q30dQbvEEd2nxoTCCN0dGA" description="If true, the temporary objects created during integration are removed at the end of the process." name="cleanTemporaryObjects " type="Boolean" value="true"/>
+  <parameter id="_Q3z2MLvEEd2nxoTCCN0dGA" description="If true, rows are inserted in the target table." name="doInsert" type="Boolean" value="true"/>
+  <parameter id="_Q3z2N7vEEd2nxoTCCN0dGA" description="If true, target table is truncated prior to the Integration.&#xD;&#xA;Note: If you set this option to true you probably want to load the target table with 'Append Mode' to true for better performance." name="truncateTargetTable" type="Boolean" value="false"/>
+  <parameter id="_Q3z2MbvEEd2nxoTCCN0dGA" description="If true, existing rows of the target table will be updated with new values." name="doUpdate" type="Boolean" value="true"/>
+  <parameter id="_Q3z2OLvEEd2nxoTCCN0dGA" description="If true, all the target table rows are deleted before the integration with a DELETE statement.&#xD;&#xA;For better performance you should use truncateTargetTable when possible." name="deleteAllTargetTable" type="Boolean" value="false"/>
+  <parameter id="_l96xEJmeEd6w8uTj6_8B6Q" description="If true, a DISTINCT statement will be added on the query inserting data in the integration table.&#xD;&#xA;This is used to avoid having duplicates in the target table." name="useDistinct" type="Boolean" value="false"/>
+  <parameter id="_Q3z2NbvEEd2nxoTCCN0dGA" description="If true, the rejects detected during the previous execution of the Mapping are added to the integration table." name="recycleRejects" type="Boolean" value="false"/>
+  <parameter id="_PYOFoJmVEd6w8uTj6_8B6Q" description="If true, the operations on the target table will be executed in a dedicated transaction.&#xD;&#xA;If false, each statement on the target table uses an Autocommit transaction." name="transactionalModeOnTarget" type="Boolean" value="false"/>
+  <parameter id="_Q3z2M7vEEd2nxoTCCN0dGA" description="When set to true and one source is a CDC table, the records deleted from this source table are deleted from the target table." name="synchronizeDeletionsFromCDC" type="Boolean" value="false"/>
+  <parameter id="_Q3z2MrvEEd2nxoTCCN0dGA" description="If true, the transactions are committed at the end of the integration.&#xD;&#xA;Please note that this option is taken into acount only if TransactionalModeOnTarget is set to true." name="commitTransaction" type="Boolean" value="true"/>
+  <parameter id="_TphKpTESEd-WZe6cNi2k2w" description="If true, an index is created on the update key of the integration table in order to optimize the subsequent statements using this table." name="createIndexOnPreIntegrationTable" type="Boolean" value="true"/>
+  <parameter id="_Q30dQLvEEd2nxoTCCN0dGA" description="This option is used to choose whether to create or not the target table before the integration.&#xD;&#xA;&#xD;&#xA;- true: The target table is created. If it already exists no error is raised.&#xD;&#xA;- false: The target table is not created.&#xD;&#xA;- drop and create: The target table will be dropped, and re-created on each execution." metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;true&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;false&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;drop and create&quot;/>" name="createTargetTable" type="String" value="false"/>
+  <parameter id="_EZNk8JmWEd6w8uTj6_8B6Q" description="Name of the transaction when Transaction Mode is set to true." name="transactionName" type="String" value="T1"/>
+  <parameter id="_n6QJ8GvoEeSNr_XKSer1lQ" description="JDBC Batch size (number of lines) used when inserting the data into the target table.&#xD;&#xA;Larger values provide better performance but consume more memory in the Runtime as the data is stored in the Memory before being sent to the target table.&#xD;&#xA;This is used only in Append Mode when a Load Template is detected." name="batchSize" type="Integer" value="1000"/>
+  <parameter id="_W2n1EHl2EeSygsAie1heIw" description="Defines a valid SQL Expression used to order the data when loading the target table.&#xD;&#xA;This is used only in Append Mode when a Load Template is detected." name="orderByExpression" type="String" value=""/>
+  <parameter id="_aYn9UJm2Eeq9ecgWuvNoJQ" description="Used to specify options on the Integration table.&#xD;&#xA;They are added at the end of the create table statement." name="integrationTableCreationOptions" type="String" value=""/>
+  <parameter id="_QjTzELB1EeqAJL64qj9Gxw" description="When a source table is used as CDC a lock is performed on it. It makes the changed data available in the Mapping.&#xD;&#xA;If set to false, the Lock must have been performed as part of a previous Mapping." name="lockCdcTable" type="Boolean" value="true"/>
+  <parameter id="_Qjc9ALB1EeqAJL64qj9Gxw" description="When a source table is used as CDC an unlock is performed on it after processing. It marks the changed data as consumed.&#xD;&#xA;If set to false, the Unlock must be performed as part of an upcoming Mapping." name="unlockCdcTable" type="Boolean" value="true"/>
+  <parameter id="_mg32kLB1EeqAJL64qj9Gxw" description="CDC Subscriber to use when CDC has been enabled on a source table." name="cdcSubscriber" type="String"/>
+  <subProcess id="_946a4183-2772-439c-9dea-078288948f0e_PREP" name="PREPARE_INTEGRATION">
+    <link id="_Q30dQrvEEd2nxoTCCN0dGA" executionType="OK" generationType="OK" mandatory="1" targetId="_946a4183-2772-439c-9dea-078288948f0e_INT?fileId=_946a4183-2772-439c-9dea-078288948f0e$type=proc$name=INTEGRATION?"/>
+    <parameter id="_Q30dQ7vEEd2nxoTCCN0dGA" name="TPL_STEP" type="String" value="Integration.BeforeControl"/>
+    <actionCode id="_946a4183-2772-439c-9dea-078288948f0e_12" generationCondition="'${createTargetTable}$'='true' or '${createTargetTable}$' = 'drop and create'" isBeginAction="false" name="Creation of target table " nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_Q31EULvEEd2nxoTCCN0dGA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_946a4183-2772-439c-9dea-078288948f0e_92"/>
+      <parameter id="_Q31EUbvEEd2nxoTCCN0dGA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_Q31EUrvEEd2nxoTCCN0dGA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_Q31EU7vEEd2nxoTCCN0dGA" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>Create table %x{md:physicalPath($REF/ref:target())}x%
+(
+	%x{md:patternList($REF/ref:target()/ref:columns(),'[columnName] [targetCreationType] [null]',',\n\t')}x%
+)</code>
+    </actionCode>
+    <actionCode id="_946a4183-2772-439c-9dea-078288948f0e_32" generationCondition="" isBeginAction="false" name="Drop of pre-integration table" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_Q31rYLvEEd2nxoTCCN0dGA" executionType="OK" generationType="OK" mandatory="1" targetId="_946a4183-2772-439c-9dea-078288948f0e_82"/>
+      <parameter id="_Q31rYbvEEd2nxoTCCN0dGA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_Q31rYrvEEd2nxoTCCN0dGA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_Q31rY7vEEd2nxoTCCN0dGA" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>drop table %x{md:physicalPath($REF,'workName')}x%</code>
+    </actionCode>
+    <actionCode id="_946a4183-2772-439c-9dea-078288948f0e_82" generationCondition="" isBeginAction="false" name="Creation of pre- integration table" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_Q31rZLvEEd2nxoTCCN0dGA" executionCondition="" executionType="OK" generationType="OK" mandatory="1" targetId="_946a4183-2772-439c-9dea-078288948f0e_132"/>
+      <parameter id="_Q32ScLvEEd2nxoTCCN0dGA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_Q32ScbvEEd2nxoTCCN0dGA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_Q32ScrvEEd2nxoTCCN0dGA" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>Create table %x{md:physicalPath($REF,'workName')}x%
+(
+	%x{md:patternList($REF/ref:columns(),'[name] [targetWritableType] [nullWord]',',\n\t')}x%,
+	INCREMENTAL_FLAG	CHAR(1)
+)
+%x{md:ifEmpty(md:paramValue($this,'integrationTableCreationOptions'), $REF/ref:target()/ref:schema()/tech:defaultTempTableStorageClause())}x%
+</code>
+    </actionCode>
+    <actionCode id="_946a4183-2772-439c-9dea-078288948f0e_92" generationCondition="'${truncateTargetTable}$'='true'" isBeginAction="false" name="Truncation of target table" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_0-m4IJmVEd6w8uTj6_8B6Q" generationCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_xgImIJmVEd6w8uTj6_8B6Q"/>
+      <parameter id="_Q32SdLvEEd2nxoTCCN0dGA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_Q32SdbvEEd2nxoTCCN0dGA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_Q32SdrvEEd2nxoTCCN0dGA" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>Truncate table %x{md:physicalPath($REF/ref:target())}x%</code>
+    </actionCode>
+    <actionCode id="_946a4183-2772-439c-9dea-078288948f0e_122" generationCondition="not(md:paramValue($this, 'lockCdcTable')='false')" isBeginAction="false" name="Lock of CDC table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$REF/ref:from()[tech:isCDC() and not(tech:isLoaded())]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_Q33gkbvEEd2nxoTCCN0dGA" description="" generationCondition="'${appendMode}$'='false' or ('${appendMode}$'='true' and ($REF/tech:hasIntegrationReject() or $REF/tech:hasCdc()))" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_946a4183-2772-439c-9dea-078288948f0e_32"/>
+      <parameter id="_Q33gkrvEEd2nxoTCCN0dGA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_Q33gk7vEEd2nxoTCCN0dGA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_Q33glLvEEd2nxoTCCN0dGA" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>update 	%x{md:physicalPath($CDC,'cdcTableName')}x%
+set 	CDC_CONSUMMATION = '1'
+where	(1=1)
+%x{$CDC/tech:cdcFilterPart2($this)}x%</code>
+    </actionCode>
+    <actionCode id="_946a4183-2772-439c-9dea-078288948f0e_132" generationCondition="" isBeginAction="false" name="Insertion in pre-integration data" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_Q34HoLvEEd2nxoTCCN0dGA" executionType="OK" generationType="OK" mandatory="1" targetId="_946a4183-2772-439c-9dea-078288948f0e_152"/>
+      <parameter id="_Q34HobvEEd2nxoTCCN0dGA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_Q34HorvEEd2nxoTCCN0dGA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_Q34Ho7vEEd2nxoTCCN0dGA" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>%xsl{
+&lt;xsl:variable name=&quot;columns&quot; select=&quot;$REF/ref:columns()[(tech:isIns() or tech:isUpd()) and not(tech:onTrg())]&quot;/>
+
+%xsl preserveSpace=&quot;true&quot;{insert into %x{md:physicalPath($REF,'workName')}x%
+(
+	%x{md:patternList($columns,'[name]', ',\n\t')}x%,
+	INCREMENTAL_FLAG
+)
+select		%x{if (md:paramValue($this,'useDistinct')='true') then 'DISTINCT' else ''}x%
+	%x{md:patternList($columns,'[expression] AS [name]', ',\n\t')}x%,
+	%x{if ($REF/tech:hasCdc() and md:paramValue($this,'appendMode')='false') 
+		then 'Case when CDC_CHANGE_TYPE=''U'' then ''I'' else CDC_CHANGE_TYPE end' 
+		else 
+			if ($REF/tech:hasCdc() and md:paramValue($this,'appendMode')='true') then 'CDC_CHANGE_TYPE' else '''I''' }x% AS INCREMENTAL_FLAG
+from	%x{$REF/tech:fromPart()}x%
+where	(1=1)%xsl{
+%x{$REF/tech:joinPart()}x%
+%x{$REF/tech:filterPart()}x%
+%x{$REF/tech:cdcFilterPart2($this)}x%
+%x{if ($REF/tech:hasCdc() and md:paramValue($this,'appendMode')='true') then '
+And CDC_CHANGE_TYPE in (''I'',''D'')' else '' }x%	
+%x{$REF/tech:groupByPart()}x%
+%x{$REF/tech:havingPart()}x%}xsl%
+}xsl%}xsl%</code>
+    </actionCode>
+    <actionCode id="_946a4183-2772-439c-9dea-078288948f0e_152" generationCondition="'${recycleRejects}$'='true'" isBeginAction="false" name="Recycle of previous rejected data" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_tnlxsGE4EeCNEIz5v6cI8A" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_sbACwGE4EeCNEIz5v6cI8A"/>
+      <parameter id="_Q34usbvEEd2nxoTCCN0dGA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_Q34usrvEEd2nxoTCCN0dGA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_Q34us7vEEd2nxoTCCN0dGA" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>%xsl{
+&lt;xsl:variable name=&quot;columns&quot; select=&quot;$REF/ref:columns()[(tech:isIns() or tech:isUpd()) and not(tech:onTrg())]&quot;/>
+
+%xsl preserveSpace=&quot;true&quot;{insert into %x{md:physicalPath($REF,'workName')}x%
+(
+	%x{md:patternList($columns,'[name]', ',\n\t')}x%,
+	INCREMENTAL_FLAG
+)
+Select DISTINCT
+	%x{md:patternList($columns,'[name]', ',\n\t')}x%, 
+	'I' INCREMENTAL_FLAG
+From %x{md:physicalPath($REF,'rejectName')}x% REJ
+Where 	not exists (
+		Select 'X' 
+		from %x{md:physicalPath($REF,'workName')}x% INT
+		Where %x{md:patternList($REF/ref:columns()[tech:isUk()],'REJ.[name]=INT.[name]', '\n\tand\t\t\t')}x%
+		)
+And REJ.REJECTED_BY		= '%x{$REF/tech:rejectedBy()}x%'
+And REJ.REJECT_MODE		= '%x{$REF/tech:rejectMode()}x%'	
+}xsl%
+}xsl%</code>
+    </actionCode>
+    <actionCode id="_946a4183-2772-439c-9dea-078288948f0e_182" generationCondition="($REF/tech:hasIntegrationReject()) or $REF/ref:from()[tech:isCDC()]" isBeginAction="false" name="Removal of deleted rows in pre-integration table" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_Q35VxbvEEd2nxoTCCN0dGA" executionType="OK" generationType="OK" mandatory="1"/>
+      <parameter id="_Q35VxrvEEd2nxoTCCN0dGA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_Q3580LvEEd2nxoTCCN0dGA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_Q3580bvEEd2nxoTCCN0dGA" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>delete from %x{md:physicalPath($REF,'workName')}x%
+where	INCREMENTAL_FLAG = 'D'</code>
+    </actionCode>
+    <actionCode id="_xgImIJmVEd6w8uTj6_8B6Q" generationCondition="'${deleteAllTargetTable}$'='true'" isBeginAction="false" name="T - Deletion of target table" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_xgImIZmVEd6w8uTj6_8B6Q" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_946a4183-2772-439c-9dea-078288948f0e_122"/>
+      <parameter id="_xgImIpmVEd6w8uTj6_8B6Q" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_xgImI5mVEd6w8uTj6_8B6Q" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_xgImJJmVEd6w8uTj6_8B6Q" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnTarget')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_xgImJZmVEd6w8uTj6_8B6Q" name="SQL_ACTION_TYPE_STAT" type="String" value="DELETE"/>
+      <parameter id="_ycoqoJmVEd6w8uTj6_8B6Q" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnTarget')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <code>delete from %x{md:physicalPath($REF/ref:target())}x%</code>
+    </actionCode>
+    <actionCode id="_uqGdwK7iEd-zyMSB0nvObA" generationCondition="'${createTargetTable}$' = 'drop and create'" isBeginAction="false" name="Drop of target table " nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_uqGdwa7iEd-zyMSB0nvObA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_946a4183-2772-439c-9dea-078288948f0e_12"/>
+      <parameter id="_uqGdwq7iEd-zyMSB0nvObA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_uqGdw67iEd-zyMSB0nvObA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_uqGdxK7iEd-zyMSB0nvObA" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>Drop table %x{md:physicalPath($REF/ref:target())}x%</code>
+    </actionCode>
+    <actionCode id="_sbACwGE4EeCNEIz5v6cI8A" generationCondition="'${synchronizeDeletionsFromCDC}$'='true'" isBeginAction="false" name="T - Deletion of target table from pre-integration table" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_sbACwWE4EeCNEIz5v6cI8A" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_946a4183-2772-439c-9dea-078288948f0e_182"/>
+      <parameter id="_sbACwmE4EeCNEIz5v6cI8A" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_sbACw2E4EeCNEIz5v6cI8A" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_sbACxGE4EeCNEIz5v6cI8A" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnTarget')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_sbACxWE4EeCNEIz5v6cI8A" name="SQL_ACTION_TYPE_STAT" type="String" value="DELETE"/>
+      <parameter id="_wk1l8GE4EeCNEIz5v6cI8A" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnTarget')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <code>Delete from %x{md:physicalPath($REF/ref:target())}x%
+Where exists (
+		Select 'X'
+		From 	%x{md:physicalPath($REF,'workName')}x% INT
+		Where	%x{md:patternList($REF/ref:columns()[tech:isUk()],'{../ref:target()/tech:name()}.[name]=INT.[name]', '\n\tand\t\t\t')}x%
+		And INCREMENTAL_FLAG='D'
+	)</code>
+    </actionCode>
+    <templateType>I-TP.RDBMS.PREPARING</templateType>
+  </subProcess>
+  <subProcess id="_946a4183-2772-439c-9dea-078288948f0e_INT" description="" name="INTEGRATION">
+    <parameter id="_Q3580rvEEd2nxoTCCN0dGA" name="TPL_STEP" type="String" value="Integration.AfterControl"/>
+    <actionCode id="_946a4183-2772-439c-9dea-078288948f0e_202" generationCondition="'${doInsert}$'='true' or '${doUpdate}$'='true'" isBeginAction="false" name="Determination of what could be updated (UK)" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_Q35807vEEd2nxoTCCN0dGA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_946a4183-2772-439c-9dea-078288948f0e_222"/>
+      <parameter id="_Q36j4LvEEd2nxoTCCN0dGA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_Q36j4bvEEd2nxoTCCN0dGA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_Q36j4rvEEd2nxoTCCN0dGA" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>update	%x{md:physicalPath($REF,'workName')}x%
+set	INCREMENTAL_FLAG = 'U'
+where 	exists	(
+		select	'X'
+		from	%x{md:physicalPath($REF/ref:target())}x% %x{$REF/tech:tableAliasWord()}x% T
+		where	%x{md:patternList($REF/ref:columns()[tech:isUk()],'T.[name] = {../tech:workName()}.[name]', '\n\t\t\tAnd\t\t\t\t\t')}x%
+		)
+</code>
+    </actionCode>
+    <actionCode id="_946a4183-2772-439c-9dea-078288948f0e_222" generationCondition="'${doUpdate}$'='true'" isBeginAction="false" name="Determination of what shouldn't be updated" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_Q36j47vEEd2nxoTCCN0dGA" generationCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_946a4183-2772-439c-9dea-078288948f0e_232_src"/>
+      <parameter id="_Q36j5LvEEd2nxoTCCN0dGA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_Q36j5bvEEd2nxoTCCN0dGA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_Q37K8LvEEd2nxoTCCN0dGA" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>update	%x{md:physicalPath($REF,'workName')}x%&#xD;
+set	INCREMENTAL_FLAG = 'N'&#xD;
+where 	exists	(&#xD;
+		select	'X'&#xD;
+		from	%x{md:physicalPath($REF/ref:target())}x% %x{$REF/tech:tableAliasWord()}x% T&#xD;
+		where	&#xD;
+				%x{md:patternList($REF/ref:columns()[tech:isUk()],'T.[name]\t={../tech:workName()}.[name]', '\n\t\t\tAnd\t')}x%&#xD;
+		%x{md:patternList($REF/ref:columns()[not(tech:isUk()) and (tech:isUpdated() and not(tech:mappedOnTarget()))],'And\t(T.[name]\t={../tech:workName()}.[name] or (T.[name] is null and {../tech:workName()}.[name] is null))', '\n\t\t')}x%&#xD;
+		)&#xD;
+And	%x{$REF/tech:workName()}x%.INCREMENTAL_FLAG='U'		&#xD;
+</code>
+    </actionCode>
+    <actionCode id="_946a4183-2772-439c-9dea-078288948f0e_232_src" generationCondition="'${doUpdate}$'='true' and exists($REF/ref:columns()[not(tech:isUk()) and tech:isUpdated()])" isBeginAction="false" name="T - Select rows in pre-integration table" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <bindLink id="_mg3WoLHHEd6hfveDXFa8HQ" bindType="DirectBind" targetId="_946a4183-2772-439c-9dea-078288948f0e_232_trg"/>
+      <parameter id="_Q37K8rvEEd2nxoTCCN0dGA" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_Q37K87vEEd2nxoTCCN0dGA" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+      <code>select
+	%x{md:patternList($REF/ref:columns()[tech:isUk()],'[name]', ',\n\t')}x%
+	%x{md:patternList($REF/ref:columns()[not(tech:isUk()) and tech:isUpdated()],',{if (tech:mappedOnTarget()) then tech:mapping() else tech:name()} {tech:tableAliasWord()} [name]', '\n\t')}x%
+from	%x{md:physicalPath($REF,'workName')}x%
+where	INCREMENTAL_FLAG = 'U'</code>
+    </actionCode>
+    <actionCode id="_946a4183-2772-439c-9dea-078288948f0e_232_trg" description="" generationCondition="'${doUpdate}$'='true' and exists($REF/ref:columns()[not(tech:isUk()) and tech:isUpdated()])" isBeginAction="false" name="T - Update rows in target table" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_Q38ZELvEEd2nxoTCCN0dGA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_946a4183-2772-439c-9dea-078288948f0e_242"/>
+      <parameter id="_Q39AILvEEd2nxoTCCN0dGA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_Q39AIbvEEd2nxoTCCN0dGA" name="SQL_ACTION_TYPE" type="String" value="UPDATE"/>
+      <parameter id="_Q39AIrvEEd2nxoTCCN0dGA" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnTarget')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <parameter id="_Q39AI7vEEd2nxoTCCN0dGA" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnTarget')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_Q39AJLvEEd2nxoTCCN0dGA" name="SQL_ACTION_TYPE_STAT" type="String" value="UPDATE"/>
+      <code>update	%x{md:physicalPath($REF/ref:target())}x%&#xD;
+set 	&#xD;
+		%x{md:patternList($REF/ref:columns()[not(tech:isUk()) and tech:isUpdated()],'[name] = :{{[name]}}:', ',\n\t\t','','\n\t\t')}x%&#xD;
+where	&#xD;
+		%x{md:patternList($REF/ref:columns()[tech:isUk()],'[name] = :{{[name]}}:', '\nAnd\t\t')}x%</code>
+    </actionCode>
+    <actionCode id="_946a4183-2772-439c-9dea-078288948f0e_242" generationCondition="'${doInsert}$'='true'" isBeginAction="false" name="T - Insertion of rows in target" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_Q39nMLvEEd2nxoTCCN0dGA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_946a4183-2772-439c-9dea-078288948f0e_252"/>
+      <parameter id="_Q39nMbvEEd2nxoTCCN0dGA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_Q39nMrvEEd2nxoTCCN0dGA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_Q3-OQLvEEd2nxoTCCN0dGA" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnTarget')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <parameter id="_Q3-OQbvEEd2nxoTCCN0dGA" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnTarget')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_Q3-1ULvEEd2nxoTCCN0dGA" name="SQL_ACTION_TYPE_STAT" type="String" value="INSERT"/>
+      <code>%xsl{
+&lt;xsl:variable name=&quot;InsNotTrgColumns&quot; select=&quot;$REF/ref:columns()[(tech:isIns() and not(tech:onTrg()))]&quot;/>
+&lt;xsl:variable name=&quot;InsTrgColumns&quot; select=&quot;$REF/ref:columns()[(tech:isIns() and tech:onTrg())]&quot;/>
+
+%xsl preserveSpace=&quot;true&quot;{insert into 	%x{md:physicalPath($REF/ref:target())}x%
+	(	%x{md:patternList($InsNotTrgColumns,'[name]', ',\n\t\t')}x%
+		%x{md:patternList($InsTrgColumns,'[name]', ',\n\t\t',',','')}x%
+	)
+select	
+		%x{md:patternList($InsNotTrgColumns,'[name]', ',\n\t\t')}x%
+		%x{md:patternList($InsTrgColumns,'[expression]', ',\n\t\t',',','')}x%
+from	%x{md:physicalPath($REF,'workName')}x%
+where	INCREMENTAL_FLAG = 'I'
+}xsl%}xsl%</code>
+    </actionCode>
+    <actionCode id="_946a4183-2772-439c-9dea-078288948f0e_252" generationCondition="'${commitTransaction}$'='true' and '${transactionalModeOnTarget}$'='true'" isBeginAction="false" name="T - Commit of transaction in target" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_Q3-1UbvEEd2nxoTCCN0dGA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_946a4183-2772-439c-9dea-078288948f0e_262"/>
+      <parameter id="_Q3-1UrvEEd2nxoTCCN0dGA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_Q3-1U7vEEd2nxoTCCN0dGA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_Q3_cYLvEEd2nxoTCCN0dGA" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnTarget')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <parameter id="_Q3_cYbvEEd2nxoTCCN0dGA" name="SQL_TRANSACTION_TYPE" type="String" value="COMMIT"/>
+      <code></code>
+    </actionCode>
+    <actionCode id="_946a4183-2772-439c-9dea-078288948f0e_262" generationCondition="not(md:paramValue($this, 'unlockCdcTable')='false')" isBeginAction="false" name="Unlock of CDC table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$REF/ref:from()[tech:isCDC() and not(tech:isLoaded())]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_Q3_cYrvEEd2nxoTCCN0dGA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_946a4183-2772-439c-9dea-078288948f0e_282"/>
+      <parameter id="_Q3_cY7vEEd2nxoTCCN0dGA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_Q3_cZLvEEd2nxoTCCN0dGA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_Q4AqgLvEEd2nxoTCCN0dGA" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>Delete 	from 	%x{md:physicalPath($CDC,'cdcTableName')}x%
+Where	CDC_CONSUMMATION = '1'
+%x{$CDC/tech:cdcFilterPart2($this)}x%</code>
+    </actionCode>
+    <actionCode id="_946a4183-2772-439c-9dea-078288948f0e_282" generationCondition="'${cleanTemporaryObjects }$'='true' and ('${appendMode}$'='false' or $REF/tech:hasIntegrationReject())" isBeginAction="false" name="Drop of pre-integration table" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_Q4AqgbvEEd2nxoTCCN0dGA" executionType="OK" generationType="OK_KO" mandatory="1"/>
+      <parameter id="_Q4AqgrvEEd2nxoTCCN0dGA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_Q4Aqg7vEEd2nxoTCCN0dGA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_Q4AqhLvEEd2nxoTCCN0dGA" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>drop table %x{md:physicalPath($REF,'workName')}x%</code>
+    </actionCode>
+    <actionCode id="_fcd6cJmXEd6w8uTj6_8B6Q" isBeginAction="false" name="EmptyAction" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+      <link id="_gBHfoJmXEd6w8uTj6_8B6Q" generationCondition="'${appendMode}$'='false'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_iH5VPTEREd-WZe6cNi2k2w"/>
+      <link id="_ra1J4JmXEd6w8uTj6_8B6Q" generationCondition="'${appendMode}$'='true' and ($REF/tech:hasIntegrationReject() or $REF/tech:hasCdc()) " executionType="OK" generationType="OK_KO" mandatory="1" targetId="_946a4183-2772-439c-9dea-078288948f0e_242"/>
+      <link id="_GhxiAJmYEd6w8uTj6_8B6Q" generationCondition="'${appendMode}$'='true' and not($REF/tech:hasIntegrationReject()) and not($REF/tech:hasCdc())" executionType="OK" generationType="OK" mandatory="1" targetId="_-sfn3JmXEd6w8uTj6_8B6Q"/>
+    </actionCode>
+    <actionCode id="_-sfn3JmXEd6w8uTj6_8B6Q" generationCondition="'${doInsert}$'='true'" isBeginAction="false" name="T - Insertion of new rows in target - append" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_IGNJMJmYEd6w8uTj6_8B6Q" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_946a4183-2772-439c-9dea-078288948f0e_252"/>
+      <parameter id="_-sfn3pmXEd6w8uTj6_8B6Q" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_-sfn35mXEd6w8uTj6_8B6Q" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_-sfn4JmXEd6w8uTj6_8B6Q" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnTarget')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <parameter id="_-sfn4ZmXEd6w8uTj6_8B6Q" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnTarget')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_-sfn4pmXEd6w8uTj6_8B6Q" name="SQL_ACTION_TYPE_STAT" type="String" value="INSERT"/>
+      <code>insert into	%x{md:physicalPath($REF/ref:target())}x%
+( 
+	%x{md:patternList($REF/ref:columns()[tech:isIns()],'[name]', ',\n\t')}x%
+) 
+select	%x{if (md:paramValue($this,'useDistinct')='true') then 'DISTINCT' else ''}x%
+		%x{md:patternList($REF/ref:columns()[tech:isIns()],'[mapping]', ',\n\t\t')}x%
+from	%x{$REF/tech:fromPart()}x%
+where	(1=1)%xsl{
+%x{$REF/tech:joinPart()}x%
+%x{$REF/tech:filterPart()}x%
+%x{$REF/tech:cdcFilterPart2($this)}x%
+%x{$REF/tech:groupByPart()}x%
+%x{$REF/tech:havingPart()}x%}xsl%</code>
+    </actionCode>
+    <actionCode id="_iH5VPTEREd-WZe6cNi2k2w" generationCondition="(('${doInsert}$'='true' or '${doUpdate}$'='true') and '${createIndexOnPreIntegrationTable}$'='true')" isBeginAction="false" name="Creation of a unique index on pre-integration table" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_kDIS0DEREd-WZe6cNi2k2w" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_946a4183-2772-439c-9dea-078288948f0e_202"/>
+      <parameter id="_iH5VPzEREd-WZe6cNi2k2w" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_iH5VQDEREd-WZe6cNi2k2w" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_iH5VQTEREd-WZe6cNi2k2w" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>%comment{create unique index %x{$REF/tech:workName('idx1_')}x%}comment%
+%x{$REF/mdj:pattern('create unique index idx1_[workName]')}x%
+on		%x{md:physicalPath($REF,'workName')}x% (%x{md:patternList($REF/ref:columns()[tech:isUk()],'[name]', ', ')}x%)
+%x{$REF/ref:target()/ref:schema()/tech:defaultTempIndexStorageClause()}x%</code>
+    </actionCode>
+    <actionCode id="_SqlAWG9IEeG8UMvGKJF0ww" generationCondition="" isBeginAction="false" name="Select on source table (SRC)" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <bindLink id="_SqlAWW9IEeG8UMvGKJF0ww" bindType="DirectBind" executionType="OK" targetId="_SqlAXG9IEeG8UMvGKJF0ww"/>
+      <parameter id="_SqlAWm9IEeG8UMvGKJF0ww" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_SqlAW29IEeG8UMvGKJF0ww" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+      <code>select		%x{if (md:paramValue($this,'useDistinct')='true') then 'DISTINCT' else ''}x%&#xD;
+			%x{md:patternList($REF/ref:columns(),'[expression] [columnAliasWord] [workName]', ',\n\t\t\t')}x%&#xD;
+&#xD;
+from	%x{$REF/tech:fromPart()}x%&#xD;
+where	(1=1)%xsl{&#xD;
+%x{$REF/tech:joinPart()}x%&#xD;
+%x{$REF/tech:filterPart()}x%&#xD;
+%x{$REF/tech:cdcFilterPart2($this)}x%&#xD;
+%x{$REF/tech:groupByPart()}x%&#xD;
+%x{$REF/tech:havingPart()}x%}xsl%&#xD;
+%x{if (md:paramValue($this,'orderByExpression')!='') then concat('order by ',md:paramValue($this,'orderByExpression')) else ''}x%</code>
+    </actionCode>
+    <actionCode id="_SqlAXG9IEeG8UMvGKJF0ww" generationCondition="" isBeginAction="false" name="Load of data (TRG)" nbCycles="-1" repetitionQuery="" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_SqlAXW9IEeG8UMvGKJF0ww" executionType="OK" generationType="OK" mandatory="1"/>
+      <link id="_B3K4AG9JEeG8UMvGKJF0ww" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_946a4183-2772-439c-9dea-078288948f0e_252"/>
+      <parameter id="_SqlAX29IEeG8UMvGKJF0ww" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_SqlAYG9IEeG8UMvGKJF0ww" name="SQL_ACTION_TYPE" type="String" value="INSERT"/>
+      <parameter id="_SqlAYW9IEeG8UMvGKJF0ww" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnTarget')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_cV5FMNZlEeGqIunAmcPXMg" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnTarget')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <parameter id="_FipvIGpdEeSwNdNNwEUXAw" name="SQL_BATCH_SIZE" type="String" value="%x{md:paramValue($this,'batchSize')}x%"/>
+      <parameter id="_53VV8MmIEeWaGMQhKzj9Hw" name="SQL_ACTION_TYPE_STAT" type="String" value="INSERT"/>
+      <code>insert into	%x{md:physicalPath($REF/ref:target())}x%&#xD;
+( &#xD;
+	%x{md:patternList($REF/ref:columns()[tech:isIns()],'[name]', ',\n\t')}x%&#xD;
+) &#xD;
+values&#xD;
+(&#xD;
+	%x{md:patternList($REF/ref:columns()[tech:isIns()],':{{[workName]}}:', ',\n\t')}x%&#xD;
+&#xD;
+)&#xD;
+</code>
+    </actionCode>
+    <actionCode id="_2QNb8G9IEeG8UMvGKJF0ww" isBeginAction="false" name="EmptyAction (2)" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+      <link id="_3aF1IG9IEeG8UMvGKJF0ww" generationCondition="$REF/tech:isMultiConnection() and '${appendMode}$'='true'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_SqlAWG9IEeG8UMvGKJF0ww">
+        <link id="_7vDqQG9IEeG8UMvGKJF0ww" executionType="OK" generationType="KO" mandatory="1" targetId="_fcd6cJmXEd6w8uTj6_8B6Q"/>
+      </link>
+    </actionCode>
+    <templateType>I-TP.RDBMS.INTEGRATING</templateType>
+  </subProcess>
+  <templateType>I-TP.RDBMS</templateType>
+</proc:process>

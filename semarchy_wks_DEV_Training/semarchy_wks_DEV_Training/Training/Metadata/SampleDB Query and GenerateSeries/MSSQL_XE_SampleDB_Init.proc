@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_70HqQfxLEea_nbqmkK-3fQ">
+  <actionCode id="_8yNqMPxLEea_nbqmkK-3fQ" isBeginAction="false" name="SqlOperation" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <metaDataLink id="_BX2_oPxMEea_nbqmkK-3fQ" name="training_dbo" target="MSSQL_XE_SampleDB.md#_iO-cEPxLEea_nbqmkK-3fQ?fileId=_iHjlcPxLEea_nbqmkK-3fQ$type=md$name=training.dbo?"/>
+    <parameter id="_81K3kPxLEea_nbqmkK-3fQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_81K3kfxLEea_nbqmkK-3fQ" name="SQL_CONNECTION" type="String"/>
+    <parameter id="_CBS-MPxMEea_nbqmkK-3fQ" name="SQL_MULTI_QUERYS" type="Boolean" value="true"/>
+    <parameter id="_CvFRQPxMEea_nbqmkK-3fQ" name="SQL_MULTI_QUERYS_SEPARATORS" type="String" value="GO"/>
+    <code>USE [training]&#xD;
+GO&#xD;
+&#xD;
+/****** Object:  UserDefinedFunction [dbo].[generate_series]    Script Date: 26/02/2017 18:48:53 ******/&#xD;
+SET ANSI_NULLS ON&#xD;
+GO&#xD;
+&#xD;
+SET QUOTED_IDENTIFIER ON&#xD;
+GO&#xD;
+&#xD;
+&#xD;
+CREATE FUNCTION [dbo].[generate_series] (@max_limit INTEGER)&#xD;
+-- Return a serie of @max_limit rows. Function to use in FROM clause. The column with the id generated is named id_value. &#xD;
+RETURNS @serie TABLE (id_value INT PRIMARY KEY NOT NULL)&#xD;
+AS&#xD;
+BEGIN&#xD;
+&#xD;
+   DECLARE @id_value INT&#xD;
+   DECLARE @temp_table TABLE (id_value int)&#xD;
+   SET @id_value = 0&#xD;
+&#xD;
+-- insert the first 10 integers&#xD;
+   WHILE @id_value &lt; 10&#xD;
+   BEGIN&#xD;
+      INSERT INTO @temp_table VALUES (@id_value)&#xD;
+      SET @id_value = @id_value + 1&#xD;
+   END&#xD;
+&#xD;
+-- If @id_value > 9, then remove unusefull values&#xD;
+   IF @id_value-1 > @max_limit&#xD;
+      DELETE FROM @temp_table WHERE id_value > @max_limit&#xD;
+   ELSE&#xD;
+      INSERT INTO @temp_table     &#xD;
+      SELECT DISTINCT 1 * tab1.id_value + 10 * tab2.id_value +  + 100 * tab3.id_value + 1000  * tab4.id_value&#xD;
+      FROM   @temp_table AS tab1 CROSS JOIN @temp_table AS tab2&#xD;
+                                 CROSS JOIN @temp_table AS tab3&#xD;
+                                 CROSS JOIN @temp_table AS tab4&#xD;
+      WHERE  1 * tab1.id_value + 10 * tab2.id_value +  + 100 * tab3.id_value + 1000  * tab4.id_value BETWEEN 10 AND @max_limit&#xD;
+-- Insert results in return variable&#xD;
+   INSERT INTO @serie&#xD;
+   SELECT DISTINCT id_value FROM @temp_table WHERE id_value > 0&#xD;
+   RETURN&#xD;
+END&#xD;
+&#xD;
+GO</code>
+  </actionCode>
+</proc:process>

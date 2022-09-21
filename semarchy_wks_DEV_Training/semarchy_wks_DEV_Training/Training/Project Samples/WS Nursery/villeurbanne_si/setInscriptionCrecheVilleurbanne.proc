@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_kH-UEReIEeag17CW0UpctQ">
+  <parameter id="_mbM68BeIEeag17CW0UpctQ" input="true" name="id_demande" type="Integer" value="2"/>
+  <parameter id="_oWkbcBeIEeag17CW0UpctQ" input="true" name="date_demande" type="String" value="2016-05-11 15:43:07:614"/>
+  <parameter id="_on0jgBeIEeag17CW0UpctQ" input="true" name="nom_demandeur" type="String" value="Souchard"/>
+  <parameter id="_o65QgBeIEeag17CW0UpctQ" input="true" name="prenom_demandeur" type="String" value="Jean"/>
+  <parameter id="_kBcOcBetEeag17CW0UpctQ" input="true" name="prenom_enfant" type="String" value="Juliette"/>
+  <parameter id="_lHhswBetEeag17CW0UpctQ" input="true" name="date_naissance_enfant" type="String" value="2015-05-11"/>
+  <parameter id="_Xx5S8BeuEeag17CW0UpctQ" output="true" name="id_inscription" type="Integer" value="1"/>
+  <parameter id="_bo5ZsBeuEeag17CW0UpctQ" output="true" name="niveau_confirmation" type="Integer" value="2"/>
+  <parameter id="_dcOPgBgREeapFfTHA28Ggw" output="true" name="date_confirmation_inscription" type="String" value="2016-05-11 15:43:07:614"/>
+  <actionCode id="_Dd-UgBezEeapFfTHA28Ggw" enable="true" isBeginAction="false" name="Sql To Parameters id_inscription" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+    <link id="_eV5ZMBezEeapFfTHA28Ggw" executionCondition="%e(rhino){ (${~/id_inscription}$ != 0) }e(rhino)% " executionType="OK" generationType="OK_KO" mandatory="1" targetId="_c5jXABezEeapFfTHA28Ggw"/>
+    <metaDataLink id="_J1yLIBezEeapFfTHA28Ggw" name="INSCRIPTION" target="../00_Metadata/HSQL_Creche.md#_aTLMcRd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=INSCRIPTION?"/>
+    <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;~/id_inscription&quot; type=&quot;Integer&quot;>&#xD;
+SELECT MAX(id_inscription) id_inscription&#xD;
+FROM   (SELECT id_inscription FROM VILLEURBANNE.INSCRIPTION &#xD;
+        WHERE  id_demande=${~/id_demande}$ &#xD;
+        UNION &#xD;
+        SELECT 0 id_inscription FROM (VALUES(0)))&#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters> </code>
+  </actionCode>
+  <actionCode id="_c5jXABezEeapFfTHA28Ggw" enable="true" isBeginAction="false" name="Sql To Parameters niveau_creche" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+    <link id="_bH1yEBgREeapFfTHA28Ggw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_aGGBMBgREeapFfTHA28Ggw"/>
+    <metaDataLink id="_c5jXARezEeapFfTHA28Ggw" name="INSCRIPTION" target="../00_Metadata/HSQL_Creche.md#_aTLMcRd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=INSCRIPTION?"/>
+    <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;~/niveau_confirmation&quot; type=&quot;Integer&quot;>&#xD;
+SELECT niveau_confirmation FROM villeurbanne.inscription&#xD;
+WHERE id_demande=${~/id_demande}$&#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters> </code>
+  </actionCode>
+  <actionCode id="_aGGBMBgREeapFfTHA28Ggw" enable="true" isBeginAction="false" name="Sql To Parameters current_date" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+    <metaDataLink id="_ctYMgBgREeapFfTHA28Ggw" name="INSCRIPTION" target="../00_Metadata/HSQL_Creche.md#_aTLMcRd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=INSCRIPTION?"/>
+    <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;~/date_confirmation_inscription&quot; type=&quot;String&quot;>&#xD;
+SELECT date_confirmation_inscription FROM villeurbanne.inscription&#xD;
+WHERE id_demande=${~/id_demande}$&#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters> </code>
+  </actionCode>
+  <actionProcessRef id="_aDn4ABg9EeaikNW2PU8LmQ" isBeginAction="false" name="Load inscription in Villeurbanne DB" nbCycles="-1" toleratedError="false" processMap="true" targetName="Load%20inscription%20in%20Villeurbanne%20DB.map#_NVjp8Bg9EeaikNW2PU8LmQ?fileId=_NVjp8Bg9EeaikNW2PU8LmQ$name=Load%20inscription%20in%20Villeurbanne%20DB$type=map?">
+    <link id="_aYn3oBg9EeaikNW2PU8LmQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_Dd-UgBezEeapFfTHA28Ggw"/>
+  </actionProcessRef>
+</proc:process>

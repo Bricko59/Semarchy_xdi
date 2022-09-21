@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map:map xmlns:map="http://www.indy.com/v2/map" id="_nRS-kPbrEeihWtdVUY4U1Q" internalVersion="8" tech="resource.tech#_waYSMH8VEd2__Mzb_dB76A?fileId=_waYSMH8VEd2__Mzb_dB76A$type=tech$name=flow?">
+  <datastore id="_oBfFYPbrEeihWtdVUY4U1Q" alias="T_PMT3" dataset="_AfLt4PbtEeihWtdVUY4U1Q" ref="resource.md#_uV68QfcJEeihDLFmfbLxVA?fileId=_N9VnAPbrEeihWtdVUY4U1Q$type=md$name=T_PMT3?">
+    <field id="_oCB38PbrEeihWtdVUY4U1Q" fullAlias="PMT_NAME" name="PMT_NAME" ref="resource.md#_uWSIoPcJEeihDLFmfbLxVA?fileId=_N9VnAPbrEeihWtdVUY4U1Q$type=md$name=PMT_NAME?"/>
+    <field id="_oCB38fbrEeihWtdVUY4U1Q" fullAlias="PMT_DESCRIPTION" name="PMT_DESCRIPTION" ref="resource.md#_uWSIp_cJEeihDLFmfbLxVA?fileId=_N9VnAPbrEeihWtdVUY4U1Q$type=md$name=PMT_DESCRIPTION?"/>
+    <field id="_oCBQ4fbrEeihWtdVUY4U1Q" fullAlias="PMT_CODE" name="PMT_CODE" ref="resource.md#_uWRhkPcJEeihDLFmfbLxVA?fileId=_N9VnAPbrEeihWtdVUY4U1Q$type=md$name=PMT_CODE?" updateKey="true"/>
+    <field id="_oCB38vbrEeihWtdVUY4U1Q" fullAlias="PMT_ACTIVE" name="PMT_ACTIVE" ref="resource.md#_uWSIrvcJEeihDLFmfbLxVA?fileId=_N9VnAPbrEeihWtdVUY4U1Q$type=md$name=PMT_ACTIVE?"/>
+    <constraint id="_vdJNkPcKEeihDLFmfbLxVA" name="PK_T_PMT3" ref="resource.md#_uWVL8PcJEeihDLFmfbLxVA?fileId=_N9VnAPbrEeihWtdVUY4U1Q$type=md$name=PK_T_PMT3?" reject="true"/>
+  </datastore>
+  <datastore id="_osRHwPbrEeihWtdVUY4U1Q" alias="DIM_PMT3" dataset="_AfLt4fbtEeihWtdVUY4U1Q" ref="resource.md#_A-2mQPcKEeihDLFmfbLxVA?fileId=_UhZw8PbrEeihWtdVUY4U1Q$type=md$name=DIM_PMT3?" subExpression="[A]">
+    <field id="_osSV4PbrEeihWtdVUY4U1Q" enable="true" insert="true" name="PMT_NAME" ref="resource.md#_A--iF_cKEeihDLFmfbLxVA?fileId=_UhZw8PbrEeihWtdVUY4U1Q$type=md$name=PMT_NAME?" update="true">
+      <expression id="_pROO8PbrEeihWtdVUY4U1Q" setDescriptorRef="_pRLysPbrEeihWtdVUY4U1Q">
+        <expression>T_PMT3.PMT_NAME</expression>
+      </expression>
+    </field>
+    <field id="_osSV4fbrEeihWtdVUY4U1Q" enable="true" insert="true" name="PMT_DESCRIPTION" ref="resource.md#_A-_JIPcKEeihDLFmfbLxVA?fileId=_UhZw8PbrEeihWtdVUY4U1Q$type=md$name=PMT_DESCRIPTION?" update="true">
+      <expression id="_pRO2APbrEeihWtdVUY4U1Q" setDescriptorRef="_pRLysPbrEeihWtdVUY4U1Q">
+        <expression>T_PMT3.PMT_DESCRIPTION</expression>
+      </expression>
+    </field>
+    <field id="_osRu0fbrEeihWtdVUY4U1Q" enable="true" insert="true" name="PMT_CODE" ref="resource.md#_A--iEPcKEeihDLFmfbLxVA?fileId=_UhZw8PbrEeihWtdVUY4U1Q$type=md$name=PMT_CODE?" update="true" updateKey="true">
+      <expression id="_pRO2AfbrEeihWtdVUY4U1Q" setDescriptorRef="_pRLysPbrEeihWtdVUY4U1Q">
+        <expression>T_PMT3.PMT_CODE</expression>
+      </expression>
+    </field>
+    <constraint id="_w8oDUPcKEeihDLFmfbLxVA" name="PK_DIM_PMT3" ref="resource.md#_A_A-UPcKEeihDLFmfbLxVA?fileId=_UhZw8PbrEeihWtdVUY4U1Q$type=md$name=PK_DIM_PMT3?" reject="true"/>
+    <setDescriptor id="_pRLysPbrEeihWtdVUY4U1Q" label="A"/>
+  </datastore>
+  <filter description="CASE '${~/genereFilter}$'&#xD;&#xA;     WHEN 'true' THEN T_PAYMENT_TYPE.PMT_DESCRIPTION IS NOT NULL &#xD;&#xA;     ELSE 1=1&#xD;&#xA;END&#xD;&#xA;AND T_PAYMENT_TYPE.PMT_ACTIVE = 1" id="_plkuUPbrEeihWtdVUY4U1Q" location="SRC">
+    <expression><![CDATA[%e(rhino){ if   ('${~/genereFilter}$' == 'true')  
+                {__ctx__.retValue = 'T_PMT3.PMT_DESCRIPTION IS NOT NULL  ' ; }
+           else {__ctx__.retValue = '1=1 ' ;} }e(rhino)% 
+AND T_PMT3.PMT_ACTIVE = 1]]></expression>
+  </filter>
+  <template id="_AfMU8PbtEeihWtdVUY4U1Q" name="L1_DIM_PMT3" process="resource.proc#_aafbe681-11ab-4ebc-ab56-de794128c580?fileId=_aafbe681-11ab-4ebc-ab56-de794128c580$type=proc$name=LOAD%20Rdbms%20to%20Rdbms?" sourceId="_oBfFYPbrEeihWtdVUY4U1Q" targetId="_osRHwPbrEeihWtdVUY4U1Q"/>
+  <template id="_AfNjEPbtEeihWtdVUY4U1Q" name="I_DIM_PMT3" process="resource.proc#_HFOfdjEZEd-WZe6cNi2k2w?fileId=_HFOfdjEZEd-WZe6cNi2k2w$type=proc$name=INTEGRATION%20Hsql?" targetId="_osRHwPbrEeihWtdVUY4U1Q"/>
+  <dataSet id="_AfLt4PbtEeihWtdVUY4U1Q">
+    <container>_oBfFYPbrEeihWtdVUY4U1Q</container>
+  </dataSet>
+  <dataSet id="_AfLt4fbtEeihWtdVUY4U1Q">
+    <container>_osRHwPbrEeihWtdVUY4U1Q</container>
+  </dataSet>
+  <hint>
+    <usedField>#_oCB38PbrEeihWtdVUY4U1Q</usedField>
+    <usedField>#_oCB38fbrEeihWtdVUY4U1Q</usedField>
+    <usedField>#_oCBQ4fbrEeihWtdVUY4U1Q</usedField>
+    <usedField>#_oCB38vbrEeihWtdVUY4U1Q</usedField>
+  </hint>
+</map:map>

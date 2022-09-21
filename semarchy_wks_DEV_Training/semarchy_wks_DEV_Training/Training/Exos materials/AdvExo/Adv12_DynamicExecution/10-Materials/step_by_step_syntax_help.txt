@@ -1,0 +1,132 @@
+*** Step 3 ***
+**************
+
+SQL Operation1
+--------------
+Name : INSERT INTO DLVRY_EXEC_LOG DELIVERIES
+SQL_ACTION_TYPE : DDL_DML
+
+Expression Editor of SQL Operation1
+----------------------------------
+INSERT INTO %x{$DLVRY_EXEC_LOG/tech:physicalPath()}x% 
+SELECT DISTINCT EXECT_PRCS,'${/CORE_SESSION_ID}$',DLVRY_NAME,NULL,NULL,NULL
+FROM   %x{$DLVRY_LINK/tech:physicalPath()}x%
+WHERE  EXECT_PRCS='${~/EXECT_PRCS}$'
+
+SQL Operation2
+--------------
+Name : SELECT DELIVERY NOT ALREADY EXECUTED
+SQL_ACTION_TYPE : SELECT
+
+Expression Editor of SQL Operation1
+----------------------------------
+SELECT A.DLVRY_NAME 
+FROM   %x{$DLVRY_EXEC_LOG/tech:physicalPath()}x% A
+       INNER JOIN %x{$DLVRY_LINK/tech:physicalPath()}x% B 
+          ON A.DLVRY_NAME=B.DLVRY_NAME
+         AND A.EXECT_PRCS=B.EXECT_PRCS
+WHERE  A.LOAD_STATUS IS NULL AND B.DLVRY_PRNT IS NULL
+AND    A.EXECT_PRCS='${~/EXECT_PRCS}$' AND A.EXECT_SEID='${/CORE_SESSION_ID}$'
+UNION 
+SELECT DLVRY_NAME  
+FROM  (SELECT A.DLVRY_NAME,--L.DLVRY_PRNT,
+              SUM(CASE WHEN B.LOAD_STATUS ='FINISHED' THEN 1 ELSE 0 END) AS NB_TREATED,
+              COUNT(*) AS NB_TOTAL
+       FROM   %x{$DLVRY_EXEC_LOG/tech:physicalPath()}x% A 
+       INNER  JOIN %x{$DLVRY_LINK/tech:physicalPath()}x% L
+              ON  A.DLVRY_NAME=L.DLVRY_NAME
+              AND A.EXECT_PRCS=L.EXECT_PRCS 
+       INNER  JOIN %x{$DLVRY_EXEC_LOG/tech:physicalPath()}x% B 
+              ON  L.DLVRY_PRNT=B.DLVRY_NAME AND A.EXECT_PRCS=B.EXECT_PRCS
+              AND A.EXECT_SEID=B.EXECT_SEID
+       WHERE  A.LOAD_STATUS  IS NULL AND A.EXECT_PRCS='${~/EXECT_PRCS}$'
+         AND  A.EXECT_SEID='${/CORE_SESSION_ID}$'
+       GROUP  BY A.DLVRY_NAME--,L.DLVRY_PRNT
+       )
+WHERE  NB_TREATED=NB_TOTAL
+		
+*** Step 4 ***
+**************
+
+Execution Condition on the link between "LOOP" and SQL Operation
+----------------------------------------------------------------
+${ExecuteDelivery/CORE_BIND_ITERATIONS}$ > 0
+
+Execution Condition on the link between "LOOP" and End
+------------------------------------------------------
+${ExecuteDelivery/CORE_BIND_ITERATIONS}$ == 0
+
+Triggering behaviour of the two links "SQL Operation --> SQL Operation" and "Loop --> SQL Operation"
+--------------------------------------------------------------------------------------------
+Not Mandatory
+
+*** Step 5 ***
+**************
+
+DELIV_NAME property of the ExecuteDelivery action
+-------------------------------------------------
+		Launch a Delivery
+		
+DELIV_SESSION_NAME property of the ExecuteDelivery action
+---------------------------------------------------------
+		Launch of :{DLVRY_NAME}:
+				
+DELIV_ASYNCHRONE_EXECUTION property of the ExecuteDelivery action
+-----------------------------------------------------------------
+		true
+				
+Add a parameter named DELIVERY_NAME
+----------------------------------
+:{DLVRY_NAME}:
+
+Add a parameter named EXECT_PRCS
+----------------------------------
+${~/EXECT_PRCS}$
+
+Add a parameter named EXECT_SEID
+----------------------------------
+${/CORE_SESSION_ID}$
+
+*** Step 6 ***
+**************
+
+Process parameters to create
+----------------------------
+DELIVERY_NAME
+EXECT_PRCS
+EXECT_SEID
+
+Expression Editor of the SQL Operation named "UPDATE DLVRY_EXEC_LOG SET LOAD_STATUS=IN PROGRESS"
+------------------------------------------------------------------------------------------------
+UPDATE %x{$DLVRY_EXEC_LOG/tech:physicalPath()}x% 
+SET    LOAD_STATUS='IN PROGRESS', 
+       EXECT_START=current_timestamp
+WHERE  DLVRY_NAME='${~/DELIVERY_NAME}$' 
+AND    EXECT_SEID='${~/EXECT_SEID}$'
+AND    EXECT_PRCS='${~/EXECT_PRCS}$'
+		
+Expression Editor of the SQL Operation named "UPDATE DLVRY_EXEC_LOG SET LOAD_STATUS=ERROR"
+------------------------------------------------------------------------------------------
+UPDATE %x{$DLVRY_EXEC_LOG/tech:physicalPath()}x%
+SET    LOAD_STATUS='ERROR' , 
+       EXECT_END=current_timestamp
+WHERE  DLVRY_NAME='${~/DELIVERY_NAME}$' 
+AND    EXECT_SEID='${~/EXECT_SEID}$'
+AND    EXECT_PRCS='${~/EXECT_PRCS}$'
+		
+Expression Editor of the SQL Operation named "UPDATE PROCESS SET LOAD_STATUS=FINISHED"
+--------------------------------------------------------------------------------------
+UPDATE %x{$DLVRY_EXEC_LOG/tech:physicalPath()}x% 
+SET    LOAD_STATUS='FINISHED'  , 
+       EXECT_END=current_timestamp
+WHERE  DLVRY_NAME='${~/DELIVERY_NAME}$' 
+AND    EXECT_SEID='${~/EXECT_SEID}$'
+AND    EXECT_PRCS='${~/EXECT_PRCS}$'
+
+DELIV_NAME property of the ExecuteDelivery action
+-------------------------------------------------
+		${~/DELIVERY_NAME}$
+		
+DELIV_SESSION_NAME property of the ExecuteDelivery action
+---------------------------------------------------------
+		Execution of ${~/DELIVERY_NAME}$

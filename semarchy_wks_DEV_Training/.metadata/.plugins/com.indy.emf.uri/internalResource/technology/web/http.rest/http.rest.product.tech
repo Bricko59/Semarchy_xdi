@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="UUID_TECH_HTTPREST_PRODUCT" name="HttpRestProduct" ref="resource.tech#_kXbWMP_rEeWgopfFW9GC4w?fileId=_kXbWMP_rEeWgopfFW9GC4w$type=tech$name=javadef?">
+  <level icon="icons/full/custom/16x16/http.api.png" xmlName="httpProduct" xpathCondition="" code="com.stambia.http.rest.product" connection="true" displayName="HTTP Rest API Product" isFile="advanced" wizardBundleName="" wizardClass=""/>
+  <level icon="icons/full/custom/16x16/sliders.png" xmlName="property" xpathCondition="" code="com.stambia.http.rest.property" connection="true" displayName="Property" isFile="false" position="20" positionReverseCode="" wizardBundleName="" wizardClass="">
+    <attribute xmlName="level" code="level" unbounded="true"/>
+    <parent>com.stambia.http.rest.product</parent>
+    <xPathExpression description="" expression="'STRING'">
+      <code>TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="'0'">
+      <code>DECIMAL_PRECISION</code>
+    </xPathExpression>
+    <xPathExpression expression="''">
+      <code>SIZE</code>
+    </xPathExpression>
+    <xPathExpression expression="@name">
+      <code>COLUMN_NAME</code>
+      <code>NAME</code>
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="'String'">
+      <code>XML_TYPE</code>
+      <code>JAVA_TYPE</code>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <contributedRegistryID>com.indy.ui.custom.out.services.registry.ModuleRequirment[@defType=com.stambia.http.rest]</contributedRegistryID>
+</tech:tech>

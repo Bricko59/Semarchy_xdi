@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_hYSpcReCEeag17CW0UpctQ">
+  <parameter id="_iZ7FkBeCEeag17CW0UpctQ" input="true" name="nombre_mois_enfant" type="Integer" value="6"/>
+  <parameter id="_iy4YIBeCEeag17CW0UpctQ" output="true" name="nombre_place" type="Integer" value="10"/>
+  <actionCode id="_XruoEBeDEeag17CW0UpctQ" enable="true" isBeginAction="false" name="Sql To Parameters id_demande" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+    <metaDataLink id="_YjmEMBeDEeag17CW0UpctQ" name="CRECHE" target="../00_Metadata/HSQL_Creche.md#_yKqtYBd1Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=CRECHE?"/>
+    <metaDataLink id="_Y1u9EBeDEeag17CW0UpctQ" name="INSCRIPTION" target="../00_Metadata/HSQL_Creche.md#_aTLMcRd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=INSCRIPTION?"/>
+    <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;~/nombre_place&quot; type=&quot;Integer&quot;>&#xD;
+SELECT SUM(NB_PLACES_NIVEAU-NB_INSCRIT) AS nombre_place&#xD;
+FROM   (SELECT NB_PLACES_NIVEAU,COUNT(ID_INSCRIPTION) AS NB_INSCRIT&#xD;
+FROM   (SELECT NB_PLACES_NIVEAU,NIVEAU FROM VILLEURBANNE.CRECHE &#xD;
+        WHERE ${~/nombre_mois_enfant}$ BETWEEN MOIS_DEBUT_NIVEAU AND MOIS_FIN_NIVEAU )&#xD;
+       LEFT OUTER JOIN VILLEURBANNE.INSCRIPTION INSCRIPTION &#xD;
+ON NIVEAU=NIVEAU_CONFIRMATION&#xD;
+GROUP BY NB_PLACES_NIVEAU) &#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters> </code>
+  </actionCode>
+</proc:process>

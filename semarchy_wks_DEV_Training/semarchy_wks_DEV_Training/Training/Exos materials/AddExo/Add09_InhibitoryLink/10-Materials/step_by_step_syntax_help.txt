@@ -1,0 +1,66 @@
+*** Step 1 ***
+**************
+
+Expression Editor of the execution condition between LoadDatamart subProcess and 'Load ended with warning' empty action
+-----------------------------------------------------------------------------------------------------------------------
+__ctx__.sumVariable("SQL_STAT_ERROR","./LoadDatamart") != 0
+
+Expression editor of the WriteTxtFile warning
+---------------------------------------------
+Session started on: ${/CORE_BEGIN_DATE}$
+
+Steps duration:
+
+    Drop Fk       : ${../Drop constraints/Drop FK/CORE_DURATION}$
+    Delete tables : ${../Drop constraints/Delete tables/CORE_DURATION}$ 
+    LoadDatamart  : ${../LoadDatamart/CORE_DURATION}$
+    Recreate Fk   : ${../Recreate constraints/CORE_DURATION}$
+    
+Total Rows: %e(rhino){__ctx__.sumVariable("SQL_NB_ROWS")}e(rhino)%
+Total Inserts: %e(rhino){__ctx__.sumVariable("SQL_STAT_INSERT")}e(rhino)%
+Total Updates: %e(rhino){__ctx__.sumVariable("SQL_STAT_UPDATE")}e(rhino)%
+Total Deletes: %e(rhino){__ctx__.sumVariable("SQL_STAT_DELETE")}e(rhino)%
+Inserts into LoadDatamart subprocess : %e(rhino){__ctx__.sumVariable("SQL_STAT_INSERT","../LoadDatamart")}e(rhino)%
+Updates into LoadDatamart subprocess : %e(rhino){__ctx__.sumVariable("SQL_STAT_UPDATE","../LoadDatamart")}e(rhino)%
+Deletes into LoadDatamart subprocess : %e(rhino){__ctx__.sumVariable("SQL_STAT_DELETE","../LoadDatamart")}e(rhino)%
+Rejects into LoadDatamart subprocess : %e(rhino){__ctx__.sumVariable("SQL_STAT_ERROR","../LoadDatamart")}e(rhino)%
+
+*** Session ended with warning ***
+
+Text Write File Property of the WriteTxtFile warning
+----------------------------------------------------
+%x{$Statistic_Report_Folder/tech:path()}x%/%x{md:formatDate("yyyyMMdd")}x%_warning.txt
+
+Expression editor of the WriteTxtFile ok
+----------------------------------------
+Session started on: ${/CORE_BEGIN_DATE}$
+
+Steps duration:
+
+    Drop Fk       : ${../Drop constraints/Drop FK/CORE_DURATION}$
+    Delete tables : ${../Drop constraints/Delete tables/CORE_DURATION}$ 
+    LoadDatamart  : ${../LoadDatamart/CORE_DURATION}$
+    Recreate Fk   : ${../Recreate constraints/CORE_DURATION}$
+    
+Total Rows: %e(rhino){__ctx__.sumVariable("SQL_NB_ROWS")}e(rhino)%
+Total Inserts: %e(rhino){__ctx__.sumVariable("SQL_STAT_INSERT")}e(rhino)%
+Total Updates: %e(rhino){__ctx__.sumVariable("SQL_STAT_UPDATE")}e(rhino)%
+Total Deletes: %e(rhino){__ctx__.sumVariable("SQL_STAT_DELETE")}e(rhino)%
+Inserts into LoadDatamart subprocess : %e(rhino){__ctx__.sumVariable("SQL_STAT_INSERT","../LoadDatamart")}e(rhino)%
+Updates into LoadDatamart subprocess : %e(rhino){__ctx__.sumVariable("SQL_STAT_UPDATE","../LoadDatamart")}e(rhino)%
+Deletes into LoadDatamart subprocess : %e(rhino){__ctx__.sumVariable("SQL_STAT_DELETE","../LoadDatamart")}e(rhino)%
+
+Session ended without warning
+
+Text Write File Property of the WriteTxtFile ok
+-----------------------------------------------
+%x{$Statistic_Report_Folder/tech:path()}x%/%x{md:formatDate("yyyyMMdd")}x%_ok.txt
+
+*** Step 3 ***
+**************
+
+Expression Editor of the generation conditions 
+----------------------------------------------
+md:paramValue($this,'withReject') = 'true'
+md:paramValue($this,'withReject') = 'false'
+

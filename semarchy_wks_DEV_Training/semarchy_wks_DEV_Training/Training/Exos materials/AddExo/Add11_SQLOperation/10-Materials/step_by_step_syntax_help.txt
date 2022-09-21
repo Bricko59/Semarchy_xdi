@@ -1,0 +1,57 @@
+*** Step 2 ***
+**************
+
+Expression Editor of the SQL Operation "SqlOperation INSERT DATA in Source Table"
+---------------------------------------------------------------------------------
+INSERT INTO SQL_OPERATION.SOURCE_TABLE
+SELECT gen_id,
+       'Label'+gen_id,
+       'I'
+FROM   UNNEST(SEQUENCE_ARRAY(1, 100000, 1)) AS generate_series(gen_id)
+
+*** Step 3 ***
+**************
+
+Expression editor of the SQL Operation "SqlOperation SELECT on SOURCE"
+----------------------------------------------------------------------
+SELECT ID_COLUMN,
+	   LB_COLUMN,
+	   OPERATION_TYPE
+FROM   SQL_OPERATION.SOURCE_TABLE
+
+Expression editor of the SQL Operation "SqlOperation SELECT on SOURCE_bis"
+--------------------------------------------------------------------------
+SELECT ID_COLUMN,
+	   LB_COLUMN
+FROM   SQL_OPERATION.SOURCE_TABLE
+WHERE  OPERATION_TYPE='I'
+
+Expression editor of the SQL Operation "SqlOperation SELECT on SOURCE_ter"
+--------------------------------------------------------------------------
+SELECT ID_COLUMN,
+	   LB_COLUMN
+FROM   SQL_OPERATION.SOURCE_TABLE
+WHERE  OPERATION_TYPE='I'
+
+
+*** Step 4 ***
+**************
+
+Expression editor of the SQL Operation "SqlOperation INSERT target"
+-------------------------------------------------------------------
+INSERT INTO SQL_OPERATION.TARGET_TABLE 
+VALUES (:{ID_COLUMN}:,:{LB_COLUMN}:)
+
+Expression editor of the bind link condition
+--------------------------------------------
+%b(rhino){':{OPERATION_TYPE}:' == 'I'}b(rhino)%
+
+Expression editor of the SQL Operation "SqlOperation INSERT target2"
+--------------------------------------------------------------------
+INSERT INTO SQL_OPERATION.TARGET_TABLE2 
+VALUES (:{ID_COLUMN}:,:{LB_COLUMN}:)
+
+Expression editor of the SQL Operation "SqlOperation INSERT target3"
+--------------------------------------------------------------------
+INSERT INTO SQL_OPERATION.TARGET_TABLE3 
+VALUES (:{ID_COLUMN}:,':{LB_COLUMN}:')

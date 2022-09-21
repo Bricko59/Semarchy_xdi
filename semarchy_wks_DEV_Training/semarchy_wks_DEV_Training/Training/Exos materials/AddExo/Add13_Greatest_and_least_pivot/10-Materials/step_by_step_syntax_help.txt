@@ -1,0 +1,101 @@
+*** Step 3 ***
+**************
+
+Computed fields :
+
+Name : GREATEST_SALE  
+Expression editor : 
+
+GREATEST(DAILY_RESULT.RESULT_SALESMAN1,
+         DAILY_RESULT.RESULT_SALESMAN2,
+         DAILY_RESULT.RESULT_SALESMAN3,
+         DAILY_RESULT.RESULT_SALESMAN4)
+
+Name : LEAST_SALE  
+Expression editor : 
+
+LEAST(DAILY_RESULT.RESULT_SALESMAN1,
+      DAILY_RESULT.RESULT_SALESMAN2,
+      DAILY_RESULT.RESULT_SALESMAN3,
+      DAILY_RESULT.RESULT_SALESMAN4)
+
+*** Step 4 ***
+**************
+
+Stage name
+---------------
+pivot_results
+
+COLUMN_NAME				TRANSFORMATION						
+-----------				------------------------------		
+RESULT_DATE				DAILY_RESULT.RESULT_DATE		
+NM_SALESMAN             SALESMAN.NM_SALESMAN			
+RESULT_SELL    		    CASE SALESMAN.ID_SALESMAN 
+                             WHEN 1 THEN DAILY_RESULT.RESULT_SALESMAN1
+                             WHEN 2 THEN DAILY_RESULT.RESULT_SALESMAN2
+                             WHEN 3 THEN DAILY_RESULT.RESULT_SALESMAN3 
+                             WHEN 4 THEN DAILY_RESULT.RESULT_SALESMAN4
+                        END 		
+
+*** Step 5 ***
+**************
+
+Stage name
+---------------------
+STG1 : greatest_sell
+STG2 : least_sell
+
+
+*** Step 6 ***
+**************
+
+Stage name
+---------------------
+STG1 : greatest_emp_sell
+STG2 : least_emp_sell
+
+Join on STG1
+--------------------------------------------------
+greatest_sell.RESULT_DATE = greatest_emp_sell.RESULT_DATE
+and greatest_sell.GREATEST_SALE = greatest_emp_sell.RESULT_SALESMAN
+
+Join on STG2
+-----------------------------------------------------
+least_sell.RESULT_DATE = least_emp_sell.RESULT_DATE
+and least_sell.LEAST_SALE = least_emp_sell.RESULT_SALESMAN
+
+*** Step 7 ***
+**************
+
+STG1 : greatest_sellers
+STG2 : least_sellers
+
+COLUMN_NAME	STG1    	TRANSFORMATION						                               Aggregate
+----------------     	------------------------------		                               --------	
+RESULT_DATE				stg_best_sell.RESULT_DATE		                                      N
+BEST_SELL         		stg_best_sell.BEST_SELL			                                      N
+BEST_SELLERS     		GROUP_CONCAT(DISTINCT greatest_emp_sell.NM_SALESMAN 
+                                     ORDER BY greatest_emp_sell.NM_SALESMAN SEPARATOR ',')	  Y
+
+COLUMN_NAME	STG2    	TRANSFORMATION						                              Aggregate
+----------------     	------------------------------		                              --------	
+RESULT_DATE				stg_worst_sell.RESULT_DATE		                                      N
+WORST_SELL         		stg_worst_sell.BEST_SELL			                                  N
+WORST_SELLERS     		GROUP_CONCAT(DISTINCT least_emp_sell.NM_SALESMAN 
+                                     ORDER BY least_emp_sell.NM_SALESMAN SEPARATOR ',')	      Y
+
+JOIN
+------------------------------------------------------------
+stg_worst_agg_sell.RESULT_DATE = stg_best_agg_sell.RESULT_DATE
+
+*** Step 8 ***
+**************
+
+COLUMN_NAME		TRANSFORMATION				
+-----------		------------------------------		
+result_date		stg_best_agg_sell.RESULT_DATE		
+best_seller     stg_best_agg_sell.BEST_SELLERS
+worst_seller    stg_worst_agg_sell.WORST_SELLERS	
+best_sell	    stg_best_agg_sell.BEST_SELL	
+worst_sell		stg_worst_agg_sell.WORST_SELL			
+

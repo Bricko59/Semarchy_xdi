@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ref:mapRef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:ref="http://www.indy.com/v2/ref" id="_bblZcaJbEey2DvXBjbcDqA">
+  <dataModel>_bZg84KJbEey2DvXBjbcDqA?fileId=_bZg84KJbEey2DvXBjbcDqA$type=map$name=Load%20dim_discount?</dataModel>
+  <containerRef xsi:type="ref:RDatastore" id="_1jJYMKJbEey2DvXBjbcDqA" countShownFields="3" hierarchical="false">
+    <dataModel>_1i_AIKJbEey2DvXBjbcDqA?fileId=_bZg84KJbEey2DvXBjbcDqA$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_1jQF4KJbEey2DvXBjbcDqA" precision="0" size="35" type="varchar" mandatory="true" position="3">
+      <dataModel>_1jMbgKJbEey2DvXBjbcDqA?fileId=_bZg84KJbEey2DvXBjbcDqA$type=map$name=dis_range?</dataModel>
+      <expressionRef id="_Fyd0kKJeEey2DvXBjbcDqA" internalExpression="${discount_ranges.range}$">
+        <dataModel>_Fyb_YKJeEey2DvXBjbcDqA?fileId=_bZg84KJbEey2DvXBjbcDqA$type=map?</dataModel>
+        <sourceRef>__PuyRaJbEey2DvXBjbcDqA</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_1jRUAKJbEey2DvXBjbcDqA" precision="0" size="3" type="numeric" position="9">
+      <dataModel>_1jOQsaJbEey2DvXBjbcDqA?fileId=_bZg84KJbEey2DvXBjbcDqA$type=map$name=dis_max?</dataModel>
+      <expressionRef id="_Fyd0kaJeEey2DvXBjbcDqA" internalExpression="${discount_ranges.max}$">
+        <dataModel>_FycmcKJeEey2DvXBjbcDqA?fileId=_bZg84KJbEey2DvXBjbcDqA$type=map?</dataModel>
+        <sourceRef>__PuyRKJbEey2DvXBjbcDqA</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_1jRUAaJbEey2DvXBjbcDqA" precision="0" size="3" status="VALID" type="numeric" position="6">
+      <dataModel>_1jOQsKJbEey2DvXBjbcDqA?fileId=_bZg84KJbEey2DvXBjbcDqA$type=map$name=dis_min?</dataModel>
+      <expressionRef id="_FyeboKJeEey2DvXBjbcDqA" internalExpression="${discount_ranges.min}$">
+        <dataModel>_FycmcaJeEey2DvXBjbcDqA?fileId=_bZg84KJbEey2DvXBjbcDqA$type=map?</dataModel>
+        <sourceRef>__PuyQ6JbEey2DvXBjbcDqA</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <constraintRef id="_1jmrMKJbEey2DvXBjbcDqA" type="pk">
+      <dataModel>_1jO3wKJbEey2DvXBjbcDqA?fileId=_bZg84KJbEey2DvXBjbcDqA$type=map$name=pk_dim_discount?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="__PuLMKJbEey2DvXBjbcDqA" countShownFields="4" hierarchical="true">
+    <dataModel>__PtkIKJbEey2DvXBjbcDqA?fileId=_bZg84KJbEey2DvXBjbcDqA$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="__PuyQ6JbEey2DvXBjbcDqA" size="12" type="Numeric" mandatory="true" position="6">
+      <dataModel>__PuyQKJbEey2DvXBjbcDqA?fileId=_bZg84KJbEey2DvXBjbcDqA$type=map$name=min?</dataModel>
+      <usage>_FyeboKJeEey2DvXBjbcDqA</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="__PuyRKJbEey2DvXBjbcDqA" size="12" type="Numeric" mandatory="true" position="9">
+      <dataModel>__PuyQaJbEey2DvXBjbcDqA?fileId=_bZg84KJbEey2DvXBjbcDqA$type=map$name=max?</dataModel>
+      <usage>_Fyd0kaJeEey2DvXBjbcDqA</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="__PuyRaJbEey2DvXBjbcDqA" size="62" type="String" mandatory="true" position="12">
+      <dataModel>__PuyQqJbEey2DvXBjbcDqA?fileId=_bZg84KJbEey2DvXBjbcDqA$type=map$name=range?</dataModel>
+      <usage>_Fyd0kKJeEey2DvXBjbcDqA</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="__PuyRqJbEey2DvXBjbcDqA" mandatory="true" position="3">
+      <dataModel>__PuLMaJbEey2DvXBjbcDqA?fileId=_bZg84KJbEey2DvXBjbcDqA$type=map$name=discount_ranges?</dataModel>
+    </fieldRef>
+  </containerRef>
+  <targetSetRef id="_3QA68aJhEey2DvXBjbcDqA" sourceSet="_3QA68KJhEey2DvXBjbcDqA">
+    <container>_1jJYMKJbEey2DvXBjbcDqA</container>
+  </targetSetRef>
+  <sourceSetRef id="_3QA68KJhEey2DvXBjbcDqA" targetSet="_3QA68aJhEey2DvXBjbcDqA">
+    <dataSet xsi:type="map:DataSet">#__PvZUKJbEey2DvXBjbcDqA</dataSet>
+  </sourceSetRef>
+  <templateRef id="_FyjUIKJeEey2DvXBjbcDqA" description="Integration : dim_discount" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=POSTGRESSQL;trgPath=server:PG_datamart/schema:datamart.hotel_datamart/datastore:dim_discount;trgTech=RDBMS;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcTechList=FILE;srcProductList=FILE">
+    <dataModel>_FyitEKJeEey2DvXBjbcDqA?fileId=_bZg84KJbEey2DvXBjbcDqA$type=map$name=I_dim_discount?</dataModel>
+    <targetRef>_1i_AIKJbEey2DvXBjbcDqA?fileId=_bZg84KJbEey2DvXBjbcDqA$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_FzkAwaJeEey2DvXBjbcDqA" description="Load : discount_ranges" nodeCode="com.stambia.flow.step" templateCriteria="type=L-TP;trgProduct=POSTGRESSQL;trgPath=server:PG_datamart/schema:datamart.hotel_datamart/datastore:dim_discount;trgTech=RDBMS;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProduct=FILE;srcPath=server:null/directory:Reference_Files_Folder/file:discount_ranges;srcTech=FILE;srcWorkspaceCapability=false;srcMapCapability=true;srcFilterCapability=true;srcJoinCapability=false">
+    <dataModel>_FzkAwKJeEey2DvXBjbcDqA?fileId=_bZg84KJbEey2DvXBjbcDqA$type=map$name=L1_dim_discount?</dataModel>
+    <load>__PwAY6JbEey2DvXBjbcDqA</load>
+    <targetRef>_1i_AIKJbEey2DvXBjbcDqA?fileId=_bZg84KJbEey2DvXBjbcDqA$type=map?</targetRef>
+  </templateRef>
+  <loadSet id="_1jc6MKJbEey2DvXBjbcDqA">
+    <container>_1i_AIKJbEey2DvXBjbcDqA?fileId=_bZg84KJbEey2DvXBjbcDqA$type=map?</container>
+  </loadSet>
+  <loadSet id="__PwAY6JbEey2DvXBjbcDqA">
+    <container>__PtkIKJbEey2DvXBjbcDqA?fileId=_bZg84KJbEey2DvXBjbcDqA$type=map?</container>
+  </loadSet>
+</ref:mapRef>

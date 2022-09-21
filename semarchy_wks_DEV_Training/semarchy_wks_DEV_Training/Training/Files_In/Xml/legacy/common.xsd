@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:com="http://stambia.org/samples/common" targetNamespace="http://stambia.org/samples/common" elementFormDefault="qualified" attributeFormDefault="qualified">
+	<xs:complexType name="bedroom">
+		<xs:attribute name="number" type="xs:int"/>
+		<xs:attribute name="floor" type="xs:string"/>
+		<xs:attribute name="bath" type="xs:boolean"/>
+		<xs:attribute name="shower" type="xs:boolean"/>
+		<xs:attribute name="bar" type="xs:boolean"/>
+		<xs:attribute name="bedNumber" type="xs:int"/>
+		<xs:attribute name="phoneNumber" type="xs:int"/>
+	</xs:complexType>
+	<xs:element name="stay">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="bedroom" type="com:bedroom"/>
+			</xs:sequence>
+			<xs:attribute name="checkIn" type="xs:dateTime"/>
+			<xs:attribute name="checkOut" type="xs:dateTime"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:attribute name="name" type="xs:string"/>
+	<xs:complexType name="bedroomAnalytic">
+		<xs:complexContent>
+			<xs:extension base="com:bedroom">
+				<xs:sequence>
+					<xs:element name="year" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="month" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:attribute name="number" type="xs:int" use="required"/>
+										<xs:attribute name="customers" type="xs:int"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:attribute name="number" type="xs:int" use="required"/>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

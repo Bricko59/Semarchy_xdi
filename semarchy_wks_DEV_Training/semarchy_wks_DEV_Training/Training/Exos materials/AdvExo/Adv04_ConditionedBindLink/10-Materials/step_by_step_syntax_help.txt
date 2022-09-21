@@ -1,0 +1,29 @@
+*** Step 3 ***
+**************
+
+EXPRESSION EDITOR of the FILTER
+--------------------------------------------------------------
+        T_SALES_PERSON.SAL_ID = ${~/p_sal_id}$
+
+*** Step 4 ***
+**************
+EXPRESSION EDITOR of SQL Operation
+------------------------------------------------
+	SELECT SAL_ID, SAL_GEN_FILE_TYPE
+	FROM %x{$T_SALES_PERSON/tech:physicalPath()}x%
+
+*** Step 5 ***
+**************
+
+Expression Editor of the execution conditions
+----------------------------------------------------------------------
+        %b(rhino){':{SAL_GEN_FILE_TYPE}:' == 'XML'}b(rhino)%
+		%b(rhino){':{SAL_GEN_FILE_TYPE}:' == 'JSON'}b(rhino)%
+
+Expression Editor of the DELIV_SESSION_NAME property
+----------------------------------------------------
+	XML treatment os SalesPerson id = :{SAL_ID}:
+	
+Value of p_sal_id parameter
+---------------------------
+	:{SAL_ID}:

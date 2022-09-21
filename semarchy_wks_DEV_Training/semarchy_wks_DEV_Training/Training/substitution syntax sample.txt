@@ -1,0 +1,275 @@
+Syntax HSQL to reset a locked database                                                          --> ALTER SESSION RESET ALL
+
+Schema name and table name of a medatalink (mdl) named MY_TABLE (this mdl is a datastore/table) --> %x{$MY_TABLE/tech:physicalPath()}x%
+
+Path of a metadatalinkg (mdl) named File_List_Folder (this mdl is a folder)                     --> %x{$File_List_Folder/tech:path()}x%
+
+Bind variable value of a variable named FILE_NAME                                               --> :{FILE_NAME}:
+
+My_Param parameter definition (in MetaInf)                                                      --> <xslVariableName>My_Param</xslVariableName>
+List of values (in MetaInf)                                                                     --> <metaInf id="value" value="my_value1"/>
+My_Param used in XPATH                                                                           --> %x{md:paramValue($this,'My_Param')}x%
+My_Param used in a generation condition                                                          --> md:paramValue($this,'myParam') = 'my_value'
+My_Param (boolean) used in a generation condition (tested if true)                              --> md:paramValue($this,'myParam')=true()
+
+Paramater value of a parameter defined in main Process with the name p_file_name                --> ${~/p_file_name}$
+
+To generate a sequence named SEQ_GEO_KEY_ID with the schema of the target table in a mapping    --> %x{md:objectPath(./ref:schema(), 'SEQ_GEO_KEY_ID')}x%
+
+To generate a NEXT VALUE For a sequence in HSQL                                                 --> %x{concat("next value for ",md:objectPath(./ref:schema(), 'SEQ_GEO_KEY_ID'))}x%
+
+Catch the first rdbms metadata link on a tool or template                                       --> ($this/metaDataLink/mdj:getMetaDataRef(.)[@defType='com.stambia.rdbms.schema'])[1]
+
+Schema name of a metadatalink (mdl) named WORK (this mdl is a schema)                           --> %x{$WORK/tech:physicalName()}x%
+
+Query on a file                                                                                 --> SELECT * FROM <file_name>
+                                                                                                    %x{$stambia_connexions/tech:xmlMetadata()}x%
+
+Value of the CORE_TEMPORARY_FOLDER session variable                                             --> ${/CORE_TEMPORARY_FOLDER}$
+
+Value of the CORE_SESSION_ID session variable                                                   --> ${/CORE_SESSION_ID}$  
+
+Value of the begin date/time of the session                                                     --> ${/CORE_BEGIN_DATE}$
+
+Value of the configuration of the session                                                       --> ${/CORE_SESSION_CONFIGURATION}$
+
+execution condition to test the day of the month (in rhino)                                     --> new Date().getDate()==11
+
+execution condition to test the day of the week (0=sunday, 1=monday)                            --> new Date().getDay()==1
+
+execution condition to test the year                                                            --> new Date().getFullYear()==2000
+
+execution condition to test the hour in the day (from 0 to 23)                                  --> new Date().getHours()==0
+
+execution condition to test the month (from 1 to 12)                                            --> new Date().getMonth()==1
+
+Generation of the current date (not in a mapping)                                               --> %x{md:formatDate("yyyyMMdd")}x%
+
+Generation of the current date time                                                             --> %x{md:formatDate("dd/MM/yyyy HH:mm:ss")}x%
+
+Generation of the previous date                                                                 --> %x{md:formatDate("yyyyMMdd",-1)}x%
+
+Generation of the next date                                                                     --> %x{md:formatDate("yyyyMMdd",1)}x%
+
+Generation of the current month                                                                 --> %x{md:formatDate("M")}x%
+
+Generation of a time in jyton                                                                   --> %e(jython){import  time; __ctx__.retValue =time.strftime("%H_%M_%S")}e(jython)%
+
+Generation of a date in jyton                                                                   --> %e(jython){import  time; __ctx__.retValue =time.strftime("%d/%m/%Y")}e(jython)%
+
+Generation of a date in groovy                                                                  --> %e(groovy){__ctx__.retValue = new Date().format('yyyyMMdd')}e(groovy)%
+
+Execution duration of Load FAC_Booking action (in milliseconds)                                 --> ${../Load FACT_Booking/CORE_DURATION}$
+
+Bind condition on a bind link that test if the bind variable named TIT_CODE is equal to Mrs     --> %b(rhino){ ':{TIT_CODE}:' == 'Mrs' }b(rhino)%
+                                                                                         or         %b(rhino){ ":{TIT_CODE}:".substring(0,3).equals('Mrs') }b(rhino)% 
+                                                                                         or         %b(rhino){
+                                                                                                    var  schemaName=":{Schema_name}:";
+                                                                                                    var  targetSchemaName="%x{$TARGET_SCHEMA/tech:schemaName()}x%";
+                                                                                                    var  instanceName=":{Instance_name}:";
+                                                                                                    var  DBInstanceName="%x{md:paramValue($this,'DBInstanceName')}x%";
+                                                                                                    var  grantContent=":{Grant_content}:";
+                                                                                                    var  granteeSchemaName="%x{md:paramValue($this,'GranteeSchemaName')}x%";
+                                                                                                    __ctx__.retValue=((schemaName.indexOf(targetSchemaName) != 1) && (instanceName.indexOf(DBInstanceName) != 1)  && (grantContent.indexOf(granteeSchemaName) != 1)) ;
+                                                                                                    }b(rhino)%
+
+Generation of a date with the format YYYYMMDD in all the possible place in Stambia              --> %e(rhino){ var now = new Date(); __ctx__.retValue =''+(now.getFullYear()*10000+(now.getMonth() + 1)*100+now.getDate());}e(rhino)%
+(part of File Name expression for example) (work for mapping and process)
+
+Generation of a date with the format YYYYMMDDHHmmSS every where in Stambia                      --> %e(rhino){ var now = new Date(); __ctx__.retValue =''+(now.getFullYear()*10000000000+(now.getMonth() + 1)*100000000+now.getDate()*1000000+now.getHours()*10000+now.getMinutes()*100+now.getSeconds());}e(rhino)% 
+
+Generation of a date with the format YYMMDDHHmmSS if the date >1999                             --> %e(rhino){ var now = new Date(); __ctx__.retValue =''+((now.getFullYear()-2000)*10000000000+(now.getMonth() + 1)*100000000+now.getDate()*1000000+now.getHours()*10000+now.getMinutes()*100+now.getSeconds());}e(rhino)%
+
+Number of rows selected in the main process                                                     --> %e(rhino){__ctx__.sumVariable("SQL_NB_ROWS")}e(rhino)%
+
+Number of SQL INSERT for the action named Load_FACT_BILLING contained in the current process    --> %e(rhino){__ctx__.sumVariable("SQL_STAT_INSERT","../Load FACT_Billing")}e(rhino)%
+
+Decrypt an encrypted value without showing it in the execution details                          --> %s(rhino){ __ctx__.decryptPassword('F88E3627C29347728A4B791601F6B7AE');}s(rhino)%
+
+Reference a table (schema + table) in a query                                                   --> {md:objectPath(ref:schema('HOTEL_DATAMART'),'DIM_BEDROOM')}
+
+Reference a query in another query 								                                --> {ref:query('Query1')/tech:physicalName()}
+
+Reference the full path of a table in a query                                                   --> {mdj:getMdRef(.,'DIM_BEDROOM')/tech:physicalPath()}
+
+Generation condition depending on a parameter                                                   --> '${SEND_EMAIL}$'='true'
+
+Condition on a link that check the number of rows return by a SELECT in a SQL FILE Export       --> ${~/SQLFileExport/SQL_NB_ROWS}$ != 0
+in the main process
+
+Condition on a link to execute the target action of the link if the number of rows of a mapping --> __ctx__.sumVariable("SQL_STAT_INSERT","<my_mapping>") == 0
+MonMapping in this process has no inserted values 
+
+To retrieve the result in a string of a XPATH evaluation (path of a folder) in a rhino script   --> "%x{$outFiles/tech:path()}x%"
+
+Set into a rhino script to a rhino variable the value of a parameter                            --> var my_variable = __ctx__.getVariableValue("~/my_parameter") ;
+
+Publish a parameter in a rhino script                                                           --> __ctx__.publishVariable("~/my_parameter","my_value");
+
+Test the number of execution (3) of an action in a loop to go to the end                        --> ${~/ACTION_NAME/CORE_NB_EXECUTIONS}$ == 3
+
+Retrieve the schema and name of the reject table with the target table data link                --> %x{md:physicalPath($MY_TABLE,'rejectName')}x%
+
+Expression to add to an attach field of a send mail to retrieve the generated file name of a    --> ${~/<WriteTxtFile action name>/TXT_WRITE_FILENAME}$
+write file action
+
+Expression to substitute the schema name + table of a column metadata link                      --> %x{$MY_COLUMN/../tech:physicalPath()}x%
+
+Not exists filter in a mapping (if the not exists table is in the target, set the filter on     --> NOT EXISTS (SELECT 1 FROM  %x{md:objectPath(./ref:schema('<my_schema>'),'<my_table>')}x% <my_table> 
+a stage)                                                                                                        WHERE <filtered_table>.<filtered_column>=<my_table>.<my_column> )
+
+
+Generation of a schema name.table name with 2 metadata links                                    --> %x{md:objectPath($MY_SCHEMA,$MY_TABLE/tech:name())}x%
+
+Generation of a schema name.table name with one metadata link                                   --> %x{md:objectPath($MY_SCHEMA, 'MY_TABLE')}x%
+
+In Xpath, it's necessary to replace the following special characters                            --> "&" by "&amp;"
+(It could be necessary also in SQLToParameter)                                                      "<simple quote>" by "&apos;"
+                                                                                                    "<double quote>" by "&quot;"
+                                                                                                    "<" by "&lt;"
+                                                                                                    ">" by "&gt;"
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+
+Dependant filters on the configuration environment                                              --> CASE WHEN '${/CORE_SESSION_CONFIGURATION}$'='DEV' 
+                                                                                                              THEN T_CUSTOMER.CUS_ID = 1 
+                                                                                                               AND T_CUSTOMER.TIT_CODE='Mr'
+                                                                                                         WHEN '${/CORE_SESSION_CONFIGURATION}$'='PROD' 
+                                                                                                              THEN T_CUSTOMER.CUS_ID = 2 
+                                                                                                         ELSE 1=1
+                                                                                                    END
+                                                                                                   
+Generate a SQL expression depending the technology												--> %e(rhino){ if   (('%x{tech:productCode()}x%' != 'MICROSOFT_SQL_SERVER') && ('%x{tech:productCode()}x%' != 'IBM_DB2_400')) 
+                                                                                                                     {__ctx__.retValue = 'SUBSTR(REJECTED_BY,1,LENGTH(REJECTED_BY)-26),' ; }
+                                                                                                               else  {__ctx__.retValue = 'SUBSTRING(REJECTED_BY,1,LENGTH(REJECTED_BY)-26),' ;} }e(rhino)%       
+                                                                                                               
+Generation condition on a link	                                                                --> exists($MAPPING_TABLE) and ( exists($MAILING_LIST)  or  exists($TARGET_MESSAGE) )  
+
+Generate a SQL condition depending on a parameter in rhino                                      --> %e(rhino){ switch ('${../SEVERITY_LEVEL}$')
+                                                                                                                      {  
+                                                                                                                       case ''        : __ctx__.retValue = '';
+                                                                                                                       break;
+                                                                                                                       case 'Warning' : __ctx__.retValue = " AND (RULE_SEVERITY = 'WARNING')";
+                                                                                                                       break;
+                                                                                                                       case 'Reject'  : __ctx__.retValue = " AND (RULE_SEVERITY = 'REJECT')";
+                                                                                                                       break;
+                                                                                                                       case 'Fatal'   : __ctx__.retValue = " AND (RULE_SEVERITY = 'FATAL')";
+                                                                                                                       break;
+                                                                                                                      }
+                                                                                                              }e(rhino)%       
+                                                                                                              
+
+Define the value of a parameter of a sub process or component with a compute                    --> %e(rhino){(${../Loop/CORE_NB_EXECUTIONS}$ + ${~/beginUserId}$ - 1).toString(); }e(rhino)% 
+
+Scripting rhino to split fields depending on a regular expression                               --> var string1="Jean-Paul, Arthur;;Léon, Marcel ; Paul";
+                                                                                                    var string2='ORA_GMP;USER1;TABLE1;;"GRANT DELETE, INSERT, UPDATE ON USER1.TABLE1 TO WORKETL;"';
+                                                                                                    var reg=new RegExp('[;]+', 'g');
+                                                                                                    print("Origin string1 : " + string1 + "\n");
+                                                                                                    print("Origin string2 : " + string2 + "\n");
+                                                                                                    var list1=string1.split(reg);
+                                                                                                    var list2=string2.split(reg);
+                                                                                                    for (var i=0; i<list1.length; i++) {
+                                                                                                        print("list1[" + i + "] = >" + list1[i] + "<\n");
+                                                                                                    }
+                                                                                                    for (var i=0; i<list2.length; i++) {
+                                                                                                        print("list2[" + i + "] = >" + list2[i] + "<\n");
+                                                                                                    }  
+                                                                                                    
+List all the parameters in entrance of a process												--> %x{md:list($this/../parameter[@input]/concat('$','{~/',@name,'}$'), '\n')}x%  
+
+SQL Explorer shortcut to set in UPPER CASE                                                      --> Ctrl Shft X
+SQL Explorer shortcut to set in LOWER CASE                                                      --> Ctrl Shft Y    
+Access directly to a metadata, when you select it on a mapping			     					--> Ctrl Shft M
+
+Mask for temporary tables to use with // executions	                                            --> [sessionTimestampName]     
+
+Filter datastore of a schema SOURCE to take only datastores having a VAL1 value tag             --> $SOURCE/datastore[tech:tag()='VAL1']
+
+Sample of rhino scripting to generate an error message depening on variable metadata            --> var  error_reason="";
+                                                                                                    if   (%{v_miss_number}% < 20) error_reason = error_reason+"- Variable v_miss_number - Too small number of women (v_miss_number=%{v_miss_number}%<20)\r\n"
+                                                                                                    if   (%{v_mister_number}% < 20) error_reason = error_reason+"- Variable v_mister_number - Too small number of men (v_mister_number=%{v_mister_number}%<20)\r\n"
+                                                                                                    if   (%{v_parity_percent}% > 20) error_reason = error_reason+"- Variable v_parity_percent - Too high difference between men and women (v_parity_percent=%{v_parity_percent}%>20)\r\n"
+                                                                                                    throw("Error on session_ID ${/CORE_SESSION_ID}$ at ${/CORE_BEGIN_DATE}$ on '${/CORE_SESSION_NAME}$' process\r\n"+error_reason);
+                                                                                                    
+Expression to set in a xsl variable (XPATH type) to catch a folder :                            --> md:ifEmpty(
+- Either an xpath expression define in XPathExpressionForWorkFolder parameter                       mdj:evaluate($this,md:paramValue($this,'XPathExpressionForWorkFolder')),
+- Either a metadata link named TARGET                                                               $this/ancestor-or-self::*/metaDataLink[@name='TARGET']/mdj:getMetaDataRef(.)/tech:path(),
+- Either a workFolder parameter (by dfault ${/CORE_JAVA_TEMPORARY_FOLDER}$ )                        md:paramValue($this,'workFolder')
+                                                                                                    ) 
+                                                                                                    
+Expression to set in a xsl variable (XPATH type) to catch schema ref                            --> if   ($this/metaDataLink/mdj:getMetaDataRef(.)[@defType='com.stambia.rdbms.schema'][1]) 
+with a schema metadatalink if exists                                                                     then $this/metaDataLink/mdj:getMetaDataRef(.)[@defType='com.stambia.rdbms.schema'][1] 
+or with another xsl variable named TARGET (this allows to call a tool in another tool)              else $TARGET 
+
+jython code to format a numeric value with a rpad                                               --> %e(jython){__ctx__.retValue = str(${../Insert Data case3/CORE_BIND_ITERATIONS}$).rjust(5) }e(jython)%
+
+Jython scripting action to publish the current_date to the JDE date format                      --> from datetime import datetime, timedelta
+                                                                                                    import datetime
+                                                                                                    cur_date = datetime.date(%x{md:formatDate("yyyy")}x%,%x{md:formatDate("MM")}x%,%x{md:formatDate("dd")}x%)   # time = 00:00:00
+                                                                                                    CENTURY=int((cur_date.year-1900)/100)
+                                                                                                    day_of_year = cur_date.timetuple().tm_yday
+                                                                                                    __ctx__.publishVariable("~/jde_date_format",str(CENTURY)+str(%x{md:formatDate("yy")}x%)+str(day_of_year))  
+    
+Test to check if it's a odd or not minute in jython	                                            --> import  time;
+                                                                                                    is_odd = str(int(time.strftime("%M"))%2)
+                                                                                                    __ctx__.publishVariable("~/current_minute_is_odd",is_odd);    
+Case even (execution condition on the link) :                                                       ${~/current_minute_is_odd}$ == 0
+Case odd  (execution contition on the link) :                                                       ${~/current_minute_is_odd}$ == 1    
+   
+To sort fields, add propertyField on XML file                                                   --> sortKey
+To sort fields in the mapping of XML as target, Tag to add on the sortkey propertyFields        --> SORT_DESC or SORT_ASC (default value)                                 
+
+Metainf code to add in the process to publish to allow the generation of web service input      --> <keepInputMessage>yes</keepInputMessage>
+                                                                                     fault      --> <keepFaultMessage>yes</keepFaultMessage>
+                                                                                     output     --> <keepOutputMessage>yes</keepOutputMessage>
+
+Xpath expression to add in XML path of a XML metadata to exclude some folders                   --> %x{$originPath/@value}x%/*/**/*.md|exclude::%x{$originPath/@value}x%/.indy.build|exclude::%x{$originPath/@value}x%/.metadata|exclude::%x{$originPath/@value}x%/Workspace Updater*|exclude::%x{$originPath/@value}x%/global
+
+ Description                                                                                        Syntax to use String Substitution Variables in Expressions
+-------------------------------------------------------------------------------------------------   ---------------------------------------------------------------
+Absolute path to current Designer installation folder.                                           --> %{env:eclipse_home}%	
+Absolute path to current workspace folder.                                                       --> %{env:workspace_loc}%	
+Name of the Project from which the value is generated.                                           --> %{env:project_name}%	
+Absolute path of the Project from which the value is generated.                                  --> %{env:project_loc}%	    
+Name of the resource from which the value is generated, 
+which can be for instance the name of the Process in which the value is generated.               --> %{env:resource_name}%	
+Absolute path of the resource from which the value is generated, 
+which can be for instance the path of the Process in which the value is generated.               --> %{env:resource_loc}%	
+
+Restit Load ALL Datamart of tutorial sample : Txt Write file name                                --> %x{$Statistic_Report_Folder/tech:path()}x%/${/CORE_SESSION_CONFIGURATION}$/Load_All_Datamart_Report_%x{md:formatDate("yyyyMMdd")}x%.txt
+Param name Load ALL Datamart                                                                     --> initEnv		
+      metainf                                                                                    --> <xslVariableName>initEnv</xslVariableName>		
+      generation condition                                                                       --> md:paramValue($this,'initEnv')=true()
+Param name Load ALL Datamart                                                                     --> rejectMngt	
+      metainf                                                                                    --> <xslVariableName>rejectMngt</xslVariableName>	
+      generation condition                                                                       --> md:paramValue($this,'rejectMngt')=true()
+Param name Load ALL Datamart                                                                     --> resetAll	
+      metainf                                                                                    --> <xslVariableName>resetAll</xslVariableName>		
+      generation condition                                                                       --> md:paramValue($this,'resetAll')=true()
+
+Content of Expression Editor of Write file action                                                --> 
+-------------------------------------------------
+
+Begin date
+----------
+    Session                   : ${/CORE_BEGIN_DATE}$
+
+Steps duration
+--------------
+    Load FACT_BILLING         : %e(jython){__ctx__.retValue = str(${../Load FACT_BILLING/CORE_DURATION}$).rjust(6) }e(jython)%
+    Load FACT_BOOKING         : %e(jython){__ctx__.retValue = str(${../Load FACT_BOOKING/CORE_DURATION}$).rjust(6) }e(jython)%
+%x{if (md:paramValue($this,'resetAll')=true()) then concat("    Recreate Fk               : ","%e(jython){__ctx__.retValue = str(${../Recreate constraints/Create FK/CORE_DURATION}$).rjust(6) }e(jython)%") else ""}x%
+
+Stats
+-----    
+    Total Rows                : %e(jython){__ctx__.retValue = str(__ctx__.sumVariable("SQL_NB_ROWS")).rjust(6) }e(jython)%
+    Total Inserts             : %e(jython){__ctx__.retValue = str(__ctx__.sumVariable("SQL_STAT_INSERT")).rjust(6) }e(jython)%
+    Inserts into FACT_BILLING : %e(jython){__ctx__.retValue = str(__ctx__.sumVariable("SQL_STAT_INSERT","../Load FACT_BILLING")).rjust(6) }e(jython)%
+
+
+
+    
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         

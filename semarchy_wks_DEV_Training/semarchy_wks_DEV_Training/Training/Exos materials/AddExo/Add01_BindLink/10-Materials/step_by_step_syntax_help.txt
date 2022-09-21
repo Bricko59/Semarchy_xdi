@@ -1,0 +1,107 @@
+﻿*** Step 1 ***
+**************
+
+Expression Editor of the SQL Operation Action
+---------------------------------------------
+
+WITH   lst1(id1,terme1) AS (
+SELECT 1,'Avec' FROM (VALUES(0)) UNION ALL SELECT 2,'Considérant' FROM (VALUES(0)) UNION ALL SELECT 3,'Où que nous même' FROM (VALUES(0)) UNION ALL
+SELECT 4,'Eu égard à' FROM (VALUES(0)) UNION ALL SELECT 5,'Vu' FROM (VALUES(0)) UNION ALL SELECT 6,'En ce qui concerne' FROM (VALUES(0)) UNION ALL
+SELECT 7,'Dans le cas particulier de' FROM (VALUES(0)) UNION ALL SELECT 8,'Quelle que soit' FROM (VALUES(0)) UNION ALL SELECT 9,'Du fait de' FROM (VALUES(0)) UNION ALL
+SELECT 10,'Tant que durera' FROM (VALUES(0)) UNION ALL SELECT 11,'Quoi qu''on dise concernant' FROM (VALUES(0)) UNION ALL SELECT 12,'Nonobstant' FROM (VALUES(0)) UNION ALL
+SELECT 13,'Malgré' FROM (VALUES(0)) UNION ALL SELECT 14,'Pour réagir face à' FROM (VALUES(0)) UNION ALL SELECT 15,'Afin de circonvenir à' FROM (VALUES(0)) UNION ALL
+SELECT 16,'Dans le but de pallier à' FROM (VALUES(0)) UNION ALL SELECT 17,'Si vous voulez mon avis concernant' FROM (VALUES(0))),
+       lst2(id2,terme2) AS (
+SELECT 1,'la restriction' FROM (VALUES(0)) UNION ALL SELECT 2,'l''orientation' FROM (VALUES(0)) UNION ALL SELECT 3,'la crise' FROM (VALUES(0)) UNION ALL
+SELECT 4,'l''inertie' FROM (VALUES(0)) UNION ALL SELECT 5,'la difficulté' FROM (VALUES(0)) UNION ALL SELECT 6,'l''austérité' FROM (VALUES(0)) UNION ALL
+SELECT 7,'la dégradation' FROM (VALUES(0)) UNION ALL SELECT 8,'cette rigueur' FROM (VALUES(0)) UNION ALL SELECT 9,'la dualité de la situation' FROM (VALUES(0)) UNION ALL
+SELECT 10,'la baisse de confiance' FROM (VALUES(0)) UNION ALL SELECT 11,'la morosité' FROM (VALUES(0)) UNION ALL SELECT 12,'la situation' FROM (VALUES(0)) UNION ALL
+SELECT 13,'l''ambiance' FROM (VALUES(0)) UNION ALL SELECT 14,'la politique' FROM (VALUES(0)) UNION ALL SELECT 15,'la fragilité' FROM (VALUES(0)) UNION ALL
+SELECT 16,'la complexité' FROM (VALUES(0)) UNION ALL SELECT 17,'l''inconstance' FROM (VALUES(0)) UNION ALL SELECT 18,'cette inflexion' FROM (VALUES(0))),
+       lst3(id3,terme3) AS (
+SELECT 1,'présente' FROM (VALUES(0)) UNION ALL SELECT 2,'actuelle' FROM (VALUES(0)) UNION ALL SELECT 3,'générale' FROM (VALUES(0)) UNION ALL 
+SELECT 4,'induite' FROM (VALUES(0)) UNION ALL SELECT 5,'conjoncturelle' FROM (VALUES(0)) UNION ALL SELECT 6,'observée' FROM (VALUES(0)) UNION ALL 
+SELECT 7,'contextuelle' FROM (VALUES(0)) UNION ALL SELECT 8,'de ces derniers temps' FROM (VALUES(0)) UNION ALL SELECT 9,'de l''époque actuelle' FROM (VALUES(0)) UNION ALL 
+SELECT 10,'intrinsèque' FROM (VALUES(0)) UNION ALL SELECT 11,'que nous constatons' FROM (VALUES(0))),
+       lst4(id4,terme4) AS (
+SELECT 1,'il convient d#' FROM (VALUES(0)) UNION ALL SELECT 2,'il faut' FROM (VALUES(0)) UNION ALL SELECT 3,'on se doit d#' FROM (VALUES(0)) UNION ALL 
+SELECT 4,'il est préférable d#' FROM (VALUES(0)) UNION ALL SELECT 5,'il serait intéressant d#' FROM (VALUES(0)) UNION ALL SELECT 6,'il ne faut pas négliger d#' FROM (VALUES(0)) UNION ALL 
+SELECT 7,'on ne peut se passer d#' FROM (VALUES(0)) UNION ALL SELECT 8,'il est nécessaire d#' FROM (VALUES(0)) UNION ALL SELECT 9,'il serait bon d#' FROM (VALUES(0)) UNION ALL 
+SELECT 10,'il faut de toute urgence' FROM (VALUES(0)) UNION ALL SELECT 11,'je recommande d#' FROM (VALUES(0)) UNION ALL SELECT 12,'je préconise un audit afin d#' FROM (VALUES(0)) UNION ALL 
+SELECT 13,'il est très important d#' FROM (VALUES(0)) UNION ALL SELECT 14,'il ne faut pas s''interdire d#' FROM (VALUES(0))), 
+       lst5(id5,terme5) AS (
+SELECT 1,'étudier' FROM (VALUES(0)) UNION ALL SELECT 2,'examiner' FROM (VALUES(0)) UNION ALL SELECT 3,'favoriser' FROM (VALUES(0)) UNION ALL 
+SELECT 4,'prendre en considération' FROM (VALUES(0)) UNION ALL SELECT 5,'anticiper' FROM (VALUES(0)) UNION ALL SELECT 6,'imaginer' FROM (VALUES(0)) UNION ALL 
+SELECT 7,'uniformiser' FROM (VALUES(0)) UNION ALL SELECT 8,'remodeler' FROM (VALUES(0)) UNION ALL SELECT 9,'avoir à l''esprit' FROM (VALUES(0)) UNION ALL 
+SELECT 10,'se remémorer' FROM (VALUES(0)) UNION ALL SELECT 11,'gérer' FROM (VALUES(0)) UNION ALL SELECT 12,'fédérer' FROM (VALUES(0)) UNION ALL 
+SELECT 13,'comprendre' FROM (VALUES(0)) UNION ALL SELECT 14,'analyser' FROM (VALUES(0)) UNION ALL SELECT 15,'appréhender' FROM (VALUES(0)) UNION ALL 
+SELECT 16,'expérimenter' FROM (VALUES(0)) UNION ALL SELECT 17,'essayer' FROM (VALUES(0)) UNION ALL SELECT 18,'caractériser' FROM (VALUES(0)) UNION ALL 
+SELECT 19,'façonner' FROM (VALUES(0)) UNION ALL SELECT 20,'revoir' FROM (VALUES(0)) UNION ALL SELECT 21,'prendre en compte' FROM (VALUES(0)) UNION ALL 
+SELECT 22,'arrêter de stigmatiser' FROM (VALUES(0)) UNION ALL SELECT 23,'considérer' FROM (VALUES(0)) UNION ALL SELECT 24,'réorganiser' FROM (VALUES(0)) UNION ALL 
+SELECT 25,'inventorier' FROM (VALUES(0))),
+       lst6(id6,terme6) AS (
+SELECT 1,'toutes les' FROM (VALUES(0)) UNION ALL SELECT 2,'chacune des' FROM (VALUES(0)) UNION ALL SELECT 3,'la majorité des' FROM (VALUES(0)) UNION ALL 
+SELECT 4,'la simultanéité des' FROM (VALUES(0)) UNION ALL SELECT 5,'l''ensemble des' FROM (VALUES(0)) UNION ALL SELECT 6,'la somme des' FROM (VALUES(0)) UNION ALL 
+SELECT 7,'la totalité des' FROM (VALUES(0)) UNION ALL SELECT 8,'la globalité des' FROM (VALUES(0)) UNION ALL SELECT 9,'les relations des' FROM (VALUES(0)) UNION ALL 
+SELECT 10,'certaines' FROM (VALUES(0)) UNION ALL SELECT 11,'la plus grande partie des' FROM (VALUES(0)) UNION ALL SELECT 12,'les principales' FROM (VALUES(0)) UNION ALL 
+SELECT 13,'systématiquement les' FROM (VALUES(0)) UNION ALL SELECT 14,'précisément les' FROM (VALUES(0)) ), 
+       lst7(id7,terme7) AS (
+SELECT 1,'solutions' FROM (VALUES(0)) UNION ALL SELECT 2,'issues' FROM (VALUES(0)) UNION ALL SELECT 3,'problématiques' FROM (VALUES(0)) UNION ALL 
+SELECT 4,'voies' FROM (VALUES(0)) UNION ALL SELECT 5,'alternatives' FROM (VALUES(0)) UNION ALL SELECT 6,'organisations matricielles' FROM (VALUES(0)) UNION ALL 
+SELECT 7,'améliorations' FROM (VALUES(0)) UNION ALL SELECT 8,'ouvertures' FROM (VALUES(0)) UNION ALL SELECT 9,'synergies' FROM (VALUES(0)) UNION ALL 
+SELECT 10,'actions' FROM (VALUES(0)) UNION ALL SELECT 11,'options' FROM (VALUES(0)) UNION ALL SELECT 12,'décisions' FROM (VALUES(0)) UNION ALL 
+SELECT 13,'modalités' FROM (VALUES(0)) UNION ALL SELECT 14,'hypothèses' FROM (VALUES(0)) UNION ALL SELECT 15,'stratégies' FROM (VALUES(0)) ),
+       lst8(id8,terme8) AS (
+SELECT 1,'imaginables' FROM (VALUES(0)) UNION ALL SELECT 2,'possibles' FROM (VALUES(0)) UNION ALL SELECT 3,'s''offrant à nous' FROM (VALUES(0)) UNION ALL 
+SELECT 4,'de bon sens' FROM (VALUES(0)) UNION ALL SELECT 5,'envisageables' FROM (VALUES(0)) UNION ALL SELECT 6,'éventuelles' FROM (VALUES(0)) UNION ALL 
+SELECT 7,'éventuelles' FROM (VALUES(0)) UNION ALL SELECT 8,'réalisables' FROM (VALUES(0)) UNION ALL SELECT 9,'déclinables' FROM (VALUES(0)) UNION ALL 
+SELECT 10,'pertinentes' FROM (VALUES(0)) UNION ALL SELECT 11,'que nous connaissons' FROM (VALUES(0)) UNION ALL SELECT 12,'évidentes' FROM (VALUES(0)) UNION ALL 
+SELECT 13,'optimales' FROM (VALUES(0)) UNION ALL SELECT 14,'opportunes' FROM (VALUES(0)) UNION ALL SELECT 15,'emblématiques' FROM (VALUES(0)) UNION ALL 
+SELECT 16,'draconiennnes' FROM (VALUES(0))), 
+       lst9(id9,terme9) AS (
+SELECT 1,'à l''avenir' FROM (VALUES(0)) UNION ALL SELECT 2,'pour le futur' FROM (VALUES(0)) UNION ALL SELECT 3,'depuis longtemps' FROM (VALUES(0)) UNION ALL 
+SELECT 4,'à court terme' FROM (VALUES(0)) UNION ALL SELECT 5,'rapidement' FROM (VALUES(0)) UNION ALL SELECT 6,'dans une perspective correcte' FROM (VALUES(0)) UNION ALL 
+SELECT 7,'avec toute la prudence requise' FROM (VALUES(0)) UNION ALL SELECT 8,'de toute urgence' FROM (VALUES(0)) UNION ALL SELECT 9,'même si ce n''est pas facile' FROM (VALUES(0)) UNION ALL 
+SELECT 10,'même si nous devons en tirer des conséquences' FROM (VALUES(0)) UNION ALL SELECT 11,'très attentivement' FROM (VALUES(0)) UNION ALL SELECT 12,'avec beaucoup de recul' FROM (VALUES(0)) UNION ALL 
+SELECT 13,'parce que la nature a horreur du vide' FROM (VALUES(0)) UNION ALL SELECT 14,'parce que nous ne faisons plus le même métier' FROM (VALUES(0)) UNION ALL 
+SELECT 15,'toutes choses étant égales par ailleurs' FROM (VALUES(0)) UNION ALL SELECT 16,'et déjà en notre possession' FROM (VALUES(0)) UNION ALL 
+SELECT 17,'en prenant toutes les précautions qui s''imposent' FROM (VALUES(0)) UNION ALL 
+SELECT 18,'si l''on veut s''en sortir' FROM (VALUES(0)) UNION ALL SELECT 19,'parce qu''il est temps d''agir' FROM (VALUES(0)) UNION ALL SELECT 20,'parce qu''il s''agit de notre dernière chance' FROM (VALUES(0)) UNION ALL 
+SELECT 21,'parce que les mêmes causes produisent les mêmes effets' FROM (VALUES(0)) UNION ALL SELECT 22,'parce que nous le valons bien' FROM (VALUES(0)) ), 
+       alea (id,alea_value1,alea_value2,alea_value3,alea_value4,alea_value5,alea_value6,alea_value7,alea_value8,alea_value9) AS (
+SELECT id,CAST(rand()*17+1 AS INTEGER),CAST(rand()*18+1 AS INTEGER),CAST(rand()*11+1 AS INTEGER),
+       CAST(rand()*14+1 AS INTEGER),CAST(rand()*29+1 AS INTEGER),CAST(rand()*14+1 AS INTEGER),
+       CAST(rand()*15+1 AS INTEGER),CAST(rand()*16+1 AS INTEGER),CAST(rand()*22+1 AS INTEGER)   
+FROM   UNNEST(SEQUENCE_ARRAY(1, 50, 1)) AS generate_series(id))
+SELECT CUS_ID,
+	   CUS_LAST_NAME,
+	   CUS_FIRST_NAME,
+	   CUS_ID+' '+CUS_FIRST_NAME+' '+CUS_LAST_NAME AS CUS_NAME,
+	   trim(terme1)+' '+trim(terme2)+' '+trim(terme3)+', '+
+       CASE WHEN SUBSTR(trim(terme4),LENGTH(trim(terme4)),1)='#' 
+                 AND SUBSTR(trim(terme5),1,1) IN ('a','e','i','o','u','é') 
+            THEN SUBSTR(trim(terme4),1,LENGTH(trim(terme4))-1)+'''' 
+            ELSE SUBSTR(trim(terme4),1,LENGTH(trim(terme4))-1)+'e ' END+
+       trim(terme5)+' '+trim(terme6)+' '+trim(terme7)+' '+trim(terme8)+' '+trim(terme9) AS generated_text
+FROM   alea JOIN lst1 ON id1 = alea_value1 
+            JOIN lst2 ON id2 = alea_value2
+            JOIN lst3 ON id3 = alea_value3
+            JOIN lst4 ON id4 = alea_value4
+            JOIN lst5 ON id5 = alea_value5
+            JOIN lst6 ON id6 = alea_value6
+            JOIN lst7 ON id7 = alea_value7
+            JOIN lst8 ON id8 = alea_value8
+            JOIN lst9 ON id9 = alea_value9
+            JOIN HOTEL_MANAGEMENT.T_CUSTOMER ON CUS_ID=id
+WHERE   CUS_COMPANY='' AND TIT_CODE='Mrs' AND CUS_ID<=50
+
+*** Step 2 ***
+**************
+
+Expression Editor of the Write File action
+------------------------------------------
+Dear Mrs :{CUS_LAST_NAME}: :{CUS_FIRST_NAME}:, your customer number is :{CUS_ID}: and we propose you consider reading and reflecting on the following french thought of the day  : ":{generated_text}:"
+
+Text Write Filename property of the Write File action
+-----------------------------------------------------
+%x{$Bind_Folder/tech:path()}x%/:{CUS_NAME}:.txt

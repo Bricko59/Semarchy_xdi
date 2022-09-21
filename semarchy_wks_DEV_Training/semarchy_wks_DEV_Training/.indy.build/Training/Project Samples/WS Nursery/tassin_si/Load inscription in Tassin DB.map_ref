@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ref:mapRef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:ref="http://www.indy.com/v2/ref" id="_8ctBLjTDEe2K1spis4bODw">
+  <dataModel>_HiOQ0BgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=Load%20inscription%20in%20Tassin%20DB?</dataModel>
+  <containerRef id="_8cu2QjTDEe2K1spis4bODw">
+    <dataModel>_mohqYBg6EeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+    <fieldRef id="_8cu2QTTDEe2K1spis4bODw">
+      <dataModel>_nQ1nkBg6EeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+      <usage>_8cu2QDTDEe2K1spis4bODw</usage>
+      <usage>_8dHQwTTDEe2K1spis4bODw</usage>
+      <expressionRef id="_8dGptjTDEe2K1spis4bODw" internalExpression="${CRECHE.NIVEAU}$">
+        <dataModel>_nQ2OoBg6EeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+        <sourceRef>_8cxShjTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_8dGpuDTDEe2K1spis4bODw">
+      <dataModel>_nsFZIBg6EeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+      <usage>_8dHQwDTDEe2K1spis4bODw</usage>
+      <expressionRef id="_8dGptzTDEe2K1spis4bODw" internalExpression="${CRECHE.NB_PLACES_NIVEAU}$">
+        <dataModel>_nsGAMBg6EeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+        <sourceRef>_8cxSgjTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_8cvdUDTDEe2K1spis4bODw" countShownFields="9" hierarchical="false">
+    <dataModel>_HiOQ0RgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_8cvdUTTDEe2K1spis4bODw" precision="0" size="32" type="INTEGER" mandatory="true" position="3">
+      <dataModel>_HiO37BgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=ID_INSCRIPTION?</dataModel>
+      <expressionRef id="_8dJF9jTDEe2K1spis4bODw">
+        <dataModel>_HiO37RgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8cwEYDTDEe2K1spis4bODw" precision="0" size="32" status="VALID" type="INTEGER" position="6">
+      <dataModel>_HiOQ1BgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=ID_DEMANDE?</dataModel>
+      <expressionRef id="_8dH30DTDEe2K1spis4bODw" internalExpression="${~/id_demande}$ + ${stage.NB_PLACES}$ - ${stage.NB_PLACES}$">
+        <dataModel>_HiOQ1RgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+        <problem id="_8djVpzTDEe2K1spis4bODw" code="INFO_USING_SESSION_VARIABLE" message=""/>
+        <sourceRef>_8dFbkTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8cwEYTTDEe2K1spis4bODw" size="26" status="VALID" type="TIMESTAMP" mandatory="true" position="9">
+      <dataModel>_HiO34BgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=DATE_DEMANDE?</dataModel>
+      <expressionRef id="_8dJF8DTDEe2K1spis4bODw" internalExpression="TO_TIMESTAMP('${~/date_demande}$','YYYY-MM-DD HH:MI:SS:FFF')">
+        <dataModel>_HiO34RgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+        <problem id="_8djVpTTDEe2K1spis4bODw" code="INFO_USING_SESSION_VARIABLE" message=""/>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8cwEYjTDEe2K1spis4bODw" size="100" status="VALID" type="VARCHAR" mandatory="true" position="12">
+      <dataModel>_HiO35hgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=NOM_DEMANDEUR?</dataModel>
+      <expressionRef id="_8dJF8zTDEe2K1spis4bODw" internalExpression="'${~/nom_demandeur}$'">
+        <dataModel>_HiO35xgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+        <problem id="_8djVoDTDEe2K1spis4bODw" code="INFO_USING_SESSION_VARIABLE" message=""/>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8cwEYzTDEe2K1spis4bODw" size="100" status="VALID" type="VARCHAR" mandatory="true" position="15">
+      <dataModel>_HiO34hgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=PRENOM_DEMANDEUR?</dataModel>
+      <expressionRef id="_8dJF8TTDEe2K1spis4bODw" internalExpression="'${~/prenom_demandeur}$'">
+        <dataModel>_HiO34xgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+        <problem id="_8djVpjTDEe2K1spis4bODw" code="INFO_USING_SESSION_VARIABLE" message=""/>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8cwEZDTDEe2K1spis4bODw" size="100" status="VALID" type="VARCHAR" mandatory="true" position="18">
+      <dataModel>_HiO36BgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=PRENOM_ENFANT?</dataModel>
+      <expressionRef id="_8dJF9DTDEe2K1spis4bODw" internalExpression="'${~/prenom_enfant}$'">
+        <dataModel>_HiO36RgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+        <problem id="_8djVozTDEe2K1spis4bODw" code="INFO_USING_SESSION_VARIABLE" message=""/>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8cwEZTTDEe2K1spis4bODw" size="10" status="VALID" type="DATE" mandatory="true" position="21">
+      <dataModel>_HiO36hgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=DATE_NAISSANCE_ENFANT?</dataModel>
+      <expressionRef id="_8dJF9TTDEe2K1spis4bODw" internalExpression="TO_DATE('${~/date_naissance_enfant}$','YYYY-MM-DD')">
+        <dataModel>_HiO36xgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+        <problem id="_8djVoTTDEe2K1spis4bODw" code="INFO_USING_SESSION_VARIABLE" message=""/>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8cwEZjTDEe2K1spis4bODw" size="26" type="TIMESTAMP" position="24">
+      <dataModel>_HiOQ0hgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=DATE_CONFIRMATION_INSCRIPTION?</dataModel>
+      <expressionRef id="_8dHQxDTDEe2K1spis4bODw" internalExpression="current_timestamp">
+        <dataModel>_HiOQ0xgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8cwEZzTDEe2K1spis4bODw" precision="0" size="32" type="INTEGER" position="27">
+      <dataModel>_HiO35BgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=NIVEAU_CONFIRMATION?</dataModel>
+      <expressionRef id="_8dJF8jTDEe2K1spis4bODw" internalExpression="${stage.MAX_NIVEAU}$">
+        <dataModel>_HiO35RgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+        <sourceRef>_8dGpsjTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_8cxSgDTDEe2K1spis4bODw" countShownFields="6" hierarchical="false">
+    <dataModel>_HiO37xgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_8cxSgTTDEe2K1spis4bODw" precision="0" size="32" type="INTEGER" position="12">
+      <dataModel>_HiO38BgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=MOIS_FIN_NIVEAU?</dataModel>
+      <usage>_8dFbkzTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8cxSgjTDEe2K1spis4bODw" precision="0" size="32" type="INTEGER" position="18">
+      <dataModel>_HiO38RgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=NB_PLACES_NIVEAU?</dataModel>
+      <usage>_8dGptzTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8cxSgzTDEe2K1spis4bODw" size="100" type="VARCHAR" mandatory="true" position="3">
+      <dataModel>_HiO38hgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=VILLE?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8cxShDTDEe2K1spis4bODw" precision="0" size="32" type="INTEGER" position="9">
+      <dataModel>_HiPe8BgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=MOIS_DEBUT_NIVEAU?</dataModel>
+      <usage>_8dFbkzTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8cxShTTDEe2K1spis4bODw" size="100" type="VARCHAR" position="15">
+      <dataModel>_HiPe8RgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=INTITULE_NIVEAU?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8cxShjTDEe2K1spis4bODw" precision="0" size="32" type="INTEGER" position="6">
+      <dataModel>_HiPe8hgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=NIVEAU?</dataModel>
+      <usage>_8dGptjTDEe2K1spis4bODw</usage>
+    </fieldRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_8c51YDTDEe2K1spis4bODw" countShownFields="9" hierarchical="false">
+    <dataModel>_HiPe8xgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_8c51YTTDEe2K1spis4bODw" size="26" type="TIMESTAMP" position="24">
+      <dataModel>_HiPe9BgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=DATE_CONFIRMATION_INSCRIPTION?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8c51YjTDEe2K1spis4bODw" precision="0" size="32" type="INTEGER" position="6">
+      <dataModel>_HiPe9RgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=ID_DEMANDE?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8c51YzTDEe2K1spis4bODw" size="26" type="TIMESTAMP" mandatory="true" position="9">
+      <dataModel>_HiPe9hgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=DATE_DEMANDE?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8c51ZDTDEe2K1spis4bODw" size="100" type="VARCHAR" mandatory="true" position="15">
+      <dataModel>_HiPe9xgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=PRENOM_DEMANDEUR?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8c51ZTTDEe2K1spis4bODw" precision="0" size="32" type="INTEGER" position="27">
+      <dataModel>_HiPe-BgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=NIVEAU_CONFIRMATION?</dataModel>
+      <usage>_8cu2QDTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8c51ZjTDEe2K1spis4bODw" size="100" type="VARCHAR" mandatory="true" position="12">
+      <dataModel>_HiPe-RgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=NOM_DEMANDEUR?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8c51ZzTDEe2K1spis4bODw" size="100" type="VARCHAR" mandatory="true" position="18">
+      <dataModel>_HiPe-hgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=PRENOM_ENFANT?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8c51aDTDEe2K1spis4bODw" size="10" type="DATE" mandatory="true" position="21">
+      <dataModel>_HiPe-xgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=DATE_NAISSANCE_ENFANT?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8c51aTTDEe2K1spis4bODw" precision="0" size="32" type="INTEGER" mandatory="true" position="3">
+      <dataModel>_HiPe_BgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=ID_INSCRIPTION?</dataModel>
+      <usage>_8dGpuzTDEe2K1spis4bODw</usage>
+    </fieldRef>
+  </containerRef>
+  <containerRef id="_8dFbkjTDEe2K1spis4bODw">
+    <dataModel>_HiPfAhgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+    <fieldRef id="_8dFbkTTDEe2K1spis4bODw">
+      <dataModel>_HiPfAxgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+      <usage>_8dFbkDTDEe2K1spis4bODw</usage>
+      <usage>_8dH30DTDEe2K1spis4bODw</usage>
+      <expressionRef id="_8dGCoTTDEe2K1spis4bODw" internalExpression="SUM(${stage_3.NB_PLACES_NIVEAU}$ - ${stage_3.NB_INSCRIPTION}$)">
+        <dataModel>_jZ4usBg7EeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+        <sourceRef>_8dGCojTDEe2K1spis4bODw</sourceRef>
+        <sourceRef>_8dGpsDTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_8dGpsjTDEe2K1spis4bODw">
+      <dataModel>_HiPfBRgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+      <usage>_8dJF8jTDEe2K1spis4bODw</usage>
+      <expressionRef id="_8dGpsTTDEe2K1spis4bODw" internalExpression="${stage_3.NIVEAU}$">
+        <dataModel>_jZ4usRg7EeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+        <sourceRef>_8dGpszTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+  </containerRef>
+  <containerRef id="_8dGCozTDEe2K1spis4bODw">
+    <dataModel>_DT8tABg7EeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+    <fieldRef id="_8dGCojTDEe2K1spis4bODw">
+      <dataModel>_0rG-4Bg7EeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+      <usage>_8dGCoTTDEe2K1spis4bODw</usage>
+      <expressionRef id="_8dHQwDTDEe2K1spis4bODw" internalExpression="${stage_2.NB_PLACES_NIVEAU}$">
+        <dataModel>_0rG-4Rg7EeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+        <sourceRef>_8dGpuDTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_8dGpsDTDEe2K1spis4bODw">
+      <dataModel>_T-TxgBg7EeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+      <usage>_8dGCoTTDEe2K1spis4bODw</usage>
+      <expressionRef id="_8dGpuzTDEe2K1spis4bODw" internalExpression="COUNT(${INSCRIPTION_2.ID_INSCRIPTION}$)">
+        <dataModel>_T-UYkRg7EeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+        <sourceRef>_8c51aTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_8dGpszTDEe2K1spis4bODw">
+      <dataModel>_EeA28Bg8EeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+      <usage>_8dGpsTTDEe2K1spis4bODw</usage>
+      <expressionRef id="_8dHQwTTDEe2K1spis4bODw" internalExpression="${stage_2.NIVEAU}$">
+        <dataModel>_EeA28Rg8EeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+        <sourceRef>_8cu2QTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+  </containerRef>
+  <clauseRef id="_8cu2QDTDEe2K1spis4bODw" internalExpression="${stage_2.NIVEAU}$ = ${INSCRIPTION_2.NIVEAU_CONFIRMATION}$">
+    <dataModel>_63VtEBg6EeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+    <sourceRef>_8cu2QTTDEe2K1spis4bODw</sourceRef>
+    <sourceRef>_8c51ZTTDEe2K1spis4bODw</sourceRef>
+  </clauseRef>
+  <clauseRef id="_8dFbkDTDEe2K1spis4bODw" internalExpression="${stage.NB_PLACES}$ > 0">
+    <dataModel>_HiPe_hgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+    <sourceRef>_8dFbkTTDEe2K1spis4bODw</sourceRef>
+  </clauseRef>
+  <clauseRef id="_8dFbkzTDEe2K1spis4bODw" internalExpression="(current_date - TO_DATE('${~/date_naissance_enfant}$','YYYY-MM-DD'))/30 BETWEEN ${CRECHE.MOIS_DEBUT_NIVEAU}$ AND ${CRECHE.MOIS_FIN_NIVEAU}$" status="VALID">
+    <dataModel>_HiPe_xgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</dataModel>
+    <problem id="_8djVpDTDEe2K1spis4bODw" code="INFO_USING_SESSION_VARIABLE" message=""/>
+    <sourceRef>_8cxShDTDEe2K1spis4bODw</sourceRef>
+    <sourceRef>_8cxSgTTDEe2K1spis4bODw</sourceRef>
+  </clauseRef>
+  <targetSetRef id="_8dS28TTDEe2K1spis4bODw" sourceSet="_8dS28DTDEe2K1spis4bODw">
+    <container>_8dFbkjTDEe2K1spis4bODw</container>
+  </targetSetRef>
+  <targetSetRef id="_8dS28zTDEe2K1spis4bODw" sourceSet="_8dS28jTDEe2K1spis4bODw">
+    <container>_8cu2QjTDEe2K1spis4bODw</container>
+  </targetSetRef>
+  <targetSetRef id="_8dS29TTDEe2K1spis4bODw" sourceSet="_8dS29DTDEe2K1spis4bODw">
+    <container>_8dGCozTDEe2K1spis4bODw</container>
+  </targetSetRef>
+  <targetSetRef id="_8dS29zTDEe2K1spis4bODw" sourceSet="_8dS29jTDEe2K1spis4bODw">
+    <container>_8cvdUDTDEe2K1spis4bODw</container>
+  </targetSetRef>
+  <sourceSetRef id="_8dS28DTDEe2K1spis4bODw" targetSet="_8dS28TTDEe2K1spis4bODw">
+    <dataSet xsi:type="map:DataSet">#_DT-iMBg7EeapFfTHA28Ggw</dataSet>
+  </sourceSetRef>
+  <sourceSetRef id="_8dS28jTDEe2K1spis4bODw" targetSet="_8dS28zTDEe2K1spis4bODw">
+    <dataSet xsi:type="map:DataSet">#_HiPfCBgmEeapFfTHA28Ggw</dataSet>
+  </sourceSetRef>
+  <sourceSetRef id="_8dS29DTDEe2K1spis4bODw" targetSet="_8dS29TTDEe2K1spis4bODw">
+    <dataSet xsi:type="map:DataSet">#_5wZ6MBg6EeapFfTHA28Ggw</dataSet>
+  </sourceSetRef>
+  <sourceSetRef id="_8dS29jTDEe2K1spis4bODw" targetSet="_8dS29zTDEe2K1spis4bODw">
+    <dataSet xsi:type="map:DataSet">#_HiPfCRgmEeapFfTHA28Ggw</dataSet>
+  </sourceSetRef>
+  <templateRef id="_8dJtBzTDEe2K1spis4bODw" description="Integration : INSCRIPTION" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=HYPERSONIC_SQL;trgPath=server:HSQL_Creche/schema:TASSIN/datastore:INSCRIPTION;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=HYPERSONIC_SQL">
+    <dataModel>_HiPfABgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=I_INSCRIPTION?</dataModel>
+    <problem id="_8djVojTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <targetRef>_HiOQ0RgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_8dNXYDTDEe2K1spis4bODw" description="Stage Integration : stage_2" nodeCode="com.stambia.flow.step" templateCriteria="type=IS-TP;trgProduct=HYPERSONIC_SQL;trgPath=server:HSQL_Creche/schema:TASSIN;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=HYPERSONIC_SQL">
+    <dataModel>_5weysBg6EeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=I_stage_2?</dataModel>
+    <targetRef>_mohqYBg6EeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_8dPzoDTDEe2K1spis4bODw" description="Stage Integration : stage_3" nodeCode="com.stambia.flow.step" templateCriteria="type=IS-TP;trgProduct=HYPERSONIC_SQL;trgPath=server:HSQL_Creche/schema:TASSIN;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=HYPERSONIC_SQL">
+    <dataModel>_T-fXsBg7EeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=I_stage_3?</dataModel>
+    <targetRef>_DT8tABg7EeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_8dSP4DTDEe2K1spis4bODw" description="Stage Integration : stage" nodeCode="com.stambia.flow.step" templateCriteria="type=IS-TP;trgProduct=HYPERSONIC_SQL;trgPath=server:HSQL_Creche/schema:TASSIN;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=HYPERSONIC_SQL">
+    <dataModel>_jZ7yABg7EeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map$name=I_stage?</dataModel>
+    <targetRef>_HiPfAhgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</targetRef>
+  </templateRef>
+  <loadSet id="_8dJF-TTDEe2K1spis4bODw">
+    <container>_HiO37xgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</container>
+  </loadSet>
+  <loadSet id="_8dJtBDTDEe2K1spis4bODw">
+    <container>_HiPe8xgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</container>
+    <container>_mohqYBg6EeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</container>
+  </loadSet>
+  <loadSet id="_8dJtAzTDEe2K1spis4bODw">
+    <container>_HiOQ0RgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</container>
+  </loadSet>
+  <loadSet id="_8dJtATTDEe2K1spis4bODw">
+    <container>_HiPfAhgmEeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</container>
+  </loadSet>
+  <loadSet id="_8dJtBjTDEe2K1spis4bODw">
+    <container>_DT8tABg7EeapFfTHA28Ggw?fileId=_HiOQ0BgmEeapFfTHA28Ggw$type=map?</container>
+  </loadSet>
+</ref:mapRef>

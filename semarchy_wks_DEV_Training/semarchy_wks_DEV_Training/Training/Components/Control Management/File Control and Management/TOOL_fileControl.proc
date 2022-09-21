@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_8teIMbnHEeWW8I6_F218gQ">
+  <parameter id="_8teIMrnHEeWW8I6_F218gQ" name="regExp" type="String" value="[0-9a-zA-Z]+,[0-9a-zA-Z]+,[0-9a-zA-Z]+"/>
+  <parameter id="_8teIM7nHEeWW8I6_F218gQ" label="File Includes" name="fileIncludes" type="String" value="*.csv"/>
+  <actionCode id="_8teINLnHEeWW8I6_F218gQ" enable="true" isBeginAction="false" name="Scripting" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <bindLink id="_WRvPwLqQEeWW8I6_F218gQ" bindType="DirectBind" executionCondition="%b(rhino){ ':{NB_ERRORS}:' == '0' }b(rhino)%" targetId="_8teITLnHEeWW8I6_F218gQ"/>
+    <bindLink id="_WOvu4ORNEeWV6I86EMJ68w" bindType="DirectBind" targetId="_Tdvm4ORNEeWV6I86EMJ68w"/>
+    <parameter id="_8teINrnHEeWW8I6_F218gQ" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+    <code>dir=java.io.File(&quot;%x{replace($SOURCE_FOLDER/tech:path(),'\\','/')}x%/file_to_progress/&quot;);&#xD;
+files=dir.listFiles();&#xD;
+var count=0;&#xD;
+var pattern=/${../regExp}$/;&#xD;
+//print(&quot;pattern=&quot;+pattern+&quot;\n&quot;);&#xD;
+var nb_error = 0;&#xD;
+var row_number = 0;&#xD;
+var error_num_lig_lst =&quot;&quot;;&#xD;
+&#xD;
+st=__ctx__.createBindedPreparedStatement();&#xD;
+st.setColumn(1,&quot;FILE_NAME&quot;,&quot;VARCHAR&quot;,400);&#xD;
+st.setColumn(2,&quot;NB_ERRORS&quot;,&quot;VARCHAR&quot;,20);&#xD;
+st.setColumn(3,&quot;ROW_NUMBER_ERR_LIST&quot;,&quot;VARCHAR&quot;,400);&#xD;
+&#xD;
+for (i=0;i&lt;files.length;i++)&#xD;
+{&#xD;
+	file=files[i];&#xD;
+	if (!file.isDirectory())&#xD;
+	{&#xD;
+			try {&#xD;
+					var myFile   = new java.io.File(&quot;%x{replace($SOURCE_FOLDER/tech:path(),'\\','/')}x%/file_to_progress/&quot;+file.getName());&#xD;
+					var myReader = new java.io.FileReader(myFile);&#xD;
+					var myBuffer = new java.io.BufferedReader(myReader);&#xD;
+                    print(file.getName()+'\n');&#xD;
+					var curLine = myBuffer.readLine();&#xD;
+                    nb_error = 0;&#xD;
+                    row_number = 0;&#xD;
+                    error_num_lig_lst =&quot;&quot;;&#xD;
+					while (curLine != null) {&#xD;
+					    row_number = row_number + 1;&#xD;
+						if (curLine.length()>0) {&#xD;
+						   var m=curLine.match(pattern);&#xD;
+		                   if (m == null) {&#xD;
+		                      nb_error = nb_error + 1;&#xD;
+		                      if (nb_error == 1) {&#xD;
+		                         error_num_lig_lst=row_number;&#xD;
+		                      }&#xD;
+		                      else {&#xD;
+		                         error_num_lig_lst=error_num_lig_lst+'#'+row_number;&#xD;
+		                      }&#xD;
+		                   }&#xD;
+						}&#xD;
+						curLine = myBuffer.readLine();&#xD;
+					}&#xD;
+                    st.setString(1,file.getName());&#xD;
+                    st.setString(2,nb_error);&#xD;
+                    st.setString(3,error_num_lig_lst);&#xD;
+                    st.addBatch();&#xD;
+			    }&#xD;
+			finally {&#xD;
+			    myReader.close();&#xD;
+	            java.lang.Thread.sleep(20);		&#xD;
+	        }	                  &#xD;
+	}&#xD;
+&#xD;
+}&#xD;
+st.executeBatch(); &#xD;
+</code>
+  </actionCode>
+  <actionCode id="_8teIN7nHEeWW8I6_F218gQ" isBeginAction="false" name="MkDir file_to_progress" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.MkDirActionCodeI">
+    <link id="_8teIOLnHEeWW8I6_F218gQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_8teIP7nHEeWW8I6_F218gQ"/>
+    <link id="_8teIRbnHEeWW8I6_F218gQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_8teIOrnHEeWW8I6_F218gQ"/>
+    <link id="_1mnwsORNEeWV6I86EMJ68w" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_io6wkORNEeWV6I86EMJ68w"/>
+    <parameter id="_8teIObnHEeWW8I6_F218gQ" name="FILE_DIR" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%/file_to_progress"/>
+  </actionCode>
+  <actionCode id="_8teIOrnHEeWW8I6_F218gQ" isBeginAction="false" name="FileMove xml files in file_to_progress" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileMoveActionCodeI">
+    <link id="_ZG0b8LqPEeWW8I6_F218gQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_8teINLnHEeWW8I6_F218gQ"/>
+    <parameter id="_8teIPLnHEeWW8I6_F218gQ" name="FILE_TO_DIR" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%/file_to_progress"/>
+    <parameter id="_8teIPbnHEeWW8I6_F218gQ" name="FILE_FROM_DIR" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%"/>
+    <parameter id="_8teIPrnHEeWW8I6_F218gQ" name="FILE_INCLUDES" type="String" value="${../fileIncludes}$"/>
+  </actionCode>
+  <actionCode id="_8teIP7nHEeWW8I6_F218gQ" isBeginAction="false" name="MkDir valid_file" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.MkDirActionCodeI">
+    <link id="_8teIQLnHEeWW8I6_F218gQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_8teIRLnHEeWW8I6_F218gQ"/>
+    <parameter id="_8teIQbnHEeWW8I6_F218gQ" name="FILE_DIR" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%/valid_file"/>
+  </actionCode>
+  <actionCode id="_8teIQrnHEeWW8I6_F218gQ" isBeginAction="false" name="Start" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_8teIQ7nHEeWW8I6_F218gQ" generationCondition="exists($SOURCE_FOLDER)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_8teIN7nHEeWW8I6_F218gQ"/>
+  </actionCode>
+  <actionCode id="_8teIRLnHEeWW8I6_F218gQ" isBeginAction="false" name="MkDir invalid_file" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.MkDirActionCodeI">
+    <link id="_ZgncALqPEeWW8I6_F218gQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_8teINLnHEeWW8I6_F218gQ"/>
+    <parameter id="_8teIRrnHEeWW8I6_F218gQ" name="FILE_DIR" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%/invalid_file"/>
+  </actionCode>
+  <actionCode id="_8teIR7nHEeWW8I6_F218gQ" enable="true" isBeginAction="false" name="FileMove invalid files" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.FileMoveActionCodeI">
+    <parameter id="_8teISLnHEeWW8I6_F218gQ" name="FILE_TO_DIR" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%/invalid_file"/>
+    <parameter id="_8teISbnHEeWW8I6_F218gQ" name="FILE_FROM_DIR" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%/file_to_progress"/>
+    <parameter id="_8teISrnHEeWW8I6_F218gQ" name="FILE_INCLUDES" type="String" value="${../fileIncludes}$"/>
+    <parameter id="_8teIS7nHEeWW8I6_F218gQ" name="FILE_INCLUDE_EMPTY_DIRS" type="String" value="true"/>
+  </actionCode>
+  <actionCode id="_8teITLnHEeWW8I6_F218gQ" enable="true" isBeginAction="false" name="FileMove valid files" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileMoveActionCodeI">
+    <link id="_8teITbnHEeWW8I6_F218gQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_8teIR7nHEeWW8I6_F218gQ"/>
+    <parameter id="_8teITrnHEeWW8I6_F218gQ" name="FILE_FROM_FILE" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%/file_to_progress/:{FILE_NAME}:"/>
+    <parameter id="_8teIT7nHEeWW8I6_F218gQ" name="FILE_TO_DIR" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%/valid_file"/>
+  </actionCode>
+  <actionCode id="_Tdvm4ORNEeWV6I86EMJ68w" isBeginAction="false" name="WriteTxtFile Log Body" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+    <parameter id="_TggnAORNEeWV6I86EMJ68w" name="TXT_WRITE_FILENAME" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%/fileControl%x{md:formatDate(&quot;yyyyMMdd&quot;)}x%.log"/>
+    <parameter id="_YJar0ORNEeWV6I86EMJ68w" name="TXT_WRITE_APPEND" type="String" value="after"/>
+    <code>':{FILE_NAME}:',':{NB_ERRORS}:',':{ROW_NUMBER_ERR_LIST}:'</code>
+  </actionCode>
+  <actionCode id="_io6wkORNEeWV6I86EMJ68w" isBeginAction="false" name="WriteTxtFile Log Header" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+    <link id="_2J4OwORNEeWV6I86EMJ68w" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_8teINLnHEeWW8I6_F218gQ"/>
+    <parameter id="_io6wkeRNEeWV6I86EMJ68w" name="TXT_WRITE_FILENAME" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%/fileControl%x{md:formatDate(&quot;yyyyMMdd&quot;)}x%.log"/>
+    <code>FILE_NAME,NB_ERRORS,ROW_NUMBER_ERR_LIST</code>
+  </actionCode>
+  <xslVariable id="_8teIULnHEeWW8I6_F218gQ" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='directory'][1]" name="SOURCE_FOLDER" type="xpath"/>
+</proc:process>

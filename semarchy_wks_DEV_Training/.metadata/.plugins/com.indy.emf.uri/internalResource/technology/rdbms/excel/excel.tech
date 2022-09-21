@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="UUID_TECH_RDBMS_EXCEL" name="Microsoft Excel Technology" ref="resource.md#UUID_MD_RDBMS_DEFAULT?fileId=UUID_MD_RDBMS_DEFAULT$type=md$name=Rdbms%20MetaData?">
+  <level code="com.stambia.rdbms.server" override="true" wizardBundleName="com.indy.addons.microsoft.excel" wizardClass="com.indy.addons.microsoft.excel.wizard.ExcelWizard"/>
+  <level icon="icons/full/custom/rdbms.property.gif" xmlName="propertyField" xpathCondition="" code="com.stambia.excel.propertyField" displayName="Property Field" position="-1">
+    <icons name="PropertyField" xpath="'icons/full/custom/rdbms.property.gif'"/>
+    <icons name="Tag" xpath="if (boolean(tag) or boolean(userProperties)) then 'icons/full/custom/rdbms.tag.png' else ''"/>
+    <attribute xmlName="tag" category="Customization" code="tag" displayName="Tags"/>
+    <attribute xmlName="userProperties" xpathCondition="" category="Customization" code="userProperties" displayName="User Properties" keyValue="true"/>
+    <attribute metaInf="" xmlName="property" code="property" displayName="Property" mdXpathAccess="tokenize('row_number row_count',' ') " reverseCode="" type="list"/>
+    <parent>com.stambia.rdbms.datastore</parent>
+    <parent>com.stambia.rdbms.datastore</parent>
+    <parent>com.stambia.rdbms.datastore</parent>
+    <parent>com.stambia.rdbms.datastore</parent>
+    <xPathExpression expression="if (@property='sheet_row_number') then 'NUMERIC'&#xA;else 'STRING'">
+      <code>TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="0">
+      <code>DECIMAL</code>
+      <code>PRECISION</code>
+    </xPathExpression>
+    <xPathExpression expression="if (tech:type()='NUMERIC') then '20'&#xA;else '255'">
+      <code>SIZE</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@property='sheet_row_number') then 'SourceMapping'&#xA;else 'SourceMapping'">
+      <code>INTERNAL_MAPPING_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="@name">
+      <code>COLUMN_NAME</code>
+      <code>NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="md:convertDataType(.,$p1)">
+      <code>CREATION_DDL</code>
+    </xPathExpression>
+    <xPathExpression expression="'attribute'">
+      <code>XML_FORM</code>
+    </xPathExpression>
+    <xPathExpression expression="concat('internalProperty:',md:ifEmpty(@property,@name))">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <xPathExpression description="" expression="@property">
+      <code>PROPERTY</code>
+    </xPathExpression>
+    <xPathExpression expression="@property">
+      <code>COLUMN_NAME</code>
+      <code>DEFAULT</code>
+      <code>NAME</code>
+    </xPathExpression>
+    <mappingType>SourceMapping</mappingType>
+  </level>
+  <level xmlName="query" code="com.stambia.rdbms.query" override="true"/>
+  <level xmlName="datastore" code="com.stambia.rdbms.datastore" override="true">
+    <xPathExpression expression="propertyField">
+      <code>PROPERTY_FIELDS_REF</code>
+    </xPathExpression>
+  </level>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditor" code="consult_data_select_columns" description="" displayName="Consult data (select columns)" xpathExpression="concat(&#xA;    'select',&#xA;    md:list((ref:columns()|ref:propertyFields())/concat('\t',tech:name()),',\n','\n','\n'),&#xA;    'from ', md:physicalName(.,'DEFAULT'),if (name()='query') then concat(' ',tech:tableAliasWord() ,' T') else ''&#xA;)">
+    <executableLevel>#com.stambia.rdbms.datastore</executableLevel>
+    <executableLevel>#com.stambia.rdbms.query</executableLevel>
+  </action>
+</tech:tech>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_MqMjMf9EEeaMLMYmCRxD3Q">
+  <actionCode id="_OSmEYP9EEeaMLMYmCRxD3Q" isBeginAction="false" name="Sleep1" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JSleepActionCodeI">
+    <link id="_PJLuIP9EEeaMLMYmCRxD3Q" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_NVZcUP9EEeaMLMYmCRxD3Q"/>
+    <parameter id="_Ue67cA-lEeeAvZIlCVWsUQ" name="SLEEP_DELAY" type="Integer" value="2000"/>
+  </actionCode>
+  <actionCode id="_P2Kv8P9EEeaMLMYmCRxD3Q" isBeginAction="false" name="Sleep2" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JSleepActionCodeI">
+    <link id="_QyVdQP9EEeaMLMYmCRxD3Q" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_NmDHcP9EEeaMLMYmCRxD3Q"/>
+    <parameter id="_V80c0A-lEeeAvZIlCVWsUQ" name="SLEEP_DELAY" type="Integer" value="3000"/>
+  </actionCode>
+  <actionProcessRef id="_NCdSMP9EEeaMLMYmCRxD3Q" isBeginAction="false" name="Load DIM_GEO with Q_Move1 querie" nbCycles="-1" toleratedError="false" processMap="true" targetName="../30-Mapping/Load%20DIM_GEO%20with%20Q_Move1%20querie.map#_wagYIP80EeaMLMYmCRxD3Q?fileId=_wagYIP80EeaMLMYmCRxD3Q$name=Load%20DIM_GEO%20with%20Q_Move1%20querie$type=map?">
+    <link id="_O61JEP9EEeaMLMYmCRxD3Q" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_OSmEYP9EEeaMLMYmCRxD3Q"/>
+  </actionProcessRef>
+  <actionProcessRef id="_NVZcUP9EEeaMLMYmCRxD3Q" isBeginAction="false" name="Load DIM_GEO with Q_Move2 querie" nbCycles="-1" toleratedError="false" processMap="true" targetName="../30-Mapping/Load%20DIM_GEO%20with%20Q_Move2%20querie.map#_-P75EP9DEeaMLMYmCRxD3Q?fileId=_-P75EP9DEeaMLMYmCRxD3Q$name=Load%20DIM_GEO%20with%20Q_Move2%20querie$type=map?">
+    <link id="_QOB2UP9EEeaMLMYmCRxD3Q" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_P2Kv8P9EEeaMLMYmCRxD3Q"/>
+  </actionProcessRef>
+  <actionProcessRef id="_NmDHcP9EEeaMLMYmCRxD3Q" isBeginAction="false" name="Load DIM_GEO with Q_Move3 querie" nbCycles="-1" toleratedError="false" processMap="true" targetName="../30-Mapping/Load%20DIM_GEO%20with%20Q_Move3%20querie.map#_GqSPMP9EEeaMLMYmCRxD3Q?fileId=_GqSPMP9EEeaMLMYmCRxD3Q$name=Load%20DIM_GEO%20with%20Q_Move3%20querie$type=map?"/>
+  <actionProcessRef id="_cWlioA-iEeeAvZIlCVWsUQ" isBeginAction="false" name="TOOL_resetTable" nbCycles="-1" toleratedError="false" targetName="../../../global/components/Training/TOOL_resetTable.proc#_ExT5MeutEeag0Ol_UBAlAw?fileId=_ExT5MeutEeag0Ol_UBAlAw$type=proc$name=TOOL_resetTable?">
+    <link id="_cluK0A-iEeeAvZIlCVWsUQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_NCdSMP9EEeaMLMYmCRxD3Q"/>
+    <metaDataLink id="_gcyjAA-iEeeAvZIlCVWsUQ" name="dim_geo" target="../20-Metadata/MSSQL_XE_SampleDB.md#_dezbwf83EeaMLMYmCRxD3Q?fileId=_NaIeQP83EeaMLMYmCRxD3Q$type=md$name=dim_geo?"/>
+  </actionProcessRef>
+</proc:process>

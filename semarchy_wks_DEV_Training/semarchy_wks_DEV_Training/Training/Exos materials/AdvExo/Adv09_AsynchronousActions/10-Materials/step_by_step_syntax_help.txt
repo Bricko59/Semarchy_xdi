@@ -1,0 +1,66 @@
+*** Step 3 ***
+**************
+
+Expression editor of Scripting Publish p_agreement_number action
+----------------------------------------------------------------
+__ctx__.publishVariable("/p_agreement_number","0")
+
+Txt Write Filename property of the WriteTxtFile action
+-------------------------------------------------------------------
+%x{$Asynchronous_Action_Log_Folder/tech:path()}x%/Signature_log.csv
+		
+EXPRESSION EDITOR of the WriteTxtFile
+--------------------------------------------------------------
+Timestamp;Action;Person;SignatureKey
+
+*** Step 4 ***
+**************
+
+Execution condition of the link between the empty and the sleep actions
+-----------------------------------------------------------------------
+${/p_agreement_number}$ < 2
+
+Execution condition of the link between the two empty actions
+-------------------------------------------------------------
+${/p_agreement_number}$ >= 2
+
+*** Step 5 ***
+**************
+
+Expression Editor of the SqlToParameter action
+----------------------------------------------------------------------
+        <sqlToParameters>
+        <parameter name="../reflexionDelay" type="Integer">
+        SELECT (CAST(RAND()*20 AS INTEGER)+5)*1000 FROM (VALUES(0))
+        </parameter>
+        <parameter name="../managerSignatureKey" type="String">
+        SELECT UUID() FROM (VALUES(0))
+        </parameter>
+        </sqlToParameters> 
+
+		
+*** Step 6 ***
+**************
+
+Sleep Delay property of the Sleep Action
+----------------------------------------
+${../reflexionDelay}$
+	
+Expression editor of the WriteTxtFile action
+--------------------------------------------
+%x{md:formatDate("dd/MM/yyyy HH:mm:ss")}x%;Signature;Manager%x{md:paramValue($this,'id_manager')}x%;${../managerSignatureKey}$
+
+Txt Write Filename property of the WriteTxtFile action
+------------------------------------------------------
+%x{$Asynchronous_Action_Log_Folder/tech:path()}x%/Signature_log.csv
+		
+*** Step 8 ***
+**************
+		
+Txt Write Filename property of the WriteTxtFile action
+------------------------------------------------------
+%x{$Asynchronous_Action_Log_Folder/tech:path()}x%/Signature_log.csv
+		
+Expression Editor of the WriteTxtFile action
+--------------------------------------------
+%x{md:formatDate("dd/MM/yyyy HH:mm:ss")}x%;Treatment;Stambia;

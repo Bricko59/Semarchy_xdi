@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map:map xmlns:map="http://www.indy.com/v2/map" id="_tyMWcNj0EeiHBZdKZ0VXqw" internalVersion="8" tech="resource.tech#_waYSMH8VEd2__Mzb_dB76A?fileId=_waYSMH8VEd2__Mzb_dB76A$type=tech$name=flow?">
+  <datastore id="_w6v-oNj7EeiHBZdKZ0VXqw" alias="file_with_joker" dataset="_w603INj7EeiHBZdKZ0VXqw" ref="resource.md#_e7pOYNjzEeiHBZdKZ0VXqw?fileId=_exiQINjzEeiHBZdKZ0VXqw$type=md$name=file_with_joker?">
+    <field id="_w60QEtj7EeiHBZdKZ0VXqw" fullAlias="lastname" name="lastname" parent="_w60QENj7EeiHBZdKZ0VXqw" ref="resource.md#_jG2DhNjzEeiHBZdKZ0VXqw?fileId=_exiQINjzEeiHBZdKZ0VXqw$type=md$name=lastname?"/>
+    <field id="_w60QE9j7EeiHBZdKZ0VXqw" fullAlias="firstname" name="firstname" parent="_w60QENj7EeiHBZdKZ0VXqw" ref="resource.md#_jG2DiNjzEeiHBZdKZ0VXqw?fileId=_exiQINjzEeiHBZdKZ0VXqw$type=md$name=firstname?"/>
+    <field id="_w60QFNj7EeiHBZdKZ0VXqw" fullAlias="file_name" name="file_name" parent="_w60QENj7EeiHBZdKZ0VXqw" ref="resource.md#_seZr9Nj3EeiHBZdKZ0VXqw?fileId=_exiQINjzEeiHBZdKZ0VXqw$type=md$name=file_name?"/>
+    <field id="_w60QEdj7EeiHBZdKZ0VXqw" fullAlias="id" name="id" parent="_w60QENj7EeiHBZdKZ0VXqw" ref="resource.md#_jG2DgNjzEeiHBZdKZ0VXqw?fileId=_exiQINjzEeiHBZdKZ0VXqw$type=md$name=id?"/>
+    <field id="_w60QENj7EeiHBZdKZ0VXqw" expand="true" name="file_with_joker" ref="resource.md#_e7pOYNjzEeiHBZdKZ0VXqw?fileId=_exiQINjzEeiHBZdKZ0VXqw$type=md$name=file_with_joker?" updateKey="true"/>
+  </datastore>
+  <datastore id="_xSlP0Nj7EeiHBZdKZ0VXqw" alias="DATA_FILE3" dataset="_xSoTINj7EeiHBZdKZ0VXqw" ref="resource.md#_S8BlQdj0EeiHBZdKZ0VXqw?fileId=_uk-T8tjzEeiHBZdKZ0VXqw$type=md$name=DATA_FILE3?" subExpression="[A]">
+    <field id="_xSl24dj7EeiHBZdKZ0VXqw" name="ID_RECORD" ref="resource.md#_S8SD8Nj0EeiHBZdKZ0VXqw?fileId=_uk-T8tjzEeiHBZdKZ0VXqw$type=md$name=ID_RECORD?" updateKey="false">
+      <expression id="_yFi90dj7EeiHBZdKZ0VXqw" setDescriptorRef="_yFi90Nj7EeiHBZdKZ0VXqw">
+        <expression></expression>
+      </expression>
+    </field>
+    <field id="_xSmd8tj7EeiHBZdKZ0VXqw" enable="true" insert="true" name="FIRST_NAME" ref="resource.md#_S8SrANj0EeiHBZdKZ0VXqw?fileId=_uk-T8tjzEeiHBZdKZ0VXqw$type=md$name=FIRST_NAME?" update="true">
+      <expression id="_yFi90tj7EeiHBZdKZ0VXqw" setDescriptorRef="_yFi90Nj7EeiHBZdKZ0VXqw">
+        <expression>file_with_joker.firstname</expression>
+      </expression>
+    </field>
+    <field id="_xSmd8Nj7EeiHBZdKZ0VXqw" enable="true" insert="true" name="FILE_ID" ref="resource.md#_S8SD-Nj0EeiHBZdKZ0VXqw?fileId=_uk-T8tjzEeiHBZdKZ0VXqw$type=md$name=FILE_ID?" update="true" updateKey="true">
+      <expression id="_yFi909j7EeiHBZdKZ0VXqw" setDescriptorRef="_yFi90Nj7EeiHBZdKZ0VXqw">
+        <expression>file_with_joker.id</expression>
+      </expression>
+    </field>
+    <field id="_xSmd8dj7EeiHBZdKZ0VXqw" enable="true" insert="true" name="LAST_NAME" ref="resource.md#_S8SEANj0EeiHBZdKZ0VXqw?fileId=_uk-T8tjzEeiHBZdKZ0VXqw$type=md$name=LAST_NAME?" update="true">
+      <expression id="_yFi91Nj7EeiHBZdKZ0VXqw" setDescriptorRef="_yFi90Nj7EeiHBZdKZ0VXqw">
+        <expression>file_with_joker.lastname</expression>
+      </expression>
+    </field>
+    <field id="_xSmd9Nj7EeiHBZdKZ0VXqw" enable="true" insert="true" name="FILE_DATE" ref="resource.md#_S8SrDtj0EeiHBZdKZ0VXqw?fileId=_uk-T8tjzEeiHBZdKZ0VXqw$type=md$name=FILE_DATE?" update="true">
+      <expression id="_yFi91dj7EeiHBZdKZ0VXqw" location="WRK" setDescriptorRef="_yFi90Nj7EeiHBZdKZ0VXqw">
+        <expression>SUBSTR(file_with_joker.file_name,6,8)</expression>
+      </expression>
+    </field>
+    <field id="_xSmd89j7EeiHBZdKZ0VXqw" enable="true" insert="true" name="FILE_NAME" ref="resource.md#_S8SrB9j0EeiHBZdKZ0VXqw?fileId=_uk-T8tjzEeiHBZdKZ0VXqw$type=md$name=FILE_NAME?" update="true" updateKey="true">
+      <expression id="_yFi91tj7EeiHBZdKZ0VXqw" setDescriptorRef="_yFi90Nj7EeiHBZdKZ0VXqw">
+        <expression>file_with_joker.file_name</expression>
+      </expression>
+    </field>
+    <field id="_xSmd9dj7EeiHBZdKZ0VXqw" enable="true" insert="true" name="UPDATE_DATE" ref="resource.md#_S8SrFdj0EeiHBZdKZ0VXqw?fileId=_uk-T8tjzEeiHBZdKZ0VXqw$type=md$name=UPDATE_DATE?" update="true">
+      <expression id="_yFi919j7EeiHBZdKZ0VXqw" location="TRG" setDescriptorRef="_yFi90Nj7EeiHBZdKZ0VXqw">
+        <expression>current_timestamp</expression>
+      </expression>
+    </field>
+    <constraint id="_xSmd9tj7EeiHBZdKZ0VXqw" name="SYS_PK_11221" ref="resource.md#_S8UgMNj0EeiHBZdKZ0VXqw?fileId=_uk-T8tjzEeiHBZdKZ0VXqw$type=md$name=SYS_PK_11221?" reject="true"/>
+    <setDescriptor id="_yFi90Nj7EeiHBZdKZ0VXqw" label="A"/>
+  </datastore>
+  <template id="_yFi95dj7EeiHBZdKZ0VXqw" name="I_DATA_FILE3" process="resource.proc#_HFOfdjEZEd-WZe6cNi2k2w?fileId=_HFOfdjEZEd-WZe6cNi2k2w$type=proc$name=INTEGRATION%20Hsql?" targetId="_xSlP0Nj7EeiHBZdKZ0VXqw"/>
+  <template id="_yFt88Nj7EeiHBZdKZ0VXqw" name="L1_DATA_FILE3" process="resource.proc#_a-mEoaIhEd68f8w2ej5O-w?fileId=_a-mEoaIhEd68f8w2ej5O-w$type=proc$name=LOAD%20File%20to%20Rdbms?" sourceId="_w6v-oNj7EeiHBZdKZ0VXqw" targetId="_xSlP0Nj7EeiHBZdKZ0VXqw"/>
+  <dataSet id="_w603INj7EeiHBZdKZ0VXqw">
+    <container>_w6v-oNj7EeiHBZdKZ0VXqw</container>
+  </dataSet>
+  <dataSet id="_xSoTINj7EeiHBZdKZ0VXqw">
+    <container>_xSlP0Nj7EeiHBZdKZ0VXqw</container>
+  </dataSet>
+  <hint>
+    <usedField>#_w60QEtj7EeiHBZdKZ0VXqw</usedField>
+    <usedField>#_w60QE9j7EeiHBZdKZ0VXqw</usedField>
+    <usedField>#_w60QFNj7EeiHBZdKZ0VXqw</usedField>
+    <usedField>#_w60QEdj7EeiHBZdKZ0VXqw</usedField>
+  </hint>
+</map:map>

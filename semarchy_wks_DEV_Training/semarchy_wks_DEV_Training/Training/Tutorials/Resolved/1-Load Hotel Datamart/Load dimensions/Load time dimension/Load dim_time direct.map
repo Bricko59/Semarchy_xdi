@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map:map xmlns:map="http://www.indy.com/v2/map" id="_TS6XYJcREeyNk-8PTn1xFw" internalVersion="8" tech="resource.tech#_waYSMH8VEd2__Mzb_dB76A?fileId=_waYSMH8VEd2__Mzb_dB76A$type=tech$name=flow?">
+  <datastore id="_c9eYMJcREeyNk-8PTn1xFw" alias="Time" dataset="_c9hbgJcREeyNk-8PTn1xFw" ref="resource.md#_VvvmMJcREeyNk-8PTn1xFw?fileId=_yUtrUDuOEeufR_jwQ73gkQ$type=md$name=time?">
+    <field id="_c9g0cJcREeyNk-8PTn1xFw" expand="true" name="time" ref="resource.md#_VvvmMJcREeyNk-8PTn1xFw?fileId=_yUtrUDuOEeufR_jwQ73gkQ$type=md$name=time?" updateKey="true"/>
+    <field id="_c9g0cZcREeyNk-8PTn1xFw" fullAlias="day_date" name="day_date" parent="_c9g0cJcREeyNk-8PTn1xFw" ref="resource.md#_XMXVMJcREeyNk-8PTn1xFw?fileId=_yUtrUDuOEeufR_jwQ73gkQ$type=md$name=day_date?"/>
+  </datastore>
+  <datastore id="_d7oCgJcREeyNk-8PTn1xFw" alias="dim_time" dataset="_d7p3sJcREeyNk-8PTn1xFw" ref="resource.md#_b39HIJb8EeytipfABCJWjQ?fileId=_50xksJMhEeymq6fNOAxqGA$type=md$name=dim_time?" subExpression="[A]">
+    <field id="_d7opkJcREeyNk-8PTn1xFw" enable="true" insert="true" name="time_key_day" ref="resource.md#_b4Eb4Jb8EeytipfABCJWjQ?fileId=_50xksJMhEeymq6fNOAxqGA$type=md$name=time_key_day?" update="true" updateKey="true">
+      <expression id="_jo1c8ZcREeyNk-8PTn1xFw" location="WRK" setDescriptorRef="_jo1c8JcREeyNk-8PTn1xFw">
+        <expression>SUBSTR(Time.day_date, 7,4)||SUBSTR(Time.day_date, 4,2)||SUBSTR(Time.day_date, 1,2)</expression>
+      </expression>
+    </field>
+    <field id="_d7pQoZcREeyNk-8PTn1xFw" enable="true" insert="true" name="time_quarter" ref="resource.md#_b4U6kJb8EeytipfABCJWjQ?fileId=_50xksJMhEeymq6fNOAxqGA$type=md$name=time_quarter?" update="true">
+      <expression id="_jo2EAJcREeyNk-8PTn1xFw" location="WRK" setDescriptorRef="_jo1c8JcREeyNk-8PTn1xFw">
+        <expression>EXTRACT(QUARTER FROM CAST(SUBSTR(Time.day_date, 7,4)||'-'||SUBSTR(Time.day_date, 4,2)||'-'||SUBSTR(Time.day_date, 1,2)||' 00:00:00' AS TIMESTAMP))</expression>
+      </expression>
+    </field>
+    <field id="_d7pQopcREeyNk-8PTn1xFw" enable="true" insert="true" name="time_year" ref="resource.md#_b4ZMAZb8EeytipfABCJWjQ?fileId=_50xksJMhEeymq6fNOAxqGA$type=md$name=time_year?" update="true">
+      <expression id="_jo2EAZcREeyNk-8PTn1xFw" location="WRK" setDescriptorRef="_jo1c8JcREeyNk-8PTn1xFw">
+        <expression>CAST(SUBSTR(Time.day_date, 7,4) AS INTEGER)</expression>
+      </expression>
+    </field>
+    <field id="_d7opkZcREeyNk-8PTn1xFw" enable="true" insert="true" name="time_date" ref="resource.md#_b4KigJb8EeytipfABCJWjQ?fileId=_50xksJMhEeymq6fNOAxqGA$type=md$name=time_date?" update="true">
+      <expression id="_jo2EApcREeyNk-8PTn1xFw" location="WRK" setDescriptorRef="_jo1c8JcREeyNk-8PTn1xFw">
+        <expression>CAST(SUBSTR(Time.day_date, 7,4)||'-'||SUBSTR(Time.day_date, 4,2)||'-'||SUBSTR(Time.day_date, 1,2)||' 00:00:00' AS TIMESTAMP)</expression>
+      </expression>
+    </field>
+    <field id="_d7pQoJcREeyNk-8PTn1xFw" enable="true" insert="true" name="time_month" ref="resource.md#_b4PbAZb8EeytipfABCJWjQ?fileId=_50xksJMhEeymq6fNOAxqGA$type=md$name=time_month?" update="true">
+      <expression id="_jo2EA5cREeyNk-8PTn1xFw" location="WRK" setDescriptorRef="_jo1c8JcREeyNk-8PTn1xFw">
+        <expression>CAST(SUBSTR(Time.day_date,4,2) AS INTEGER)</expression>
+      </expression>
+    </field>
+    <constraint id="_d7pQo5cREeyNk-8PTn1xFw" name="pk_dim_time" ref="resource.md#_b4ggwJb8EeytipfABCJWjQ?fileId=_50xksJMhEeymq6fNOAxqGA$type=md$name=pk_dim_time?" reject="true"/>
+    <setDescriptor id="_jo1c8JcREeyNk-8PTn1xFw" label="A"/>
+  </datastore>
+  <template id="_jo3SIJcREeyNk-8PTn1xFw" name="I_dim_time" process="resource.proc#_dQ2dRp4SEd6bQIkgWyxFQQ?fileId=_dQ2dRp4SEd6bQIkgWyxFQQ$type=proc$name=INTEGRATION%20PostgreSql?" targetId="_d7oCgJcREeyNk-8PTn1xFw">
+    <parameter id="_cNzcgJcWEeyNk-8PTn1xFw" name="useDistinct" value="true"/>
+  </template>
+  <template id="_jo9YxpcREeyNk-8PTn1xFw" name="L1_dim_time" process="resource.proc#_8fa24535-b67f-4d00-aca7-ac642ec8ff0f?fileId=_8fa24535-b67f-4d00-aca7-ac642ec8ff0f$type=proc$name=LOAD%20File%20to%20PostGre%20SQL%20(with%20Copy)?" sourceId="_c9eYMJcREeyNk-8PTn1xFw" targetId="_d7oCgJcREeyNk-8PTn1xFw"/>
+  <dataSet id="_c9hbgJcREeyNk-8PTn1xFw">
+    <container>_c9eYMJcREeyNk-8PTn1xFw</container>
+  </dataSet>
+  <dataSet id="_d7p3sJcREeyNk-8PTn1xFw">
+    <container>_d7oCgJcREeyNk-8PTn1xFw</container>
+  </dataSet>
+  <hint>
+    <usedField>#_c9g0cZcREeyNk-8PTn1xFw</usedField>
+  </hint>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation " xmi:id="_TTci4JcREeyNk-8PTn1xFw" type="Map" measurementUnit="Pixel">
+  <children xmi:type="notation:Shape" xmi:id="_c9jQspcREeyNk-8PTn1xFw" type="2004" fontName="Segoe UI">
+    <children xmi:type="notation:DecorationNode" xmi:id="_c9j3wJcREeyNk-8PTn1xFw" type="5005"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_c9j3wZcREeyNk-8PTn1xFw" type="5007"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_c9j3wpcREeyNk-8PTn1xFw" type="7003"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_c9j3w5cREeyNk-8PTn1xFw" type="7009"/>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_c9j3xJcREeyNk-8PTn1xFw" type="7004">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_c9j3xZcREeyNk-8PTn1xFw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_c9j3xpcREeyNk-8PTn1xFw"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" xmi:id="_c9j3x5cREeyNk-8PTn1xFw" type="5009">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_c9j3yJcREeyNk-8PTn1xFw"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" xmi:id="_c9j3yZcREeyNk-8PTn1xFw" type="7005">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_c9j3ypcREeyNk-8PTn1xFw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_c9j3y5cREeyNk-8PTn1xFw"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_c9j3zJcREeyNk-8PTn1xFw" type="7007"/>
+    <element xmi:type="map:Datastore" href="resource.map#_c9eYMJcREeyNk-8PTn1xFw?fileId=_TS6XYJcREeyNk-8PTn1xFw$type=map?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_c9jQs5cREeyNk-8PTn1xFw" x="133" y="108"/>
+  </children>
+  <children xmi:type="notation:Shape" xmi:id="_d7rF1ZcREeyNk-8PTn1xFw" type="2004" fontName="Segoe UI">
+    <children xmi:type="notation:DecorationNode" xmi:id="_d7rs4JcREeyNk-8PTn1xFw" type="5005"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_d7rs4ZcREeyNk-8PTn1xFw" type="5007"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_d7rs4pcREeyNk-8PTn1xFw" type="7003"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_d7rs45cREeyNk-8PTn1xFw" type="7009"/>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_d7rs5JcREeyNk-8PTn1xFw" type="7004">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_d7rs5ZcREeyNk-8PTn1xFw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_d7rs5pcREeyNk-8PTn1xFw"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" xmi:id="_d7rs55cREeyNk-8PTn1xFw" type="5009">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_d7rs6JcREeyNk-8PTn1xFw"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" xmi:id="_d7rs6ZcREeyNk-8PTn1xFw" type="7005">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_d7rs6pcREeyNk-8PTn1xFw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_d7rs65cREeyNk-8PTn1xFw"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_d7rs7JcREeyNk-8PTn1xFw" type="7007"/>
+    <element xmi:type="map:Datastore" href="resource.map#_d7oCgJcREeyNk-8PTn1xFw?fileId=_TS6XYJcREeyNk-8PTn1xFw$type=map?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_d7rF1pcREeyNk-8PTn1xFw" x="385" y="93"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_TTci4ZcREeyNk-8PTn1xFw"/>
+  <element xmi:type="map:Map" href="resource.map#_TS6XYJcREeyNk-8PTn1xFw?fileId=_TS6XYJcREeyNk-8PTn1xFw$type=map$name=Load%20dim_time%20simple?"/>
+  <edges xmi:type="notation:Edge" xmi:id="_jo68gJcREeyNk-8PTn1xFw" type="targetLink" source="_d7rF1ZcREeyNk-8PTn1xFw" target="_c9jQspcREeyNk-8PTn1xFw">
+    <element xsi:nil="true"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_jo68gZcREeyNk-8PTn1xFw" points="[-80, -9, 174, 0]$[-176, 0, 78, 9]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_jo7jkJcREeyNk-8PTn1xFw" type="targetDataSetLink" source="_d7rF1ZcREeyNk-8PTn1xFw" target="_d7rF1ZcREeyNk-8PTn1xFw">
+    <element xmi:type="map:DataSet" href="resource.map#_c9hbgJcREeyNk-8PTn1xFw?fileId=_TS6XYJcREeyNk-8PTn1xFw$type=map?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_jo7jkZcREeyNk-8PTn1xFw" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_jo8KoJcREeyNk-8PTn1xFw" type="targetSetLink" source="_d7rF1ZcREeyNk-8PTn1xFw" target="_d7rF1ZcREeyNk-8PTn1xFw">
+    <element xmi:type="map:SetDescriptor" href="resource.map#_jo1c8JcREeyNk-8PTn1xFw?fileId=_TS6XYJcREeyNk-8PTn1xFw$type=map?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_jo8KoZcREeyNk-8PTn1xFw" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+</notation:Diagram>
+]]></diagram>
+</map:map>

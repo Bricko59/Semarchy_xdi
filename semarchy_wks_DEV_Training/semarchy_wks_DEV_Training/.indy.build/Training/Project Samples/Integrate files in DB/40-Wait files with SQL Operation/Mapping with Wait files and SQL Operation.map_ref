@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ref:mapRef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:ref="http://www.indy.com/v2/ref" id="_9RbppTTDEe2K1spis4bODw">
+  <dataModel>_d86qYNj1EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map$name=Mapping%20with%20Wait%20files%20and%20SQL%20Operation?</dataModel>
+  <containerRef xsi:type="ref:RDatastore" id="_9RcQsDTDEe2K1spis4bODw" countShownFields="4" hierarchical="true">
+    <dataModel>_bhFSYNj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_9RcQsTTDEe2K1spis4bODw" size="57" type="String" mandatory="true" position="12">
+      <dataModel>_bhMAFNj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map$name=firstname?</dataModel>
+      <usage>_9Rde2DTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9RcQsjTDEe2K1spis4bODw" size="12" type="Numeric" mandatory="true" position="6">
+      <dataModel>_bhMAEtj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map$name=id?</dataModel>
+      <usage>_9Rde0zTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9RcQszTDEe2K1spis4bODw" size="56" type="String" mandatory="true" position="9">
+      <dataModel>_bhMAE9j7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map$name=lastname?</dataModel>
+      <usage>_9Rde1zTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9RcQtDTDEe2K1spis4bODw" mandatory="true" position="3">
+      <dataModel>_bhMAEdj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map$name=file_with_parameter?</dataModel>
+    </fieldRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_9Rc3wDTDEe2K1spis4bODw" countShownFields="7" hierarchical="false">
+    <dataModel>_cM4ocNj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_9Rc3wTTDEe2K1spis4bODw" precision="0" size="32" type="INTEGER" mandatory="true" position="3">
+      <dataModel>_cM5PgNj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map$name=ID_RECORD?</dataModel>
+      <expressionRef id="_9Rde1jTDEe2K1spis4bODw">
+        <dataModel>_c86XMdj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9Rc3wjTDEe2K1spis4bODw" precision="0" size="32" type="INTEGER" position="6">
+      <dataModel>_cM52kNj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map$name=FILE_ID?</dataModel>
+      <expressionRef id="_9Rde0zTDEe2K1spis4bODw" internalExpression="${file_with_parameter.id}$">
+        <dataModel>_c85wIdj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map?</dataModel>
+        <sourceRef>_9RcQsjTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9Rc3wzTDEe2K1spis4bODw" size="100" type="VARCHAR" position="9">
+      <dataModel>_cM52kdj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map$name=LAST_NAME?</dataModel>
+      <expressionRef id="_9Rde1zTDEe2K1spis4bODw" internalExpression="${file_with_parameter.lastname}$">
+        <dataModel>_c86XMtj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map?</dataModel>
+        <sourceRef>_9RcQszTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9Rc3xDTDEe2K1spis4bODw" size="100" type="VARCHAR" position="12">
+      <dataModel>_cM52ktj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map$name=FIRST_NAME?</dataModel>
+      <expressionRef id="_9Rde2DTDEe2K1spis4bODw" internalExpression="${file_with_parameter.firstname}$">
+        <dataModel>_c86XM9j7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map?</dataModel>
+        <sourceRef>_9RcQsTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9Rc3xTTDEe2K1spis4bODw" size="100" status="VALID" type="VARCHAR" position="15">
+      <dataModel>_cM52k9j7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map$name=FILE_NAME?</dataModel>
+      <expressionRef id="_9Rde1DTDEe2K1spis4bODw" internalExpression="'${~/p_file_name}$'">
+        <dataModel>_c85wItj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map?</dataModel>
+        <problem id="_9RkzkDTDEe2K1spis4bODw" code="INFO_USING_SESSION_VARIABLE" message=""/>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9Rde0DTDEe2K1spis4bODw" size="8" status="VALID" type="CHARACTER" position="18">
+      <dataModel>_cM52lNj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map$name=FILE_DATE?</dataModel>
+      <expressionRef id="_9Rde2TTDEe2K1spis4bODw" internalExpression="'${~/p_file_date}$'">
+        <dataModel>_c86XNNj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map?</dataModel>
+        <problem id="_9RkMgzTDEe2K1spis4bODw" code="INFO_USING_SESSION_VARIABLE" message=""/>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9Rde0TTDEe2K1spis4bODw" size="26" type="TIMESTAMP" position="21">
+      <dataModel>_cM52ldj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map$name=UPDATE_DATE?</dataModel>
+      <expressionRef id="_9Rde1TTDEe2K1spis4bODw" internalExpression="current_timestamp">
+        <dataModel>_c86XMNj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <constraintRef id="_9RkMgDTDEe2K1spis4bODw" type="pk">
+      <dataModel>_cM6doNj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map$name=SYS_PK_11219?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <targetSetRef id="_9RfUATTDEe2K1spis4bODw" sourceSet="_9RfUADTDEe2K1spis4bODw">
+    <container>_9Rc3wDTDEe2K1spis4bODw</container>
+  </targetSetRef>
+  <sourceSetRef id="_9RfUADTDEe2K1spis4bODw" targetSet="_9RfUATTDEe2K1spis4bODw">
+    <dataSet xsi:type="map:DataSet">#_bhMnINj7EeiHBZdKZ0VXqw</dataSet>
+  </sourceSetRef>
+  <templateRef id="_9ReF4DTDEe2K1spis4bODw" description="Integration : DATA_FILE2" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=HYPERSONIC_SQL;trgPath=server:Datamart/schema:LOAD_FILES/datastore:DATA_FILE2;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=FILE">
+    <dataModel>_c86-QNj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map$name=I_DATA_FILE2?</dataModel>
+    <problem id="_9RkMgTTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <targetRef>_cM4ocNj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_9Res9jTDEe2K1spis4bODw" description="Load : file_with_parameter" nodeCode="com.stambia.flow.step" templateCriteria="type=L-TP;trgProduct=HYPERSONIC_SQL;trgPath=server:Datamart/schema:LOAD_FILES/datastore:DATA_FILE2;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProduct=FILE;srcPath=server:null/directory:Multiple_Files_Folder/file:file_with_parameter;srcWorkspaceCapability=false;srcMapCapability=true;srcFilterCapability=true;srcJoinCapability=false">
+    <dataModel>_c9FWVtj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map$name=L1_DATA_FILE2?</dataModel>
+    <problem id="_9RkMgjTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <load>_9Rde3DTDEe2K1spis4bODw</load>
+    <targetRef>_cM4ocNj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map?</targetRef>
+  </templateRef>
+  <loadSet id="_9Rde3DTDEe2K1spis4bODw">
+    <container>_bhFSYNj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map?</container>
+  </loadSet>
+  <loadSet id="_9Rde3jTDEe2K1spis4bODw">
+    <container>_cM4ocNj7EeiHBZdKZ0VXqw?fileId=_d86qYNj1EeiHBZdKZ0VXqw$type=map?</container>
+  </loadSet>
+</ref:mapRef>

@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ref:mapRef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:ref="http://www.indy.com/v2/ref" id="_9hZYUDTDEe2K1spis4bODw">
+  <dataModel>_AVmAoAH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map$name=Aggregate%20periods%20with%20analytic%20functions?</dataModel>
+  <containerRef xsi:type="ref:RDatastore" id="_9hv9kDTDEe2K1spis4bODw" countShownFields="4" hierarchical="false">
+    <dataModel>_AVn10AH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_9hv9kTTDEe2K1spis4bODw" size="7" type="DATE" mandatory="true" position="6">
+      <dataModel>_AVn10QH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map$name=BEGIN_DATE?</dataModel>
+      <usage>_9h-nFDTDEe2K1spis4bODw</usage>
+      <usage>_9h-nGjTDEe2K1spis4bODw</usage>
+      <usage>_9h-nHDTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9h9Y8DTDEe2K1spis4bODw" size="5" type="VARCHAR2" position="12">
+      <dataModel>_AVn10gH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map$name=JOB_CODE?</dataModel>
+      <usage>_9h-nGDTDEe2K1spis4bODw</usage>
+      <usage>_9h-nGjTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9h9Y8TTDEe2K1spis4bODw" size="5" type="VARCHAR2" mandatory="true" position="3">
+      <dataModel>_AVn10wH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map$name=MATRICULE_NUMBER?</dataModel>
+      <usage>_9h-nETTDEe2K1spis4bODw</usage>
+      <usage>_9h-nGjTDEe2K1spis4bODw</usage>
+      <usage>_9h-nHDTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9h9Y8jTDEe2K1spis4bODw" size="7" type="DATE" position="9">
+      <dataModel>_AVn11AH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map$name=END_DATE?</dataModel>
+      <usage>_9h-nFjTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <constraintRef id="_9iLbYDTDEe2K1spis4bODw" type="pk">
+      <dataModel>_AVn11QH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map$name=PK_JOB_HISTORY?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_9h9Y8zTDEe2K1spis4bODw" countShownFields="5" hierarchical="false">
+    <dataModel>_AVn11gH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_9h9Y9DTDEe2K1spis4bODw" size="5" type="VARCHAR2" mandatory="true" position="3">
+      <dataModel>_AVn11wH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map$name=MATRICULE_NUMBER?</dataModel>
+      <expressionRef id="_9iBDUDTDEe2K1spis4bODw" internalExpression="${union_tout.MATRICULE_NUMBER}$">
+        <dataModel>_AVn12AH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9iAcQjTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9h-AADTDEe2K1spis4bODw" size="7" type="DATE" mandatory="true" position="6">
+      <dataModel>_AVn12QH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map$name=BEGIN_DATE?</dataModel>
+      <expressionRef id="_9iBDUTTDEe2K1spis4bODw" internalExpression="${union_tout.BEGIN_DATE}$">
+        <dataModel>_AVn12gH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9iAcRjTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9h-AATTDEe2K1spis4bODw" size="7" type="DATE" position="9">
+      <dataModel>_AVn13QH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map$name=END_DATE?</dataModel>
+      <expressionRef id="_9iBDUzTDEe2K1spis4bODw" internalExpression="MAX(${union_tout.END_DATE}$)">
+        <dataModel>_AVn13gH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9iAcSTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9h-AAjTDEe2K1spis4bODw" size="5" type="VARCHAR2" position="12">
+      <dataModel>_AVoc4AH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map$name=JOB_CODE?</dataModel>
+      <expressionRef id="_9iBDVDTDEe2K1spis4bODw" internalExpression="MAX(${union_tout.JOB_CODE}$)">
+        <dataModel>_AVoc4QH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9iAcTDTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9h-AAzTDEe2K1spis4bODw" precision="0" size="22" type="NUMBER" position="15">
+      <dataModel>_AVn12wH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map$name=SUM_JOB_PERIOD?</dataModel>
+      <expressionRef id="_9iBDUjTDEe2K1spis4bODw" internalExpression="SUM(${union_tout.CUMUL}$)">
+        <dataModel>_AVn13AH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9iAcTzTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <constraintRef id="_9iMCcDTDEe2K1spis4bODw" type="pk">
+      <dataModel>_AVoc4gH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map$name=PK_CUMUL_JOB?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef id="_9h-nEzTDEe2K1spis4bODw">
+    <dataModel>_AVoc7QH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+    <fieldRef id="_9h-nEjTDEe2K1spis4bODw">
+      <dataModel>_AVoc7gH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      <usage>_9h_OIjTDEe2K1spis4bODw</usage>
+      <usage>_9h_1MjTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9h-nETTDEe2K1spis4bODw" internalExpression="${JOB_HISTORY.MATRICULE_NUMBER}$">
+        <dataModel>_AVoc7wH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9h9Y8TTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_9h-nFTTDEe2K1spis4bODw">
+      <dataModel>_AVoc8AH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      <usage>_9h_1NTTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9h-nFDTDEe2K1spis4bODw" internalExpression="${JOB_HISTORY.BEGIN_DATE}$">
+        <dataModel>_AVoc8QH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9hv9kTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_9h-nFzTDEe2K1spis4bODw">
+      <dataModel>_AVoc8gH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      <usage>_9h_OJzTDEe2K1spis4bODw</usage>
+      <usage>_9h_1NzTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9h-nFjTDEe2K1spis4bODw" internalExpression="COALESCE(${JOB_HISTORY.END_DATE}$, date'2999-12-31')">
+        <dataModel>_AVoc8wH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9h9Y8jTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_9h-nGTTDEe2K1spis4bODw">
+      <dataModel>_AVoc9AH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      <usage>_9h_OKTTDEe2K1spis4bODw</usage>
+      <usage>_9h_1OTTDEe2K1spis4bODw</usage>
+      <usage>_9ibTADTDEe2K1spis4bODw</usage>
+      <usage>_9igykDTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9h-nGDTDEe2K1spis4bODw" internalExpression="${JOB_HISTORY.JOB_CODE}$">
+        <dataModel>_AVoc9QH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9h9Y8DTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_9h-nGzTDEe2K1spis4bODw">
+      <dataModel>_AVoc9gH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      <usage>_9ibTADTDEe2K1spis4bODw</usage>
+      <usage>_9igykDTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9h-nGjTDEe2K1spis4bODw" internalExpression="lag(${JOB_HISTORY.JOB_CODE}$) over (partition by ${JOB_HISTORY.MATRICULE_NUMBER}$ order by ${JOB_HISTORY.BEGIN_DATE}$)">
+        <dataModel>_AVoc9wH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9h9Y8DTDEe2K1spis4bODw</sourceRef>
+        <sourceRef>_9h9Y8TTDEe2K1spis4bODw</sourceRef>
+        <sourceRef>_9hv9kTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_9h-nHTTDEe2K1spis4bODw">
+      <dataModel>_AVoc-AH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      <usage>_9h_OJTTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9h-nHDTDEe2K1spis4bODw" internalExpression="lag(${JOB_HISTORY.BEGIN_DATE}$) over (partition by ${JOB_HISTORY.MATRICULE_NUMBER}$ order by ${JOB_HISTORY.BEGIN_DATE}$)">
+        <dataModel>_AVoc-QH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9hv9kTTDEe2K1spis4bODw</sourceRef>
+        <sourceRef>_9h9Y8TTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+  </containerRef>
+  <containerRef id="_9h_OJDTDEe2K1spis4bODw">
+    <dataModel>_AVoc-wH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+    <fieldRef id="_9h_OIzTDEe2K1spis4bODw">
+      <dataModel>_AVoc_AH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      <usage>_9iAcRDTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9h_OIjTDEe2K1spis4bODw" internalExpression="${ajout_precedent.MATRICULE_NUMBER}$">
+        <dataModel>_AVoc_QH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9h-nEjTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_9h_OJjTDEe2K1spis4bODw">
+      <dataModel>_AVoc_gH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      <usage>_9iAcRzTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9h_OJTTDEe2K1spis4bODw" internalExpression="MIN(${ajout_precedent.LAG_BEGIN_DATE}$)">
+        <dataModel>_AVoc_wH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9h-nHTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_9h_OKDTDEe2K1spis4bODw">
+      <dataModel>_AVodAAH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      <usage>_9iAcSjTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9h_OJzTDEe2K1spis4bODw" internalExpression="MAX(${ajout_precedent.END_DATE}$)">
+        <dataModel>_AVodAQH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9h-nFzTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_9h_OKjTDEe2K1spis4bODw">
+      <dataModel>_AVodAgH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      <usage>_9iAcTTTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9h_OKTTDEe2K1spis4bODw" internalExpression="${ajout_precedent.JOB_CODE}$">
+        <dataModel>_AVodAwH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9h-nGTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_9h_OLDTDEe2K1spis4bODw">
+      <dataModel>_AVodBAH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      <usage>_9iAcUDTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9h_OKzTDEe2K1spis4bODw" internalExpression="COUNT(*)">
+        <dataModel>_AVodBQH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <targetFilterRef id="_9ibTADTDEe2K1spis4bODw" internalExpression="${ajout_precedent.LAG_JOB_CODE}$ = ${ajout_precedent.JOB_CODE}$">
+      <dataModel>_AVodBwH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      <sourceRef>_9h-nGzTDEe2K1spis4bODw</sourceRef>
+      <sourceRef>_9h-nGTTDEe2K1spis4bODw</sourceRef>
+    </targetFilterRef>
+  </containerRef>
+  <containerRef id="_9h_1NDTDEe2K1spis4bODw">
+    <dataModel>_AVodCAH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+    <problem id="_9ijO0DTDEe2K1spis4bODw" code="WARNING_CONTAINER_SUBEXPRESSION" message=""/>
+    <fieldRef id="_9h_1MzTDEe2K1spis4bODw">
+      <dataModel>_AVodCQH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      <usage>_9iAcQTTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9h_1MjTDEe2K1spis4bODw" internalExpression="${ajout_precedent.MATRICULE_NUMBER}$">
+        <dataModel>_AVodCgH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9h-nEjTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_9h_1NjTDEe2K1spis4bODw">
+      <dataModel>_AVodCwH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      <usage>_9iAcRTTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9h_1NTTDEe2K1spis4bODw" internalExpression="${ajout_precedent.BEGIN_DATE}$">
+        <dataModel>_AVodDAH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9h-nFTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_9h_1ODTDEe2K1spis4bODw">
+      <dataModel>_AVodDQH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      <usage>_9iAcSDTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9h_1NzTDEe2K1spis4bODw" internalExpression="${ajout_precedent.END_DATE}$">
+        <dataModel>_AVodDgH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9h-nFzTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_9h_1OjTDEe2K1spis4bODw">
+      <dataModel>_AVodDwH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      <usage>_9iAcSzTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9h_1OTTDEe2K1spis4bODw" internalExpression="${ajout_precedent.JOB_CODE}$">
+        <dataModel>_AVodEAH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9h-nGTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_9h_1PDTDEe2K1spis4bODw">
+      <dataModel>_AVodEQH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      <usage>_9iAcTjTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9h_1OzTDEe2K1spis4bODw" internalExpression="1">
+        <dataModel>_AVodEgH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <targetFilterRef id="_9igykDTDEe2K1spis4bODw" internalExpression="${ajout_precedent.LAG_JOB_CODE}$ is null or ${ajout_precedent.LAG_JOB_CODE}$ &lt;> ${ajout_precedent.JOB_CODE}$">
+      <dataModel>_AVodFAH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      <sourceRef>_9h-nGzTDEe2K1spis4bODw</sourceRef>
+      <sourceRef>_9h-nGTTDEe2K1spis4bODw</sourceRef>
+    </targetFilterRef>
+  </containerRef>
+  <containerRef id="_9iAcQzTDEe2K1spis4bODw">
+    <dataModel>_AVodFQH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+    <fieldRef id="_9iAcQjTDEe2K1spis4bODw">
+      <dataModel>_AVodFgH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      <usage>_9iBDUDTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9iAcQTTDEe2K1spis4bODw" internalExpression="${rupture.MATRICULE_NUMBER}$">
+        <dataModel>_AVodFwH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9h_1MzTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+      <expressionRef id="_9iAcRDTDEe2K1spis4bODw" internalExpression="${sans_rupture.MATRICULE_NUMBER}$">
+        <dataModel>_AVodGAH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9h_OIzTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_9iAcRjTDEe2K1spis4bODw">
+      <dataModel>_AVodGQH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      <usage>_9iBDUTTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9iAcRTTDEe2K1spis4bODw" internalExpression="${rupture.BEGIN_DATE}$">
+        <dataModel>_AVodGgH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9h_1NjTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+      <expressionRef id="_9iAcRzTDEe2K1spis4bODw" internalExpression="${sans_rupture.BEGIN_DATE}$">
+        <dataModel>_AVodGwH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9h_OJjTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_9iAcSTTDEe2K1spis4bODw">
+      <dataModel>_AVodHAH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      <usage>_9iBDUzTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9iAcSDTDEe2K1spis4bODw" internalExpression="${rupture.END_DATE}$">
+        <dataModel>_AVodHQH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9h_1ODTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+      <expressionRef id="_9iAcSjTDEe2K1spis4bODw" internalExpression="${sans_rupture.END_DATE}$">
+        <dataModel>_AVodHgH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9h_OKDTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_9iAcTDTDEe2K1spis4bODw">
+      <dataModel>_AVodHwH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      <usage>_9iBDVDTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9iAcSzTDEe2K1spis4bODw" internalExpression="${rupture.JOB_CODE}$">
+        <dataModel>_AVodIAH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9h_1OjTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+      <expressionRef id="_9iAcTTTDEe2K1spis4bODw" internalExpression="${sans_rupture.JOB_CODE}$">
+        <dataModel>_AVodIQH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9h_OKjTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_9iAcTzTDEe2K1spis4bODw">
+      <dataModel>_AVodIgH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+      <usage>_9iBDUjTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9iAcTjTDEe2K1spis4bODw" internalExpression="${rupture.CUMUL}$">
+        <dataModel>_AVodIwH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9h_1PDTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+      <expressionRef id="_9iAcUDTDEe2K1spis4bODw" internalExpression="${sans_rupture.CUMUL}$">
+        <dataModel>_AVodJAH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</dataModel>
+        <sourceRef>_9h_OLDTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+  </containerRef>
+  <targetSetRef id="_9iJmMTTDEe2K1spis4bODw" sourceSet="_9iJmMDTDEe2K1spis4bODw">
+    <container>_9h-nEzTDEe2K1spis4bODw</container>
+  </targetSetRef>
+  <targetSetRef id="_9iJmMzTDEe2K1spis4bODw" sourceSet="_9iJmMjTDEe2K1spis4bODw">
+    <container>_9h_OJDTDEe2K1spis4bODw</container>
+  </targetSetRef>
+  <targetSetRef id="_9iJmNTTDEe2K1spis4bODw" sourceSet="_9iJmNDTDEe2K1spis4bODw">
+    <container>_9h_1NDTDEe2K1spis4bODw</container>
+  </targetSetRef>
+  <targetSetRef id="_9iJmNzTDEe2K1spis4bODw" sourceSet="_9iJmNjTDEe2K1spis4bODw">
+    <container>_9iAcQzTDEe2K1spis4bODw</container>
+  </targetSetRef>
+  <targetSetRef id="_9iJmOTTDEe2K1spis4bODw" sourceSet="_9iJmODTDEe2K1spis4bODw">
+    <container>_9h9Y8zTDEe2K1spis4bODw</container>
+  </targetSetRef>
+  <sourceSetRef id="_9iJmMDTDEe2K1spis4bODw" targetSet="_9iJmMTTDEe2K1spis4bODw">
+    <dataSet xsi:type="map:DataSet">#_AVodJwH8EemNL-9oVsp3Bg</dataSet>
+  </sourceSetRef>
+  <sourceSetRef id="_9iJmMjTDEe2K1spis4bODw" targetSet="_9iJmMzTDEe2K1spis4bODw">
+    <dataSet xsi:type="map:DataSet">#_AVodKAH8EemNL-9oVsp3Bg</dataSet>
+  </sourceSetRef>
+  <sourceSetRef id="_9iJmNDTDEe2K1spis4bODw" targetSet="_9iJmNTTDEe2K1spis4bODw">
+    <dataSet xsi:type="map:DataSet">#_AVodKAH8EemNL-9oVsp3Bg</dataSet>
+  </sourceSetRef>
+  <sourceSetRef id="_9iJmNjTDEe2K1spis4bODw" targetSet="_9iJmNzTDEe2K1spis4bODw">
+    <dataSet xsi:type="map:DataSet">#_AVodKgH8EemNL-9oVsp3Bg</dataSet>
+    <dataSet xsi:type="map:DataSet">#_AVodKQH8EemNL-9oVsp3Bg</dataSet>
+  </sourceSetRef>
+  <sourceSetRef id="_9iJmODTDEe2K1spis4bODw" targetSet="_9iJmOTTDEe2K1spis4bODw">
+    <dataSet xsi:type="map:DataSet">#_AVodKwH8EemNL-9oVsp3Bg</dataSet>
+  </sourceSetRef>
+  <templateRef id="_9iEGojTDEe2K1spis4bODw" description="Stage Integration : ajout_precedent" nodeCode="com.stambia.flow.step" templateCriteria="type=IS-TP;trgProduct=ORACLE;trgPath=server:XE_hotel_datamart/schema:HOTEL_DATAMART;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=ORACLE">
+    <dataModel>_AVoc5AH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map$name=I_ajout_precedent?</dataModel>
+    <problem id="_9ijO0TTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <targetRef>_AVoc7QH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_9iFUwDTDEe2K1spis4bODw" description="Stage Integration : sans_rupture" nodeCode="com.stambia.flow.step" templateCriteria="type=IS-TP;trgProduct=ORACLE;trgPath=server:XE_hotel_datamart/schema:HOTEL_DATAMART;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=ORACLE">
+    <dataModel>_AVoc5QH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map$name=I_sans_rupture?</dataModel>
+    <problem id="_9ijO0zTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <targetRef>_AVoc-wH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_9iHJ8DTDEe2K1spis4bODw" description="Stage Integration : rupture" nodeCode="com.stambia.flow.step" templateCriteria="type=IS-TP;trgProduct=ORACLE;trgPath=server:XE_hotel_datamart/schema:HOTEL_DATAMART;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=ORACLE">
+    <dataModel>_AVoc5gH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map$name=I_rupture?</dataModel>
+    <problem id="_9ijO1DTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <targetRef>_AVodCAH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_9iIYEDTDEe2K1spis4bODw" description="Stage Integration : union_tout" nodeCode="com.stambia.flow.step" templateCriteria="type=IS-TP;trgProduct=ORACLE;trgPath=server:XE_hotel_datamart/schema:HOTEL_DATAMART;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=ORACLE">
+    <dataModel>_AVoc5wH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map$name=I_union_tout?</dataModel>
+    <problem id="_9ijO1TTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <targetRef>_AVodFQH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_9iI_IjTDEe2K1spis4bODw" description="Integration : CUMUL_JOB" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=ORACLE;trgPath=server:XE_hotel_datamart/schema:HOTEL_DATAMART/datastore:CUMUL_JOB;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=ORACLE">
+    <dataModel>_AVoc6gH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map$name=I_CUMUL_JOB?</dataModel>
+    <problem id="_9ijO0jTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <targetRef>_AVn11gH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</targetRef>
+  </templateRef>
+  <loadSet id="_9iBDXzTDEe2K1spis4bODw">
+    <container>_AVodFQH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</container>
+  </loadSet>
+  <loadSet id="_9iBDWTTDEe2K1spis4bODw">
+    <container>_AVoc7QH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</container>
+  </loadSet>
+  <loadSet id="_9iBDVzTDEe2K1spis4bODw">
+    <container>_AVn10AH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</container>
+  </loadSet>
+  <loadSet id="_9iEGoTTDEe2K1spis4bODw">
+    <container>_AVn11gH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</container>
+  </loadSet>
+  <loadSet id="_9iBDWzTDEe2K1spis4bODw">
+    <container>_AVoc-wH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</container>
+  </loadSet>
+  <loadSet id="_9iBDXTTDEe2K1spis4bODw">
+    <container>_AVodCAH8EemNL-9oVsp3Bg?fileId=_AVmAoAH8EemNL-9oVsp3Bg$type=map?</container>
+  </loadSet>
+</ref:mapRef>

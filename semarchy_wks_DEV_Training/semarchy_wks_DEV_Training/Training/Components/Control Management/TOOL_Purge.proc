@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_7QajASssEeehUpmuDjp-wg">
+  <parameter id="_l0xEUCstEeehUpmuDjp-wg" name="keepNumber" type="Integer" value="10"/>
+  <parameter id="_rtTlACstEeehUpmuDjp-wg" metaInf="&lt;metaInf id=&quot;value&quot; value=&quot;session&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;minute&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;hour&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;day&quot;/>" name="keepUnitType" type="String" value="day"/>
+  <parameter id="_EXRkYCsuEeehUpmuDjp-wg" metaInf="&lt;metaInf id=&quot;value&quot; value=&quot;status done&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;status error&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;status killed&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;all&quot;/>" name="purgeStatus" type="String" value="all"/>
+  <parameter id="_RMWZYCsuEeehUpmuDjp-wg" name="purgeSessionName" type="String" value="sessionname %"/>
+  <actionCode id="_8odUACssEeehUpmuDjp-wg" isBeginAction="false" name="Scripting" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <parameter id="_8q5kACssEeehUpmuDjp-wg" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+    <code>purgeStatus = __ctx__.getVariableValue(&quot;${../purgeStatus}$&quot;);&#xD;
+purgeName = __ctx__.getVariableValue(&quot;../purgeSessionName&quot;);&#xD;
+if (purgeStatus=='all') {purgeStatus=&quot;&quot; } &#xD;
+__ctx__.executeCommand(&quot;purge keep ${../keepNumber}$ ${../keepUnitType}$ &quot;+purgeName+&quot; &quot;+purgeStatus);&#xD;
+</code>
+  </actionCode>
+</proc:process>

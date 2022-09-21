@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cro="http://stambia.org/samples/customer_repartition_out" targetNamespace="http://stambia.org/samples/customer_repartition_out" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xs:complexType name="resultQuery">
+		<xs:attribute name="query_id" type="xs:integer"/>
+		<xs:attribute name="customerNumber" type="xs:integer"/>
+		<xs:attribute name="columnPercentage" type="xs:integer"/>
+	</xs:complexType>	
+	<xs:complexType name="result_lst">
+		<xs:sequence>
+			<xs:element name="resultQuery" type="cro:resultQuery" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="source_country_code" type="xs:string"/>
+		<xs:attribute name="target_country_code" type="xs:string"/>
+	</xs:complexType>	
+	<xs:element name="customer_repartition_out">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="result_lst" type="cro:result_lst" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

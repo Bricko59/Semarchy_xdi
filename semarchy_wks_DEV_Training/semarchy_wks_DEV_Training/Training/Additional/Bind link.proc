@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_h0mCELk8EeuevZq3ZGZbnA">
+  <parameter id="_h0mCEbk8EeuevZq3ZGZbnA" metaInf="&lt;xslVariableName>initEnv&lt;/xslVariableName>" name="isDebugMode" type="Boolean" value="true"/>
+  <actionCode id="_h0mCErk8EeuevZq3ZGZbnA" isBeginAction="false" name="SqlOperation" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <bindLink id="_h0mCE7k8EeuevZq3ZGZbnA" bindType="DirectBind" targetId="_h0mCGbk8EeuevZq3ZGZbnA"/>
+    <bindLink id="_h0mCFLk8EeuevZq3ZGZbnA" bindType="DirectBind" targetId="_h0mCG7k8EeuevZq3ZGZbnA"/>
+    <bindLink id="_h0mCFbk8EeuevZq3ZGZbnA" bindType="DirectBind" targetId="_h0mpIbk8EeuevZq3ZGZbnA"/>
+    <metaDataLink id="90e7ccca-d20d-46b4-b4e5-30728f148e8d" name="dim_customer" target="resource.md#_b6SCYZb8EeytipfABCJWjQ?fileId=_50xksJMhEeymq6fNOAxqGA$type=md$name=dim_customer?"/>
+    <parameter id="_h0mCF7k8EeuevZq3ZGZbnA" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+    <parameter id="_h0mCGLk8EeuevZq3ZGZbnA" name="SQL_CONNECTION" type="String"/>
+    <code>SELECT CUS_ID,CUS_TITLE+' '+CUS_NAME AS CUS_NAME ,&#xD;
+       CASE WHEN CUS_ID=8 THEN 'jean-michel.souchard@stambia.com' ELSE 'jm.souchard@gmail.com' END AS CUS_MAIL&#xD;
+FROM   %x{$dim_customer/tech:physicalPath()}x%&#xD;
+WHERE  CUS_TITLE='Miss'</code>
+  </actionCode>
+  <actionCode id="_h0mCGbk8EeuevZq3ZGZbnA" generationCondition="md:paramValue($this,'isDebugMode')=true()" isBeginAction="false" name="Scripting" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <parameter id="_h0mCGrk8EeuevZq3ZGZbnA" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+    <code>print('customer : :{CUS_NAME}: - ID : :{CUS_ID}: - Mail : :{CUS_MAIL}:');</code>
+  </actionCode>
+  <actionCode id="_h0mCG7k8EeuevZq3ZGZbnA" isBeginAction="false" name="SendMail" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SendMailActionCodeI">
+    <metaDataLink id="_h0mCHLk8EeuevZq3ZGZbnA" name="Send_mail_folder" target="resource.md#_DLjaOKx6Eeq1Uvhuu_dvcw?fileId=_DLiywKx6Eeq1Uvhuu_dvcw$type=md$name=Send_mail_folder?"/>
+    <metaDataLink id="_h0mCHbk8EeuevZq3ZGZbnA" name="Outlook_message" target="resource.md#_ognLuigUEeuUE48NtByOaw?fileId=_ogkIUCgUEeuUE48NtByOaw$type=md$name=Outlook_message?"/>
+    <parameter id="_h0mCHrk8EeuevZq3ZGZbnA" name="MAIL_TO" type="String" value=":{CUS_MAIL}:"/>
+    <parameter id="_h0mCH7k8EeuevZq3ZGZbnA" name="MAIL_SUBJECT" type="String" value="Mail important à :{CUS_NAME}:"/>
+    <parameter id="_h0mCILk8EeuevZq3ZGZbnA" name="MAIL_ATTACH" type="String" value="%x{$Send_mail_folder/tech:path()}x%/:{CUS_NAME}:.txt"/>
+    <parameter id="_h0mCIbk8EeuevZq3ZGZbnA" name="MAIL_HOSTNAME" type="String"/>
+    <parameter id="_h0mpILk8EeuevZq3ZGZbnA" name="MAIL_FROM" type="String"/>
+    <parameter id="d56be7b1-77c5-4a63-bba1-13c19d1673f7" name="MAIL_UNCRYPTED_PASSWORD" type="String"/>
+    <code>Chère :{CUS_NAME}:,&#xD;
+Vous êtes référencée avec l'identifiant :{CUS_ID}:</code>
+  </actionCode>
+  <actionCode id="_h0mpIbk8EeuevZq3ZGZbnA" isBeginAction="false" name="WriteTxtFile" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+    <link id="_h0mpIrk8EeuevZq3ZGZbnA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_h0mCG7k8EeuevZq3ZGZbnA"/>
+    <metaDataLink id="_h0mpI7k8EeuevZq3ZGZbnA" name="Send_mail_folder" target="resource.md#_DLjaOKx6Eeq1Uvhuu_dvcw?fileId=_DLiywKx6Eeq1Uvhuu_dvcw$type=md$name=Send_mail_folder?"/>
+    <parameter id="_h0mpJLk8EeuevZq3ZGZbnA" name="TXT_WRITE_FILENAME" type="String" value="%x{$Send_mail_folder/tech:path()}x%/:{CUS_NAME}:.txt"/>
+    <code>Chère :{CUS_NAME}:,&#xD;
+Votre référence :&#xD;
+ - identifiant :{CUS_ID}:</code>
+  </actionCode>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.3/notation#/?fileId=_h0mCELk8EeuevZq3ZGZbnA?" xmi:id="826c463f-7eae-402b-b51b-f5122483dc91" type="Proc" measurementUnit="Pixel">
+  <children xmi:type="notation:Node" xmi:id="02389544-9abc-47f2-81e9-d5f96e7f84ad" type="2001">
+    <children xmi:type="notation:Node" xmi:id="846a7b79-2c1e-4024-85b9-1bcd75e8049c" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="ec1c12f4-b134-4415-b79e-e48b4edee503" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="a2946610-bd0b-49ca-a343-7d027cd5ffc8"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="90ffa6eb-1ace-4b90-9929-c04bb580ce63"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="38a21cc4-ec09-471c-990b-9df4754b9854"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="dca26e09-a504-41b7-b8b7-5529ba73a219" type="7002">
+      <children xmi:type="notation:Node" xmi:id="__sq0IKEiEey6HJjlkOrxiQ" type="3002">
+        <element xmi:type="proc:MetaDataLink" href="resource.proc#90e7ccca-d20d-46b4-b4e5-30728f148e8d?fileId=_h0mCELk8EeuevZq3ZGZbnA$type=proc?"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__sq0IaEiEey6HJjlkOrxiQ"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="2334cd1d-57aa-4a09-9097-72380bcd9b18"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="171f74a4-3fff-4529-b18c-dccf138dec16"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="535e1200-c2b1-43de-b0e4-4831a196df33"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="843bddcd-27b7-49dd-9589-cd790a92ce5a" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_h0mCErk8EeuevZq3ZGZbnA?fileId=_h0mCELk8EeuevZq3ZGZbnA$type=proc$name=SqlOperation?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="6c345240-389a-42fe-8bdf-b169ba5e815c" x="234" y="66"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="c4d17c33-efd5-4838-9f80-e314fb8a0da7" type="2001">
+    <children xmi:type="notation:Node" xmi:id="e34e7edf-6e71-49bf-a5bd-8d28a1a97a32" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="c6321979-2172-4d07-a4db-f80cf1427261" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="bd4a9000-0693-4afe-a03a-cdef2e655eb7"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="93e3d656-d7ea-4242-870a-453d4a2d41d8"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="58f8352c-5961-48ff-80aa-3c878503dbea"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="0f6621f1-f66d-4fe0-b1a0-4ae8b79efef3" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="6a73d4bc-d631-4d75-bbad-57588528214d"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="919ce516-e540-44e3-b965-936dad276eb1"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="a470d8c5-717f-4b54-b232-97ce9d36962e"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="7a1e5c79-0119-415d-92d4-0c2718b8104c" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_h0mCGbk8EeuevZq3ZGZbnA?fileId=_h0mCELk8EeuevZq3ZGZbnA$type=proc$name=Scripting?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="4321f20a-a6da-442e-b382-6c60a667ee1f" x="30" y="222"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="9aad8dfd-241e-4703-a6bb-c2d677e20b57" type="2001">
+    <children xmi:type="notation:Node" xmi:id="549d3731-77e0-439d-ae4f-14445f9fb680" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="d8eb4037-88c2-452e-819c-4e10cb6fca42" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="ea079e88-ede2-4fd4-b65c-c74900569891" collapsed="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="2639f2e4-ccd2-401a-ad5d-3ac6d6de3500"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="6d59c699-e45c-4920-8d3e-2e376994c408"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="036b1ee1-5ddc-41a1-831c-2977caaa5884" type="7002">
+      <children xmi:type="notation:Node" xmi:id="35ce6461-7d2c-487d-80d6-f376e17a8fb1" type="3002">
+        <element xmi:type="proc:MetaDataLink" href="resource.proc#_h0mpI7k8EeuevZq3ZGZbnA?fileId=_h0mCELk8EeuevZq3ZGZbnA$type=proc?"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="07642b18-6af2-4c94-9b06-6436cc0596ea"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="b516cf25-e5fc-4a0b-91d7-c8636e7d07ba"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="07a99ee6-011c-4152-b1be-b1c6d0b9d6f7"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="bd26d5cb-dd0e-4511-a770-e5dca73b44a9"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="9548746c-17fd-45e8-9a66-cd3f1e357f1a" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_h0mpIbk8EeuevZq3ZGZbnA?fileId=_h0mCELk8EeuevZq3ZGZbnA$type=proc$name=WriteTxtFile?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="1f4ff040-8042-4133-9d9e-e716ae0df506" x="330" y="222"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="b4a7b074-d06d-4aec-94de-234f361095a0" type="2005">
+    <children xmi:type="notation:Node" xmi:id="79192d84-978c-4ee4-9d1e-fef13c896a1e" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="b38f66df-0191-49ea-ad73-00b6ca59a333" fontName="Segoe UI"/>
+    <element xmi:type="proc:Parameter" href="resource.proc#_h0mCEbk8EeuevZq3ZGZbnA?fileId=_h0mCELk8EeuevZq3ZGZbnA$type=proc$name=isDebugMode?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="ead87d0c-cd32-4a38-bbb7-301f29c9ec0f" x="600" y="30"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="bbece862-da26-4105-843d-0a13e05f1a91" type="2001">
+    <children xmi:type="notation:Node" xmi:id="feaf7c70-381f-4417-acb1-5fcc934d951e" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="c9031109-5abb-412a-945f-8871c9570284" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="a1a4496b-e286-4e87-9151-15bec59e4978" collapsed="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="e43ffa8e-5a15-40b0-9d8c-8e6cac7ed3b9"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="4bafb836-e215-4caf-bcf8-dd867ca86e9e"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="c906c1b0-47bc-49fe-8e2a-51460af6ea9c" type="7002">
+      <children xmi:type="notation:Node" xmi:id="dc6fe338-0a58-41d8-9a42-2033ee004a35" type="3002">
+        <element xmi:type="proc:MetaDataLink" href="resource.proc#_h0mCHLk8EeuevZq3ZGZbnA?fileId=_h0mCELk8EeuevZq3ZGZbnA$type=proc?"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="1d78cc0d-6961-4c62-834f-62c9e3f385c2"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="f885d2a6-3047-43a9-94bb-b74d76e66678" type="3002">
+        <element xmi:type="proc:MetaDataLink" href="resource.proc#_h0mCHbk8EeuevZq3ZGZbnA?fileId=_h0mCELk8EeuevZq3ZGZbnA$type=proc?"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="e86dea22-25c2-4244-88e4-ce02040c34de"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="276989e2-af6a-4cef-bf37-b3c29b6bcd5b"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="582740ae-02fc-4136-a3da-73be416d6272"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="41f25531-7ded-45e2-8abb-fee9f0cdade9"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="7065fb00-b6c3-412c-b199-8b3c0f6ed7d0" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_h0mCG7k8EeuevZq3ZGZbnA?fileId=_h0mCELk8EeuevZq3ZGZbnA$type=proc$name=SendMail?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="57a0c5f5-5e80-4ff3-b23f-1266abeeb8e5" x="438" y="342"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="289da94f-c65c-47af-9f23-eba2a4c5ca8f"/>
+  <element xmi:type="proc:ActionProcess" href="resource.proc#_h0mCELk8EeuevZq3ZGZbnA?fileId=_h0mCELk8EeuevZq3ZGZbnA$type=proc$name=Bind%20link?"/>
+  <edges xmi:type="notation:Edge" xmi:id="94c4467f-e7c1-44a6-8d1f-fc40168f7846" type="4002" source="02389544-9abc-47f2-81e9-d5f96e7f84ad" target="c4d17c33-efd5-4838-9f80-e314fb8a0da7">
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="b2fdddb2-2aee-4a77-a3e1-1d8b855dfb2f"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="d1d83d46-415d-40cb-b673-d6422292017f" fontName="Segoe UI"/>
+    <element xmi:type="proc:BindLink" href="resource.proc#_h0mCE7k8EeuevZq3ZGZbnA?fileId=_h0mCELk8EeuevZq3ZGZbnA$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="78b21a69-351e-4242-b3f2-5036bf0e0930" points="[0, 0, 167, -60]$[-167, 60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="21eeb879-41bf-4bb7-92db-c1f1c6be1b72" id="(0.24923076923076923,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="8fcd97ea-abff-414f-b548-8b9caef40321" id="(0.5,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="2cff413e-d173-4e19-8d63-6583ca37f61a" type="4002" source="02389544-9abc-47f2-81e9-d5f96e7f84ad" target="bbece862-da26-4105-843d-0a13e05f1a91">
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="c6be43ac-110d-45b1-b3cf-b16727e0be76"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="059b3e65-66b0-49a1-a3d0-3704078d1198" fontName="Segoe UI"/>
+    <element xmi:type="proc:BindLink" href="resource.proc#_h0mCFLk8EeuevZq3ZGZbnA?fileId=_h0mCELk8EeuevZq3ZGZbnA$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="53a84577-35ef-4698-bb68-4b35a426111c" points="[0, 0, 0, -180]$[0, 180, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="f06947a0-d4d9-4044-99ab-91640060ee50" id="(0.8461538461538461,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="4103c15f-4bbe-4507-97f1-707b6bba11d7" id="(0.49295774647887325,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="508c1de1-4352-4f0b-9be2-3abab09d09e8" type="4002" source="02389544-9abc-47f2-81e9-d5f96e7f84ad" target="9aad8dfd-241e-4703-a6bb-c2d677e20b57">
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="46561bd4-df71-4635-9ee0-897badac3fd2"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="bb5aae92-a2d9-48f2-8ad1-4c424ea70011" fontName="Segoe UI"/>
+    <element xmi:type="proc:BindLink" href="resource.proc#_h0mCFbk8EeuevZq3ZGZbnA?fileId=_h0mCELk8EeuevZq3ZGZbnA$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="96bfcfc4-1857-4360-bc4d-4cb9629d7afa" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="d13cf3ea-f8ad-4566-a9ce-f7470a2e73f6" id="(0.49846153846153846,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="e964054e-e30b-4c87-a0bb-ea3ff0ef9932" id="(0.5,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="5b3866ee-90cb-4e2d-bc8a-51d56e30de36" type="4001" source="9aad8dfd-241e-4703-a6bb-c2d677e20b57" target="bbece862-da26-4105-843d-0a13e05f1a91">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="1db372b5-8b6a-4650-af5d-d0071e708e2b"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="d2b596b9-1dbe-4ff7-97c9-4787e6e5daa7" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="resource.proc#_h0mpIrk8EeuevZq3ZGZbnA?fileId=_h0mCELk8EeuevZq3ZGZbnA$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="cb5b1529-b27a-48aa-9c74-d9d9a2cd1b39" points="[0, 0, -78, -63]$[78, 63, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="5710679b-d2ce-4d5b-b903-15e54fd595cd" id="(0.5,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="87bf5f65-b7e0-4c63-b225-534944dab65d" id="(0.24647887323943662,0.0)"/>
+  </edges>
+</notation:Diagram>
+]]></diagram>
+</proc:process>

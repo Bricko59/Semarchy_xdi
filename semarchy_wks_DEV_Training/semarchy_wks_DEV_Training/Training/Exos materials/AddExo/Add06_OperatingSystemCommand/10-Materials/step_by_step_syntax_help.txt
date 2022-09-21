@@ -1,0 +1,26 @@
+*** Step 2 ***
+**************
+
+OS_SHELL_LAUNCHER
+-----------------
+cmd /c
+
+OS_WORKING_DIR
+--------------
+%{env:eclipse_home}%stambiaRuntime
+
+Expression Editor of the Operating System Action
+------------------------------------------------
+startdelivery.bat -name Load_DIM_Geography_with_input_param -var ~/STATE_CODE ${~/STATE}$ -var ~/CITY_NAME ${~/CITY}$ 
+
+*** Step 3 ***
+**************
+Property of the file path
+-------------------------
+%x{$OS_Command_Folder/tech:path()}x%/OS_result_command%x{md:formatDate("yyyyMMdd")}x%.txt
+
+Expression Editor of the write file
+-----------------------------------
+RETURN CODE : ${../OperatingSystem startdelivery/OS_RET_CODE}$
+
+RETURN MESSAGE : ${../OperatingSystem startdelivery/OS_RET_MESS}$

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ref:mapRef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:ref="http://www.indy.com/v2/ref" id="_9VkiwDTDEe2K1spis4bODw">
+  <dataModel>_JM090OOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map$name=Load%20Data%20with%20HSQL%20stored_proc?</dataModel>
+  <containerRef xsi:type="ref:RDatastore" id="_9Vr3gDTDEe2K1spis4bODw" countShownFields="6" hierarchical="false">
+    <dataModel>_LF8bkOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_9VsekDTDEe2K1spis4bODw" size="100" type="VARCHAR" position="15">
+      <dataModel>_LGNhU-OaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map$name=CUS_COMPANY?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9VzMQDTDEe2K1spis4bODw" precision="0" size="32" type="INTEGER" mandatory="true" position="3">
+      <dataModel>_LGM6QOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map$name=CUS_ID?</dataModel>
+      <usage>_9WB1xDTDEe2K1spis4bODw</usage>
+      <usage>_9WB1xTTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9VzMQTTDEe2K1spis4bODw" size="8" type="VARCHAR" position="6">
+      <dataModel>_LGNhUOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map$name=TIT_CODE?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9VzMQjTDEe2K1spis4bODw" size="26" type="TIMESTAMP" position="18">
+      <dataModel>_LGNhVOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map$name=CUS_BIRTH_DATE?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9VzMQzTDEe2K1spis4bODw" size="32" type="VARCHAR" mandatory="true" position="9">
+      <dataModel>_LGNhUeOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map$name=CUS_LAST_NAME?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9VzMRDTDEe2K1spis4bODw" size="25" type="VARCHAR" position="12">
+      <dataModel>_LGNhUuOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map$name=CUS_FIRST_NAME?</dataModel>
+    </fieldRef>
+    <constraintRef id="_9WHVUDTDEe2K1spis4bODw" type="fk">
+      <dataModel>_LGOIYOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map$name=FK_CUSTOMER_TITLE?</dataModel>
+    </constraintRef>
+    <constraintRef id="_9WH8YDTDEe2K1spis4bODw" type="pk">
+      <dataModel>_LGOIYeOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map$name=PK_T_CUSTOMER?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_9V6hADTDEe2K1spis4bODw" countShownFields="3" hierarchical="false">
+    <dataModel>_Lp8ggOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_9V6hATTDEe2K1spis4bODw" precision="0" size="32" type="INTEGER" mandatory="true" position="3">
+      <dataModel>_Lp9HkOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map$name=CUS_ID?</dataModel>
+      <expressionRef id="_9WB1wDTDEe2K1spis4bODw" internalExpression="${get_customer.get_customer/id_cus}$">
+        <dataModel>_PG4hcOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map?</dataModel>
+        <sourceRef>_9WAnojTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9V6hAjTDEe2K1spis4bODw" size="32" type="VARCHAR" mandatory="true" position="6">
+      <dataModel>_Lp9HkeOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map$name=LAST_NAME?</dataModel>
+      <expressionRef id="_9WB1wTTDEe2K1spis4bODw" internalExpression="${get_customer.get_customer/lastname}$">
+        <dataModel>_PG4hceOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map?</dataModel>
+        <sourceRef>_9WAnoDTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9V6hAzTDEe2K1spis4bODw" size="25" type="VARCHAR" position="9">
+      <dataModel>_Lp9HkuOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map$name=FIRST_NAME?</dataModel>
+      <expressionRef id="_9WBOsTTDEe2K1spis4bODw" internalExpression="${get_customer.get_customer/firstname}$">
+        <dataModel>_PG36YOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map?</dataModel>
+        <sourceRef>_9V_ZgTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <constraintRef id="_9WIjcDTDEe2K1spis4bODw" type="pk">
+      <dataModel>_Lp9uoOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map$name=PK_RETRIEVED_CUSTOMER?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_9V_ZgDTDEe2K1spis4bODw" countShownFields="4" hierarchical="true">
+    <dataModel>_MTUNoOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_9V_ZgTTDEe2K1spis4bODw" mandatory="true" position="9">
+      <dataModel>_MTVbweOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map$name=firstname?</dataModel>
+      <usage>_9WBOsTTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9WB1xjTDEe2K1spis4bODw">
+        <dataModel>_NRzPIOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9WAnoDTDEe2K1spis4bODw" mandatory="true" position="12">
+      <dataModel>_MTVbwuOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map$name=lastname?</dataModel>
+      <usage>_9WB1wTTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9WB1xzTDEe2K1spis4bODw">
+        <dataModel>_NRzPIeOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9WAnoTTDEe2K1spis4bODw" mandatory="true" position="3">
+      <dataModel>_MTU0seOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map$name=get_customer?</dataModel>
+      <expressionRef id="_9WB1xTTDEe2K1spis4bODw" internalExpression="${T_CUSTOMER.CUS_ID}$">
+        <dataModel>_NRyoEOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map?</dataModel>
+        <sourceRef>_9VzMQDTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9WAnojTDEe2K1spis4bODw" mandatory="true" position="6">
+      <dataModel>_MTVbwOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map$name=id_cus?</dataModel>
+      <usage>_9WB1wDTDEe2K1spis4bODw</usage>
+      <expressionRef id="_9WB1xDTDEe2K1spis4bODw" internalExpression="${T_CUSTOMER.CUS_ID}$">
+        <dataModel>_NRyBAOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map?</dataModel>
+        <sourceRef>_9VzMQDTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+  </containerRef>
+  <targetSetRef id="_9WGHMTTDEe2K1spis4bODw" sourceSet="_9WGHMDTDEe2K1spis4bODw">
+    <container>_9V6hADTDEe2K1spis4bODw</container>
+  </targetSetRef>
+  <targetSetRef id="_9WGHMzTDEe2K1spis4bODw" sourceSet="_9WGHMjTDEe2K1spis4bODw">
+    <container>_9V_ZgDTDEe2K1spis4bODw</container>
+  </targetSetRef>
+  <sourceSetRef id="_9WGHMDTDEe2K1spis4bODw" targetSet="_9WGHMTTDEe2K1spis4bODw">
+    <dataSet xsi:type="map:DataSet">#_MTWC0OOaEemkOsYcvTop0Q</dataSet>
+  </sourceSetRef>
+  <sourceSetRef id="_9WGHMjTDEe2K1spis4bODw" targetSet="_9WGHMzTDEe2K1spis4bODw">
+    <dataSet xsi:type="map:DataSet">#_LGTn8OOaEemkOsYcvTop0Q</dataSet>
+  </sourceSetRef>
+  <templateRef id="_9WB1zzTDEe2K1spis4bODw" description="Integration : get_customer" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=RDBMS_STORED_PROCEDURE;trgPath=procedureSet:StoredProceduresSet/procedure:get_customer;trgWorkspaceCapability=false;trgMapCapability=false;trgFilterCapability=false;trgJoinCapability=false;srcProduct=HYPERSONIC_SQL;srcPath=server:HSQL_Hotel/schema:HOTEL_MANAGEMENT/datastore:T_CUSTOMER;srcWorkspaceCapability=true;srcMapCapability=true;srcFilterCapability=true;srcJoinCapability=true;NO_LOAD=true;;srcProductList=HYPERSONIC_SQL">
+    <dataModel>_NR5VwOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map$name=I_get_customer?</dataModel>
+    <problem id="_9WJxkDTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <targetRef>_MTUNoOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_9WESADTDEe2K1spis4bODw" description="Integration : RETRIEVED_CUSTOMER" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=HYPERSONIC_SQL;trgPath=server:HSQL_Hotel/schema:STORED_PROC/datastore:RETRIEVED_CUSTOMER;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=RDBMS_STORED_PROCEDURE">
+    <dataModel>_PG6WoOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map$name=I_RETRIEVED_CUSTOMER?</dataModel>
+    <problem id="_9WJxkjTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <targetRef>_Lp8ggOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_9WE5EDTDEe2K1spis4bODw" description="Load : get_customer" nodeCode="com.stambia.flow.step" templateCriteria="type=L-TP;trgProduct=HYPERSONIC_SQL;trgPath=server:HSQL_Hotel/schema:STORED_PROC/datastore:RETRIEVED_CUSTOMER;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProduct=RDBMS_STORED_PROCEDURE;srcPath=procedureSet:StoredProceduresSet/procedure:get_customer;srcWorkspaceCapability=false;srcMapCapability=false;srcFilterCapability=false;srcJoinCapability=false;srcIsTarget=true">
+    <dataModel>_PHXCkOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map$name=L1_RETRIEVED_CUSTOMER?</dataModel>
+    <problem id="_9WJxkTTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <load>_9WB1zjTDEe2K1spis4bODw</load>
+    <targetRef>_Lp8ggOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map?</targetRef>
+  </templateRef>
+  <loadSet id="_9WB1zjTDEe2K1spis4bODw">
+    <container>_MTUNoOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map?</container>
+  </loadSet>
+  <loadSet id="_9WB1zDTDEe2K1spis4bODw">
+    <container>_Lp8ggOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map?</container>
+  </loadSet>
+  <loadSet id="_9WB1yjTDEe2K1spis4bODw">
+    <container>_LF8bkOOaEemkOsYcvTop0Q?fileId=_JM090OOaEemkOsYcvTop0Q$type=map?</container>
+  </loadSet>
+</ref:mapRef>

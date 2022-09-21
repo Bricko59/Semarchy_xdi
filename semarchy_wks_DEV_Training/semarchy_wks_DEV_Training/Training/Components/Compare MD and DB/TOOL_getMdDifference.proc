@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="__wsKsdoKEeWH7YZcbbzkng" name="getMdDifference">
+  <parameter id="__wsKstoKEeWH7YZcbbzkng" name="DROP_SCAN_TABLE" type="Boolean" value="false"/>
+  <parameter id="__wsKs9oKEeWH7YZcbbzkng" label="Workspace1 (code used to compare Workspace1 with Workspace2)" name="WORKSPACE_CODE1" type="String" value="WKS1"/>
+  <parameter id="__wsKtNoKEeWH7YZcbbzkng" label="Workspace2 (code used to compare Workspace1 with Workspace2)" name="WORKSPACE_CODE2" type="String" value="WKS2"/>
+  <parameter id="__wsKtdoKEeWH7YZcbbzkng" label="Execute the Metadata comparison between the two workspaces" name="RUN_MD_COMPARISON" type="Boolean" value="false"/>
+  <parameter id="__wsKttoKEeWH7YZcbbzkng" label="Metadata comparison with internal ID" name="COMPARE_WITH_ID" type="Boolean" value="false"/>
+  <actionCode id="__wsKt9oKEeWH7YZcbbzkng" isBeginAction="false" name="Choose depending on metadatalink to scan" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="__wsKuNoKEeWH7YZcbbzkng" generationCondition="exists($DB_SERVER_TO_SCAN)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__wsKy9oKEeWH7YZcbbzkng"/>
+    <link id="__wsKudoKEeWH7YZcbbzkng" generationCondition="exists($SCHEMA_JSON_TO_SCAN)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__wsK3doKEeWH7YZcbbzkng"/>
+    <link id="__wsKutoKEeWH7YZcbbzkng" generationCondition="exists($XSD_TO_SCAN)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__wsK6doKEeWH7YZcbbzkng"/>
+    <link id="__wsKu9oKEeWH7YZcbbzkng" generationCondition="exists($WSDL_TO_SCAN)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__wsK79oKEeWH7YZcbbzkng"/>
+    <link id="__wsKvNoKEeWH7YZcbbzkng" generationCondition="exists($MAIL_SERVER_TO_SCAN)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__wsK49oKEeWH7YZcbbzkng"/>
+    <link id="__wsKvdoKEeWH7YZcbbzkng" generationCondition="exists($EXCEL_SERVER_TO_SCAN)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__wsK19oKEeWH7YZcbbzkng"/>
+    <link id="__wsKvtoKEeWH7YZcbbzkng" generationCondition="exists($FILE_SERVER_TO_SCAN)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__wsK9doKEeWH7YZcbbzkng"/>
+    <link id="__wsKv9oKEeWH7YZcbbzkng" generationCondition="exists($VARIABLE_SET_TO_SCAN)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__wsK0doKEeWH7YZcbbzkng"/>
+    <link id="__wsKwNoKEeWH7YZcbbzkng" generationCondition="exists($FTP_SERVER_TO_SCAN)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__wsK-9oKEeWH7YZcbbzkng"/>
+  </actionCode>
+  <actionCode id="__wsKwdoKEeWH7YZcbbzkng" isBeginAction="false" name="Check schema to store metadata information" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="__wsKwtoKEeWH7YZcbbzkng" generationCondition="exists($SCHEMA_DB_TO_STORE)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__wsKx9oKEeWH7YZcbbzkng"/>
+  </actionCode>
+  <actionCode id="__wsKw9oKEeWH7YZcbbzkng" generationCondition="'${DROP_SCAN_TABLE}$'='true'" enable="true" isBeginAction="false" name="CREATE TABLE MD_SCANNED" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="__wsKxNoKEeWH7YZcbbzkng" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__wsKt9oKEeWH7YZcbbzkng"/>
+    <parameter id="__wsKxdoKEeWH7YZcbbzkng" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="__wsKxtoKEeWH7YZcbbzkng" name="SQL_CONNECTION" type="String" value="%connection{$SCHEMA_DB_TO_STORE}%"/>
+    <code>CREATE TABLE %x{md:objectPath($SCHEMA_DB_TO_STORE,'MD_SCANNED')}x%&#xD;
+(	&#xD;
+    NODE_ID           %x{$SCHEMA_DB_TO_STORE/tech:varcharDdl(50)}x%,&#xD;
+    WKS_CODE          %x{$SCHEMA_DB_TO_STORE/tech:varcharDdl(30)}x%,&#xD;
+    PARENT_NODE_ID    %x{$SCHEMA_DB_TO_STORE/tech:varcharDdl(50)}x%,&#xD;
+    PARENT_NODE_NAME  %x{$SCHEMA_DB_TO_STORE/tech:varcharDdl(100)}x%,&#xD;
+    NODE_TECHNOLOGIE  %x{$SCHEMA_DB_TO_STORE/tech:varcharDdl(100)}x%,&#xD;
+    NODE_TYPE         %x{$SCHEMA_DB_TO_STORE/tech:varcharDdl(30)}x%,&#xD;
+	NODE_NAME         %x{$SCHEMA_DB_TO_STORE/tech:varcharDdl(100)}x%,&#xD;
+	NODE_THREE        %x{$SCHEMA_DB_TO_STORE/tech:varcharDdl(1000)}x%,&#xD;
+    NODE_LEVEL        %x{$SCHEMA_DB_TO_STORE/tech:varcharDdl(2)}x%,&#xD;
+	PROPERTY1         %x{$SCHEMA_DB_TO_STORE/tech:varcharDdl(1000)}x%, &#xD;
+	PROPERTY2         %x{$SCHEMA_DB_TO_STORE/tech:varcharDdl(1000)}x%, &#xD;
+	PROPERTY3         %x{$SCHEMA_DB_TO_STORE/tech:varcharDdl(1000)}x%, &#xD;
+	PROPERTY4         %x{$SCHEMA_DB_TO_STORE/tech:varcharDdl(1000)}x%, &#xD;
+	PROPERTY5         %x{$SCHEMA_DB_TO_STORE/tech:varcharDdl(1000)}x%, &#xD;
+	PROPERTY6         %x{$SCHEMA_DB_TO_STORE/tech:varcharDdl(1000)}x%, &#xD;
+	PROPERTY7         %x{$SCHEMA_DB_TO_STORE/tech:varcharDdl(1000)}x%&#xD;
+)</code>
+  </actionCode>
+  <actionCode id="__wsKx9oKEeWH7YZcbbzkng" generationCondition="'${DROP_SCAN_TABLE}$'='true'" enable="true" isBeginAction="false" name="DROP TABLE MD_SCANNED" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="__wsKyNoKEeWH7YZcbbzkng" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__wsKw9oKEeWH7YZcbbzkng"/>
+    <parameter id="__wsKydoKEeWH7YZcbbzkng" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="__wsKytoKEeWH7YZcbbzkng" name="SQL_CONNECTION" type="String" value="%connection{$SCHEMA_DB_TO_STORE}%"/>
+    <code>DROP TABLE %x{md:objectPath($SCHEMA_DB_TO_STORE,'MD_SCANNED')}x%</code>
+  </actionCode>
+  <actionCode id="__wsKy9oKEeWH7YZcbbzkng" generationCondition="" enable="true" isBeginAction="false" name="INSERT DB_SERVER INTO MD_SCANNED" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="__wsKzNoKEeWH7YZcbbzkng" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__wsLBdoKEeWH7YZcbbzkng"/>
+    <parameter id="__wsKzdoKEeWH7YZcbbzkng" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="__wsKztoKEeWH7YZcbbzkng" name="SQL_CONNECTION" type="String" value="%connection{$SCHEMA_DB_TO_STORE}%"/>
+    <parameter id="__wsKz9oKEeWH7YZcbbzkng" name="SQL_ACTION_TYPE_STAT" type="String" value="INSERT"/>
+    <parameter id="__wsK0NoKEeWH7YZcbbzkng" name="SQL_MULTI_QUERYS" type="String" value="true"/>
+    <code>%x{md:list($DB_SERVER_TO_SCAN/descendant-or-self::*[@id != ''][name()!='colref']/&#xD;
+concat('insert into ',md:objectPath($SCHEMA_DB_TO_STORE,'MD_SCANNED'),' values(''',@id,''',''',&#xD;
+       '${../WORKSPACE_CODE1}$',''',''',../@id,''',''',../@name,''',''',ancestor-or-self::server/tech:productCode(),''',''',&#xD;
+       name(),''',''',@name,''',''',&#xD;
+       md:list(ancestor-or-self::*[name()!='md'][name()!='super'][name()!='rdbms'][name()!='product']/concat(@name,'(',name(),')'),'/'),''',''',&#xD;
+       count(tokenize(md:list(ancestor-or-self::*/concat(@name,'(',name(),')'),'/'),'/'))-4,&#xD;
+       if (name()='server') then concat(''',''jdbcDriver=',tech:jdbcDriver(),''',''jdbcUrl=',tech:jdbcUrl(),''',''jdbcUser=',tech:jdbcUser(),''',''jdbcPwd',tech:encryptedJdbcPassword(),''',NULL,NULL,NULL);')&#xD;
+       else if (name()='schema') then concat(''',''physicalName=',tech:physicalName(),''',''loadMask=',tech:loadMask(),''',''integrationMask=',tech:integrationMask(),''',''rejectMask=',tech:rejectMask(),''',''workName=',tech:workName(),''',''rejectName=',tech:rejectName(),''',NULL);')&#xD;
+       else if (name()='datastore') then concat(''',''physicalName=',tech:physicalName(),''',''histoName=',tech:histoName(),''',''alias=',tech:alias(),''',''tag=',tech:tag(),''',''cdcPhysicalName=',tech:cdcPhysicalName(),''',NULL,NULL);')&#xD;
+       else if (name()='column') then concat(''',''type=',tech:type(),''',''position=',tech:position(),''',''size=',tech:size(),''',''precision=',tech:precision(),''',''nullable=',tech:nullable(),''',''scdCode=',tech:scdCode(),''',NULL);')&#xD;
+       else if (name()='pk') then concat(''',''pkColumnList=',md:list(./ref:columns()/tech:name(),','),''',''severity=',tech:severity(),''',NULL,NULL,NULL,NULL,NULL);')&#xD;
+       else if (name()='fk') then concat(''',''pkTableName=',tech:pkTableName(),''',''severity=',tech:severity(),''',NULL,NULL,NULL,NULL,NULL);')&#xD;
+       else if (name()='relation') then concat(''',''pkColumnList=',md:list(ref:pkColumn()/@name,','),''',''fkColumnList=',md:list(ref:fkColumn()/@name,','),''',''expression=',replace(normalize-space(replace(tech:expression(),'\r\n',' ')),'''',''''''),''',NULL,NULL,NULL,NULL);')&#xD;
+       else if (name()='ck') then concat(''',''expression=',replace(normalize-space(replace(tech:expression(),'\r\n',' ')),'''',''''''),''',''rejectMessage=',replace(normalize-space(replace(tech:rejectMessage(),'\r\n',' ')),'''',''''''),''',''rejectCode=',tech:rejectCode(),''',''severity=',tech:severity(),''',NULL,NULL,NULL);')&#xD;
+       else if (name()='query') then concat(''',''expression=',replace(normalize-space(replace(tech:expression(),'\r\n',' ')),'''',''''''),''',NULL,NULL,NULL,NULL,NULL,NULL);')&#xD;
+       else if (name()='ak') then concat(''',''rejectMessage=',replace(normalize-space(replace(tech:rejectMessage(),'\r\n',' ')),'''',''''''),''',''rejectCode=',tech:rejectCode(),''',''severity=',tech:severity(),''',NULL,NULL,NULL,NULL);')&#xD;
+       else if (name()='index') then concat(''',''type=',tech:type(),''',''isUnique=',tech:isUnique(),''',NULL,NULL,NULL,NULL,NULL);')&#xD;
+       else if (name()='variable') then concat(''',''type=',tech:type(),''',''qury=',replace(normalize-space(replace(tech:query(),'\r\n',' ')),'''',''''''),''',''defaultValue=',replace(normalize-space(replace(tech:defaultValue(),'\r\n',' ')),'''',''''''),''',NULL,NULL,NULL,NULL);')&#xD;
+       else if (name()='sequence') then ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='distributionkey') then ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'),'\n')}x%    </code>
+  </actionCode>
+  <actionCode id="__wsK0doKEeWH7YZcbbzkng" generationCondition="" enable="true" isBeginAction="false" name="INSERT VARIABLE INTO MD_SCANNED" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="__wsK0toKEeWH7YZcbbzkng" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__wsLBdoKEeWH7YZcbbzkng"/>
+    <parameter id="__wsK09oKEeWH7YZcbbzkng" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="__wsK1NoKEeWH7YZcbbzkng" name="SQL_CONNECTION" type="String" value="%connection{$SCHEMA_DB_TO_STORE}%"/>
+    <parameter id="__wsK1doKEeWH7YZcbbzkng" name="SQL_ACTION_TYPE_STAT" type="String" value="INSERT"/>
+    <parameter id="__wsK1toKEeWH7YZcbbzkng" name="SQL_MULTI_QUERYS" type="String" value="true"/>
+    <code>%x{md:list($VARIABLE_SET_TO_SCAN/descendant-or-self::*[@id != '']/&#xD;
+concat('insert into ',md:objectPath($SCHEMA_DB_TO_STORE,'MD_SCANNED'),' values(''',@id,''',''',&#xD;
+       '${../WORKSPACE_CODE1}$',''',''',../@id,''',''',../@name,''',''VARIABLE_SET'',''',&#xD;
+       name(),''',''',@name,''',''',&#xD;
+       md:list(ancestor-or-self::*[name()!='md'][name()!='super'][name()!='rdbms'][name()!='product']/concat(@name,'(',name(),')'),'/'),''',''',&#xD;
+       count(tokenize(md:list(ancestor-or-self::*/concat(@name,'(',name(),')'),'/'),'/'))-4,&#xD;
+       if (name()='set') then ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='connection') then ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='variable') then concat(''',''type=',tech:type(),''',''',replace(normalize-space(replace(tech:query(),'\r\n',' ')),'''',''''''),''',''defaultValue=',replace(normalize-space(replace(tech:defaultValue(),'\r\n',' ')),'''',''''''),''',''refreshConnectionName=',ref:refreshConnection()/@name,''',''saveConnectionName=',ref:saveConnection()/@name,''',NULL,NULL);')&#xD;
+       else ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'),'\n')}x%  </code>
+  </actionCode>
+  <actionCode id="__wsK19oKEeWH7YZcbbzkng" generationCondition="" enable="true" isBeginAction="false" name="INSERT EXCEL INTO MD_SCANNED" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="__wsK2NoKEeWH7YZcbbzkng" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__wsLBdoKEeWH7YZcbbzkng"/>
+    <parameter id="__wsK2doKEeWH7YZcbbzkng" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="__wsK2toKEeWH7YZcbbzkng" name="SQL_CONNECTION" type="String" value="%connection{$SCHEMA_DB_TO_STORE}%"/>
+    <parameter id="__wsK29oKEeWH7YZcbbzkng" name="SQL_ACTION_TYPE_STAT" type="String" value="INSERT"/>
+    <parameter id="__wsK3NoKEeWH7YZcbbzkng" name="SQL_MULTI_QUERYS" type="String" value="true"/>
+    <code>%x{md:list($EXCEL_SERVER_TO_SCAN/descendant-or-self::*[@id != '']/&#xD;
+concat('insert into ',md:objectPath($SCHEMA_DB_TO_STORE,'MD_SCANNED'),' values(''',@id,''',''',&#xD;
+       '${../WORKSPACE_CODE1}$',''',''',../@id,''',''',../@name,''',''',ancestor-or-self::server/tech:productCode(),''',''',&#xD;
+       name(),''',''',@name,''',''',&#xD;
+       md:list(ancestor-or-self::*[name()!='md'][name()!='super'][name()!='rdbms'][name()!='product']/concat(@name,'(',name(),')'),'/'),''',''',&#xD;
+       count(tokenize(md:list(ancestor-or-self::*/concat(@name,'(',name(),')'),'/'),'/'))-4,&#xD;
+       if (name()='server') then concat(''',''jdbcDriver=',tech:jdbcDriver(),''',''jdbcUrl=',tech:jdbcUrl(),''',''jdbcUser=',tech:jdbcUser(),''',''jdbcPwd=',tech:encryptedJdbcPassword(),''',NULL,NULL,NULL);')&#xD;
+       else if (name()='schema') then concat(''',''physicalName=',tech:physicalName(),''',''loadMask=',tech:loadMask(),''',''integrationMask=',tech:integrationMask(),''',''rejectMask=',tech:rejectMask(),''',''workName=',tech:workName(),''',''rejectName=',tech:rejectName(),''',NULL);')&#xD;
+       else if (name()='datastore') then concat(''',''physicalName=',tech:physicalName(),''',''tech:histoName=',tech:histoName(),''',''alias=',tech:alias(),''',''tag=',tech:tag(),''',''cdcPhysicalName=',tech:cdcPhysicalName(),''',NULL,NULL);')&#xD;
+       else if (name()='column') then concat(''',''type=',tech:type(),''',''position=',tech:position(),''',''size=',tech:size(),''',''precision=',tech:precision(),''',''nullable=',tech:nullable(),''',''scdCode=',tech:scdCode(),''',NULL);')&#xD;
+       else ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'),'\n')}x% </code>
+  </actionCode>
+  <actionCode id="__wsK3doKEeWH7YZcbbzkng" generationCondition="" enable="true" isBeginAction="false" name="INSERT JSON INTO MD_SCANNED" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="__wsK3toKEeWH7YZcbbzkng" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__wsLBdoKEeWH7YZcbbzkng"/>
+    <parameter id="__wsK39oKEeWH7YZcbbzkng" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="__wsK4NoKEeWH7YZcbbzkng" name="SQL_CONNECTION" type="String" value="%connection{$SCHEMA_DB_TO_STORE}%"/>
+    <parameter id="__wsK4doKEeWH7YZcbbzkng" name="SQL_ACTION_TYPE_STAT" type="String" value="INSERT"/>
+    <parameter id="__wsK4toKEeWH7YZcbbzkng" name="SQL_MULTI_QUERYS" type="String" value="true"/>
+    <code>%x{md:list($SCHEMA_JSON_TO_SCAN/descendant-or-self::*[@id != '']/&#xD;
+concat('insert into ',md:objectPath($SCHEMA_DB_TO_STORE,'MD_SCANNED'),' values(''',@id,''',''',&#xD;
+       '${../WORKSPACE_CODE1}$',''',''',../@id,''',''',../@name,''',''',ancestor-or-self::schema/tech:productCode(),''',''',&#xD;
+       name(),''',''',@name,''',''',&#xD;
+       md:list(ancestor-or-self::*[name()!='md'][name()!='super'][name()!='rdbms'][name()!='product']/concat(@name,'(',name(),')'),'/'),''',''',&#xD;
+       count(tokenize(md:list(ancestor-or-self::*/concat(@name,'(',name(),')'),'/'),'/'))-4,&#xD;
+       if (name()='schema') then ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='objet') then ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='array') then ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='value') then concat(''',''xmlType=',tech:xmlType(),''',''size=',tech:size(),''',''precision=',tech:precision(),''',NULL,NULL,NULL,NULL);')&#xD;
+       else ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'),'\n')}x%    </code>
+  </actionCode>
+  <actionCode id="__wsK49oKEeWH7YZcbbzkng" generationCondition="" enable="true" isBeginAction="false" name="INSERT MAIL INTO MD_SCANNED" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="__wsK5NoKEeWH7YZcbbzkng" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__wsLBdoKEeWH7YZcbbzkng"/>
+    <parameter id="__wsK5doKEeWH7YZcbbzkng" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="__wsK5toKEeWH7YZcbbzkng" name="SQL_CONNECTION" type="String" value="%connection{$SCHEMA_DB_TO_STORE}%"/>
+    <parameter id="__wsK59oKEeWH7YZcbbzkng" name="SQL_ACTION_TYPE_STAT" type="String" value="INSERT"/>
+    <parameter id="__wsK6NoKEeWH7YZcbbzkng" name="SQL_MULTI_QUERYS" type="String" value="true"/>
+    <code>%x{md:list($MAIL_SERVER_TO_SCAN/descendant-or-self::*[@id != ''][name()!='colref']/&#xD;
+concat('insert into ',md:objectPath($SCHEMA_DB_TO_STORE,'MD_SCANNED'),' values(''',@id,''',''',&#xD;
+       '${../WORKSPACE_CODE1}$',''',''',../@id,''',''',../@name,''',''',ancestor-or-self::server/tech:productCode(),''',''',&#xD;
+       name(),''',''',@name,''',''',&#xD;
+       md:list(ancestor-or-self::*[name()!='md'][name()!='super'][name()!='rdbms'][name()!='product']/concat(@name,'(',name(),')'),'/'),''',''',&#xD;
+       count(tokenize(md:list(ancestor-or-self::*/concat(@name,'(',name(),')'),'/'),'/'))-4,&#xD;
+       if (name()='server') then ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='incomingAccount') then concat(''',''hostName=',tech:hostName(),''',''protocol=',tech:protocol(),''',''port=',tech:port(),''',''user=',tech:user(),''',''pwd=',tech:password(),''',''address=',tech:address(),''',''sslProtocol=',tech:sslProtocol(),''');')&#xD;
+       else if (name()='outgoingServer') then concat(''',''hostName=',tech:hostName(),''',''port=',tech:port(),''',''user=',tech:user(),''',''pwd=',tech:password(),''',''sslProtocol=',tech:sslProtocol(),''',''useSSL=',tech:useSSL(),''',NULL);')&#xD;
+       else if (name()='mailingList') then concat(''',''addressList=',tech:addressList(),''',NULL,NULL,NULL,NULL,NULL,NULL);')&#xD;
+       else if (name()='message') then concat(''',''hostName=',tech:hostName(),''',''user=',tech:user(),''',''pwd=',tech:password(),''',''sender=',tech:sender(),''',''to=',tech:to(),''',''subject=',replace(normalize-space(replace(tech:subject(),'\r\n',' ')),'''',''''''),''',''message=',replace(normalize-space(replace(tech:message(),'\r\n',' ')),'''',''''''),''');')&#xD;
+       else ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'),'\n')}x%    &#xD;
+</code>
+  </actionCode>
+  <actionCode id="__wsK6doKEeWH7YZcbbzkng" generationCondition="" enable="true" isBeginAction="false" name="INSERT XML INTO MD_SCANNED" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="__wsK6toKEeWH7YZcbbzkng" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__wsLBdoKEeWH7YZcbbzkng"/>
+    <parameter id="__wsK69oKEeWH7YZcbbzkng" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="__wsK7NoKEeWH7YZcbbzkng" name="SQL_CONNECTION" type="String" value="%connection{$SCHEMA_DB_TO_STORE}%"/>
+    <parameter id="__wsK7doKEeWH7YZcbbzkng" name="SQL_ACTION_TYPE_STAT" type="String" value="INSERT"/>
+    <parameter id="__wsK7toKEeWH7YZcbbzkng" name="SQL_MULTI_QUERYS" type="String" value="true"/>
+    <code>%x{md:list($XSD_TO_SCAN/descendant-or-self::*[@id != ''][name()!='colref']/&#xD;
+concat('insert into ',md:objectPath($SCHEMA_DB_TO_STORE,'MD_SCANNED'),' values(''',@id,''',''',&#xD;
+       '${../WORKSPACE_CODE1}$',''',''',../@id,''',''',../@name,''',''',ancestor-or-self::xsd/tech:productCode(),''',''',&#xD;
+       name(),''',''',@name,''',''',&#xD;
+       md:list(ancestor-or-self::*[name()!='md'][name()!='super'][name()!='rdbms'][name()!='product']/concat(@name,'(',name(),')'),'/'),''',''',&#xD;
+       count(tokenize(md:list(ancestor-or-self::*/concat(@name,'(',name(),')'),'/'),'/'))-4,&#xD;
+       if (name()='xsd') then concat(''',''xmlFilePath=',tech:xmlFilePath(),''',NULL,NULL,NULL,NULL,NULL,NULL);')&#xD;
+       else if (name()='namespace') then ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='element') then concat(''',''type=',tech:type(),''',''size=',tech:size(),''',''precision=',tech:precision(),''',NULL,NULL,NULL,NULL);')&#xD;
+       else if (name()='sequence') then  ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='attribute') then concat(''',''type=',tech:type(),''',''size=',tech:size(),''',''precision=',tech:precision(),''',NULL,NULL,NULL,NULL);')&#xD;
+       else ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'),'\n')}x%    </code>
+  </actionCode>
+  <actionCode id="__wsK79oKEeWH7YZcbbzkng" generationCondition="" enable="true" isBeginAction="false" name="INSERT WSDL INTO MD_SCANNED" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="__wsK8NoKEeWH7YZcbbzkng" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__wsLBdoKEeWH7YZcbbzkng"/>
+    <parameter id="__wsK8doKEeWH7YZcbbzkng" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="__wsK8toKEeWH7YZcbbzkng" name="SQL_CONNECTION" type="String" value="%connection{$SCHEMA_DB_TO_STORE}%"/>
+    <parameter id="__wsK89oKEeWH7YZcbbzkng" name="SQL_ACTION_TYPE_STAT" type="String" value="INSERT"/>
+    <parameter id="__wsK9NoKEeWH7YZcbbzkng" name="SQL_MULTI_QUERYS" type="String" value="true"/>
+    <code>%x{md:list($WSDL_TO_SCAN/descendant-or-self::*[@id != ''][name()!='colref']/&#xD;
+concat('insert into ',md:objectPath($SCHEMA_DB_TO_STORE,'MD_SCANNED'),' values(''',@id,''',''',&#xD;
+       '${../WORKSPACE_CODE1}$',''',''',../@id,''',''',../@name,''',''',ancestor-or-self::wsdl/tech:productCode(),''',''',&#xD;
+       name(),''',''',@name,''',''',&#xD;
+       md:list(ancestor-or-self::*[name()!='md'][name()!='super'][name()!='rdbms'][name()!='product']/concat(@name,'(',name(),')'),'/'),''',''',&#xD;
+       count(tokenize(md:list(ancestor-or-self::*/concat(@name,'(',name(),')'),'/'),'/'))-4,&#xD;
+       if (name()='wsdl') then ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='namespace') then ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='service') then ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='port') then ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='operation') then ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='input') then ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='output') then ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='fault') then ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='part') then ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='headerPart') then ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='element') then concat(''',''type=',tech:type(),''',''size=',tech:size(),''',''precision=',tech:precision(),''',NULL,NULL,NULL,NULL);')&#xD;
+       else if (name()='sequence') then  ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='attribute') then concat(''',''type=',tech:type(),''',''size=',tech:size(),''',''precision=',tech:precision(),''',NULL,NULL,NULL,NULL);')&#xD;
+       else if (name()='wsse') then concat(''',''user=',tech:user(),''',''pwd=',tech:password(),''',''passwordType=',tech:passwordType(),''',''timeToLive=',tech:timeToLive(),''',''addsNonce=',tech:addsNonce(),''',''addsCreated=',tech:addsCreated(),''',NULL);')&#xD;
+       else if (name()='oauth') then concat(''',''token=',tech:token(),''',''tokenSecret=',tech:tokenSecret(),''',''consumerKey=',tech:consumerKey(),''',''consumerSecret=',tech:consumerSecret(),''',''signatureMethod=',tech:signatureMethod(),''',NULL,NULL);')&#xD;
+       else if (name()='oauth2') then concat(''',''clientId=',tech:clientId(),''',''clientSecret=',tech:clientSecret(),''',''accessToken=',tech:accessToken(),''',''refreshToken=',tech:refreshToken(),''',''tokenEndpoint=',tech:tokenEndpoint(),''',''expiresIn=',tech:expiresIn(),'-connectionTimeout=',tech:connectionTimeout(),''',''numberOfAttempts=',tech:numberOfAttempts(),''');')&#xD;
+       else if (name()='objet') then ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='array') then ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='value') then concat(''',''xmlType=',tech:xmlType(),''',''size=',tech:size(),''',''precision=',tech:precision(),''',NULL,NULL,NULL,NULL);')&#xD;
+       else ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'),'\n')}x%    </code>
+  </actionCode>
+  <actionCode id="__wsK9doKEeWH7YZcbbzkng" generationCondition="" enable="true" isBeginAction="false" name="INSERT FILE INTO MD_SCANNED" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="__wsK9toKEeWH7YZcbbzkng" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__wsLBdoKEeWH7YZcbbzkng"/>
+    <parameter id="__wsK99oKEeWH7YZcbbzkng" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="__wsK-NoKEeWH7YZcbbzkng" name="SQL_CONNECTION" type="String" value="%connection{$SCHEMA_DB_TO_STORE}%"/>
+    <parameter id="__wsK-doKEeWH7YZcbbzkng" name="SQL_ACTION_TYPE_STAT" type="String" value="INSERT"/>
+    <parameter id="__wsK-toKEeWH7YZcbbzkng" name="SQL_MULTI_QUERYS" type="String" value="true"/>
+    <code>%x{md:list($FILE_SERVER_TO_SCAN/descendant-or-self::*[@id != ''][name()!='colref']/&#xD;
+concat('insert into ',md:objectPath($SCHEMA_DB_TO_STORE,'MD_SCANNED'),' values(''',@id,''',''',&#xD;
+       '${../WORKSPACE_CODE1}$',''',''',../@id,''',''',../@name,''',''',ancestor-or-self::server/tech:productCode(),''',''',&#xD;
+       name(),''',''',@name,''',''',&#xD;
+       md:list(ancestor-or-self::*[name()!='md'][name()!='super'][name()!='rdbms'][name()!='product']/concat(@name,'(',name(),')'),'/'),''',''',&#xD;
+       count(tokenize(md:list(ancestor-or-self::*/concat(@name,'(',name(),')'),'/'),'/'))-4,&#xD;
+       if (name()='server') then concat(''',''jdbcDriver=',tech:jdbcDriver(),''',''jdbcUrl=',tech:jdbcUrl(),''',NULL,NULL,NULL,NULL,NULL);')&#xD;
+       else if (name()='directory') then concat(''',''path=',tech:path(),''',''workPath=',ref:work()/tech:path(),''',''logPath=',ref:log()/tech:path(),''',''rejectPath=',ref:reject()/tech:path(),''',NULL,NULL,NULL);')&#xD;
+       else if (name()='file') then concat(''',''physicalName=',tech:physicalName(),''',''type=',tech:type(),''',''header=',tech:header(),''',''fieldSeparator=',tech:fieldSeparator(),''',''lineSeparator=',tech:lineSeparator(),''',''stringDelimiter=',tech:stringDelimiter(),''',NULL);')&#xD;
+       else if (name()='field') then concat(''',''fieldEndPosition=',tech:fieldEndPosition(),''',''type=',tech:type(),''',''fieldPosition=',tech:fieldPosition(),''',''size=',tech:size(),''',''precision=',tech:precision(),''',NULL,NULL);')&#xD;
+       else if (name()='record') then ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='filter') then ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'&#xD;
+       else if (name()='computedField') then concat(''',''type=',tech:type(),''',''size=',tech:size(),''',''precision=',tech:precision(),''',NULL,NULL,NULL,NULL);')&#xD;
+       else ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'),'\n')}x%    </code>
+  </actionCode>
+  <actionCode id="__wsK-9oKEeWH7YZcbbzkng" generationCondition="" enable="true" isBeginAction="false" name="INSERT FTP INTO MD_SCANNED" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="__wsK_NoKEeWH7YZcbbzkng" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__wsLBdoKEeWH7YZcbbzkng"/>
+    <parameter id="__wsK_doKEeWH7YZcbbzkng" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="__wsK_toKEeWH7YZcbbzkng" name="SQL_CONNECTION" type="String" value="%connection{$SCHEMA_DB_TO_STORE}%"/>
+    <parameter id="__wsK_9oKEeWH7YZcbbzkng" name="SQL_ACTION_TYPE_STAT" type="String" value="INSERT"/>
+    <parameter id="__wsLANoKEeWH7YZcbbzkng" name="SQL_MULTI_QUERYS" type="String" value="true"/>
+    <code>%x{md:list($FTP_SERVER_TO_SCAN/descendant-or-self::*[@id != ''][name()!='colref']/&#xD;
+concat('insert into ',md:objectPath($SCHEMA_DB_TO_STORE,'MD_SCANNED'),' values(''',@id,''',''',&#xD;
+       '${../WORKSPACE_CODE1}$',''',''',../@id,''',''',../@name,''',''',ancestor-or-self::server/tech:productCode(),''',''',&#xD;
+       name(),''',''',@name,''',''',&#xD;
+       md:list(ancestor-or-self::*[name()!='md'][name()!='super'][name()!='rdbms'][name()!='product']/concat(@name,'(',name(),')'),'/'),''',''',&#xD;
+       count(tokenize(md:list(ancestor-or-self::*/concat(@name,'(',name(),')'),'/'),'/'))-4,&#xD;
+       if (name()='server') then concat(''',''host=',tech:host(),''',''port=',tech:port(),''',''user=',tech:user(),''',''pwd=',tech:password(),''',''proxiUser=',tech:proxiUser(),'-proxiPwd=',tech:proxiPassword(),'-proxiHost=',tech:proxiHost(),'-proxiPort=',tech:proxiPort(),''',''privateKeyFile=',tech:privateKeyFile(),'-pwdPhrase=',tech:passwordPhrase(),''',''timeOut=',tech:timeout(),''');')&#xD;
+       else if (name()='directory') then concat(''',''path=',tech:path(),''',NULL,NULL,NULL,NULL,NULL,NULL);')&#xD;
+       else ''',NULL,NULL,NULL,NULL,NULL,NULL,NULL);'),'\n')}x%    </code>
+  </actionCode>
+  <actionCode id="__wsLAdoKEeWH7YZcbbzkng" generationCondition="'${RUN_MD_COMPARISON}$'='true'" isBeginAction="false" name="SQLFileExport" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SqlFileExportActionCodeI">
+    <parameter id="__wsLAtoKEeWH7YZcbbzkng" name="SQL_EXP_FILENAME" type="String" value="%x{$WRITE_FOLDER/tech:path()}x%/getDifferenceLog.csv"/>
+    <parameter id="__wsLA9oKEeWH7YZcbbzkng" name="SQL_EXP_GENERATE_HEADER" type="String" value="true"/>
+    <parameter id="__wsLBNoKEeWH7YZcbbzkng" name="SQL_CONNECTION" type="String" value="%connection{$SCHEMA_DB_TO_STORE}%"/>
+    <code>SELECT  WKS_CODE,&#xD;
+        NODE_TECHNOLOGIE,NODE_THREE,&#xD;
+        PROPERTY1,PROPERTY2,PROPERTY3,PROPERTY4,&#xD;
+        PROPERTY5,PROPERTY6,PROPERTY7&#xD;
+ FROM  (SELECT '${../WORKSPACE_CODE2}$' AS WKS_CODE,&#xD;
+                %e(rhino){ switch ('${../COMPARE_WITH_ID}$')&#xD;
+                                  {  case 'false' : __ctx__.retValue = ''; break;&#xD;
+                                     case 'true' : __ctx__.retValue = 'NODE_ID,PARENT_NODE_ID,';break;}&#xD;
+                }e(rhino)%   &#xD;
+               PARENT_NODE_NAME,NODE_LEVEL,NODE_THREE,NODE_TECHNOLOGIE,NODE_TYPE,NODE_NAME,&#xD;
+               PROPERTY1,PROPERTY2,PROPERTY3,PROPERTY4,&#xD;
+               PROPERTY5,PROPERTY6,PROPERTY7&#xD;
+	    FROM  (SELECT %e(rhino){ switch ('${../COMPARE_WITH_ID}$')&#xD;
+                                        {  case 'false' : __ctx__.retValue = ''; break;&#xD;
+                                           case 'true' : __ctx__.retValue = 'NODE_ID,PARENT_NODE_ID,';break;}&#xD;
+                      }e(rhino)%   &#xD;
+	                  PARENT_NODE_NAME,NODE_LEVEL,NODE_THREE,NODE_TECHNOLOGIE,NODE_TYPE,NODE_NAME,&#xD;
+                      PROPERTY1,PROPERTY2,PROPERTY3,PROPERTY4,&#xD;
+                      PROPERTY5,PROPERTY6,PROPERTY7&#xD;
+               FROM   %x{md:objectPath($SCHEMA_DB_TO_STORE,'MD_SCANNED')}x% &#xD;
+               WHERE  WKS_CODE='${../WORKSPACE_CODE2}$' &#xD;
+               EXCEPT&#xD;
+               SELECT %e(rhino){ switch ('${../COMPARE_WITH_ID}$')&#xD;
+                                        {  case 'false' : __ctx__.retValue = ''; break;&#xD;
+                                           case 'true' : __ctx__.retValue = 'NODE_ID,PARENT_NODE_ID,';break;}&#xD;
+                      }e(rhino)%   &#xD;
+                      PARENT_NODE_NAME,NODE_LEVEL,NODE_THREE,NODE_TECHNOLOGIE,NODE_TYPE,NODE_NAME,&#xD;
+                      PROPERTY1,PROPERTY2,PROPERTY3,PROPERTY4,&#xD;
+                      PROPERTY5,PROPERTY6,PROPERTY7&#xD;
+               FROM   %x{md:objectPath($SCHEMA_DB_TO_STORE,'MD_SCANNED')}x% &#xD;
+               WHERE  WKS_CODE='${../WORKSPACE_CODE1}$')&#xD;
+        UNION&#xD;
+        SELECT '${../WORKSPACE_CODE1}$' AS WKS_CODE,&#xD;
+               %e(rhino){ switch ('${../COMPARE_WITH_ID}$')&#xD;
+                                 {  case 'false' : __ctx__.retValue = ''; break;&#xD;
+                                    case 'true' : __ctx__.retValue = 'NODE_ID,PARENT_NODE_ID,';break;}&#xD;
+               }e(rhino)%   &#xD;
+               PARENT_NODE_NAME,NODE_LEVEL,NODE_THREE,NODE_TECHNOLOGIE,NODE_TYPE,NODE_NAME,&#xD;
+               PROPERTY1,PROPERTY2,PROPERTY3,PROPERTY4,&#xD;
+               PROPERTY5,PROPERTY6,PROPERTY7&#xD;
+	    FROM  (SELECT %e(rhino){ switch ('${../COMPARE_WITH_ID}$')&#xD;
+                                        {  case 'false' : __ctx__.retValue = ''; break;&#xD;
+                                           case 'true' : __ctx__.retValue = 'NODE_ID,PARENT_NODE_ID,';break;}&#xD;
+                      }e(rhino)%   &#xD;
+	                  PARENT_NODE_NAME,NODE_LEVEL,NODE_THREE,NODE_TECHNOLOGIE,NODE_TYPE,NODE_NAME,&#xD;
+                      PROPERTY1,PROPERTY2,PROPERTY3,PROPERTY4,&#xD;
+                      PROPERTY5,PROPERTY6,PROPERTY7&#xD;
+               FROM   %x{md:objectPath($SCHEMA_DB_TO_STORE,'MD_SCANNED')}x% &#xD;
+               WHERE  WKS_CODE='${../WORKSPACE_CODE1}$' &#xD;
+               EXCEPT&#xD;
+               SELECT %e(rhino){ switch ('${../COMPARE_WITH_ID}$')&#xD;
+                                        {  case 'false' : __ctx__.retValue = ''; break;&#xD;
+                                           case 'true' : __ctx__.retValue = 'NODE_ID,PARENT_NODE_ID,';break;}&#xD;
+                      }e(rhino)%   &#xD;
+                      PARENT_NODE_NAME,NODE_LEVEL,NODE_THREE,NODE_TECHNOLOGIE,NODE_TYPE,NODE_NAME,&#xD;
+                      PROPERTY1,PROPERTY2,PROPERTY3,PROPERTY4,&#xD;
+                      PROPERTY5,PROPERTY6,PROPERTY7&#xD;
+               FROM   %x{md:objectPath($SCHEMA_DB_TO_STORE,'MD_SCANNED')}x% &#xD;
+               WHERE  WKS_CODE='${../WORKSPACE_CODE2}$'))&#xD;
+ ORDER BY NODE_TECHNOLOGIE,NODE_THREE,WKS_CODE</code>
+  </actionCode>
+  <actionCode id="__wsLBdoKEeWH7YZcbbzkng" isBeginAction="false" name="Execute comparison" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="__wsLBtoKEeWH7YZcbbzkng" generationCondition="exists($WRITE_FOLDER)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__wsLAdoKEeWH7YZcbbzkng"/>
+  </actionCode>
+  <xslVariable id="__wsLB9oKEeWH7YZcbbzkng" description="How to use it ?&#xD;&#xA;----------------&#xD;&#xA;1-Drag &amp; Drop this template at the top (main) level of a process&#xD;&#xA;2-Drag &amp; Drop a RDBMS schema in this template&#xD;&#xA;3-Link the end of the process to this template with a &quot;Unsuccessful Link&quot;&#xD;&#xA;4-Define the properties of the template&#xD;&#xA;&#xD;&#xA;What will be done ?&#xD;&#xA;---------------------&#xD;&#xA;The template will try to CREATE the STB_ERROR_LOG table in the schema &#xD;&#xA;The template will INSERT error properties in the STB_ERROR_LOG table , one record per error&#xD;&#xA;At the end, an error is generated to keep the process in error&#xD;&#xA;&#xD;&#xA;What are your options ?&#xD;&#xA;-------------------------&#xD;&#xA;You can add a process reference/code, different to the process name. It will work even if there is no value&#xD;&#xA;You can choose to drop the STB_ERROR_LOG table at the begin of the template&#xD;&#xA;You can choose to insert also the TOLERATED errors in the table&#xD;&#xA;&#xD;&#xA;mdj:getMetaDataRef($this/metaDataLink[1])" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='server']&#xD;&#xA;                                        [tech:productCode()!='MAIL']&#xD;&#xA;                                        [tech:productCode()!='FILE']&#xD;&#xA;                                        [tech:productCode()!='MICROSOFT_EXCEL']&#xD;&#xA;                                        [tech:productCode()!='FTP']&#xD;&#xA;                                        [1]" name="DB_SERVER_TO_SCAN" type="xpath"/>
+  <xslVariable id="__wsLCNoKEeWH7YZcbbzkng" description="How to use it ?&#xD;&#xA;----------------&#xD;&#xA;1-Drag &amp; Drop this template at the top (main) level of a process&#xD;&#xA;2-Drag &amp; Drop a RDBMS schema in this template&#xD;&#xA;3-Link the end of the process to this template with a &quot;Unsuccessful Link&quot;&#xD;&#xA;4-Define the properties of the template&#xD;&#xA;&#xD;&#xA;What will be done ?&#xD;&#xA;---------------------&#xD;&#xA;The template will try to CREATE the STB_ERROR_LOG table in the schema &#xD;&#xA;The template will INSERT error properties in the STB_ERROR_LOG table , one record per error&#xD;&#xA;At the end, an error is generated to keep the process in error&#xD;&#xA;&#xD;&#xA;What are your options ?&#xD;&#xA;-------------------------&#xD;&#xA;You can add a process reference/code, different to the process name. It will work even if there is no value&#xD;&#xA;You can choose to drop the STB_ERROR_LOG table at the begin of the template&#xD;&#xA;You can choose to insert also the TOLERATED errors in the table&#xD;&#xA;&#xD;&#xA;mdj:getMetaDataRef($this/metaDataLink[1])" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='schema'][tech:productCode()='JSON'][1]" name="SCHEMA_JSON_TO_SCAN" type="xpath"/>
+  <xslVariable id="__wsLCdoKEeWH7YZcbbzkng" description="How to use it ?&#xD;&#xA;----------------&#xD;&#xA;1-Drag &amp; Drop this template at the top (main) level of a process&#xD;&#xA;2-Drag &amp; Drop a RDBMS schema in this template&#xD;&#xA;3-Link the end of the process to this template with a &quot;Unsuccessful Link&quot;&#xD;&#xA;4-Define the properties of the template&#xD;&#xA;&#xD;&#xA;What will be done ?&#xD;&#xA;---------------------&#xD;&#xA;The template will try to CREATE the STB_ERROR_LOG table in the schema &#xD;&#xA;The template will INSERT error properties in the STB_ERROR_LOG table , one record per error&#xD;&#xA;At the end, an error is generated to keep the process in error&#xD;&#xA;&#xD;&#xA;What are your options ?&#xD;&#xA;-------------------------&#xD;&#xA;You can add a process reference/code, different to the process name. It will work even if there is no value&#xD;&#xA;You can choose to drop the STB_ERROR_LOG table at the begin of the template&#xD;&#xA;You can choose to insert also the TOLERATED errors in the table&#xD;&#xA;&#xD;&#xA;mdj:getMetaDataRef($this/metaDataLink[1])" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='xsd'][1]" name="XSD_TO_SCAN" type="xpath"/>
+  <xslVariable id="__wsLCtoKEeWH7YZcbbzkng" description="How to use it ?&#xD;&#xA;----------------&#xD;&#xA;1-Drag &amp; Drop this template at the top (main) level of a process&#xD;&#xA;2-Drag &amp; Drop a RDBMS schema in this template&#xD;&#xA;3-Link the end of the process to this template with a &quot;Unsuccessful Link&quot;&#xD;&#xA;4-Define the properties of the template&#xD;&#xA;&#xD;&#xA;What will be done ?&#xD;&#xA;---------------------&#xD;&#xA;The template will try to CREATE the STB_ERROR_LOG table in the schema &#xD;&#xA;The template will INSERT error properties in the STB_ERROR_LOG table , one record per error&#xD;&#xA;At the end, an error is generated to keep the process in error&#xD;&#xA;&#xD;&#xA;What are your options ?&#xD;&#xA;-------------------------&#xD;&#xA;You can add a process reference/code, different to the process name. It will work even if there is no value&#xD;&#xA;You can choose to drop the STB_ERROR_LOG table at the begin of the template&#xD;&#xA;You can choose to insert also the TOLERATED errors in the table&#xD;&#xA;&#xD;&#xA;mdj:getMetaDataRef($this/metaDataLink[1])" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='schema'][tech:productCode()!='JSON'][1]" name="SCHEMA_DB_TO_STORE" type="xpath"/>
+  <xslVariable id="__wsLC9oKEeWH7YZcbbzkng" description="How to use it ?&#xD;&#xA;----------------&#xD;&#xA;1-Drag &amp; Drop this template at the top (main) level of a process&#xD;&#xA;2-Drag &amp; Drop a RDBMS schema in this template&#xD;&#xA;3-Link the end of the process to this template with a &quot;Unsuccessful Link&quot;&#xD;&#xA;4-Define the properties of the template&#xD;&#xA;&#xD;&#xA;What will be done ?&#xD;&#xA;---------------------&#xD;&#xA;The template will try to CREATE the STB_ERROR_LOG table in the schema &#xD;&#xA;The template will INSERT error properties in the STB_ERROR_LOG table , one record per error&#xD;&#xA;At the end, an error is generated to keep the process in error&#xD;&#xA;&#xD;&#xA;What are your options ?&#xD;&#xA;-------------------------&#xD;&#xA;You can add a process reference/code, different to the process name. It will work even if there is no value&#xD;&#xA;You can choose to drop the STB_ERROR_LOG table at the begin of the template&#xD;&#xA;You can choose to insert also the TOLERATED errors in the table&#xD;&#xA;&#xD;&#xA;mdj:getMetaDataRef($this/metaDataLink[1])" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='wsdl'][1]" name="WSDL_TO_SCAN" type="xpath"/>
+  <xslVariable id="__wsLDNoKEeWH7YZcbbzkng" description="How to use it ?&#xD;&#xA;----------------&#xD;&#xA;1-Drag &amp; Drop this template at the top (main) level of a process&#xD;&#xA;2-Drag &amp; Drop a RDBMS schema in this template&#xD;&#xA;3-Link the end of the process to this template with a &quot;Unsuccessful Link&quot;&#xD;&#xA;4-Define the properties of the template&#xD;&#xA;&#xD;&#xA;What will be done ?&#xD;&#xA;---------------------&#xD;&#xA;The template will try to CREATE the STB_ERROR_LOG table in the schema &#xD;&#xA;The template will INSERT error properties in the STB_ERROR_LOG table , one record per error&#xD;&#xA;At the end, an error is generated to keep the process in error&#xD;&#xA;&#xD;&#xA;What are your options ?&#xD;&#xA;-------------------------&#xD;&#xA;You can add a process reference/code, different to the process name. It will work even if there is no value&#xD;&#xA;You can choose to drop the STB_ERROR_LOG table at the begin of the template&#xD;&#xA;You can choose to insert also the TOLERATED errors in the table&#xD;&#xA;&#xD;&#xA;mdj:getMetaDataRef($this/metaDataLink[1])" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='server']&#xD;&#xA;                                        [tech:productCode()='MAIL']&#xD;&#xA;                                        [1]" name="MAIL_SERVER_TO_SCAN" type="xpath"/>
+  <xslVariable id="__wsLDdoKEeWH7YZcbbzkng" description="How to use it ?&#xD;&#xA;----------------&#xD;&#xA;1-Drag &amp; Drop this template at the top (main) level of a process&#xD;&#xA;2-Drag &amp; Drop a RDBMS schema in this template&#xD;&#xA;3-Link the end of the process to this template with a &quot;Unsuccessful Link&quot;&#xD;&#xA;4-Define the properties of the template&#xD;&#xA;&#xD;&#xA;What will be done ?&#xD;&#xA;---------------------&#xD;&#xA;The template will try to CREATE the STB_ERROR_LOG table in the schema &#xD;&#xA;The template will INSERT error properties in the STB_ERROR_LOG table , one record per error&#xD;&#xA;At the end, an error is generated to keep the process in error&#xD;&#xA;&#xD;&#xA;What are your options ?&#xD;&#xA;-------------------------&#xD;&#xA;You can add a process reference/code, different to the process name. It will work even if there is no value&#xD;&#xA;You can choose to drop the STB_ERROR_LOG table at the begin of the template&#xD;&#xA;You can choose to insert also the TOLERATED errors in the table&#xD;&#xA;&#xD;&#xA;mdj:getMetaDataRef($this/metaDataLink[1])" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='server']&#xD;&#xA;                                        [tech:productCode()='MICROSOFT_EXCEL']&#xD;&#xA;                                        [1]" name="EXCEL_SERVER_TO_SCAN" type="xpath"/>
+  <xslVariable id="__wsLDtoKEeWH7YZcbbzkng" description="How to use it ?&#xD;&#xA;----------------&#xD;&#xA;1-Drag &amp; Drop this template at the top (main) level of a process&#xD;&#xA;2-Drag &amp; Drop a RDBMS schema in this template&#xD;&#xA;3-Link the end of the process to this template with a &quot;Unsuccessful Link&quot;&#xD;&#xA;4-Define the properties of the template&#xD;&#xA;&#xD;&#xA;What will be done ?&#xD;&#xA;---------------------&#xD;&#xA;The template will try to CREATE the STB_ERROR_LOG table in the schema &#xD;&#xA;The template will INSERT error properties in the STB_ERROR_LOG table , one record per error&#xD;&#xA;At the end, an error is generated to keep the process in error&#xD;&#xA;&#xD;&#xA;What are your options ?&#xD;&#xA;-------------------------&#xD;&#xA;You can add a process reference/code, different to the process name. It will work even if there is no value&#xD;&#xA;You can choose to drop the STB_ERROR_LOG table at the begin of the template&#xD;&#xA;You can choose to insert also the TOLERATED errors in the table&#xD;&#xA;&#xD;&#xA;mdj:getMetaDataRef($this/metaDataLink[1])" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='server']&#xD;&#xA;                                        [tech:productCode()='FILE']&#xD;&#xA;                                        [1]" name="FILE_SERVER_TO_SCAN" type="xpath"/>
+  <xslVariable id="__wsLD9oKEeWH7YZcbbzkng" description="How to use it ?&#xD;&#xA;----------------&#xD;&#xA;1-Drag &amp; Drop this template at the top (main) level of a process&#xD;&#xA;2-Drag &amp; Drop a RDBMS schema in this template&#xD;&#xA;3-Link the end of the process to this template with a &quot;Unsuccessful Link&quot;&#xD;&#xA;4-Define the properties of the template&#xD;&#xA;&#xD;&#xA;What will be done ?&#xD;&#xA;---------------------&#xD;&#xA;The template will try to CREATE the STB_ERROR_LOG table in the schema &#xD;&#xA;The template will INSERT error properties in the STB_ERROR_LOG table , one record per error&#xD;&#xA;At the end, an error is generated to keep the process in error&#xD;&#xA;&#xD;&#xA;What are your options ?&#xD;&#xA;-------------------------&#xD;&#xA;You can add a process reference/code, different to the process name. It will work even if there is no value&#xD;&#xA;You can choose to drop the STB_ERROR_LOG table at the begin of the template&#xD;&#xA;You can choose to insert also the TOLERATED errors in the table&#xD;&#xA;&#xD;&#xA;mdj:getMetaDataRef($this/metaDataLink[1])" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='set']&#xD;&#xA;                                        [1]" name="VARIABLE_SET_TO_SCAN" type="xpath"/>
+  <xslVariable id="__wsLENoKEeWH7YZcbbzkng" description="How to use it ?&#xD;&#xA;----------------&#xD;&#xA;1-Drag &amp; Drop this template at the top (main) level of a process&#xD;&#xA;2-Drag &amp; Drop a RDBMS schema in this template&#xD;&#xA;3-Link the end of the process to this template with a &quot;Unsuccessful Link&quot;&#xD;&#xA;4-Define the properties of the template&#xD;&#xA;&#xD;&#xA;What will be done ?&#xD;&#xA;---------------------&#xD;&#xA;The template will try to CREATE the STB_ERROR_LOG table in the schema &#xD;&#xA;The template will INSERT error properties in the STB_ERROR_LOG table , one record per error&#xD;&#xA;At the end, an error is generated to keep the process in error&#xD;&#xA;&#xD;&#xA;What are your options ?&#xD;&#xA;-------------------------&#xD;&#xA;You can add a process reference/code, different to the process name. It will work even if there is no value&#xD;&#xA;You can choose to drop the STB_ERROR_LOG table at the begin of the template&#xD;&#xA;You can choose to insert also the TOLERATED errors in the table&#xD;&#xA;&#xD;&#xA;mdj:getMetaDataRef($this/metaDataLink[1])" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='server']&#xD;&#xA;                                        [tech:productCode()='FTP']&#xD;&#xA;                                        [1]" name="FTP_SERVER_TO_SCAN" type="xpath"/>
+  <xslVariable id="__wsLEdoKEeWH7YZcbbzkng" description="How to use it ?&#xD;&#xA;----------------&#xD;&#xA;1-Drag &amp; Drop this template at the top (main) level of a process&#xD;&#xA;2-Drag &amp; Drop a RDBMS schema in this template&#xD;&#xA;3-Link the end of the process to this template with a &quot;Unsuccessful Link&quot;&#xD;&#xA;4-Define the properties of the template&#xD;&#xA;&#xD;&#xA;What will be done ?&#xD;&#xA;---------------------&#xD;&#xA;The template will try to CREATE the STB_ERROR_LOG table in the schema &#xD;&#xA;The template will INSERT error properties in the STB_ERROR_LOG table , one record per error&#xD;&#xA;At the end, an error is generated to keep the process in error&#xD;&#xA;&#xD;&#xA;What are your options ?&#xD;&#xA;-------------------------&#xD;&#xA;You can add a process reference/code, different to the process name. It will work even if there is no value&#xD;&#xA;You can choose to drop the STB_ERROR_LOG table at the begin of the template&#xD;&#xA;You can choose to insert also the TOLERATED errors in the table&#xD;&#xA;&#xD;&#xA;mdj:getMetaDataRef($this/metaDataLink[1])" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='directory']&#xD;&#xA;                                        [tech:productCode()='FILE']&#xD;&#xA;                                        [1]" name="WRITE_FOLDER" type="xpath"/>
+</proc:process>

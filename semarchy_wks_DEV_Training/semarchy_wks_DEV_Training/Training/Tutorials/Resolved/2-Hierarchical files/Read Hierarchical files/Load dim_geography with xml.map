@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map:map xmlns:map="http://www.indy.com/v2/map" id="_K7BJIJiiEeyJYM9CAJZuPA" internalVersion="8" tech="resource.tech#_waYSMH8VEd2__Mzb_dB76A?fileId=_waYSMH8VEd2__Mzb_dB76A$type=tech$name=flow?">
+  <datastore id="_MDyvEJiiEeyJYM9CAJZuPA" alias="geography" dataset="_MD9HIJiiEeyJYM9CAJZuPA" ref="resource.md#_Fib65ZiiEeyJYM9CAJZuPA?fileId=_A4FEkJiiEeyJYM9CAJZuPA$type=md$name=geography?">
+    <field id="_MD2ZdZiiEeyJYM9CAJZuPA" fullAlias="geography/state/city/@cityName" name="cityName" parent="_MD2ZdJiiEeyJYM9CAJZuPA" ref="resource.md#_Fib6_5iiEeyJYM9CAJZuPA?fileId=_A4FEkJiiEeyJYM9CAJZuPA$type=md$name=cityName?"/>
+    <field id="_MD2ZcJiiEeyJYM9CAJZuPA" expand="true" name="state" parent="_MD1yYZiiEeyJYM9CAJZuPA" ref="resource.md#_Fib66ZiiEeyJYM9CAJZuPA?fileId=_A4FEkJiiEeyJYM9CAJZuPA$type=md$name=state?" updateKey="true"/>
+    <field id="_MD2ZdJiiEeyJYM9CAJZuPA" expand="true" name="city" parent="_MD2ZcJiiEeyJYM9CAJZuPA" ref="resource.md#_Fib6-JiiEeyJYM9CAJZuPA?fileId=_A4FEkJiiEeyJYM9CAJZuPA$type=md$name=city?" updateKey="true"/>
+    <field id="_MD2ZdpiiEeyJYM9CAJZuPA" fullAlias="geography/state/city/@zipCode" name="zipCode" parent="_MD2ZdJiiEeyJYM9CAJZuPA" ref="resource.md#_Fib6_JiiEeyJYM9CAJZuPA?fileId=_A4FEkJiiEeyJYM9CAJZuPA$type=md$name=zipCode?"/>
+    <field id="_MD1yYZiiEeyJYM9CAJZuPA" expand="true" name="geography" ref="resource.md#_Fib65ZiiEeyJYM9CAJZuPA?fileId=_A4FEkJiiEeyJYM9CAJZuPA$type=md$name=geography?" updateKey="true"/>
+    <field id="_MD2ZcpiiEeyJYM9CAJZuPA" fullAlias="geography/state/@stateName" name="stateName" parent="_MD2ZcJiiEeyJYM9CAJZuPA" ref="resource.md#_Fib67ZiiEeyJYM9CAJZuPA?fileId=_A4FEkJiiEeyJYM9CAJZuPA$type=md$name=stateName?"/>
+    <field id="_MD2ZcZiiEeyJYM9CAJZuPA" fullAlias="geography/state/@code" name="code" parent="_MD2ZcJiiEeyJYM9CAJZuPA" ref="resource.md#_Fib685iiEeyJYM9CAJZuPA?fileId=_A4FEkJiiEeyJYM9CAJZuPA$type=md$name=code?"/>
+    <field id="_MD2Zc5iiEeyJYM9CAJZuPA" name="upperCaseName" parent="_MD2ZcJiiEeyJYM9CAJZuPA" ref="resource.md#_Fib68JiiEeyJYM9CAJZuPA?fileId=_A4FEkJiiEeyJYM9CAJZuPA$type=md$name=upperCaseName?"/>
+  </datastore>
+  <datastore id="_OurA8JiiEeyJYM9CAJZuPA" alias="dim_geography" dataset="_OuwggJiiEeyJYM9CAJZuPA" ref="resource.md#_b447QJb8EeytipfABCJWjQ?fileId=_50xksJMhEeymq6fNOAxqGA$type=md$name=dim_geography?" subExpression="[A]">
+    <field id="_OusPEZiiEeyJYM9CAJZuPA" enable="true" insert="true" name="geo_state_code" ref="resource.md#_b5HkwZb8EeytipfABCJWjQ?fileId=_50xksJMhEeymq6fNOAxqGA$type=md$name=geo_state_code?" update="true">
+      <expression id="_QTMuwJiiEeyJYM9CAJZuPA" setDescriptorRef="_QTK5kJiiEeyJYM9CAJZuPA">
+        <expression>geography.geography/state/@code</expression>
+      </expression>
+    </field>
+    <field id="_OuroAZiiEeyJYM9CAJZuPA" enable="true" insert="true" name="geo_zip_code" ref="resource.md#_b5BeIZb8EeytipfABCJWjQ?fileId=_50xksJMhEeymq6fNOAxqGA$type=md$name=geo_zip_code?" update="true" updateKey="true">
+      <expression id="_QTMuwZiiEeyJYM9CAJZuPA" setDescriptorRef="_QTK5kJiiEeyJYM9CAJZuPA">
+        <expression>geography.geography/state/city/@zipCode</expression>
+      </expression>
+    </field>
+    <field id="_OusPEpiiEeyJYM9CAJZuPA" enable="true" insert="true" name="geo_state" ref="resource.md#_b5KoEZb8EeytipfABCJWjQ?fileId=_50xksJMhEeymq6fNOAxqGA$type=md$name=geo_state?" update="true">
+      <expression id="_QTNV0JiiEeyJYM9CAJZuPA" setDescriptorRef="_QTK5kJiiEeyJYM9CAJZuPA">
+        <expression>geography.geography/state/@stateName</expression>
+      </expression>
+    </field>
+    <field id="_OuroAJiiEeyJYM9CAJZuPA" enable="true" insert="true" name="geo_key_id" ref="resource.md#_b4-a0Jb8EeytipfABCJWjQ?fileId=_50xksJMhEeymq6fNOAxqGA$type=md$name=geo_key_id?" update="false" updateKey="false">
+      <expression id="_QTNV0ZiiEeyJYM9CAJZuPA" location="TRG" setDescriptorRef="_QTK5kJiiEeyJYM9CAJZuPA">
+        <expression>nextval('hotel_datamart.seq_geo_key_id')</expression>
+      </expression>
+    </field>
+    <field id="_OusPEJiiEeyJYM9CAJZuPA" enable="true" insert="true" name="geo_city" ref="resource.md#_b5EhcJb8EeytipfABCJWjQ?fileId=_50xksJMhEeymq6fNOAxqGA$type=md$name=geo_city?" update="true">
+      <expression id="_QTNV0piiEeyJYM9CAJZuPA" setDescriptorRef="_QTK5kJiiEeyJYM9CAJZuPA">
+        <expression>geography.geography/state/city/@cityName</expression>
+      </expression>
+    </field>
+    <constraint id="_OusPE5iiEeyJYM9CAJZuPA" name="pk_dim_geography" ref="resource.md#_b5PgkJb8EeytipfABCJWjQ?fileId=_50xksJMhEeymq6fNOAxqGA$type=md$name=pk_dim_geography?" reject="true"/>
+    <setDescriptor id="_QTK5kJiiEeyJYM9CAJZuPA" label="A"/>
+  </datastore>
+  <template id="_QTPyEJiiEeyJYM9CAJZuPA" name="I_dim_geography" process="resource.proc#_dQ2dRp4SEd6bQIkgWyxFQQ?fileId=_dQ2dRp4SEd6bQIkgWyxFQQ$type=proc$name=INTEGRATION%20PostgreSql?" targetId="_OurA8JiiEeyJYM9CAJZuPA"/>
+  <template id="_QT6gcJiiEeyJYM9CAJZuPA" name="L1_dim_geography" process="resource.proc#_eNVMMrdDEd6wPMNq-9tkHw?fileId=_eNVMMrdDEd6wPMNq-9tkHw$type=proc$name=Load%20Xml%20to%20Rdbms?" sourceId="_MDyvEJiiEeyJYM9CAJZuPA" targetId="_OurA8JiiEeyJYM9CAJZuPA"/>
+  <dataSet id="_MD9HIJiiEeyJYM9CAJZuPA">
+    <container>_MDyvEJiiEeyJYM9CAJZuPA</container>
+  </dataSet>
+  <dataSet id="_OuwggJiiEeyJYM9CAJZuPA">
+    <container>_OurA8JiiEeyJYM9CAJZuPA</container>
+  </dataSet>
+  <hint>
+    <usedField>#_MD2ZdZiiEeyJYM9CAJZuPA</usedField>
+    <usedField>#_MD2ZdpiiEeyJYM9CAJZuPA</usedField>
+    <usedField>#_MD2ZcpiiEeyJYM9CAJZuPA</usedField>
+    <usedField>#_MD2ZcZiiEeyJYM9CAJZuPA</usedField>
+  </hint>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation " xmi:id="_K-q6EJiiEeyJYM9CAJZuPA" type="Map" measurementUnit="Pixel">
+  <children xmi:type="notation:Shape" xmi:id="_MEAxgJiiEeyJYM9CAJZuPA" type="2004" fontName="Segoe UI">
+    <children xmi:type="notation:DecorationNode" xmi:id="_MEAxgpiiEeyJYM9CAJZuPA" type="5005"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_MEAxg5iiEeyJYM9CAJZuPA" type="5007"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_MEAxhJiiEeyJYM9CAJZuPA" type="7003"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_MEAxhZiiEeyJYM9CAJZuPA" type="7009"/>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_MEAxhpiiEeyJYM9CAJZuPA" type="7004">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_MEAxh5iiEeyJYM9CAJZuPA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_MEAxiJiiEeyJYM9CAJZuPA"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" xmi:id="_MEAxiZiiEeyJYM9CAJZuPA" type="5009">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_MEAxipiiEeyJYM9CAJZuPA"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" xmi:id="_MEAxi5iiEeyJYM9CAJZuPA" type="7005">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_MEAxjJiiEeyJYM9CAJZuPA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_MEAxjZiiEeyJYM9CAJZuPA"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_MEAxjpiiEeyJYM9CAJZuPA" type="7007"/>
+    <element xmi:type="map:Datastore" href="resource.map#_MDyvEJiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_MEAxgZiiEeyJYM9CAJZuPA" x="139" y="76"/>
+  </children>
+  <children xmi:type="notation:Shape" xmi:id="_Ouy8wJiiEeyJYM9CAJZuPA" type="2004" fontName="Segoe UI">
+    <children xmi:type="notation:DecorationNode" xmi:id="_Ouy8wpiiEeyJYM9CAJZuPA" type="5005"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_Ouy8w5iiEeyJYM9CAJZuPA" type="5007"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_Ouy8xJiiEeyJYM9CAJZuPA" type="7003"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_Ouy8xZiiEeyJYM9CAJZuPA" type="7009"/>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_Ouy8xpiiEeyJYM9CAJZuPA" type="7004">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Ouy8x5iiEeyJYM9CAJZuPA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Ouy8yJiiEeyJYM9CAJZuPA"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" xmi:id="_Ouy8yZiiEeyJYM9CAJZuPA" type="5009">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_Ouy8ypiiEeyJYM9CAJZuPA"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" xmi:id="_Ouy8y5iiEeyJYM9CAJZuPA" type="7005">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Ouy8zJiiEeyJYM9CAJZuPA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Ouy8zZiiEeyJYM9CAJZuPA"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_Ouy8zpiiEeyJYM9CAJZuPA" type="7007"/>
+    <element xmi:type="map:Datastore" href="resource.map#_OurA8JiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Ouy8wZiiEeyJYM9CAJZuPA" x="440" y="87"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_K-q6EZiiEeyJYM9CAJZuPA"/>
+  <element xmi:type="map:Map" href="resource.map#_K7BJIJiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map$name=Load%20dim_geography%20with%20XML?"/>
+  <edges xmi:type="notation:Edge" xmi:id="_QTqo0JiiEeyJYM9CAJZuPA" type="targetLink" source="_Ouy8wJiiEeyJYM9CAJZuPA" target="_MEAxgJiiEeyJYM9CAJZuPA">
+    <element xsi:nil="true"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_QTqo0ZiiEeyJYM9CAJZuPA" points="[-85, 4, 200, -9]$[-184, 8, 101, -5]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_QTseAJiiEeyJYM9CAJZuPA" type="targetDataSetLink" source="_Ouy8wJiiEeyJYM9CAJZuPA" target="_Ouy8wJiiEeyJYM9CAJZuPA">
+    <element xmi:type="map:DataSet" href="resource.map#_MD9HIJiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_QTseAZiiEeyJYM9CAJZuPA" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_QTseApiiEeyJYM9CAJZuPA" type="targetSetLink" source="_Ouy8wJiiEeyJYM9CAJZuPA" target="_Ouy8wJiiEeyJYM9CAJZuPA">
+    <element xmi:type="map:SetDescriptor" href="resource.map#_QTK5kJiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_QTseA5iiEeyJYM9CAJZuPA" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+</notation:Diagram>
+]]></diagram>
+</map:map>

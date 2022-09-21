@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_bgAgsdOGEees7YJp9Xf_nw" description="This template is used to replicate schemas or tables into a folder.&#xD;&#xA;The source can be any database.&#xD;&#xA;&#xD;&#xA;To use the replicator:&#xD;&#xA;1. Create a Process&#xD;&#xA;2. Drag and drop the replicator in the Process&#xD;&#xA;3. Drag and drop the source schema on the replicator and rename it to 'SOURCE' (unless you specify another expression in XPath Expression For Source Table List).&#xD;&#xA;4. The target folder is configured by:&#xD;&#xA;&#x9;- The template will first look for an XPath Expression specified in the option XPath Expression For Work Folder&#xD;&#xA;&#x9;- If not found, the template will look for a Metadata Link named 'TARGET'&#xD;&#xA;&#x9;- If not found, the value of the parameter Work Folder will be used&#xD;&#xA;5. Finally, configure the replicator parameters accordingly to your requirements&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;27/11/2017&#x9;Template creation">
+  <parameter id="_bgAgt9OGEees7YJp9Xf_nw" description="Check this option to drop the target folder" name="dropFolder" type="Boolean" value="false"/>
+  <parameter id="_bgAgtNOGEees7YJp9Xf_nw" description="Check this option to create a sub-folder in the target folder.&#xD;&#xA;The name of the sub-folder will be data_&lt;TargetTableName>" name="createFolder" type="Boolean" value="false"/>
+  <parameter id="_bgAgtdOGEees7YJp9Xf_nw" description="Check this option to unload the data from the source tables to the target folders." name="unloadData" type="Boolean" value="false"/>
+  <parameter id="_bgAgytOGEees7YJp9Xf_nw" name="useCDC" type="Boolean" value="false"/>
+  <parameter id="_bgAgstOGEees7YJp9Xf_nw" description="XPath query used to determine which datastores must be replicated&#xD;&#xA;&#xD;&#xA;Note: this option is evaluated at generation time while the IGNORED_TABLES option is evaluated at run time." metaInf="&lt;xslVariableName>query&lt;/xslVariableName>" name="XPathExpressionForSourceTableList" type="String" value="$SOURCE//datastore"/>
+  <parameter id="_V9r1sNOIEees7YJp9Xf_nw" description="XPath Expression that specifies the path to the target folder.&#xD;&#xA;If specified, this expression will have precedence on any Metadata Link specifying the target folder as well as the option Work Folder.&#xD;&#xA;&#xD;&#xA;Example:&#xD;&#xA;$data/tech:path()" metaInf="" name="XPathExpressionForWorkFolder" type="String" value=""/>
+  <parameter id="_bgAgvtOGEees7YJp9Xf_nw" description="Directory in which the files generated during the unload.&#xD;&#xA;This expression is used if no Metadata Link specifying the target folder can be found and if XPath Expression For Work Folder is empty" metaInf="" name="workFolder" type="String" value="${/CORE_JAVA_TEMPORARY_FOLDER}$"/>
+  <parameter id="_bgAgttOGEees7YJp9Xf_nw" description="JDBC fetch size" metaInf="&lt;xslVariableName>fetchSize&lt;/xslVariableName>" name="fetchSize" type="String" value=""/>
+  <parameter id="_bgAguNOGEees7YJp9Xf_nw" description="This option specifies the number of threads used to unload the data.&#xD;&#xA;Set this option to 0 to disable the parallel loads.&#xD;&#xA;&#xD;&#xA;Note: When parallel load is enabled, a numeric source column must be specified with the tag SPLIT_BY. This column will be used to determine the different batches of data processed by each thread" metaInf="&lt;xslVariableName>splitParallelDegree&lt;/xslVariableName>" name="splitParallelDegree" type="String" value="0"/>
+  <parameter id="_bgAgvdOGEees7YJp9Xf_nw" description="Encoding used when exporting source data to a file" metaInf="&lt;xslVariableName>fileEncoding&lt;/xslVariableName>" name="fileEncoding" type="String" value="UTF8"/>
+  <parameter id="_T2AQINOLEees7YJp9Xf_nw" description="Character used to spearate fields when exporting source data to a file" metaInf="&lt;xslVariableName>fieldSep&lt;/xslVariableName>" name="fieldSep" type="String" value="~"/>
+  <parameter id="_bgAgxNOGEees7YJp9Xf_nw" description="ASCII Code of the Character used to spearate fields when exporting source data to a file" metaInf="&lt;xslVariableName>xFieldSep&lt;/xslVariableName>" name="xFieldSep" type="String" value=""/>
+  <parameter id="_T2FIodOLEees7YJp9Xf_nw" description="Character used to separate rows when exporting source data to a file" metaInf="&lt;xslVariableName>rowSep&lt;/xslVariableName>" name="rowSep" type="String" value=""/>
+  <parameter id="_bgAgvNOGEees7YJp9Xf_nw" description="ASCII Code of the Character used to spearate rows when exporting source data to a file" metaInf="&lt;xslVariableName>xRowSep&lt;/xslVariableName>" name="xRowSep" type="String" value="0A"/>
+  <parameter id="_T2FIoNOLEees7YJp9Xf_nw" description="Character used to enclose string values when exporting source data to a file" metaInf="&lt;xslVariableName>stringDelimiter&lt;/xslVariableName>" name="stringDelimiter" type="String" value=""/>
+  <parameter id="_bgAgw9OGEees7YJp9Xf_nw" description="ASCII Code of the Character used to enclose string values when exporting source data to a file" metaInf="&lt;xslVariableName>xStringDelimiter&lt;/xslVariableName>" name="xStringDelimiter" type="String" value=""/>
+  <parameter id="_bgAgv9OGEees7YJp9Xf_nw" description="Timestamp format used when exporting source data to a file" metaInf="&lt;xslVariableName>timestampFormat&lt;/xslVariableName>" name="timestampFormat" type="String" value="yyyy-MM-dd HH:mm:ss.SSS"/>
+  <parameter id="_bgAgwtOGEees7YJp9Xf_nw" description="Date format used when exporting source data to a file" metaInf="&lt;xslVariableName>dateFormat&lt;/xslVariableName>" name="dateFormat" type="String" value="yyyy-MM-dd"/>
+  <parameter id="_adNqINOKEees7YJp9Xf_nw" description="Time format used when exporting source data to a file" metaInf="&lt;xslVariableName>timeFormat&lt;/xslVariableName>" name="timeFormat" type="String" value="HH:mm:ss.SSS"/>
+  <parameter id="_bgAgutOGEees7YJp9Xf_nw" description="Numeric separator used when exporting source data to a file" metaInf="&lt;xslVariableName>numericSeparator&lt;/xslVariableName>" name="numericSeparator" type="String" value="."/>
+  <parameter id="_bgAgxtOGEees7YJp9Xf_nw" description="The string to be written in the File for a null value" metaInf="&lt;xslVariableName>nullValueReplacement&lt;/xslVariableName>" name="nullValueReplacement" type="String" value=""/>
+  <parameter id="_bgAgydOGEees7YJp9Xf_nw" description="Name of the CDC Subscriber for which data is to be consumed when Use Cdc is set to true." metaInf="" name="cdcSubscriber" type="String" value="defaultSubscriber"/>
+  <parameter id="_bgAgs9OGEees7YJp9Xf_nw" description="Comma separated list of tables to ignore from the replication.&#xD;&#xA;It must be the fully qualified table names.&#xD;&#xA;&#xD;&#xA;E.g. for Microsoft SQL Server&#xD;&#xA;[CATALOG].[SCHEMA].[TABLE01],[CATALOG].[SCHEMA].[TABLE02]" name="IGNORED_TABLES" type="String"/>
+  <subProcess id="_bgAgy9OGEees7YJp9Xf_nw" description="" generationCondition="md:paramValue($this,'unloadData')='true'" isBeginAction="false" name="Unload data" nbCycles="-1" repetitionQuery="" toleratedError="false">
+    <subProcess id="_bgAgz9OGEees7YJp9Xf_nw" isBeginAction="false" name="For each table" nbCycles="-1" repetitionQuery="$sourceTableList" repetitionVariableName="SOURCE_TABLE" toleratedError="false">
+      <actionCode id="_bgAg0dOGEees7YJp9Xf_nw" isBeginAction="false" name="Start" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+        <link id="_bgAg0tOGEees7YJp9Xf_nw" executionCondition="var depthInProcess=&quot;../../&quot;;&#xD;&#xA;&#xD;&#xA;__ctx__.retValue=true;&#xD;&#xA;var strIgnoredTables = __ctx__.getVariableValue(depthInProcess+&quot;IGNORED_TABLES&quot;);&#xD;&#xA;if(strIgnoredTables.length()>0) {&#xD;&#xA;&#x9;var arrayIgnoredTables = strIgnoredTables.split(&quot;,&quot;);&#xD;&#xA;&#x9;for (var i = 0; i &lt; arrayIgnoredTables.length; i++) {&#xD;&#xA;&#x9;&#x9;var curIgnoredTable = arrayIgnoredTables[i].trim();&#xD;&#xA;&#x9;&#x9;if(curIgnoredTable.equals(&quot;%x{replace($SOURCE_TABLE/tech:physicalPath(), '&quot;','\\&quot;')}x%&quot;)) {&#xD;&#xA;&#x9;&#x9;&#x9;__ctx__.retValue=false;&#xD;&#xA;&#x9;&#x9;}&#xD;&#xA;&#x9;}&#xD;&#xA;}&#xD;&#xA;" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_bgAg4tOGEees7YJp9Xf_nw"/>
+      </actionCode>
+      <actionCode id="_bgAg4tOGEees7YJp9Xf_nw" generationCondition="$isCdc" isBeginAction="false" name="Lock of CDC table" nbCycles="-1" repetitionMode="" repetitionQuery="" repetitionVariableName="" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+        <link id="_bgAg49OGEees7YJp9Xf_nw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_bgAhPNOGEees7YJp9Xf_nw?fileId=_bgAgsdOGEees7YJp9Xf_nw$type=proc$name=Unload?"/>
+        <parameter id="_bgAg5NOGEees7YJp9Xf_nw" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+        <parameter id="_bgAg5dOGEees7YJp9Xf_nw" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+        <parameter id="_bgAg5tOGEees7YJp9Xf_nw" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+        <code>update 	%x{$SOURCE_TABLE/tech:cdcTablePath()}x%
+set 	CDC_CONSUMMATION = '1'
+where	CDC_SUBSCRIBER='%x{md:paramValue($this,'cdcSubscriber')}x%'</code>
+      </actionCode>
+      <actionCode id="_bgAg59OGEees7YJp9Xf_nw" generationCondition="$isCdc" isBeginAction="false" name="Unlock of CDC table" nbCycles="-1" repetitionMode="" repetitionQuery="" repetitionVariableName="" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+        <parameter id="_bgAg6NOGEees7YJp9Xf_nw" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+        <parameter id="_bgAg6dOGEees7YJp9Xf_nw" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+        <parameter id="_bgAg6tOGEees7YJp9Xf_nw" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+        <code>Delete 	from 	%x{$SOURCE_TABLE/tech:cdcTablePath()}x%
+Where	CDC_CONSUMMATION = '1'
+and		CDC_SUBSCRIBER='%x{md:paramValue($this,'cdcSubscriber')}x%'</code>
+      </actionCode>
+      <subProcess id="_bgAhPNOGEees7YJp9Xf_nw" generationCondition="" isBeginAction="false" name="Unload" nbCycles="-1" repetitionQuery="" toleratedError="false">
+        <link id="_bgAhPdOGEees7YJp9Xf_nw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_bgAg59OGEees7YJp9Xf_nw"/>
+        <subProcess id="_bgAhSNOGEees7YJp9Xf_nw" generationCondition="number(md:ifEmpty(md:paramValue($this,'splitParallelDegree'),'0'))>1" isBeginAction="false" name="For split table" nbCycles="-1" toleratedError="false">
+          <actionCode id="_bgAhStOGEees7YJp9Xf_nw" isBeginAction="false" name="getMin" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+            <link id="_bgAhS9OGEees7YJp9Xf_nw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_bgAhUtOGEees7YJp9Xf_nw"/>
+            <parameter id="_bgAhTNOGEees7YJp9Xf_nw" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+            <parameter id="_bgAhTdOGEees7YJp9Xf_nw" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+            <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;../MIN_VALUE&quot; type=&quot;String&quot; failsIfNoRecord=&quot;false&quot; defaultValue=&quot;0&quot;>&#xD;
+select	&#xD;
+min(%x{$splitByColumn/tech:name()}x%)&#xD;
+from (%x{$selectStatement}x%)&#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters></code>
+          </actionCode>
+          <actionCode id="_bgAhTtOGEees7YJp9Xf_nw" isBeginAction="false" name="getMax" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+            <link id="_bgAhT9OGEees7YJp9Xf_nw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_bgAhVtOGEees7YJp9Xf_nw"/>
+            <parameter id="_bgAhUNOGEees7YJp9Xf_nw" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+            <parameter id="_bgAhUdOGEees7YJp9Xf_nw" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+            <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;../MAX_VALUE&quot; type=&quot;String&quot; failsIfNoRecord=&quot;false&quot; defaultValue=&quot;0&quot;>&#xD;
+select	&#xD;
+max(%x{$splitByColumn/tech:name()}x%)&#xD;
+from (%x{$selectStatement}x%)&#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters></code>
+          </actionCode>
+          <actionCode id="_bgAhUtOGEees7YJp9Xf_nw" isBeginAction="false" name="Format MIN_VALUE" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+            <link id="_bgAhU9OGEees7YJp9Xf_nw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_bgAhWtOGEees7YJp9Xf_nw?fileId=_bgAgsdOGEees7YJp9Xf_nw$type=proc$name=Load%20Data?"/>
+            <parameter id="_bgAhVNOGEees7YJp9Xf_nw" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+            <parameter id="_bgAhVdOGEees7YJp9Xf_nw" name="SCRIPTING_CONNECTION" type="String" value="${CORE_ACTION_ID}$"/>
+            <code>var minValue = new java.lang.String(__ctx__.getVariableValue(&quot;../MIN_VALUE&quot;));&#xD;
+if(!minValue.contains(&quot;.&quot;)) {&#xD;
+	__ctx__.publishVariable(&quot;../MIN_VALUE&quot;,minValue+&quot;.0&quot;);&#xD;
+}&#xD;
+</code>
+          </actionCode>
+          <actionCode id="_bgAhVtOGEees7YJp9Xf_nw" isBeginAction="false" name="Format MAX_VALUE" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+            <link id="_bgAhV9OGEees7YJp9Xf_nw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_bgAhWtOGEees7YJp9Xf_nw?fileId=_bgAgsdOGEees7YJp9Xf_nw$type=proc$name=Load%20Data?"/>
+            <parameter id="_bgAhWNOGEees7YJp9Xf_nw" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+            <parameter id="_bgAhWdOGEees7YJp9Xf_nw" name="SCRIPTING_CONNECTION" type="String" value="${CORE_ACTION_ID}$"/>
+            <code>var maxValue = new java.lang.String(__ctx__.getVariableValue(&quot;../MAX_VALUE&quot;));&#xD;
+if(!maxValue.contains(&quot;.&quot;)) {&#xD;
+	__ctx__.publishVariable(&quot;../MAX_VALUE&quot;,maxValue+&quot;.0&quot;);&#xD;
+}&#xD;
+</code>
+          </actionCode>
+          <subProcess id="_bgAhWtOGEees7YJp9Xf_nw" isBeginAction="false" name="Load Data" nbCycles="-1" repetitionMode="Parallelize" repetitionQuery="$split/split" repetitionVariableName="CUR_SPLIT" toleratedError="false">
+            <actionCode id="_PGXRMNOLEees7YJp9Xf_nw" isBeginAction="false" name="Unload of data from source into file" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SqlFileExportActionCodeI">
+              <parameter id="_PGXRMdOLEees7YJp9Xf_nw" name="SQL_EXP_FILENAME" type="String" value="%x{$tempFileName}x%"/>
+              <parameter id="_PGXRMtOLEees7YJp9Xf_nw" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+              <parameter id="_PGXRM9OLEees7YJp9Xf_nw" name="SQL_EXP_FILE_FORMAT" type="String" value="variable"/>
+              <parameter id="_PGXRNNOLEees7YJp9Xf_nw" name="SQL_EXP_DATE_FORMAT" type="String" value="%x{md:ifEmpty($timestampFormat,'yyyy-MM-dd HH:mm:ss.SSS')}x%"/>
+              <parameter id="_PGXRNdOLEees7YJp9Xf_nw" name="SQL_EXP_FETCH_SIZE" type="Integer" value="%x{$fetchSize}x%"/>
+              <parameter id="_PGXRNtOLEees7YJp9Xf_nw" name="SQL_EXP_FILE_ENCODING" type="String" value="%x{$fileEncoding}x%"/>
+              <parameter id="_PGXRN9OLEees7YJp9Xf_nw" description="" name="SQL_EXP_NUMERIC_SEPARATOR_CHAR" type="String" value="%x{md:ifEmpty($numericSeparator,'.')}x%"/>
+              <parameter id="_PGXRONOLEees7YJp9Xf_nw" name="SQL_EXP_XROW_SEP" type="String" value="%x{$xRowSep}x%"/>
+              <parameter id="_PGXROdOLEees7YJp9Xf_nw" name="SQL_EXP_SHORT_DATE_FORMAT" type="String" value="%x{md:ifEmpty($dateFormat,'yyyy-MM-dd')}x%"/>
+              <parameter id="_PGXROtOLEees7YJp9Xf_nw" name="SQL_EXP_NULL_VALUE_REPLACEMENT" type="String" value="%x{$nullValueReplacement}x%"/>
+              <parameter id="_PGXRO9OLEees7YJp9Xf_nw" name="SQL_EXP_TIME_FORMAT" type="String" value="%x{md:ifEmpty($timeFormat,'HH:mm:ss.SSS')}x%"/>
+              <parameter id="_PGXRPNOLEees7YJp9Xf_nw" name="SQL_EXP_XFIELD_SEP" type="String" value="%x{$xFieldSep}x%"/>
+              <parameter id="_PGXRPdOLEees7YJp9Xf_nw" name="SQL_EXP_XSTRING_DELIMITER" type="String" value="%x{$xStringDelimiter}x%"/>
+              <parameter id="_jTFpMNOLEees7YJp9Xf_nw" name="SQL_EXP_FIELD_SEP" type="String" value="%x{$fieldSep}x%"/>
+              <parameter id="_kcCOQNOLEees7YJp9Xf_nw" name="SQL_EXP_ROW_SEP" type="String" value="%x{$rowSep}x%"/>
+              <parameter id="_lyTdoNOLEees7YJp9Xf_nw" name="SQL_EXP_STRING_DELIMITER" type="String" value="%x{$stringDelimiter}x%"/>
+              <code>%x{$selectStatement}x%&#xD;
+and (&#xD;
+%x{if($CUR_SPLIT/@name='1') then '1=1' else concat($splitByColumn/tech:name(),' &amp;gt;  (${../../MIN_VALUE}$) + ((${../../MAX_VALUE}$)-(${../../MIN_VALUE}$))/',md:paramValue($this,'splitParallelDegree'),'*(',$CUR_SPLIT/@name,'-1)')}x% &#xD;
+%x{if($CUR_SPLIT/@name=md:paramValue($this,'splitParallelDegree')) then concat('or ',$splitByColumn/tech:name(),' is null') else concat('and ',$splitByColumn/tech:name(),' &amp;lt;= (${../../MIN_VALUE}$) + ((${../../MAX_VALUE}$)-(${../../MIN_VALUE}$))/',md:paramValue($this,'splitParallelDegree'),'*(',$CUR_SPLIT/@name,'  )')}x%&#xD;
+)</code>
+            </actionCode>
+            <xslVariable id="_PGbioNOLEees7YJp9Xf_nw" code="concat(&#xD;&#xA;&#x9;$targetFolderPath,&#xD;&#xA;&#x9;'/data_',&#xD;&#xA;&#x9;$SOURCE_TABLE/tech:name(),&#xD;&#xA;&#x9;'_',&#xD;&#xA;&#x9;$CUR_SPLIT/@name,&#xD;&#xA;&#x9;'.dat'&#xD;&#xA;)" name="tempFileName" type="xpath"/>
+          </subProcess>
+          <xslVariable id="_bgAhddOGEees7YJp9Xf_nw" code="%xsl{&#xD;&#xA;&lt;xsl:for-each select=&quot;1 to md:ifEmpty(md:paramValue($this,'splitParallelDegree'),'4')&quot;>&#xD;&#xA;&lt;split name=&quot;{.}&quot;/>&#xD;&#xA;&lt;/xsl:for-each>&#xD;&#xA;}xsl%" name="split" type="xsl"/>
+        </subProcess>
+        <subProcess id="_bgAhdtOGEees7YJp9Xf_nw" generationCondition="number(md:ifEmpty(md:paramValue($this,'splitParallelDegree'),'0'))&lt;=1" isBeginAction="false" name="For simple table" nbCycles="-1" toleratedError="false">
+          <actionCode id="_o0D-cNOLEees7YJp9Xf_nw" isBeginAction="false" name="Unload of data from source into file" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SqlFileExportActionCodeI">
+            <parameter id="_o0D-cdOLEees7YJp9Xf_nw" name="SQL_EXP_FILENAME" type="String" value="%x{$tempFileName}x%"/>
+            <parameter id="_o0D-ctOLEees7YJp9Xf_nw" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+            <parameter id="_o0D-c9OLEees7YJp9Xf_nw" name="SQL_EXP_FILE_FORMAT" type="String" value="variable"/>
+            <parameter id="_o0D-dNOLEees7YJp9Xf_nw" name="SQL_EXP_DATE_FORMAT" type="String" value="%x{md:ifEmpty($timestampFormat,'yyyy-MM-dd HH:mm:ss.SSS')}x%"/>
+            <parameter id="_o0D-ddOLEees7YJp9Xf_nw" name="SQL_EXP_FETCH_SIZE" type="Integer" value="%x{$fetchSize}x%"/>
+            <parameter id="_o0D-dtOLEees7YJp9Xf_nw" name="SQL_EXP_FILE_ENCODING" type="String" value="%x{$fileEncoding}x%"/>
+            <parameter id="_o0D-d9OLEees7YJp9Xf_nw" description="" name="SQL_EXP_NUMERIC_SEPARATOR_CHAR" type="String" value="%x{md:ifEmpty($numericSeparator,'.')}x%"/>
+            <parameter id="_o0D-eNOLEees7YJp9Xf_nw" name="SQL_EXP_XROW_SEP" type="String" value="%x{$xRowSep}x%"/>
+            <parameter id="_o0D-edOLEees7YJp9Xf_nw" name="SQL_EXP_SHORT_DATE_FORMAT" type="String" value="%x{md:ifEmpty($dateFormat,'yyyy-MM-dd')}x%"/>
+            <parameter id="_o0D-etOLEees7YJp9Xf_nw" name="SQL_EXP_NULL_VALUE_REPLACEMENT" type="String" value="%x{$nullValueReplacement}x%"/>
+            <parameter id="_o0D-e9OLEees7YJp9Xf_nw" name="SQL_EXP_TIME_FORMAT" type="String" value="%x{md:ifEmpty($timeFormat,'HH:mm:ss.SSS')}x%"/>
+            <parameter id="_o0D-fNOLEees7YJp9Xf_nw" name="SQL_EXP_XFIELD_SEP" type="String" value="%x{$xFieldSep}x%"/>
+            <parameter id="_o0D-fdOLEees7YJp9Xf_nw" name="SQL_EXP_XSTRING_DELIMITER" type="String" value="%x{$xStringDelimiter}x%"/>
+            <parameter id="_o0D-ftOLEees7YJp9Xf_nw" name="SQL_EXP_FIELD_SEP" type="String" value="%x{$fieldSep}x%"/>
+            <parameter id="_o0D-f9OLEees7YJp9Xf_nw" name="SQL_EXP_ROW_SEP" type="String" value="%x{$rowSep}x%"/>
+            <parameter id="_o0D-gNOLEees7YJp9Xf_nw" name="SQL_EXP_STRING_DELIMITER" type="String" value="%x{$stringDelimiter}x%"/>
+            <code>%x{$selectStatement}x%</code>
+          </actionCode>
+          <xslVariable id="_bgAhkNOGEees7YJp9Xf_nw" code="concat(&#xD;&#xA;&#x9;$targetFolderPath,&#xD;&#xA;&#x9;'/data_',&#xD;&#xA;&#x9;$SOURCE_TABLE/tech:name(),&#xD;&#xA;&#x9;'.dat'&#xD;&#xA;)" name="tempFileName" type="xpath"/>
+        </subProcess>
+        <xslVariable id="_bgAhl9OGEees7YJp9Xf_nw" code="if (exists($splitByColumnTag))&#xD;&#xA;&#x9;then $splitByColumnTag&#xD;&#xA;&#x9;else $splitByColumnFallback" name="splitByColumn" order="1" type="xpath"/>
+        <xslVariable id="_bgAhmNOGEees7YJp9Xf_nw" code="($SOURCE_TABLE/ref:columns()[tech:tag()='SPLIT_BY'])[1]" name="splitByColumnTag" type="xpath"/>
+        <xslVariable id="_bgAhmdOGEees7YJp9Xf_nw" code="($SOURCE_TABLE/ref:columns()[&#xD;&#xA;&#x9;   ref:datatype()/tech:superTypeName() = 'BIGINT' &#xD;&#xA;&#x9;or ref:datatype()/tech:superTypeName() = 'DECIMAL' &#xD;&#xA;&#x9;or ref:datatype()/tech:superTypeName() = 'DOUBLE' &#xD;&#xA;&#x9;or ref:datatype()/tech:superTypeName() = 'FLOAT' &#xD;&#xA;&#x9;or ref:datatype()/tech:superTypeName() = 'INTEGER' &#xD;&#xA;&#x9;or ref:datatype()/tech:superTypeName() = 'NUMERIC' &#xD;&#xA;&#x9;or ref:datatype()/tech:superTypeName() = 'REAL' &#xD;&#xA;&#x9;or ref:datatype()/tech:superTypeName() = 'SMALLINT' &#xD;&#xA;&#x9;or ref:datatype()/tech:superTypeName() = 'TINYINT' &#xD;&#xA;])[1]" name="splitByColumnFallback" type="xpath"/>
+      </subProcess>
+      <xslVariable id="_bgAhmtOGEees7YJp9Xf_nw" code="%xsl{&#xD;&#xA;select&#x9;&#xD;&#xA;%x{$SOURCE_TABLE/md:list(md:sortedList(ref:columns()/concat(tech:position(), ' ', tech:columnName(),' ',tech:columnAliasWord(),' ',tech:columnName(),'\t')),',\n\t')}x%&#xD;&#xA;&lt;xsl:choose>&#xD;&#xA;&#x9;&lt;xsl:when test=&quot;not($isCdc)&quot;>&#xD;&#xA;&#x9;&#x9;from&#x9;%x{md:physicalName($SOURCE_TABLE)}x%&#xD;&#xA;&#x9;&lt;/xsl:when>&#xD;&#xA;&#x9;&lt;xsl:otherwise>&#xD;&#xA;&#x9;&#x9;from&#x9;%x{$SOURCE_TABLE/tech:cdcViewPath()}x%&#xD;&#xA;&#x9;&lt;/xsl:otherwise>&#xD;&#xA;&lt;/xsl:choose>&#xD;&#xA;where 1=1&#xD;&#xA;%x{if($isCdc) then concat('and CDC_SUBSCRIBER=''',md:paramValue($this,'cdcSubscriber'), ''' and&#x9;CDC_CHANGE_TYPE!=''D''') else ''}x%&#xD;&#xA;}xsl%" name="selectStatement" type="xsl"/>
+      <xslVariable id="_mHdVodOIEees7YJp9Xf_nw" code="concat($parentFolderPath,'/',$targetFolderName)" name="targetFolderPath" order="1" type="xpath"/>
+      <xslVariable id="_zGibMNOIEees7YJp9Xf_nw" code="concat('data_',$SOURCE_TABLE/tech:physicalName())" name="targetFolderName" type="xpath"/>
+    </subProcess>
+  </subProcess>
+  <subProcess id="_bgAhndOGEees7YJp9Xf_nw" generationCondition="md:paramValue($this,'dropFolder')='true'" isBeginAction="false" name="Drop Folder" nbCycles="-1" toleratedError="false">
+    <link id="_bgAhntOGEees7YJp9Xf_nw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_bgAhptOGEees7YJp9Xf_nw?fileId=_bgAgsdOGEees7YJp9Xf_nw$type=proc$name=Create%20Folder?"/>
+    <subProcess id="_bgAhn9OGEees7YJp9Xf_nw" generationCondition="" isBeginAction="false" name="For each table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$sourceTableList" repetitionVariableName="SOURCE_TABLE" toleratedError="false">
+      <actionCode id="_bgAhoNOGEees7YJp9Xf_nw" generationCondition="" isBeginAction="false" name="Start" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+        <link id="_bgAhodOGEees7YJp9Xf_nw" executionCondition="var depthInProcess=&quot;../../&quot;;&#xD;&#xA;&#xD;&#xA;__ctx__.retValue=true;&#xD;&#xA;var strIgnoredTables = __ctx__.getVariableValue(depthInProcess+&quot;IGNORED_TABLES&quot;);&#xD;&#xA;if(strIgnoredTables.length()>0) {&#xD;&#xA;&#x9;var arrayIgnoredTables = strIgnoredTables.split(&quot;,&quot;);&#xD;&#xA;&#x9;for (var i = 0; i &lt; arrayIgnoredTables.length; i++) {&#xD;&#xA;&#x9;&#x9;var curIgnoredTable = arrayIgnoredTables[i].trim();&#xD;&#xA;&#x9;&#x9;if(curIgnoredTable.equals(&quot;%x{replace($SOURCE_TABLE/tech:physicalPath(), '&quot;','\\&quot;')}x%&quot;)) {&#xD;&#xA;&#x9;&#x9;&#x9;__ctx__.retValue=false;&#xD;&#xA;&#x9;&#x9;}&#xD;&#xA;&#x9;}&#xD;&#xA;}&#xD;&#xA;" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_HNJPANOHEees7YJp9Xf_nw"/>
+      </actionCode>
+      <actionCode id="_HNJPANOHEees7YJp9Xf_nw" isBeginAction="false" name="Delete Folder content" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+        <link id="_e0GSMNOHEees7YJp9Xf_nw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_eggn0NOHEees7YJp9Xf_nw"/>
+        <parameter id="_IvAqYNOHEees7YJp9Xf_nw" name="DEL_INCLUDE_EMPTY_DIRS" type="Boolean" value="true"/>
+        <parameter id="_Xgp5wNOHEees7YJp9Xf_nw" name="DEL_DIR" type="String" value="%x{$parentFolderPath}x%"/>
+        <parameter id="_aKseINOHEees7YJp9Xf_nw" name="DEL_INCLUDES" type="String" value="%x{$targetFolderName}x%/**"/>
+      </actionCode>
+      <actionCode id="_eggn0NOHEees7YJp9Xf_nw" isBeginAction="false" name="Delete Folder" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+        <parameter id="_eggn0tOHEees7YJp9Xf_nw" name="DEL_DIR" type="String" value="%x{$parentFolderPath}x%"/>
+        <parameter id="_eggn09OHEees7YJp9Xf_nw" name="DEL_INCLUDES" type="String" value="%x{$targetFolderName}x%"/>
+        <parameter id="_dBDtoNOPEees7YJp9Xf_nw" name="DEL_INCLUDE_EMPTY_DIRS" type="Boolean" value="true"/>
+      </actionCode>
+      <xslVariable id="_bgAhpdOGEees7YJp9Xf_nw" code="concat('data_',$SOURCE_TABLE/tech:physicalName())" name="targetFolderName" type="xpath"/>
+      <xslVariable id="_P4q0sNOHEees7YJp9Xf_nw" code="concat($parentFolderPath,'/',$targetFolderName)" name="targetFolderPath" order="1" type="xpath"/>
+    </subProcess>
+  </subProcess>
+  <subProcess id="_bgAhptOGEees7YJp9Xf_nw" generationCondition="md:paramValue($this,'createFolder')='true'" isBeginAction="false" name="Create Folder" nbCycles="-1" toleratedError="false">
+    <link id="_bgAhp9OGEees7YJp9Xf_nw" executionCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_bgAgy9OGEees7YJp9Xf_nw?fileId=_bgAgsdOGEees7YJp9Xf_nw$type=proc$name=Unload%20data?"/>
+    <subProcess id="_bgAhqNOGEees7YJp9Xf_nw" generationCondition="" isBeginAction="false" name="For each table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$sourceTableList" repetitionVariableName="SOURCE_TABLE" toleratedError="false">
+      <actionCode id="_bgAhqdOGEees7YJp9Xf_nw" generationCondition="" isBeginAction="false" name="Start" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+        <link id="_bgAhqtOGEees7YJp9Xf_nw" executionCondition="var depthInProcess=&quot;../../&quot;;&#xD;&#xA;&#xD;&#xA;__ctx__.retValue=true;&#xD;&#xA;var strIgnoredTables = __ctx__.getVariableValue(depthInProcess+&quot;IGNORED_TABLES&quot;);&#xD;&#xA;if(strIgnoredTables.length()>0) {&#xD;&#xA;&#x9;var arrayIgnoredTables = strIgnoredTables.split(&quot;,&quot;);&#xD;&#xA;&#x9;for (var i = 0; i &lt; arrayIgnoredTables.length; i++) {&#xD;&#xA;&#x9;&#x9;var curIgnoredTable = arrayIgnoredTables[i].trim();&#xD;&#xA;&#x9;&#x9;if(curIgnoredTable.equals(&quot;%x{replace($SOURCE_TABLE/tech:physicalPath(), '&quot;','\\&quot;')}x%&quot;)) {&#xD;&#xA;&#x9;&#x9;&#x9;__ctx__.retValue=false;&#xD;&#xA;&#x9;&#x9;}&#xD;&#xA;&#x9;}&#xD;&#xA;}&#xD;&#xA;" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_f8534NOIEees7YJp9Xf_nw"/>
+      </actionCode>
+      <actionCode id="_f8534NOIEees7YJp9Xf_nw" isBeginAction="false" name="MkDir" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.MkDirActionCodeI">
+        <parameter id="_f87GANOIEees7YJp9Xf_nw" name="FILE_DIR" type="String" value="%x{$targetFolderPath}x%"/>
+      </actionCode>
+      <xslVariable id="_fLu5odOIEees7YJp9Xf_nw" code="concat($parentFolderPath,'/',$targetFolderName)" name="targetFolderPath" order="1" type="xpath"/>
+      <xslVariable id="_w3tMINOIEees7YJp9Xf_nw" code="concat('data_',$SOURCE_TABLE/tech:physicalName())" name="targetFolderName" type="xpath"/>
+    </subProcess>
+  </subProcess>
+  <xslVariable id="_bgAhsdOGEees7YJp9Xf_nw" code="md:paramValue($this,'useCDC')='true'" name="isCdc" type="xpath"/>
+  <xslVariable id="_orspcNOHEees7YJp9Xf_nw" code="md:ifEmpty(&#xD;&#xA;&#x9;mdj:evaluate($this,md:paramValue($this,'XPathExpressionForWorkFolder')),&#xD;&#xA;&#x9;$this/ancestor-or-self::*/metaDataLink[@name='TARGET']/mdj:getMetaDataRef(.)/tech:path(),&#xD;&#xA;&#x9;md:paramValue($this,'workFolder')&#xD;&#xA;)" name="parentFolderPath" type="xpath"/>
+  <xslVariable id="_9RTIkNOUEees7YJp9Xf_nw" code="mdj:evaluate($this,md:paramValue($this,'XPathExpressionForSourceTableList'))" name="sourceTableList" type="xpath"/>
+</proc:process>

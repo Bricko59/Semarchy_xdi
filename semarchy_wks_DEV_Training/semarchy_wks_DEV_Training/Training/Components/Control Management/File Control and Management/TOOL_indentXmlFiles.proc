@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_xBYBkQMSEeaLsPzrYiHX8A" description="To use it, you just have to drag &amp; drop a metadata folder on the component and specify the &quot;file include&quot; parameter.&#xD;&#xA;The component will indent the xml files and create two subdirectories :&#xD;&#xA;- xml_to_indent&#xD;&#xA;- indented_xml&#xD;&#xA;The xml results files will be generated in indented_xml">
+  <parameter id="_xBYBlAMSEeaLsPzrYiHX8A" label="File Includes" name="fileIncludes" type="String" value="*.xml"/>
+  <actionCode id="_xBYBlQMSEeaLsPzrYiHX8A" isBeginAction="false" name="Bean Scripting" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.BeanScriptingActionCodeI">
+    <parameter id="_xBYBlgMSEeaLsPzrYiHX8A" name="SCRIPTING_LANGUAGE" type="String" value="beanshell"/>
+    <code>file_name = &quot;:{FILE_NAME}:&quot;;&#xD;
+in_file_name = &quot;%x{replace($SOURCE_FOLDER/tech:path(),'\\','/')}x%/xml_to_indent/&quot;+file_name;&#xD;
+out_file_name = &quot;%x{replace($SOURCE_FOLDER/tech:path(),'\\','/')}x%/indented_xml/&quot;+file_name;&#xD;
+print(file_name+&quot;\\n&quot;);&#xD;
+print(in_file_name+&quot;\\n&quot;);&#xD;
+print(out_file_name+&quot;\\n&quot;);&#xD;
+&#xD;
+d = javax.xml.parsers.DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new java.io.File(in_file_name));&#xD;
+tf = javax.xml.transform.TransformerFactory.newInstance();&#xD;
+t = tf.newTransformer();&#xD;
+t.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, &quot;yes&quot;);&#xD;
+var os;&#xD;
+try{&#xD;
+	os=new java.io.FileOutputStream(out_file_name);&#xD;
+	t.transform(new javax.xml.transform.dom.DOMSource(d),		new javax.xml.transform.stream.StreamResult(				new java.io.OutputStreamWriter(os, &quot;utf-8&quot;)));&#xD;
+	}finally{&#xD;
+	if (os!=null){&#xD;
+		os.close();&#xD;
+	}&#xD;
+	}</code>
+  </actionCode>
+  <actionCode id="_8Rg5EAMSEeaLsPzrYiHX8A" isBeginAction="false" name="MkDir indented_xml" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.MkDirActionCodeI">
+    <link id="_NzI8wAMTEeaLsPzrYiHX8A" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_i22AEAMTEeaLsPzrYiHX8A"/>
+    <parameter id="_8Rg5EgMSEeaLsPzrYiHX8A" name="FILE_DIR" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%/indented_xml"/>
+  </actionCode>
+  <actionCode id="_8RhgIAMSEeaLsPzrYiHX8A" isBeginAction="false" name="FileMove xml files in xml_to_indent" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileMoveActionCodeI">
+    <link id="_NeneQAMTEeaLsPzrYiHX8A" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_i22AEAMTEeaLsPzrYiHX8A"/>
+    <parameter id="_8RhgIgMSEeaLsPzrYiHX8A" name="FILE_TO_DIR" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%/xml_to_indent"/>
+    <parameter id="_8RhgIwMSEeaLsPzrYiHX8A" name="FILE_FROM_DIR" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%"/>
+    <parameter id="_8RhgJAMSEeaLsPzrYiHX8A" name="FILE_INCLUDES" type="String" value="${../fileIncludes}$"/>
+  </actionCode>
+  <actionCode id="_8RhgJQMSEeaLsPzrYiHX8A" isBeginAction="false" name="MkDir xml_to_indent" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.MkDirActionCodeI">
+    <link id="_8RhgJgMSEeaLsPzrYiHX8A" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_8RhgIAMSEeaLsPzrYiHX8A"/>
+    <link id="_8RhgJwMSEeaLsPzrYiHX8A" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_8Rg5EAMSEeaLsPzrYiHX8A"/>
+    <parameter id="_8RhgKAMSEeaLsPzrYiHX8A" name="FILE_DIR" type="String" value="%x{$SOURCE_FOLDER/tech:path()}x%/xml_to_indent"/>
+  </actionCode>
+  <actionCode id="_8RhgKQMSEeaLsPzrYiHX8A" isBeginAction="false" name="Start" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_8RhgKgMSEeaLsPzrYiHX8A" generationCondition="exists($SOURCE_FOLDER)" executionType="OK" generationType="OK" mandatory="1" targetId="_8RhgJQMSEeaLsPzrYiHX8A"/>
+  </actionCode>
+  <actionCode id="_i22AEAMTEeaLsPzrYiHX8A" isBeginAction="false" name="Scripting" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <bindLink id="_mGFjQAMTEeaLsPzrYiHX8A" bindType="DirectBind" targetId="_xBYBlQMSEeaLsPzrYiHX8A"/>
+    <parameter id="_i22AEgMTEeaLsPzrYiHX8A" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+    <code>dir=java.io.File(&quot;%x{replace($SOURCE_FOLDER/tech:path(),'\\','/')}x%/xml_to_indent/&quot;);&#xD;
+files=dir.listFiles();&#xD;
+var count=0;&#xD;
+st=__ctx__.createBindedPreparedStatement();&#xD;
+st.setColumnName(1,&quot;FILE_NAME&quot;);&#xD;
+&#xD;
+try {&#xD;
+	for (i=0;i&lt;files.length;i++)&#xD;
+	{&#xD;
+		file=files[i];&#xD;
+		if (!file.isDirectory())&#xD;
+		{&#xD;
+			if (file.getName().endsWith(&quot;.xml&quot;)  )&#xD;
+			{&#xD;
+                 	    st.setString(1,file.getName());&#xD;
+			     	    st.executeUpdate();                &#xD;
+			}&#xD;
+		}&#xD;
+		java.lang.Thread.sleep(3);&#xD;
+	}&#xD;
+}&#xD;
+finally {&#xD;
+	    java.lang.Thread.sleep(20);		&#xD;
+}	 </code>
+  </actionCode>
+  <xslVariable id="_xBYBlwMSEeaLsPzrYiHX8A" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='directory'][1]" name="SOURCE_FOLDER" type="xpath"/>
+</proc:process>

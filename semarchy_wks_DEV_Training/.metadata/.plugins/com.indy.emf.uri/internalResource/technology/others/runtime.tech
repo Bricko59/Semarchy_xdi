@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="UUID_TECH_RUNTIME" name="Stambia Runtime">
+  <level icon="/icons/Logo16x16.png" iconBundleName="com.indy.product.core.branding" xmlName="runtime" code="com.stambia.runtime" displayName="Runtimes" hasName="true" isFile="true" wizardBundleName="">
+    <xPathExpression expression="engine">
+      <code>RUNTIMES_REF</code>
+    </xPathExpression>
+  </level>
+  <level icon="/icons/full/obj16/Engine.png" iconBundleName="com.indy.ui.conf.edit" xmlName="engine" xpathDisplayName="@name" code="com.stambia.runtime.engine" displayName="Runtime" hasName="true">
+    <attribute xmlName="host" code="host" displayName="Host" externalize="true"/>
+    <attribute xmlName="port" code="port" displayName="Port" externalize="true"/>
+    <attribute xmlName="user" code="user" displayName="User" externalize="true"/>
+    <attribute xmlName="password" code="password" displayName="Password" externalize="true" type="password"/>
+    <attribute xmlName="description" code="description" configurable="true" displayName="Description" multiLine="true"/>
+    <parent>com.stambia.runtime</parent>
+    <xPathExpression expression="@host">
+      <code>HOST</code>
+    </xPathExpression>
+    <xPathExpression expression="@port">
+      <code>PORT</code>
+    </xPathExpression>
+    <xPathExpression expression="@user">
+      <code>USER</code>
+    </xPathExpression>
+    <xPathExpression expression="@password">
+      <code>PASSWORD</code>
+    </xPathExpression>
+  </level>
+  <metaDataLinkType name="ExecuteDelivery">
+    <parameter name="DELIV_ENGINE_HOST" value="@host"/>
+    <parameter name="DELIV_ENGINE_PORT" value="@port"/>
+    <parameter name="DELIV_ENGINE_USER_NAME" value="@user"/>
+    <parameter name="DELIV_ENGINE_PASSWORD" value="@password"/>
+    <technology>com.indy.engine.actionCodes.ExecDeliveryActionCodeI</technology>
+    <level>#com.stambia.runtime.engine</level>
+  </metaDataLinkType>
+  <contributedRegistryID>com.indy.ui.custom.out.services.registry.RuntimeEngine</contributedRegistryID>
+</tech:tech>

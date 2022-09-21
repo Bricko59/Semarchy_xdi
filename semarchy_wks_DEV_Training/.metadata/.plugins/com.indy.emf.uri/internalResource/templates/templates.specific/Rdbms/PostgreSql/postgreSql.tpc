@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tpc:conf xmlns:tpc="http://www.stambia.com/tpc" id="_A-xVkVE5Ed-SQuyZS8LpiA">
+  <case name="I-TP">
+    <propertyState name="TYPE" value="I-TP"/>
+    <case name="RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="TRG POSTGRESQL">
+        <propertyState name="trgProduct" value="POSTGRESSQL"/>
+        <template id="_A-x8pFE5Ed-SQuyZS8LpiA" ref="INTEGRATION%20PostgreSql.tp.proc#_dQ2dRp4SEd6bQIkgWyxFQQ?fileId=_dQ2dRp4SEd6bQIkgWyxFQQ$type=proc$name=INTEGRATION%20PostgreSql?"/>
+      </case>
+    </case>
+  </case>
+  <case name="L-TP">
+    <propertyState name="TYPE" value="L-TP"/>
+    <case name="TRG_RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="SRC_RDBMS">
+        <or>
+          <propertyState name="srcTech" value="RDBMS"/>
+          <propertyState mode="CONTAINS" name="srcCompatibleTechList" value="RDBMS"/>
+        </or>
+        <case name="TRG POSTGRE SQL">
+          <propertyState name="trgProduct" value="POSTGRESSQL"/>
+          <template id="_A-zx1FE5Ed-SQuyZS8LpiA" ref="../../../templates.generic/Rdbms/LOAD%20Rdbms%20to%20Rdbms.tp.proc#_aafbe681-11ab-4ebc-ab56-de794128c580?fileId=_aafbe681-11ab-4ebc-ab56-de794128c580$type=proc$name=LOAD%20Rdbms%20to%20Rdbms?"/>
+          <template id="_A-zx1VE5Ed-SQuyZS8LpiA" ref="LOAD%20Rdbms%20to%20PostgreSql%20(with%20COPY).proc#_7lU40Z5IEd6bQIkgWyxFQQ?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=LOAD%20Rdbms%20to%20PostGre%20SQL%20(with%20COPY)?"/>
+        </case>
+        <template id="_A-0Y4VE5Ed-SQuyZS8LpiA" ref="../../../templates.generic/Rdbms/LOAD%20Rdbms%20to%20Rdbms.tp.proc#_aafbe681-11ab-4ebc-ab56-de794128c580?fileId=_aafbe681-11ab-4ebc-ab56-de794128c580$type=proc$name=LOAD%20Rdbms%20to%20Rdbms?"/>
+      </case>
+      <case name="SRC_FILE">
+        <propertyState name="srcTech" value="FILE"/>
+        <case name="TRG POSTGRE SQL">
+          <propertyState name="trgProduct" value="POSTGRESSQL"/>
+          <template id="_A-0Y5FE5Ed-SQuyZS8LpiA" ref="LOAD%20File%20to%20PostgreSql%20(with%20Copy).proc#_8fa24535-b67f-4d00-aca7-ac642ec8ff0f?fileId=_8fa24535-b67f-4d00-aca7-ac642ec8ff0f$type=proc$name=LOAD%20File%20to%20PostGre%20SQL%20(with%20Copy)?"/>
+        </case>
+      </case>
+    </case>
+  </case>
+  <case name="C-TP">
+    <propertyState name="TYPE" value="C-TP"/>
+    <case name="RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="POSTGRESQL">
+        <propertyState name="trgProduct" value="POSTGRESSQL"/>
+        <template id="_gffOZOhZEeGCDfZuhYd9mg" ref="REJECT%20PostgreSql.tp.proc#_9JoUFuhYEeGCDfZuhYd9mg?fileId=_9JoUFuhYEeGCDfZuhYd9mg$type=proc$name=REJECT+PostgreSql?"/>
+      </case>
+    </case>
+  </case>
+</tpc:conf>

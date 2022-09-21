@@ -1,0 +1,16 @@
+
+*** Step 5 ***
+**************
+Mapping
+-------
+	Field          Mapping                                 Key	    Location
+    -------------- --------------------------------------- -------- ---------
+	ID_RECORD                                              N
+	FILE_ID        file_to_integrate.id                    Y        SOURCE
+	LAST_NAME      file_to_integrate.lastname              N		SOURCE
+	FIRST_NAME     file_to_integrate.firstname             N		SOURCE
+	FILE_NAME      file_to_integrate.file_name             Y        SOURCE
+	FILE_DATE      SUBSTR(file_to_integrate.file_name,6,8) N		STAGING
+	UPDATE_DATE    CURRENT_TIMESTAMP                       N        TARGET	
+	
+	

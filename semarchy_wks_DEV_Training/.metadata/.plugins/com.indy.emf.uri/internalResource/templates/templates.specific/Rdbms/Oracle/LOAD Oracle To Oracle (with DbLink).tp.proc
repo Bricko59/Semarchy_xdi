@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:UUID="java.util.UUID" xmlns:common="http://exslt.org/common" xmlns:mdj="java:com.indy.xsl.global.Functions" xmlns:proc="http://www.example.org/proc" xmlns:saxon="http://saxon.sf.net/" id="_7c9e6e87-7819-41ec-8620-fdae9c861ad4" description="This template is used to Load data between two Oracle databases using a Database Link.&#xD;&#xA;&#xD;&#xA;A view is created on the source database and it is referenced on the target database using a Database Link. &#xD;&#xA;The name of the Database Link is specified in the Metadata: it is the Physical Name of the source Server.&#xD;&#xA;&#xD;&#xA;Note: if multiple schemas are involved in the source query, the connection user may require that the SELECT privilege is granted directly and not through a Role.&#xD;&#xA;&#xD;&#xA;Refer to the description of each Parameter for more information.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;16/06/2020&#x9;Bug fix: the 'Cdc Subscriber' parameter is ignored when querying the source data&#xD;&#xA;16/06/2020&#x9;New Parameters 'Unlock Cdc Table' and 'Lock Cdc Table'&#xD;&#xA;15/02/2016   Initialize template history" isBeginAction="false" name="LOAD Oracle to Oracle (with DBLINK)" nbCycles="-1" toleratedError="false">
+  <parameter id="_5DkpkNE5EeSnj6-6hWuqKw" description="If true, a DISTINCT statement will be added on the query creating the load view.&#xD;&#xA;This is used to avoid having duplicates." name="useDistinct" type="Boolean" value="false"/>
+  <parameter id="_BlX-kMrFEd20FKhajg6bqg" description="If true, the temporary objects created during the load will be removed at the end of the process." name="cleanTemporaryObjects" type="Boolean" value="true"/>
+  <parameter id="_BlX-kcrFEd20FKhajg6bqg" description="If true, the Database Link will be dropped and re-created before loading data.&#xD;&#xA;Please note that this option does not support multiple loads using this Template to run in parallel as one template may drop the Database Link used by another Load." name="createAndDropDBLink" type="Boolean" value="true"/>
+  <parameter id="_TJEogCUCEeKLkbBnXY6L_g" description="CDC Subscriber to use when CDC has been enabled on a source table." name="cdcSubscriber" type="String"/>
+  <parameter id="_6KYakLInEeqqT5qF-1pubg" description="When a source table is used as CDC an unlock is performed on it after processing. It marks the changed data as consumed.&#xD;&#xA;If set to false, the Unlock must be performed as part of an upcoming Mapping." name="unlockCdcTable" type="Boolean" value="true"/>
+  <parameter id="_6Kw1ELInEeqqT5qF-1pubg" description="When a source table is used as CDC a lock is performed on it. It makes the changed data available in the Mapping.&#xD;&#xA;If set to false, the Lock must have been performed as part of a previous Mapping." name="lockCdcTable" type="Boolean" value="true"/>
+  <subProcess id="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_BEFORE" name="Load">
+    <link id="_BlYloMrFEd20FKhajg6bqg" executionType="OK" generationType="OK" mandatory="1" targetId="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_AFTER?fileId=_7c9e6e87-7819-41ec-8620-fdae9c861ad4$type=proc$name=Clean?"/>
+    <actionCode id="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_1" generationCondition="'${createAndDropDBLink}$'='true'" isBeginAction="false" name="Alter of session for global names" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_BlZMsMrFEd20FKhajg6bqg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_11"/>
+      <parameter id="_BlZMscrFEd20FKhajg6bqg" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_BlZMssrFEd20FKhajg6bqg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <code>alter session set global_names = false</code>
+    </actionCode>
+    <actionCode id="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_11" generationCondition="'${createAndDropDBLink}$'='true'" isBeginAction="false" name="T - Alter of session for global names" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_BlZzwMrFEd20FKhajg6bqg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_21"/>
+      <parameter id="_BlZzwcrFEd20FKhajg6bqg" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_BlZzwsrFEd20FKhajg6bqg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_BlZzw8rFEd20FKhajg6bqg" name="SQL_TRANSACTION_NAME" type="String" value="T1"/>
+      <parameter id="_BlZzxMrFEd20FKhajg6bqg" name="SQL_TRANSACTION_TYPE" type="String" value="NO COMMIT"/>
+      <code>alter session set global_names = false</code>
+    </actionCode>
+    <actionCode id="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_21" generationCondition="'${createAndDropDBLink}$'='true'" isBeginAction="false" name="Drop of database link on target" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_Blaa0MrFEd20FKhajg6bqg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_31"/>
+      <parameter id="_Blaa0crFEd20FKhajg6bqg" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_Blaa0srFEd20FKhajg6bqg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <code>drop database link %x{$REF/ref:source()/tech:serverName()}x%</code>
+    </actionCode>
+    <actionCode id="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_31" generationCondition="'${createAndDropDBLink}$'='true'" isBeginAction="false" name="Creation of database link on target" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_BlbB4MrFEd20FKhajg6bqg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_41"/>
+      <parameter id="_BlbB4crFEd20FKhajg6bqg" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_BlbB4srFEd20FKhajg6bqg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <code>create database link	%x{$REF/ref:source()/tech:serverName()}x%
+connect to				%x{$REF/ref:source()/tech:jdbcUser()}x%
+identified by			%x{$REF/ref:source()/tech:jdbcPassword()}x%
+using					'%x{$REF/ref:source()/tech:serverName()}x%'
+
+</code>
+    </actionCode>
+    <actionCode id="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_41" generationCondition="not(md:paramValue($this, 'lockCdcTable')='false')" isBeginAction="false" name="Lock of CDC table" nbCycles="-1" repetitionMode="Parallelize" repetitionQuery="mdj:xpath($REF,'FROM_REF')[mdj:xpath(.,'IS_CDC')]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_1YtXQOkqEd2tSel_91_pPw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_0hRY_ekqEd2tSel_91_pPw"/>
+      <parameter id="_Blbo8srFEd20FKhajg6bqg" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_BlcQAMrFEd20FKhajg6bqg" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+      <code>update 	%x{$CDC/ref:target()/tech:cdcTablePath()}x%&#xD;
+set 	CDC_CONSUMMATION = '1'&#xD;
+where	(1=1)&#xD;
+%x{$CDC/tech:cdcFilterPart($this)}x%</code>
+    </actionCode>
+    <actionCode id="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_51" generationCondition="" isBeginAction="false" name="Creation of select view on source" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_m85DEMrPEd20FKhajg6bqg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_71"/>
+      <parameter id="_BlcQAsrFEd20FKhajg6bqg" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_Blc3EMrFEd20FKhajg6bqg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <code>create or replace view %x{md:physicalPath($REF,'workName','workName','SOURCE_SCHEMA_REF')}x%&#xD;
+(&#xD;
+	%x{md:patternList($REF/ref:columns(),'[workName]',',\n\t')}x%&#xD;
+	%x{if ($REF/tech:hasCdc()) then ', CDC_CHANGE_TYPE' else ''}x%&#xD;
+)&#xD;
+as &#xD;
+select	%x{if (md:paramValue($this,'useDistinct')='true') then 'DISTINCT' else ''}x%&#xD;
+		%x{md:patternList($REF/ref:columns(),'[expression] [columnAliasWord] [workName]', ',\n\t\t')}x%&#xD;
+		%x{if ($REF/tech:hasCdc()) then ', CDC_CHANGE_TYPE' else ''}x%&#xD;
+from	%x{$REF/tech:fromPart()}x%&#xD;
+where	(1=1)%xsl{&#xD;
+%x{$REF/tech:joinPart()}x%&#xD;
+%x{$REF/tech:filterPart()}x%&#xD;
+%x{$REF/tech:cdcFilterPart2($this)}x%&#xD;
+%x{$REF/tech:groupByPart()}x%&#xD;
+%x{$REF/tech:havingPart()}x%}xsl%</code>
+    </actionCode>
+    <actionCode id="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_71" generationCondition="" isBeginAction="false" name="Drop of synonym on target" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_Blc3EcrFEd20FKhajg6bqg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_81"/>
+      <parameter id="_Blc3EsrFEd20FKhajg6bqg" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_Blc3E8rFEd20FKhajg6bqg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <code>drop synonym %x{md:physicalPath($REF,'workName')}x%</code>
+    </actionCode>
+    <actionCode id="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_81" generationCondition="" isBeginAction="false" name="Creation of synonym on target" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_BldeIcrFEd20FKhajg6bqg" executionType="OK" generationType="OK" mandatory="1"/>
+      <parameter id="_BleFMMrFEd20FKhajg6bqg" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_BleFMcrFEd20FKhajg6bqg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <code>create synonym	%x{md:physicalPath($REF,'workName')}x%&#xD;
+for				%x{md:physicalPath($REF,'workName','workName','SOURCE_SCHEMA_REF')}x%@%x{$REF/ref:source()/tech:serverName()}x%</code>
+    </actionCode>
+    <actionCode id="_0hRY_ekqEd2tSel_91_pPw" generationCondition="" isBeginAction="false" name="Drop of select view on source" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_Blbo8crFEd20FKhajg6bqg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_51"/>
+      <parameter id="_0hRY_-kqEd2tSel_91_pPw" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_0hRZAOkqEd2tSel_91_pPw" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <code>drop view  %x{md:physicalPath($REF,'workName','workName','SOURCE_SCHEMA_REF')}x%</code>
+    </actionCode>
+    <templateType>L-TP.RDBMS.LOADING</templateType>
+  </subProcess>
+  <subProcess id="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_AFTER" name="Clean">
+    <actionCode id="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_91" generationCondition="not(md:paramValue($this, 'unlockCdcTable')='false')" isBeginAction="false" name="Unlock of CDC table" nbCycles="-1" repetitionMode="Parallelize" repetitionQuery="mdj:xpath($REF,'FROM_REF')[mdj:xpath(.,'IS_CDC')]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_QjXxwOkrEd2tSel_91_pPw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_101"/>
+      <parameter id="_BlesQcrFEd20FKhajg6bqg" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_BlesQsrFEd20FKhajg6bqg" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+      <parameter id="_b4TpgCUCEeKLkbBnXY6L_g" name="SQL_MULTI_QUERYS" type="String" value="true"/>
+      <code>%x{$CDC/ref:target()/tech:cdcDeleteDml()}x%&#xD;
+Where	CDC_CONSUMMATION = '1'&#xD;
+%x{$CDC/tech:cdcFilterPart($this)}x%</code>
+    </actionCode>
+    <actionCode id="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_101" generationCondition="'${cleanTemporaryObjects}$'='true'" isBeginAction="false" name="Drop of synonym on target" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_REAZoOkrEd2tSel_91_pPw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_121"/>
+      <parameter id="_BlfTUcrFEd20FKhajg6bqg" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_BlfTUsrFEd20FKhajg6bqg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <code>drop synonym %x{md:physicalPath($REF,'workName')}x%</code>
+    </actionCode>
+    <actionCode id="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_111" generationCondition="'${createAndDropDBLink}$'='true'" isBeginAction="false" name="Drop of database link on target" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter id="_Blf6YcrFEd20FKhajg6bqg" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_Blf6YsrFEd20FKhajg6bqg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <code>drop database link %x{$REF/ref:source()/tech:serverName()}x%</code>
+    </actionCode>
+    <actionCode id="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_121" generationCondition="'${cleanTemporaryObjects}$'='true'" isBeginAction="false" name="Drop of view on source" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_BlghccrFEd20FKhajg6bqg" executionType="OK" generationType="OK_KO" mandatory="1"/>
+      <link id="_RPVf4OkrEd2tSel_91_pPw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_fhxuDehrEd2_ILAI0h8VRw"/>
+      <parameter id="_BlghcsrFEd20FKhajg6bqg" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_Blghc8rFEd20FKhajg6bqg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <code>drop view %x{md:physicalPath($REF,'workName','workName','SOURCE_SCHEMA_REF')}x%</code>
+    </actionCode>
+    <actionCode id="_fhxuDehrEd2_ILAI0h8VRw" generationCondition="'${createAndDropDBLink}$'='true'" isBeginAction="false" name="Closure of database link on target" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_R3azkOkrEd2tSel_91_pPw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_7c9e6e87-7819-41ec-8620-fdae9c861ad4_111"/>
+      <parameter id="_fhxuD-hrEd2_ILAI0h8VRw" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_fhxuEOhrEd2_ILAI0h8VRw" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <code>alter session close database link %x{$REF/ref:source()/tech:serverName()}x%</code>
+    </actionCode>
+    <templateType>L-TP.RDBMS.CLEANING</templateType>
+  </subProcess>
+  <templateType>L-TP.RDBMS</templateType>
+</proc:process>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_ZWpIcJfiEeyNk-8PTn1xFw-proc">
+  <altId origin="mapping" value="_ZWpIcJfiEeyNk-8PTn1xFw"/>
+  <altId origin="flow" value="_ZWpIcJfiEeyNk-8PTn1xFw-flow"/>
+  <actionProcessRef id="_ZWpIcJfiEeyNk-8PTn1xFw-proc1_L1" name="L1-dim_customer-Load" targetName="../../../../../../../plugin/com.indy.environment/templates/templates.generic/Rdbms/LOAD%20Rdbms%20to%20Rdbms.tp.proc#_aafbe681-11ab-4ebc-ab56-de794128c580_BEFORE?fileId=_aafbe681-11ab-4ebc-ab56-de794128c580$type=proc$name=load?">
+    <link id="f4997a6a-d594-4c6a-a156-8212cbdc47a1" generationType="OK_KO" mandatory="1" targetId="_ZWpIcJfiEeyNk-8PTn1xFw-proc_I1"/>
+    <metaDataLink id="d8dcf6d2-1e7a-496d-bb49-2c81b1e30d06" name="REF" target="Update%20dim_customer.cus_vip%20step2.md#0d5a4963-93f5-32fe-bac0-cff29944659e?fileId=_ZWpIcJfiEeyNk-8PTn1xFw-flow$type=md$name=L1_dim_customer?"/>
+    <parameter id="1fe39e34-f57e-48f4-bf81-c61c61b310ae" fault="false" input="false" output="false" name="createLoadIndexes" type="Boolean" value="false"/>
+    <parameter id="91c7f51f-f015-401a-a6b7-1db8e0fb1f2f" fault="false" input="false" output="false" name="cleanTemporaryObjects" type="Boolean" value="true"/>
+    <parameter id="eb9fc1da-a75f-45c0-a0ff-7c6ea9788ead" fault="false" input="false" output="false" name="useDistinct" type="Boolean" value="false"/>
+    <parameter id="84c04f40-f045-4d3d-bfa7-c54f8d2d72ac" fault="false" input="false" output="false" name="lockCdcTable" type="Boolean" value="true"/>
+    <parameter id="83b5629e-7eb9-483b-acba-6d7fc8e3d0b4" fault="false" input="false" output="false" name="useTransactionOnWorkTables" type="Boolean" value="false"/>
+    <parameter id="7b6863b9-58d8-469f-bdf5-b5b37524448f" fault="false" input="false" output="false" name="cdcWaitMode" type="Boolean" value="false"/>
+    <parameter id="d57d1d5c-a4b2-4f3d-ab5d-43384053182b" fault="false" input="false" output="false" name="transactionName" type="String" value="T1"/>
+    <parameter id="42c2f17a-b9c4-4762-b824-5ba3c60d595b" fault="false" input="false" output="false" name="fetchSize" type="Integer" value=""/>
+    <parameter id="e10d08a5-4350-48e3-afd8-729cd5ac454b" fault="false" input="false" output="false" name="batchSize" type="Integer" value=""/>
+    <parameter id="f8df79d0-7453-407a-840e-298f5f37c8b6" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;TRANSACTION_NONE&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;TRANSACTION_READ_COMMITTED&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;TRANSACTION_READ_UNCOMMITTED&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;TRANSACTION_REPEATABLE_READ&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;TRANSACTION_SERIALIZABLE&quot;/>" fault="false" input="false" output="false" name="sourceTransactionIsolation" type="String" value=""/>
+    <parameter id="2ebe708a-b4ba-4aac-a630-ef20cb8c9316" fault="false" input="false" output="false" name="workTableOption" type="String"/>
+    <parameter id="b15789ed-a407-4d72-8936-dd1afea56e5e" fault="false" input="false" output="false" name="splitParallelDegree" type="String" value="0"/>
+    <parameter id="20e856e2-edd8-404d-8501-b79d69939abf" fault="false" input="false" output="false" name="cdcWaitTimout" type="Integer" value="-1"/>
+    <parameter id="f3339de3-b608-4db7-99db-d505fb996040" fault="false" input="false" output="false" name="cdcWaitPollInterval" type="Integer" value="5000"/>
+    <parameter id="d238053e-ba91-4d38-b378-e564ca97f89c" fault="false" input="false" output="false" name="cdcWaitRowsNumber" type="Integer" value="1"/>
+    <parameter id="02ff9802-aeec-4f88-8d08-905fc66ac843" fault="false" input="false" output="false" name="cdcSubscriber" type="String"/>
+    <parameter id="0f5174fb-7fa5-4cb9-861e-8b82de74e120" fault="false" input="false" output="false" name="unlockCdcTable" type="Boolean" value="true"/>
+  </actionProcessRef>
+  <actionProcessRef id="_ZWpIcJfiEeyNk-8PTn1xFw-proc2_L1" name="L1-dim_customer-Cleanup" targetName="../../../../../../../plugin/com.indy.environment/templates/templates.generic/Rdbms/LOAD%20Rdbms%20to%20Rdbms.tp.proc#_aafbe681-11ab-4ebc-ab56-de794128c580_AFTER?fileId=_aafbe681-11ab-4ebc-ab56-de794128c580$type=proc$name=Clean?">
+    <metaDataLink id="0b2435b4-b59c-4552-ab48-644d2c8109fe" name="REF" target="Update%20dim_customer.cus_vip%20step2.md#0d5a4963-93f5-32fe-bac0-cff29944659e?fileId=_ZWpIcJfiEeyNk-8PTn1xFw-flow$type=md$name=L1_dim_customer?"/>
+    <parameter id="7d10bd02-32e9-4fc1-85a9-baf35b566d04" fault="false" input="false" output="false" name="createLoadIndexes" type="Boolean" value="false"/>
+    <parameter id="9f01873c-cb36-47ac-8156-30d6df891434" fault="false" input="false" output="false" name="cleanTemporaryObjects" type="Boolean" value="true"/>
+    <parameter id="88238f21-2216-4ed4-909b-6efa4f5b804d" fault="false" input="false" output="false" name="useDistinct" type="Boolean" value="false"/>
+    <parameter id="bced2f54-f25c-4396-964c-ddd264324147" fault="false" input="false" output="false" name="lockCdcTable" type="Boolean" value="true"/>
+    <parameter id="dc2b16da-8e62-4c58-9048-68c9b7709ff5" fault="false" input="false" output="false" name="useTransactionOnWorkTables" type="Boolean" value="false"/>
+    <parameter id="fc95cc61-2229-4f87-ae50-5b725cc3421e" fault="false" input="false" output="false" name="cdcWaitMode" type="Boolean" value="false"/>
+    <parameter id="2939e634-7f1a-4600-9441-8d90745d4ebd" fault="false" input="false" output="false" name="transactionName" type="String" value="T1"/>
+    <parameter id="82ea4f9c-fe68-41d6-b7f8-fef382d86e5e" fault="false" input="false" output="false" name="fetchSize" type="Integer" value=""/>
+    <parameter id="5e4f2e69-aa72-40c3-bb24-9b73141066ee" fault="false" input="false" output="false" name="batchSize" type="Integer" value=""/>
+    <parameter id="59fd0c38-4f2f-404d-8dc5-85e69f0321db" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;TRANSACTION_NONE&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;TRANSACTION_READ_COMMITTED&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;TRANSACTION_READ_UNCOMMITTED&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;TRANSACTION_REPEATABLE_READ&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;TRANSACTION_SERIALIZABLE&quot;/>" fault="false" input="false" output="false" name="sourceTransactionIsolation" type="String" value=""/>
+    <parameter id="096542de-b546-4d0d-b575-2f745202a52c" fault="false" input="false" output="false" name="workTableOption" type="String"/>
+    <parameter id="be075655-6a9e-4bf5-89db-860dfb6fd48b" fault="false" input="false" output="false" name="splitParallelDegree" type="String" value="0"/>
+    <parameter id="a11dae75-a6d9-47b6-8945-16d4e37e386c" fault="false" input="false" output="false" name="cdcWaitTimout" type="Integer" value="-1"/>
+    <parameter id="be34c0bf-75f9-4a59-8f8b-c13472e0c388" fault="false" input="false" output="false" name="cdcWaitPollInterval" type="Integer" value="5000"/>
+    <parameter id="8de0232f-fa14-413e-bfe5-3b77b94d54f6" fault="false" input="false" output="false" name="cdcWaitRowsNumber" type="Integer" value="1"/>
+    <parameter id="accd4685-a278-4df8-92a4-d08e7f918a65" fault="false" input="false" output="false" name="cdcSubscriber" type="String"/>
+    <parameter id="93f11779-1737-49c3-a2f8-ea53f55e00f8" fault="false" input="false" output="false" name="unlockCdcTable" type="Boolean" value="true"/>
+  </actionProcessRef>
+  <subProcess id="_ZWpIcJfiEeyNk-8PTn1xFw-proc_I1" name="I1-dim_customer-Integration">
+    <link id="e8bfa949-0673-49f6-b808-7cd35fc93918" generationType="OK_KO" mandatory="1" targetId="_ZWpIcJfiEeyNk-8PTn1xFw-proc2_L1"/>
+    <metaDataLink id="80a42ac2-f8d1-4208-885e-21ad810e262a" name="REF" target="Update%20dim_customer.cus_vip%20step2.md#1e2892d6-68a2-3a9e-9a79-df0fd069f67b?fileId=_ZWpIcJfiEeyNk-8PTn1xFw-flow$type=md$name=I1_dim_customer?"/>
+    <altId origin="container" value="_mP6g8JfiEeyNk-8PTn1xFw"/>
+    <altId origin="mdNode" value="_b6SCYZb8EeytipfABCJWjQ"/>
+    <actionProcessRef id="_ZWpIcJfiEeyNk-8PTn1xFw-proc1_I1" name="I1-dim_customer-Prepare" targetName="../../../../../../../plugin/com.indy.environment/templates/templates.specific/Rdbms/PostgreSql/INTEGRATION%20PostgreSql.tp.proc#_dQ2dVZ4SEd6bQIkgWyxFQQ?fileId=_dQ2dRp4SEd6bQIkgWyxFQQ$type=proc$name=PREPARE_INTEGRATION?">
+      <link id="917e53bd-c0ce-4dff-9776-eec02318916c" generationType="OK_KO" mandatory="1" targetId="_ZWpIcJfiEeyNk-8PTn1xFw-proc3_I1"/>
+      <parameter id="e980dd54-4d2d-41a3-9ce8-c0c22632022e" fault="false" input="false" output="false" name="appendMode" type="Boolean" value="false"/>
+      <parameter id="f3346720-bb6d-4602-99b6-4ae1a0afc829" fault="false" input="false" output="false" name="cleanTemporaryObjects " type="Boolean" value="true"/>
+      <parameter id="e5fa0858-1973-4932-a2ec-dd21d8325042" fault="false" input="false" output="false" name="doInsert" type="Boolean" value="true"/>
+      <parameter id="545c6aec-3865-439d-b3ae-f15814e2ed05" fault="false" input="false" output="false" name="truncateTargetTable" type="Boolean" value="false"/>
+      <parameter id="2338fcd2-68ba-4e33-acf8-5d5049d62cbd" fault="false" input="false" output="false" name="doUpdate" type="Boolean" value="true"/>
+      <parameter id="36dbdd22-87a7-417f-ba52-45f4fea1cfca" fault="false" input="false" output="false" name="deleteAllTargetTable" type="Boolean" value="false"/>
+      <parameter id="fb1a6e7b-1597-4c3b-8421-4101d446b7df" fault="false" input="false" output="false" name="useDistinct" type="Boolean" value="false"/>
+      <parameter id="3983c195-4c3e-4fc6-90af-8702f7e2adec" fault="false" input="false" output="false" name="recycleRejects" type="Boolean" value="false"/>
+      <parameter id="f46c1da2-ced2-4989-b36e-247e8f68d01e" fault="false" input="false" output="false" label="Transactional Mode On Work Tables" name="useTransactionOnWorkTables" type="Boolean" value="false"/>
+      <parameter id="187e2bed-a9e8-4e6f-9053-0372a4482e47" fault="false" input="false" output="false" name="synchronizeDeletionsFromCDC" type="Boolean" value="false"/>
+      <parameter id="c0d1ed1a-fc20-4b9f-8ca3-1eaacbe1077b" fault="false" input="false" output="false" name="transactionalModeOnTarget" type="Boolean" value="false"/>
+      <parameter id="4ffa0c84-6300-4d80-9af8-5ec4a88bc325" fault="false" input="false" output="false" name="analyzeIntegrationTable" type="Boolean" value="true"/>
+      <parameter id="acdb499d-2517-4a5f-800b-d7bb06528ee7" fault="false" input="false" output="false" name="commitTransaction" type="Boolean" value="false"/>
+      <parameter id="4a64e1cb-b7d9-4242-abed-80fbf988913c" fault="false" input="false" output="false" name="analyzeTargetTable" type="Boolean" value="false"/>
+      <parameter id="4785d662-a1f9-4c7b-8bfd-fca3b160083a" fault="false" input="false" output="false" name="useOnlyKeywordOnUpdate" type="Boolean" value="true"/>
+      <parameter id="3dd917e0-a746-4cc7-8554-fc8fd6e48bef" metaInf="&lt;metaInf id=&quot;value&quot; value=&quot;ANALYZE&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;VACUUM_ANALYZE&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;FULL_VACUUM_ANALYZE&quot;/>" fault="false" input="false" output="false" name="analyzeIntegrationMethod" type="String" value="ANALYZE"/>
+      <parameter id="aba8a458-32d6-4e77-8109-74d6ba85dd21" metaInf="&lt;metaInf id=&quot;value&quot; value=&quot;ANALYZE&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;VACUUM_ANALYZE&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;FULL_VACUUM_ANALYZE&quot;/>" fault="false" input="false" output="false" name="analyzeTargetMethod" type="String" value="ANALYZE"/>
+      <parameter id="4a9a5472-6276-4ae3-935b-01484217948b" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;true&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;false&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;drop and create&quot;/>" fault="false" input="false" output="false" name="createTargetTable" type="String" value="false"/>
+      <parameter id="b9e52329-055d-4dc6-8806-94494cec1e7a" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;disable&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;flag&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;except&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;notExists&quot;/>" fault="false" input="false" output="false" name="uselessUpdateDetectionMethod" type="String" value="flag"/>
+      <parameter id="9690af13-0273-4d53-bff4-77443d7fc67a" metaInf="&lt;metaInf id=&quot;value&quot; value=&quot;all rows&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;where clause&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;key&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;disable&quot;/>" fault="false" input="false" output="false" name="deletionStrategy" type="String" value="disable"/>
+      <parameter id="068d6343-3f6a-4b89-9c5e-ab71f4dbee4d" metaInf="&lt;xslVariableName>_deletionWhereClause&lt;/xslVariableName>" fault="false" input="false" output="false" name="deletionWhereClause" type="String" value="1=1"/>
+      <parameter id="db21edee-1959-41c1-88ef-d871752bfe61" fault="false" input="false" output="false" name="afterQueryExpression" type="String" value=""/>
+      <parameter id="89bb5bf2-21c9-4b56-bf94-dbdd636f00af" fault="false" input="false" output="false" name="transactionName" type="String" value="T1"/>
+      <parameter id="380545f2-0767-4850-8dfe-36ff1bd4e647" fault="false" input="false" output="false" name="scdDefaultEndDate" type="String" value="'01-01-2400'"/>
+      <parameter id="89c630d9-b8c5-487b-9c4b-52a7b66a6b70" fault="false" input="false" output="false" name="unlockCdcTable" type="Boolean" value="true"/>
+      <parameter id="93146f2d-6dba-4714-ba47-e5e28e1ef214" fault="false" input="false" output="false" name="cdcSubscriber" type="String"/>
+      <parameter id="48047e31-5698-4a12-b925-06deecbfa5f2" fault="false" input="false" output="false" name="lockCdcTable" type="Boolean" value="true"/>
+    </actionProcessRef>
+    <actionProcessRef id="_ZWpIcJfiEeyNk-8PTn1xFw-proc3_I1" name="I1-dim_customer-Integration" targetName="../../../../../../../plugin/com.indy.environment/templates/templates.specific/Rdbms/PostgreSql/INTEGRATION%20PostgreSql.tp.proc#_dQ2dlJ4SEd6bQIkgWyxFQQ?fileId=_dQ2dRp4SEd6bQIkgWyxFQQ$type=proc$name=INTEGRATION?">
+      <parameter id="a83ea481-dfa4-4160-8272-ac49456b241c" fault="false" input="false" output="false" name="appendMode" type="Boolean" value="false"/>
+      <parameter id="3d532289-2975-48a0-abfd-714c3af93899" fault="false" input="false" output="false" name="cleanTemporaryObjects " type="Boolean" value="true"/>
+      <parameter id="680fcd05-0fe3-4b07-8892-84fb2e9db072" fault="false" input="false" output="false" name="doInsert" type="Boolean" value="true"/>
+      <parameter id="022e1108-fc1b-4ae6-8e44-570fdec44edb" fault="false" input="false" output="false" name="truncateTargetTable" type="Boolean" value="false"/>
+      <parameter id="0b635589-941a-4560-a192-d0446f529dc8" fault="false" input="false" output="false" name="doUpdate" type="Boolean" value="true"/>
+      <parameter id="7dfcb852-54b4-4a89-893f-823274051cae" fault="false" input="false" output="false" name="deleteAllTargetTable" type="Boolean" value="false"/>
+      <parameter id="a2f26d7d-029e-4163-9b8d-8945456c887a" fault="false" input="false" output="false" name="useDistinct" type="Boolean" value="false"/>
+      <parameter id="1ea457b9-5b42-4174-aa58-4cf2dca1e5fb" fault="false" input="false" output="false" name="recycleRejects" type="Boolean" value="false"/>
+      <parameter id="55f57a24-bb50-4c9e-845a-86bb70781f85" fault="false" input="false" output="false" label="Transactional Mode On Work Tables" name="useTransactionOnWorkTables" type="Boolean" value="false"/>
+      <parameter id="237cd2bb-3b3a-45fc-8a50-4bcc761572f6" fault="false" input="false" output="false" name="synchronizeDeletionsFromCDC" type="Boolean" value="false"/>
+      <parameter id="ed564199-e317-486f-89e0-efc3458095cd" fault="false" input="false" output="false" name="transactionalModeOnTarget" type="Boolean" value="false"/>
+      <parameter id="766da69d-c6df-4c13-8c7c-4fd5b4321776" fault="false" input="false" output="false" name="analyzeIntegrationTable" type="Boolean" value="true"/>
+      <parameter id="6cf980ca-e4d1-4ed9-bbef-4fb0fff23e9a" fault="false" input="false" output="false" name="commitTransaction" type="Boolean" value="false"/>
+      <parameter id="2b74081b-3d41-45b6-aea3-a8962cb89305" fault="false" input="false" output="false" name="analyzeTargetTable" type="Boolean" value="false"/>
+      <parameter id="8a06a5a4-f284-4d59-beb3-7c9dadcd4807" fault="false" input="false" output="false" name="useOnlyKeywordOnUpdate" type="Boolean" value="true"/>
+      <parameter id="61ea3604-a93e-44d3-bb29-498de0621831" metaInf="&lt;metaInf id=&quot;value&quot; value=&quot;ANALYZE&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;VACUUM_ANALYZE&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;FULL_VACUUM_ANALYZE&quot;/>" fault="false" input="false" output="false" name="analyzeIntegrationMethod" type="String" value="ANALYZE"/>
+      <parameter id="00fb8f72-bcaf-4690-895b-a8c54a5f5796" metaInf="&lt;metaInf id=&quot;value&quot; value=&quot;ANALYZE&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;VACUUM_ANALYZE&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;FULL_VACUUM_ANALYZE&quot;/>" fault="false" input="false" output="false" name="analyzeTargetMethod" type="String" value="ANALYZE"/>
+      <parameter id="f8eafe1e-dc65-4cf7-ad99-6bfe0cb27292" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;true&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;false&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;drop and create&quot;/>" fault="false" input="false" output="false" name="createTargetTable" type="String" value="false"/>
+      <parameter id="c8b26a28-b504-4f46-890f-e8a3dca48535" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;disable&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;flag&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;except&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;notExists&quot;/>" fault="false" input="false" output="false" name="uselessUpdateDetectionMethod" type="String" value="flag"/>
+      <parameter id="5f1017d6-2d0b-4ae7-a32d-0330fe2f5a6a" metaInf="&lt;metaInf id=&quot;value&quot; value=&quot;all rows&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;where clause&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;key&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;disable&quot;/>" fault="false" input="false" output="false" name="deletionStrategy" type="String" value="disable"/>
+      <parameter id="96b5c2a1-289f-45d4-8b69-a1927d5891b4" metaInf="&lt;xslVariableName>_deletionWhereClause&lt;/xslVariableName>" fault="false" input="false" output="false" name="deletionWhereClause" type="String" value="1=1"/>
+      <parameter id="7c1fec74-1075-4727-8979-2aaee26bf0de" fault="false" input="false" output="false" name="afterQueryExpression" type="String" value=""/>
+      <parameter id="226cbee0-c4a5-40b2-a74c-cd4a0b51ecea" fault="false" input="false" output="false" name="transactionName" type="String" value="T1"/>
+      <parameter id="96e2bf4e-d7d7-46ea-b1c2-95ff8d370af0" fault="false" input="false" output="false" name="scdDefaultEndDate" type="String" value="'01-01-2400'"/>
+      <parameter id="20bab2c5-f1a9-40d2-82dd-4ab23f99ea85" fault="false" input="false" output="false" name="unlockCdcTable" type="Boolean" value="true"/>
+      <parameter id="17f11fd9-5ea2-4314-a2d2-666f8de8dacb" fault="false" input="false" output="false" name="cdcSubscriber" type="String"/>
+      <parameter id="c1403078-9f05-4324-934e-f16d2ddffdf4" fault="false" input="false" output="false" name="lockCdcTable" type="Boolean" value="true"/>
+    </actionProcessRef>
+  </subProcess>
+</proc:process>

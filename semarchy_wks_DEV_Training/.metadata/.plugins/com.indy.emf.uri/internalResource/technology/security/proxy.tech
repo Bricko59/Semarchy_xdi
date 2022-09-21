@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="UUID_TECH_PROXY" name="Proxy">
+  <level icon="/icons/com.stambia.proxy.root.png" iconBundleName="com.indy.addons.base" xmlName="proxyRoot" xpathDisplayName="if (exists(@name) then concat('Proxy Security ', @name) else 'Proxy Security'" code="com.stambia.proxy.root" connection="true" displayName="Proxy Security" isFile="true"/>
+  <level icon="/icons/com.stambia.proxy.png" iconBundleName="com.indy.addons.base" xmlName="proxy" xpathDisplayName="concat('Proxy ', @name)" code="com.stambia.proxy" displayName="Proxy">
+    <attribute xmlName="host" code="host" displayName="Host"/>
+    <attribute xmlName="port" code="port" displayName="Port"/>
+    <attribute xmlName="username" code="username" displayName="Username"/>
+    <attribute xmlName="password" code="password" displayName="Password" type="password"/>
+    <parent>com.stambia.proxy.root</parent>
+    <xPathExpression expression="@host">
+      <code>HOST</code>
+    </xPathExpression>
+    <xPathExpression expression="@port">
+      <code>PORT</code>
+    </xPathExpression>
+    <xPathExpression expression="@username">
+      <code>USERNAME</code>
+    </xPathExpression>
+    <xPathExpression expression="@password">
+      <code>PASSWORD</code>
+    </xPathExpression>
+    <xPathExpression expression="1=1">
+      <code>INTERNAL_REFERENCEABLE_REGISTRY</code>
+    </xPathExpression>
+    <xPathExpression description="" expression="('password')">
+      <code>CRYPTED_ATTRIBUTES</code>
+    </xPathExpression>
+  </level>
+  <xPathExpression description="" expression="concat(&#xA;&#x9;'{&quot;',$p1,'&quot;:{','&quot;type&quot;:&quot;',name(),'&quot;,'&#xA;&#x9;,md:list($plainAttributes/concat('&quot;',name(),'&quot;:&quot;',.,'&quot;'),','),','&#xA;&#x9;,md:list($cryptedAttributes/concat('&quot;',name(),'&quot;:&quot;','%s(rhino){ __ctx__.decryptPassword(''',.,''');}s(rhino)%','&quot;'),',')&#xA;&#x9;,tech:additionalJson(),'}}'&#xA;)">
+    <code>MD_TO_JSON</code>
+    <xPathParameter defaultValue="'security'"/>
+    <xPathVariable expression="@*[.!='' and name()!='id' and name()!='defType' and name()!='name' and not(name() = ../tech:cryptedAttributes())]" name="plainAttributes"/>
+    <xPathVariable expression="@*[name() = ../tech:cryptedAttributes()]" name="cryptedAttributes"/>
+  </xPathExpression>
+  <contributedRegistryID>com.indy.ui.custom.out.services.registry.ReferencableObject</contributedRegistryID>
+</tech:tech>

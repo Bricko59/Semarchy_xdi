@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ref:mapRef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:ref="http://www.indy.com/v2/ref" id="_epEXVzNREe2HNZiLrCljlg">
+  <dataModel>_Np_FoDLFEe2I8opIze4gbg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=LoadFact_booking?</dataModel>
+  <containerRef xsi:type="ref:RDatastore" id="_epIBsTNREe2HNZiLrCljlg" countShownFields="7" hierarchical="false">
+    <dataModel>_zc-WADNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_epIBsjNREe2HNZiLrCljlg" precision="0" size="10" type="serial" mandatory="true" position="3">
+      <dataModel>_zdLKUTNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=bok_key_id?</dataModel>
+      <expressionRef id="_epLsFjNREe2HNZiLrCljlg">
+        <dataModel>_5eInMDNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_epIBszNREe2HNZiLrCljlg" precision="0" size="10" type="integer" position="6">
+      <dataModel>_zdLxYDNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=cus_id?</dataModel>
+      <expressionRef id="_epLsETNREe2HNZiLrCljlg" internalExpression="${t_bdr_pln_cus.cus_id}$">
+        <dataModel>_5eInMjNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map?</dataModel>
+        <sourceRef>_epKd9DNREe2HNZiLrCljlg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_epIBtDNREe2HNZiLrCljlg" precision="0" size="10" type="varchar" position="9">
+      <dataModel>_zdMYcDNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=time_key_day?</dataModel>
+      <expressionRef id="_epLsEjNREe2HNZiLrCljlg" internalExpression="${dim_time.time_key_day}$">
+        <dataModel>_5eInMzNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map?</dataModel>
+        <sourceRef>_epJP1TNREe2HNZiLrCljlg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_epIowDNREe2HNZiLrCljlg" precision="0" size="10" type="numeric" position="12">
+      <dataModel>_zdMYcTNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=bdr_id?</dataModel>
+      <expressionRef id="_epLsGDNREe2HNZiLrCljlg" internalExpression="${t_bdr_pln_cus.bdr_id}$">
+        <dataModel>_5eInNzNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map?</dataModel>
+        <sourceRef>_epKd8jNREe2HNZiLrCljlg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_epIowTNREe2HNZiLrCljlg" precision="0" size="10" type="numeric" position="15">
+      <dataModel>_zdM_gDNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=bok_people?</dataModel>
+      <expressionRef id="_epLsFTNREe2HNZiLrCljlg" internalExpression="${t_bdr_pln_cus.pln_cus_pers_count}$">
+        <dataModel>_5eInNTNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map?</dataModel>
+        <sourceRef>_epKd8DNREe2HNZiLrCljlg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_epIowjNREe2HNZiLrCljlg" precision="0" size="1" type="numeric" position="18">
+      <dataModel>_zdM_gTNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=bok_booked?</dataModel>
+      <expressionRef id="_epLsFzNREe2HNZiLrCljlg" internalExpression="CAST(${t_bdr_pln_cus.pln_cus_booked}$ AS INTEGER)">
+        <dataModel>_5eInNjNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map?</dataModel>
+        <sourceRef>_epKd8zNREe2HNZiLrCljlg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_epIowzNREe2HNZiLrCljlg" precision="6" size="29" type="timestamp" position="21">
+      <dataModel>_zdNmkDNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=update_date?</dataModel>
+      <expressionRef id="_epLsEzNREe2HNZiLrCljlg" internalExpression="tr::currentTimestamp()">
+        <dataModel>_5eInNDNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map?</dataModel>
+        <sourceRef>_epLsFDNREe2HNZiLrCljlg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <constraintRef id="_epIoxDNREe2HNZiLrCljlg" type="pk">
+      <dataModel>_zdNmkTNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=fact_booking_pkey?</dataModel>
+    </constraintRef>
+    <constraintRef id="_epIoxTNREe2HNZiLrCljlg" type="fk">
+      <dataModel>_zdONoDNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=fk_fact_booking_bdr?</dataModel>
+    </constraintRef>
+    <constraintRef id="_epIoxjNREe2HNZiLrCljlg" type="fk">
+      <dataModel>_zdONoTNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=fk_fact_booking_cus?</dataModel>
+    </constraintRef>
+    <constraintRef id="_epIoxzNREe2HNZiLrCljlg" type="fk">
+      <dataModel>_zdONojNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=fk_fact_booking_time?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_epJP0DNREe2HNZiLrCljlg" countShownFields="5" hierarchical="false">
+    <dataModel>_0oOoMDNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_epJP0TNREe2HNZiLrCljlg" precision="0" size="1" type="numeric" position="12">
+      <dataModel>_0oRrgTNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=time_quarter?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_epJP0jNREe2HNZiLrCljlg" precision="6" size="29" type="timestamp" position="6">
+      <dataModel>_0oQdYDNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=time_date?</dataModel>
+      <usage>_epIBsDNREe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_epJP0zNREe2HNZiLrCljlg" precision="0" size="2" type="numeric" position="9">
+      <dataModel>_0oRrgDNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=time_month?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_epJP1DNREe2HNZiLrCljlg" precision="0" size="4" type="numeric" position="15">
+      <dataModel>_0oSSkDNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=time_year?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_epJP1TNREe2HNZiLrCljlg" precision="0" size="10" type="varchar" mandatory="true" position="3">
+      <dataModel>_0oP2UDNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=time_key_day?</dataModel>
+      <usage>_epLsEjNREe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <constraintRef id="_epJ24DNREe2HNZiLrCljlg" type="pk">
+      <dataModel>_0oSSkTNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=pk_dim_time?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_epJ24TNREe2HNZiLrCljlg" countShownFields="5" hierarchical="false">
+    <dataModel>_1_2icDNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_epKd8DNREe2HNZiLrCljlg" precision="0" size="5" type="smallint" mandatory="true" position="12">
+      <dataModel>_1_4XojNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=pln_cus_pers_count?</dataModel>
+      <usage>_epLsFTNREe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_epKd8TNREe2HNZiLrCljlg" precision="6" size="29" type="timestamp" mandatory="true" position="6">
+      <dataModel>_1_4XoDNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=pln_day?</dataModel>
+      <usage>_epIBsDNREe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_epKd8jNREe2HNZiLrCljlg" precision="0" size="10" type="integer" mandatory="true" position="3">
+      <dataModel>_1_3wkDNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=bdr_id?</dataModel>
+      <usage>_epLsGDNREe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_epKd8zNREe2HNZiLrCljlg" precision="0" size="1" type="boolean" mandatory="true" position="15">
+      <dataModel>_1_4-sDNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=pln_cus_booked?</dataModel>
+      <usage>_epLsFzNREe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_epKd9DNREe2HNZiLrCljlg" precision="0" size="10" type="integer" mandatory="true" position="9">
+      <dataModel>_1_4XoTNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=cus_id?</dataModel>
+      <usage>_epLsETNREe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <constraintRef id="_epKd9TNREe2HNZiLrCljlg" type="fk">
+      <dataModel>_1_4-sTNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=fk_bdr_pln_bedroom?</dataModel>
+    </constraintRef>
+    <constraintRef id="_epKd9jNREe2HNZiLrCljlg" type="fk">
+      <dataModel>_1_5lwDNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=fk_bdr_pln_customer?</dataModel>
+    </constraintRef>
+    <constraintRef id="_epKd9zNREe2HNZiLrCljlg" type="pk">
+      <dataModel>_1_5lwTNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=pk_t_bdr_pln_cus?</dataModel>
+    </constraintRef>
+    <constraintRef id="_epKd-DNREe2HNZiLrCljlg" type="fk">
+      <dataModel>_1_5lwjNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=fk_bdr_pln_planning?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <clauseRef id="_epIBsDNREe2HNZiLrCljlg" internalExpression="${dim_time.time_date}$ = ${t_bdr_pln_cus.pln_day}$">
+    <dataModel>_fBIHcDNQEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map?</dataModel>
+    <sourceRef>_epJP0jNREe2HNZiLrCljlg</sourceRef>
+    <sourceRef>_epKd8TNREe2HNZiLrCljlg</sourceRef>
+  </clauseRef>
+  <targetSetRef id="_epP9gTNREe2HNZiLrCljlg" sourceSet="_epP9gDNREe2HNZiLrCljlg">
+    <container>_epIBsTNREe2HNZiLrCljlg</container>
+  </targetSetRef>
+  <sourceSetRef id="_epP9gDNREe2HNZiLrCljlg" targetSet="_epP9gTNREe2HNZiLrCljlg">
+    <dataSet xsi:type="map:DataSet">#_1__FUDNPEe2HNZiLrCljlg</dataSet>
+  </sourceSetRef>
+  <templateRef id="_epM6NjNREe2HNZiLrCljlg" description="Load : t_bdr_pln_cus" nodeCode="com.stambia.flow.step" templateCriteria="type=L-TP;trgProduct=POSTGRESSQL;trgPath=server:PG_datamart/schema:datamart.hotel_datamart/datastore:fact_booking;trgTech=RDBMS;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProduct=POSTGRESSQL;srcPath=server:PG_hotel/schema:hotel.hotel_management/datastore:t_bdr_pln_cus;srcTech=RDBMS;srcWorkspaceCapability=true;srcMapCapability=true;srcFilterCapability=true;srcJoinCapability=true">
+    <dataModel>_5exgYDNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=L1_fact_booking?</dataModel>
+    <load>_epM6NDNREe2HNZiLrCljlg</load>
+    <targetRef>_zc-WADNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_epOvYDNREe2HNZiLrCljlg" description="Integration : fact_booking" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=POSTGRESSQL;trgPath=server:PG_datamart/schema:datamart.hotel_datamart/datastore:fact_booking;trgTech=RDBMS;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcTechList=RDBMS;srcProductList=POSTGRESSQL">
+    <dataModel>_5e74cDNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map$name=I_fact_booking?</dataModel>
+    <targetRef>_zc-WADNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map?</targetRef>
+  </templateRef>
+  <loadSet id="_epM6MjNREe2HNZiLrCljlg">
+    <container>_zc-WADNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map?</container>
+  </loadSet>
+  <loadSet id="_epM6NDNREe2HNZiLrCljlg">
+    <container>_1_2icDNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map?</container>
+  </loadSet>
+  <loadSet id="_epM6NTNREe2HNZiLrCljlg">
+    <container>_0oOoMDNPEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map?</container>
+  </loadSet>
+  <udfRef id="_epLsFDNREe2HNZiLrCljlg">
+    <dataModel>_blCbEDNQEe2HNZiLrCljlg?fileId=_Np_FoDLFEe2I8opIze4gbg$type=map?</dataModel>
+    <usage>_epLsEzNREe2HNZiLrCljlg</usage>
+  </udfRef>
+</ref:mapRef>

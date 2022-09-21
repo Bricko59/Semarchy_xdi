@@ -1,0 +1,8 @@
+*** Step 2 ***
+**************
+
+Expression editor of scripting action
+-----------------------------------------------------------------------------------------------------------------------------------
+var fileDir = "%b(rhino){var pattern = /\\/g;String(__ctx__.getSourceResultSet().getString('FILE_DIR')).replace(pattern,'/')}b%" ;
+var List = __ctx__.getVariableValue("~/ListOfAttachements") + fileDir +"/" +":{FILE_NAME}:" + ";";
+__ctx__.publishVariable("~/ListOfAttachements",List);

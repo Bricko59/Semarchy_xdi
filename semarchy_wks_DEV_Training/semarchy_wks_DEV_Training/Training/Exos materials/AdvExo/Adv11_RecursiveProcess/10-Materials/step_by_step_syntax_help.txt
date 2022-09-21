@@ -1,0 +1,43 @@
+*** Step 1 ***
+**************
+
+Process name
+------------------
+MyRecursiveProcess
+
+Parameter names, types and values
+---------------------------------------------------------
+    current_iteration		Type : Integer 		Value 	1
+	factorialResult			Type : Integer		Value	1
+	factorialNumber			Type : Integer		Value	8
+
+Expression Editor of execution Condition
+----------------------------------------
+%e(rhino){ (${./current_iteration}$ <= ${./factorialNumber}$) }e(rhino)%
+	
+Value of TXT_WRITE_FILENAME property
+------------------------------------------------------------------------------------------
+%x{$recursiveFactorial_folder/tech:path()}x%/factorial_%x{md:formatDate("yyyyMMdd")}x%.txt
+
+Value of TXT_WRITE_APPEND property
+------------------------------------------------------
+%e(rhino){if (${../current_iteration}$ == 1)
+               {__ctx__.retValue = "false"; } 
+          else {__ctx__.retValue = "true";} }e(rhino)%
+
+*** Step 2 ***
+**************
+
+Value of DELIV_NAME property
+----------------------------
+MyRecursiveProcess
+
+Value of DELIV_SESSION_NAME property
+------------------------------------------------------------------------------------------------------------------------------------------
+factorial of ${../current_iteration}$ = %e(jython){__ctx__.retValue = str(int(${../current_iteration}$*${../factorialResult}$))}e(jython)%
+
+Expression Editor of the parameters
+---------------------------------------------------------------------------------------------------------------------------
+	current_iteration		Type : 	Integer		Value	%e(rhino){ ${../current_iteration}$ + 1}e(rhino)% 
+	factorialResult			Type : 	Integer		Value	%e(rhino){${../current_iteration}$*${../factorialResult}$}e(rhino)%
+	factorialNumber         Type : 	Integer		Value	%e(rhino){ ${../factorialNumber}$}e(rhino)%

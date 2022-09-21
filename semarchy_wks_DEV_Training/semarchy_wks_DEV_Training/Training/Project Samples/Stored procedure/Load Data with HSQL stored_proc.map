@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map:map xmlns:map="http://www.indy.com/v2/map" id="_JM090OOaEemkOsYcvTop0Q" internalVersion="8" tech="resource.tech#_waYSMH8VEd2__Mzb_dB76A?fileId=_waYSMH8VEd2__Mzb_dB76A$type=tech$name=flow?">
+  <datastore id="_LF8bkOOaEemkOsYcvTop0Q" alias="T_CUSTOMER" dataset="_LGTn8OOaEemkOsYcvTop0Q" ref="resource.md#_jZk3QeBoEemkOsYcvTop0Q?fileId=_jZf-wOBoEemkOsYcvTop0Q$type=md$name=T_CUSTOMER?">
+    <field id="_LGNhU-OaEemkOsYcvTop0Q" name="CUS_COMPANY" ref="resource.md#_jZk3YeBoEemkOsYcvTop0Q?fileId=_jZf-wOBoEemkOsYcvTop0Q$type=md$name=CUS_COMPANY?"/>
+    <field id="_LGM6QOOaEemkOsYcvTop0Q" fullAlias="CUS_ID" name="CUS_ID" ref="resource.md#_jZk3ROBoEemkOsYcvTop0Q?fileId=_jZf-wOBoEemkOsYcvTop0Q$type=md$name=CUS_ID?" updateKey="true"/>
+    <field id="_LGNhUOOaEemkOsYcvTop0Q" name="TIT_CODE" ref="resource.md#_jZk3TOBoEemkOsYcvTop0Q?fileId=_jZf-wOBoEemkOsYcvTop0Q$type=md$name=TIT_CODE?"/>
+    <field id="_LGNhVOOaEemkOsYcvTop0Q" name="CUS_BIRTH_DATE" ref="resource.md#_jZk3aOBoEemkOsYcvTop0Q?fileId=_jZf-wOBoEemkOsYcvTop0Q$type=md$name=CUS_BIRTH_DATE?"/>
+    <field id="_LGNhUeOaEemkOsYcvTop0Q" name="CUS_LAST_NAME" ref="resource.md#_jZk3U-BoEemkOsYcvTop0Q?fileId=_jZf-wOBoEemkOsYcvTop0Q$type=md$name=CUS_LAST_NAME?"/>
+    <field id="_LGNhUuOaEemkOsYcvTop0Q" name="CUS_FIRST_NAME" ref="resource.md#_jZk3WuBoEemkOsYcvTop0Q?fileId=_jZf-wOBoEemkOsYcvTop0Q$type=md$name=CUS_FIRST_NAME?"/>
+    <constraint id="_LGOIYOOaEemkOsYcvTop0Q" name="FK_CUSTOMER_TITLE" ref="resource.md#_jZk3cuBoEemkOsYcvTop0Q?fileId=_jZf-wOBoEemkOsYcvTop0Q$type=md$name=FK_CUSTOMER_TITLE?" reject="true"/>
+    <constraint id="_LGOIYeOaEemkOsYcvTop0Q" name="PK_T_CUSTOMER" ref="resource.md#_jZk3b-BoEemkOsYcvTop0Q?fileId=_jZf-wOBoEemkOsYcvTop0Q$type=md$name=PK_T_CUSTOMER?" reject="true"/>
+  </datastore>
+  <datastore id="_Lp8ggOOaEemkOsYcvTop0Q" alias="RETRIEVED_CUSTOMER" dataset="_Lp-VsOOaEemkOsYcvTop0Q" ref="resource.md#_1dynYeOZEemkOsYcvTop0Q?fileId=_jZf-wOBoEemkOsYcvTop0Q$type=md$name=RETRIEVED_CUSTOMER?" subExpression="[A]">
+    <field id="_Lp9HkuOaEemkOsYcvTop0Q" enable="true" insert="true" name="FIRST_NAME" ref="resource.md#_1eLo8OOZEemkOsYcvTop0Q?fileId=_jZf-wOBoEemkOsYcvTop0Q$type=md$name=FIRST_NAME?" update="true">
+      <expression id="_PG36YOOaEemkOsYcvTop0Q" setDescriptorRef="_PG3TUOOaEemkOsYcvTop0Q">
+        <expression>get_customer.get_customer/firstname</expression>
+      </expression>
+    </field>
+    <field id="_Lp9HkOOaEemkOsYcvTop0Q" enable="true" insert="true" name="CUS_ID" ref="resource.md#_1eKa0OOZEemkOsYcvTop0Q?fileId=_jZf-wOBoEemkOsYcvTop0Q$type=md$name=CUS_ID?" update="true" updateKey="true">
+      <expression id="_PG4hcOOaEemkOsYcvTop0Q" setDescriptorRef="_PG3TUOOaEemkOsYcvTop0Q">
+        <expression>get_customer.get_customer/id_cus</expression>
+      </expression>
+    </field>
+    <field id="_Lp9HkeOaEemkOsYcvTop0Q" enable="true" insert="true" name="LAST_NAME" ref="resource.md#_1eLB4OOZEemkOsYcvTop0Q?fileId=_jZf-wOBoEemkOsYcvTop0Q$type=md$name=LAST_NAME?" update="true">
+      <expression id="_PG4hceOaEemkOsYcvTop0Q" setDescriptorRef="_PG3TUOOaEemkOsYcvTop0Q">
+        <expression>get_customer.get_customer/lastname</expression>
+      </expression>
+    </field>
+    <constraint id="_Lp9uoOOaEemkOsYcvTop0Q" name="PK_RETRIEVED_CUSTOMER" ref="resource.md#_1eM3EOOZEemkOsYcvTop0Q?fileId=_jZf-wOBoEemkOsYcvTop0Q$type=md$name=PK_RETRIEVED_CUSTOMER?" reject="true"/>
+    <setDescriptor id="_PG3TUOOaEemkOsYcvTop0Q" label="A"/>
+  </datastore>
+  <datastore id="_MTUNoOOaEemkOsYcvTop0Q" alias="get_customer" dataset="_MTWC0OOaEemkOsYcvTop0Q" ref="resource.md#_enoPUOOWEemkOsYcvTop0Q?fileId=_ZOf5MOD-EemkOsYcvTop0Q$type=md$name=get_customer?" subExpression="[A]">
+    <field id="_MTVbwOOaEemkOsYcvTop0Q" enable="true" fullAlias="get_customer/id_cus" insert="true" name="id_cus" parent="_MTU0seOaEemkOsYcvTop0Q" ref="resource.md#_uvz-YOOXEemkOsYcvTop0Q?fileId=_ZOf5MOD-EemkOsYcvTop0Q$type=md$name=id_cus?" update="true">
+      <expression id="_NRyBAOOaEemkOsYcvTop0Q" setDescriptorRef="_NRuWoOOaEemkOsYcvTop0Q">
+        <expression>T_CUSTOMER.CUS_ID</expression>
+      </expression>
+    </field>
+    <field id="_MTU0seOaEemkOsYcvTop0Q" enable="true" expand="true" insert="true" name="get_customer" ref="resource.md#_enoPUOOWEemkOsYcvTop0Q?fileId=_ZOf5MOD-EemkOsYcvTop0Q$type=md$name=get_customer?" update="true" updateKey="true">
+      <expression id="_NRyoEOOaEemkOsYcvTop0Q" setDescriptorRef="_NRuWoOOaEemkOsYcvTop0Q">
+        <expression>T_CUSTOMER.CUS_ID</expression>
+      </expression>
+    </field>
+    <field id="_MTVbweOaEemkOsYcvTop0Q" fullAlias="get_customer/firstname" name="firstname" parent="_MTU0seOaEemkOsYcvTop0Q" ref="resource.md#_xcdx4eOXEemkOsYcvTop0Q?fileId=_ZOf5MOD-EemkOsYcvTop0Q$type=md$name=firstname?">
+      <expression id="_NRzPIOOaEemkOsYcvTop0Q" setDescriptorRef="_NRuWoOOaEemkOsYcvTop0Q">
+        <expression></expression>
+      </expression>
+    </field>
+    <field id="_MTVbwuOaEemkOsYcvTop0Q" fullAlias="get_customer/lastname" name="lastname" parent="_MTU0seOaEemkOsYcvTop0Q" ref="resource.md#_0pl1MeOXEemkOsYcvTop0Q?fileId=_ZOf5MOD-EemkOsYcvTop0Q$type=md$name=lastname?">
+      <expression id="_NRzPIeOaEemkOsYcvTop0Q" setDescriptorRef="_NRuWoOOaEemkOsYcvTop0Q">
+        <expression></expression>
+      </expression>
+    </field>
+    <setDescriptor id="_NRuWoOOaEemkOsYcvTop0Q" label="A"/>
+  </datastore>
+  <template id="_NR5VwOOaEemkOsYcvTop0Q" name="I_get_customer" process="resource.proc#_3LjdoUdBEemY2or4OqFeDQ?fileId=_3LjdoUdBEemY2or4OqFeDQ$type=proc$name=INTEGRATION%20Stored%20Procedure.tp?" targetId="_MTUNoOOaEemkOsYcvTop0Q"/>
+  <template id="_PG6WoOOaEemkOsYcvTop0Q" name="I_RETRIEVED_CUSTOMER" process="resource.proc#_HFOfdjEZEd-WZe6cNi2k2w?fileId=_HFOfdjEZEd-WZe6cNi2k2w$type=proc$name=INTEGRATION%20Hsql?" targetId="_Lp8ggOOaEemkOsYcvTop0Q"/>
+  <template id="_PHXCkOOaEemkOsYcvTop0Q" name="L1_RETRIEVED_CUSTOMER" process="resource.proc#_eNVMMrdDEd6wPMNq-9tkHw?fileId=_eNVMMrdDEd6wPMNq-9tkHw$type=proc$name=Load%20Xml%20to%20Rdbms?" sourceId="_MTUNoOOaEemkOsYcvTop0Q" targetId="_Lp8ggOOaEemkOsYcvTop0Q"/>
+  <dataSet id="_LGTn8OOaEemkOsYcvTop0Q">
+    <container>_LF8bkOOaEemkOsYcvTop0Q</container>
+  </dataSet>
+  <dataSet id="_Lp-VsOOaEemkOsYcvTop0Q">
+    <container>_Lp8ggOOaEemkOsYcvTop0Q</container>
+  </dataSet>
+  <dataSet id="_MTWC0OOaEemkOsYcvTop0Q">
+    <container>_MTUNoOOaEemkOsYcvTop0Q</container>
+  </dataSet>
+  <hint>
+    <usedField>#_LGM6QOOaEemkOsYcvTop0Q</usedField>
+    <usedField>#_MTVbwOOaEemkOsYcvTop0Q</usedField>
+    <usedField>#_MTVbweOaEemkOsYcvTop0Q</usedField>
+    <usedField>#_MTVbwuOaEemkOsYcvTop0Q</usedField>
+  </hint>
+</map:map>

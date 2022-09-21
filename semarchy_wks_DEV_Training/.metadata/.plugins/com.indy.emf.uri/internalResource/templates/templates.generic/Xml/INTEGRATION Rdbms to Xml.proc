@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_brHmkaEoEd6xg_kipsVRYg" description="This template is used to write an XML / JSON file from any database.&#xD;&#xA;&#xD;&#xA;It also offers the possibility to generate, if required, multiple files based on the source data.&#xD;&#xA;For this simply map the root node of the target structure, which represent the repetition key, from a source column.&#xD;&#xA;At execution, for each value of the source column, a file will be written.&#xD;&#xA;The 'Out File Mask' parameter can be used to define the mask for the target files name.&#xD;&#xA;&#xD;&#xA;Refer to the description of each Parameter for more information.&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;23/09/2021&#x9;New parameter &quot;Json Node Null Behaviour&quot;&#xD;&#xA;16/06/2020&#x9;New Parameter 'Cdc Subscriber'&#xD;&#xA;16/06/2020&#x9;New Parameters 'Unlock Cdc Table' and 'Lock Cdc Table'&#xD;&#xA;20/03/2018&#x9;Reorganize the parameters display order&#xD;&#xA;16/02/2017&#x9;Add support for SORT_DESC and SORT_ASC tags&#xD;&#xA;03/01/2017&#x9;New parameter to replace null values when loading attributes: 'Attribute Null Value Replacement'&#xD;&#xA;08/11/2016&#x9;New parameters for transactional mode on source tables" metaInf="&lt;template-feature-support name=&quot;stagingArea&quot; enable=&quot;true&quot; evaluation=&quot;NATIVE&quot;/>">
+  <parameter id="_h3wCsLMVEd6-nvvKmu_s4w" description="If true, dupplicated source rows will be filtered to avoid having duplicates in target file(s)." name="DISTINCT" type="Boolean" value="true"/>
+  <parameter id="_lGCdYLP2Ed6xfJDbiNfyJg" description="Specifies if the XML declaration node should be written at the begin of the target xml file.&#xD;&#xA;This node helps the readers that will next process the file to find out which encoding is used, for instance.&#xD;&#xA;It can moreover help the user, for debug purposes.&#xD;&#xA;&#xD;&#xA;Set this to true (default) if you want the Runtime to write it.&#xD;&#xA;&#xD;&#xA;Example of declaration&#xD;&#xA;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xD;&#xA;&#xD;&#xA;" name="WRITE_XML_DECLARATION" type="Boolean" value="true"/>
+  <parameter id="_GmDo4KXTEeaISqPB9sndpw" description="If true, the selections on the source tables will be executed in a dedicated transaction.&#xD;&#xA;This can be useful when the source tables were populated in a previous step, not committed yet. &#xD;&#xA;&#xD;&#xA;If false, each statement on the source tables uses an Autocommit transaction." name="transactionalMode" type="Boolean" value="false"/>
+  <parameter id="_MS8hwOTLEd6QE9z4Uu685w" description="Optional debug parameter used to extract into files the descriptors of the integration.&#xD;&#xA;These are files containing the select query that is performed on the source table and the structure of the exchanges.&#xD;&#xA;Set this parameter to true if you want the Runtime to write these files." name="WRITE_XML_DESCRIPTOR" type="Boolean" value="false"/>
+  <parameter id="_7DayMOjREd68N66TleSdNw" name="XML_COMMIT" type="Boolean" value="true"/>
+  <parameter id="_2filwOgWEd-2uv_dKt71Iw" description="If set to true, previously created files will be deleted prior to the integration.&#xD;&#xA;&#xD;&#xA;Note:&#xD;&#xA;This works only for files with fixed path defined in Metadata or through the 'Out File Name' parameter.&#xD;&#xA;Dynamically generated files with 'Out File Mask' are not deleted when using this option." name="deletePreviousFiles" type="Boolean" value="true"/>
+  <parameter id="_qk3lYK6XEd6-KrFhFov0kw" description="This parameter can be used to specify manually the path of the file to be written.&#xD;&#xA;If it is not set it will be retrieved from the target Metadata.&#xD;&#xA;&#xD;&#xA;E.g. D:/files/customers.xml&#xD;&#xA;&#xD;&#xA;Note that 'Out File Name' and 'Out File Mask' parameters cannot be used together, you should only use one of them." name="OUT_FILE_NAME" type="String"/>
+  <parameter id="_ABaIUL5jEd6bgqrD2ccAOw" description="This parameter allows to specify a mask for the file(s) to create.&#xD;&#xA;It offers the possibility to make it dynamic and also to separate the result into multiple folders if required.&#xD;&#xA;&#xD;&#xA;The mask can contain one of the following predefined values:&#xD;&#xA;- [FILE_NAME]: Complete name of the file as specified in the Metadata&#xD;&#xA;- [FILE_SHORT_NAME]: Path and name of the file without the extension as specified in the Metadata&#xD;&#xA;- [FILE_EXTENSION]: File extension extracted from the file name specified in the Metadata&#xD;&#xA;- [POSITION]: Number that increments with each newly generated file&#xD;&#xA;- [TIMESTAMP]: Number of milliseconds since January 1st, 1970&#xD;&#xA;&#xD;&#xA;And also user defined tags:&#xD;&#xA;- [&lt;tag>]: User defined tag that is defined on one of the target fields in the Mapping.&#xD;&#xA;It will be replaced at execution by the value that is loaded into the field.&#xD;&#xA;This allows to create dynamic paths based on loaded data.&#xD;&#xA;&#xD;&#xA;E.g.&#xD;&#xA;D:/Temp/myfile.[TIMESTAMP].xml&#xD;&#xA;D:/Temp/customerDetailsByCity_[CITY_NAME].xml&#xD;&#xA;D:/Temp/[STATE_CODE]/customerDetailsByCity_[CITY_NAME].xml&#xD;&#xA;&#xD;&#xA;Note: Last two examples are using custom tags defined by the user in the Mapping.&#xD;&#xA;Refer to the XML tutorial for further information and examples." name="OUT_FILE_MASK" type="String" value=""/>
+  <parameter id="_lgiHQLMVEd6-nvvKmu_s4w" description="Encoding that should be used to write the target files." metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;UTF-8&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;ISO-8859-1&quot;/>" name="OUT_FILE_ENCODING" type="String" value=""/>
+  <parameter id="_nU2asM2IEeCm5-sZGL1HuQ" description="This parameter defines the name that should have the session variable containing the generated file's path.&#xD;&#xA;This session variable is generated at execution at the Mapping's Process root, allowing to process it if required.&#xD;&#xA;It can be useful when the Mapping is used in a larger Process in which there is the need to retrieve the path of the created file after its creation, to make further operations on it.&#xD;&#xA;" name="outFileNameVar" type="String" value="OUT_FILE_NAME"/>
+  <parameter id="_oOmmwEdJEeWcYJW-wUPrGA" description="Defines what the template should do when the target file already exists:&#xD;&#xA;&#xD;&#xA;- preserve: The existing file is kept as is and nothing is done.&#xD;&#xA;(temporary file containing integrated data is simply deleted and existing file is untouched.)&#xD;&#xA;- replace: The file is deleted and replaced with the new one with new data.&#xD;&#xA;- raiseException: An exception is thrown to inform the user that the file already exists, and the execution stops.&#xD;&#xA;&#xD;&#xA;This can be particularly useful when generating multiple files using a mask, to choose what to do when facing a file that already exists.&#xD;&#xA;This could help, for instance, if using the preserve mode, to generate only the new files based on the source and keep existing ones as is.&#xD;&#xA;(be careful in this case, as they will not be updated with new data.)&#xD;&#xA;&#xD;&#xA;See also 'Delete previous files' parameter that could be useful to remove previously create file." metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;replace&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;preserve&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;raiseException&quot;/>" name="fileExistsBehaviour" type="String" value="replace"/>
+  <parameter id="_fCNe8GP_EeOwTZVnXRqLlw" description="Defines what to do when source data does not return any row:&#xD;&#xA;&#xD;&#xA;- createEmptyFile: An empty file is created.&#xD;&#xA;- deleteExistingFile: If the file already exists at the target location, it is deleted.&#xD;&#xA;- raiseException: An exception is thrown to inform the user that there is no source data, and the execution stops." metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;deleteExistingFile&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;createEmptyFile&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;raiseException&quot;/>" name="noDataBehaviour" type="String" value="deleteExistingFile"/>
+  <parameter id="_CNOh0Nn_EeCi_78PNYk6Cg" description="Defines what to do when a null value is loaded into a target xml element or JSON value:&#xD;&#xA;&#xD;&#xA;- ForceToTrue: The element is created in the target file with the xsi:nil=&quot;true&quot; attribute.&#xD;&#xA;- ForceToFalse: The element or JSON value is not created in the target file.&#xD;&#xA;- TrueIfNotDefined: When the 'isNullable' property is not defined in Metadata, the element is created in the target file with the xsi:nil=&quot;true&quot; attribute.&#xD;&#xA;- FalseIfNotDefined: When the 'isNullable' property is not defined in Metadata, the element is not created in the target file.&#xD;&#xA;&#xD;&#xA;Note that this applies to all the elements that are loaded and that the 'ForceToTrue' and 'ForceToFalse' options override what is defined in Metadata.&#xD;&#xA;These two options allow to force manually in the template to create or not elements with xsi:nil=&quot;true&quot; attribute when a null value is encountered.&#xD;&#xA;&#xD;&#xA;If you want to impact only the behavior of elements where the 'isNullable' property is not defined in Metadata, use the two other options.&#xD;&#xA;They allow to choose what to do when it is the case, and simply follow what is defined in Metadata when it is already defined in.&#xD;&#xA;&#xD;&#xA;Note:&#xD;&#xA;From Runtime S17.5.6, the 'ForceToFalse' option is also supported for JSON values.&#xD;&#xA;When this option is set the JSON values will not be present in the target file if the source value is null.&#xD;&#xA;All other options are supported for XML elements only." metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;FalseIfNotDefined&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;TrueIfNotDefined&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;ForceToFalse&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;ForceToTrue&quot;/>" name="nilBehaviour" type="String" value="FalseIfNotDefined"/>
+  <parameter description="Defines what to do when a null value is loaded into a JSON array or a JSON object&#xD;&#xA;&#xD;&#xA;- Do Not Write Node: The JSON array or Object is not created in the target file.&#xD;&#xA;- Write Empty Node: The JSON array or Object is created in the target file with an empty array of an empty object&#xD;&#xA;- Write Null Node: The JSON array or Object is created in the target file with null as value&#xD;&#xA; " id="8bc2def9-ba5f-4f7e-a96e-d6f35a1551ce" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;Do Not Write Node&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;Write Null Node&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;Write Empty Node&quot;/>" name="jsonNodeNullBehaviour" type="String" value="Do Not Write Node"/> 
+  <parameter id="_oClisHcaEeWmhOv9rtji2A" description="This parameter allows to define a keyword that will be treated as an empty value when encountered.&#xD;&#xA;It offers the possibility, for instance, to differentiate empty and null values on technologies like Oracle that does not differentiate them.&#xD;&#xA;&#xD;&#xA;E.g.&#xD;&#xA;If this parameter is defined to 'emptykeyword', when a field is loaded with this particular value, it will be treated as an empty value.&#xD;&#xA;It will then appear in the target file as &lt;myelement /> for instance, if working on an xml element.&#xD;&#xA;&#xD;&#xA;Note:&#xD;&#xA;On source databases that differentiate both empty and null values, this is not necessary to use this.&#xD;&#xA;They will return different values for empty and null &#xD;&#xA;&#xD;&#xA;" name="emptyValueKeyword" type="String" value=""/>
+  <parameter id="_6X6ekNGkEeajUsXkDs5rEg" description="This parameter allows to specify the value that must be used to load attributes when a null value is detected.&#xD;&#xA;As an attribute loaded with a null value will not appear in the target XML file, this offers the possibility to replace it with a specific value instead." name="attributeNullValueReplacement" type="String"/>
+  <parameter id="_ugBPwChnEeCGPpZAAg4OAQ" metaInf="&lt;metaInf id=&quot;value&quot; value=&quot;manual&quot;/>&#xD;&#xA;&lt;!--&lt;metaInf id=&quot;value&quot; value=&quot;auto&quot;/>-->&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;off&quot;/>" name="sourceSetOptimization" type="String" value="off"/>
+  <parameter id="_XjzmwNK0Ed-0OJZ7Pcv0uw" name="integrationSelectHint" type="String" value=""/>
+  <parameter id="_Cbg7EKXTEeaISqPB9sndpw" description="Name of the transaction when Transaction Mode is set to true." name="transactionName" type="String" value="T1"/>
+  <parameter id="_lvSZIOjEEd6N9Lo4gYTBQA" description="JDBC Fetch size (number of lines) used when querying the source database.&#xD;&#xA;&#xD;&#xA;Larger values provide better performance but consume more memory in the Runtime as the data is stored in the Memory before being written in the XML File." name="SQL_FECTH_SIZE" type="Integer" value=""/>
+  <parameter id="_vbE9UL5kEd6bgqrD2ccAOw" description="This parameter can be used to surround the target structure with an additional root node named as specified.&#xD;&#xA;The name of this additional node will be the name defined in this parameter.&#xD;&#xA;&#xD;&#xA;For instance, if the target structure is an XML file which looks like this:&#xD;&#xA;&lt;customers>&#xD;&#xA;   &lt;customer name=&quot;GIBBS&quot;>&#xD;&#xA;&lt;customers>&#xD;&#xA;&#xD;&#xA;Setting this parameter to 'rootNode' will results to an XML file with an additional node like this:&#xD;&#xA;&lt;rootNode>&#xD;&#xA;    &lt;customers>&#xD;&#xA;       &lt;customer name=&quot;GIBBS&quot;>&#xD;&#xA;    &lt;customers>&#xD;&#xA;&lt;/rootNode>&#xD;&#xA;&#xD;&#xA;Note that this works only for XML files." name="SUPER_ROOT_NAME" type="String" value=""/>
+  <parameter id="_hnvOEEkxEd-hn7knSN6hDg" description="If true, mapped XML element nodes that are used as a key will be written to the request even if they don't have a datatype.&#xD;&#xA;Important note: setting this to false will prevent runtime from sending requests when only key nodes are mapped (for example if only the root element of the XML datastore is mapped)." name="WRITE_KEY_VALUES" type="String" value="false"/>
+  <parameter id="_nc8DULP2Ed6xfJDbiNfyJg" name="XML_VERSION" type="String" value="1.0"/>
+  <parameter id="_CUEc0LQCEd6n_6FKwvmCzw" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;com.sun.xml.internal.stream.XMLOutputFactoryImpl&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;com.ctc.wstx.stax.WstxOutputFactory&quot;/>" name="XML_FACTORY_CLASS_NAME" type="String" value=""/>
+  <parameter id="_LwGnMK_PEeqGH6AaH3PDiA" description="When a source table is used as CDC a lock is performed on it. It makes the changed data available in the Mapping.&#xD;&#xA;If set to false, the Lock must have been performed as part of a previous Mapping." name="lockCdcTable" type="Boolean" value="true"/>
+  <parameter id="_LwMt0K_PEeqGH6AaH3PDiA" description="When a source table is used as CDC an unlock is performed on it after processing. It marks the changed data as consumed.&#xD;&#xA;If set to false, the Unlock must be performed as part of an upcoming Mapping." name="unlockCdcTable" type="Boolean" value="true"/>
+  <parameter id="_oWn7sK_PEeqGH6AaH3PDiA" description="CDC Subscriber to use when CDC has been enabled on a source table." name="cdcSubscriber" type="String"/>
+  <subProcess id="_1b6fEK6lEd6tEoMWC9noQg" isBeginAction="false" name="INT" nbCycles="-1" toleratedError="false">
+    <actionCode id="_4B1_gK6lEd6tEoMWC9noQg" enable="true" isBeginAction="false" name="SqlToXml" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcToXmlActionCodeI">
+      <link id="_R1H38ENKEeCcsKFd3RQ7Tg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_RD7rkENKEeCcsKFd3RQ7Tg"/>
+      <parameter id="_4B2mkK6lEd6tEoMWC9noQg" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_4B2mka6lEd6tEoMWC9noQg" name="OUT_FILE_NAME" type="String" value="%x{$fileName}x%"/>
+      <parameter id="_TQNrULP2Ed6HPKjJZBD9yw" name="WRITE_XML_DECLARATION" ref="#_lGCdYLP2Ed6xfJDbiNfyJg" type="Boolean" value="true"/>
+      <parameter id="_sWSX4LP2Ed6xfJDbiNfyJg" name="OUT_FILE_ENCODING" type="String" value="%x{md:ifEmpty(md:ifEmpty(md:paramValue($this/..,'OUT_FILE_ENCODING'),$REF/ref:target()/tech:xmlFileEncoding()),'UTF-8')}x%"/>
+      <parameter id="_u9wwcLP2Ed6xfJDbiNfyJg" name="XML_VERSION" ref="#_nc8DULP2Ed6xfJDbiNfyJg" type="String"/>
+      <parameter id="_2XpHELQBEd6n_6FKwvmCzw" name="XML_OUTPUT_FACTORY" type="String" value="%x{md:ifEmpty($REF/ref:target()/tech:xmlOutputFactoryClass(),md:paramValue($this/..,'XML_FACTORY_CLASS_NAME'))}x%"/>
+      <parameter id="_ETeP4L5iEd6bgqrD2ccAOw" name="OUT_FILE_MASK" ref="#_ABaIUL5jEd6bgqrD2ccAOw" type="String" value=""/>
+      <parameter id="_1-Un4L5kEd6bgqrD2ccAOw" name="SUPER_ROOT_NAME" type="String" value="%x{md:ifEmpty(md:paramValue($this/..,'SUPER_ROOT_NAME'),$REF/ref:target()/tech:xmlRootName())}x%"/>
+      <parameter id="_FPcp0OTLEd6QE9z4Uu685w" name="WRITE_XML_DESCRIPTOR" type="Boolean" value="%x{md:ifEmpty(md:paramValue($this/..,'WRITE_XML_DESCRIPTOR'),'false')}x%"/>
+      <parameter id="_t52m0OjEEd6N9Lo4gYTBQA" name="SQL_FETCH_SIZE" ref="#_lvSZIOjEEd6N9Lo4gYTBQA" type="Integer"/>
+      <parameter id="__POEQOjREd68N66TleSdNw" name="XML_COMMIT" type="Boolean" value="%x{md:ifEmpty(md:paramValue($this,'XML_COMMIT',3),md:paramValue($this,'XML_COMMIT',2))}x%"/>
+      <parameter id="_lTGskEkxEd-hn7knSN6hDg" name="WRITE_KEY_VALUES" type="String" value="%x{md:ifEmpty(md:paramValue($this/..,'WRITE_KEY_VALUES'),'false')}x%"/>
+      <parameter id="_tNXqEM2EEeCm5-sZGL1HuQ" name="OUT_FILE_NAME_VAR" type="String" value="%xsl preserveSpace=&quot;false&quot;{&#xD;&#xA;&lt;xsl:variable name=&quot;tmp&quot; select=&quot;md:ifEmpty(md:paramValue($this,'outFileNameVar'),'OUT_FILE_NAME')&quot;/>&#xD;&#xA;&lt;xsl:choose>&#xD;&#xA;&lt;xsl:when test=&quot;$tmp!='' and (starts-with($tmp,'/') or starts-with($tmp,'~'))&quot;>&#xD;&#xA;&#x9;&#x9;&lt;xsl:value-of select=&quot;$tmp&quot;/>&#xD;&#xA;&lt;/xsl:when>&#xD;&#xA;&lt;xsl:when test=&quot;$tmp!=''&quot;>../../&lt;xsl:value-of select=&quot;$tmp&quot;/>&#xD;&#xA;&lt;/xsl:when>&#xD;&#xA;&lt;/xsl:choose>&#xD;&#xA;}xsl%"/>
+      <parameter id="_SpXkINn_EeCi_78PNYk6Cg" name="NIL_BEHAVIOUR" type="String" value="%x{md:ifEmpty(md:paramValue($this/..,'nilBehaviour'),'FalseIfNotDefined')}x%"/>
+      <parameter id="e2c55d4a-fa4d-450e-bf9d-3bd923f0aebb" name="JSON_NODE_NULL_BEHAVIOUR" type="String" value="%x{md:ifEmpty(md:paramValue($this/..,'jsonNodeNullBehaviour'),'Do Not Write Node')}x%"/>
+      <parameter id="_W78ZUNWGEeGBf6GB-b98Ww" name="DATA_TYPE_CONVERTER" type="String" value="%x{$REF/ref:target()/tech:dataTypeConverter()}x%"/>
+      <parameter id="_YinI0GQAEeOwTZVnXRqLlw" name="NO_DATA_BEHAVIOUR" ref="#_fCNe8GP_EeOwTZVnXRqLlw" type="String"/>
+      <parameter id="_tgKnAEdJEeWcYJW-wUPrGA" name="FILE_EXISTS_BEHAVIOUR" ref="#_oOmmwEdJEeWcYJW-wUPrGA" type="String"/>
+      <parameter id="_OkaQkFq9EeWWpL-9H3kOuA" name="STREAM_HOOK_01" type="String" value="${../streamHook01}$"/>
+      <parameter id="_qrNKwHcaEeWmhOv9rtji2A" name="EMPTY_VALUE_KEYWORD" type="String" value="%x{md:paramValue($this,'emptyValueKeyword',2)}x%"/>
+      <parameter id="_bA2I8JanEeaLh5IP6nICvQ" name="ATTRIBUTE_NULL_VALUE_REPLACEMENT" type="String" value="%x{md:paramValue($this,'attributeNullValueReplacement',2)}x%"/>
+      <parameter id="_flD5kKXSEeaISqPB9sndpw" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalMode')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_hZfEkKXSEeaISqPB9sndpw" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalMode')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <parameter id="9576941d-2fce-42b2-afb5-7c0bb697554f" name="OVERRIDE_ACTION_PARAMETERS" type="String" value="${../overrideParameters}$"/>
+      <code>&lt;sqlToXml:descriptor xmlns:sqlToXml=&quot;http://www.stambia.com/sqlToXml&quot; xmlns:md=&quot;http://www.stambia.com/md&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;>&#xD;
+%xsl{&#xD;
+&lt;xsl:variable name=&quot;setKeyOnRoot&quot; select=&quot;md:paramValue($this,'setKeyOnRoot')='true'&quot;/>&#xD;
+&#xD;
+&lt;xsl:variable name=&quot;sourceSets&quot;>&#xD;
+	&lt;xsl:for-each select=&quot;($REF/tech:sourceSets())&quot;>&#xD;
+		&lt;sourceSet name=&quot;{md:ifEmpty(.,'__monoSS__')}&quot; distinct=&quot;{md:paramValue($this,'DISTINCT')}&quot; integrationSelectHint=&quot;{md:paramValue($this,'integrationSelectHint')}&quot;>&#xD;
+		&lt;!--xsl:for-each select=&quot;$REF/ref:fields()[tech:sourceSet()=current() or (not(tech:sourceSet()!='')) and tech:onSrc()]&quot;> -->&#xD;
+		&lt;xsl:for-each select=&quot;$REF/ref:fields()[tech:sourceSet()=current() or (not(tech:sourceSet()!='')) and (tech:onSrc() or tech:onWrk())]&quot;>&#xD;
+			&lt;xsl:variable name=&quot;field&quot;>&#xD;
+			&lt;field isKey=&quot;{if (not($setKeyOnRoot) and tech:isUk()) then 'true' else 'false' }&quot;  id=&quot;{if (extrafield ) then concat(extrafield/ref:parent()/@id,'_', ref:target()/@id) else ref:target()/@id}&quot; alias=&quot;{replace(replace(tech:workName(),'-','_'),':','_')}&quot; aliasWord=&quot;{tech:columnAliasWord()}&quot; isAggregate=&quot;{tech:isAggregate()}&quot; location=&quot;{tech:location()}&quot; forceIsNillable=&quot;{if (tech:tag()='IS_NILLABLE') then 'true' else if (tech:tag()='IS_NOT_NILLABLE') then 'false' else ''}&quot; sortOrder=&quot;{if (tech:tag()='SORT_ASC') then 'ASC' else if (tech:tag()='SORT_DESC' ) then 'DESC' else ''}&quot;>&#xD;
+				&lt;xsl:value-of select=&quot;tech:expression()&quot;/>&#xD;
+			&lt;xsl:copy-of select=&quot;tag&quot;/>&#xD;
+			&lt;xsl:for-each select=&quot;./ref:froms()&quot;>&#xD;
+				&lt;from>&lt;xsl:value-of select=&quot;tech:from()&quot;/>&lt;/from>&#xD;
+			&lt;/xsl:for-each>&#xD;
+		&#xD;
+			&lt;/field>&#xD;
+			&lt;/xsl:variable>&#xD;
+			&lt;xsl:copy-of select=&quot;$field&quot;/>&#xD;
+			&lt;xsl:if test=&quot;$setKeyOnRoot and tech:isUk()&quot;>&#xD;
+			&lt;field id=&quot;{$REF/ref:target()/@id}&quot; isKey=&quot;true&quot; alias=&quot;{$field/field/@alias}_key&quot; emptyIfNull=&quot;$REF/tech:tag('EMPTY_IF_NULL')&quot;>&#xD;
+				&lt;xsl:copy-of select=&quot;$field/field/@*[name()!='id' and name()!='alias' and name()!='isKey' and name()!='location' and name()!='isAggregate']&quot;/>&#xD;
+				&lt;xsl:copy-of select =&quot;$field/field/text()&quot;/> &#xD;
+				&lt;xsl:copy-of select =&quot;$field/field/*&quot;/> &#xD;
+&#xD;
+			&lt;/field>&#xD;
+			&lt;/xsl:if>&#xD;
+		&#xD;
+&#xD;
+		&lt;/xsl:for-each>&#xD;
+		&lt;!-- &#xD;
+		removed for bug DS-2713 : the introduced __monoSS__ make it useless&#xD;
+		&lt;xsl:if test=&quot;.!=''&quot;>&lt;/xsl:if>&#xD;
+		-->&#xD;
+		&lt;query>&#xD;
+			&lt;xsl:choose>&#xD;
+			&#xD;
+				&lt;xsl:when test=&quot;md:paramValue($this,'sourceSetOptimization')='manual'&quot;>&#xD;
+					&lt;xsl:variable name=&quot;joins&quot;>&#xD;
+						&lt;explicitJoins bracket=&quot;{$REF/ref:srcProduct()/tech:hasExplicitJoinInBracket()}&quot;>&#xD;
+						&lt;xsl:call-template name=&quot;rdbms:fromPart&quot;>&#xD;
+							&lt;xsl:with-param select=&quot;$REF&quot; name=&quot;context&quot;/>&#xD;
+							&lt;xsl:with-param name=&quot;sourceSet&quot; select=&quot;current()&quot;/>&#xD;
+							&lt;xsl:with-param name=&quot;mode&quot; select=&quot;'NODE'&quot;/>&#xD;
+						&lt;/xsl:call-template>&#xD;
+						&lt;/explicitJoins>&#xD;
+						&lt;implicitJoins>&#xD;
+						&lt;xsl:for-each select=&quot;$REF/ref:implicitJoin(current())&quot;>&#xD;
+							&lt;join>&#xD;
+								&lt;expr>&lt;xsl:value-of select=&quot;tech:implicitExpression()&quot;/>&lt;/expr>&#xD;
+								&lt;xsl:for-each select=&quot;./ref:froms()&quot;>&#xD;
+										&lt;from>&lt;xsl:value-of select=&quot;tech:from()&quot;/>&lt;/from>&#xD;
+								&lt;/xsl:for-each>&#xD;
+							&lt;/join>&#xD;
+						&lt;/xsl:for-each>&#xD;
+						&lt;/implicitJoins>&#xD;
+					&lt;/xsl:variable>&#xD;
+					&lt;xsl:copy-of select=&quot;$joins&quot;/>&#xD;
+					&lt;xsl:for-each select=&quot;$REF/ref:froms()/tech:from()&quot;>&#xD;
+						&lt;xsl:if test=&quot;.!=$joins//from&quot;>&#xD;
+							&lt;from>&lt;xsl:value-of select=&quot;.&quot;/>&lt;/from>&#xD;
+						&lt;/xsl:if>&#xD;
+					&lt;/xsl:for-each>&#xD;
+				&lt;/xsl:when>&#xD;
+				&lt;xsl:otherwise>&#xD;
+					&lt;from>&#xD;
+						&lt;xsl:value-of select=&quot;$REF/tech:fromPart(current())&quot;/>&#xD;
+					&lt;/from>&#xD;
+				&lt;/xsl:otherwise>&#xD;
+			&lt;/xsl:choose>	&#xD;
+		&lt;where>&#xD;
+		&lt;xsl:value-of select=&quot;$REF/tech:joinPart(current())&quot;/>&#xD;
+		&lt;xsl:value-of select=&quot;$REF/tech:filterPart(current())&quot;/>&#xD;
+		&lt;xsl:value-of select=&quot;$REF/tech:cdcFilterPart2($this,current())&quot;/>&#xD;
+		&lt;xsl:value-of select=&quot;$REF/tech:havingPart(current())&quot;/>&#xD;
+&lt;!--		&lt;xsl:value-of select=&quot;$REF/tech:groupByPart(current())&quot;/>-->&#xD;
+&lt;!-- calculé automatiquement-->&#xD;
+		&lt;/where>&#xD;
+		&lt;/query>&#xD;
+		&#xD;
+		&lt;/sourceSet>&#xD;
+	&lt;/xsl:for-each>&#xD;
+&lt;/xsl:variable>&#xD;
+&amp;lt;data targetNamespace=&quot;%x{$REF/ref:target()/../@targetNamespace}x%&quot;>&#xD;
+	&lt;xsl:apply-templates select=&quot;$sourceSets&quot; mode=&quot;xmlToText&quot;/>&#xD;
+	&lt;xsl:apply-templates select=&quot;$REF/ref:target()&quot; mode=&quot;xmlToText&quot;>&#xD;
+			&lt;xsl:with-param name=&quot;allExtraFields&quot; select=&quot;$REF/ref:target()/ref:allExtraFields()&quot; tunnel=&quot;yes&quot;/>&#xD;
+			&lt;xsl:with-param name=&quot;extraFields&quot; select=&quot;$REF/ref:extraFields()&quot;  tunnel=&quot;yes&quot;/>&#xD;
+			&lt;xsl:with-param name=&quot;filters&quot; tunnel=&quot;yes&quot;>name()='md:ref'&lt;/xsl:with-param>&#xD;
+			&lt;xsl:with-param name=&quot;indent&quot; tunnel=&quot;yes&quot;> &lt;/xsl:with-param>&#xD;
+			&lt;xsl:with-param name=&quot;useXmlForm&quot; tunnel=&quot;yes&quot; select=&quot;true()&quot;/>&#xD;
+	&lt;/xsl:apply-templates>&#xD;
+	&lt;xsl:apply-templates select=&quot;$REF/ref:target()/ref:namespace()&quot; mode=&quot;xmlToText&quot;/>&#xD;
+&amp;lt;/data>&#xD;
+&#xD;
+}xsl%&#xD;
+&lt;/sqlToXml:descriptor></code>
+    </actionCode>
+    <actionCode id="_wCLgwOgWEd-2uv_dKt71Iw" generationCondition="'${deletePreviousFiles}$'='true'" isBeginAction="false" name="FileDelete" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+      <link id="_xnqQ0OgWEd-2uv_dKt71Iw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_4B1_gK6lEd6tEoMWC9noQg"/>
+      <parameter id="_wbNr0OgWEd-2uv_dKt71Iw" name="DEL_FILE" type="String" value="%x{$fileName}x%"/>
+    </actionCode>
+    <actionCode id="_PuOc4ENKEeCcsKFd3RQ7Tg" generationCondition="not(md:paramValue($this, 'lockCdcTable')='false')" isBeginAction="false" name="Lock of CDC table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$REF/ref:from()[tech:isCDC() and not(tech:isLoaded())]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_QNucUENKEeCcsKFd3RQ7Tg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_wCLgwOgWEd-2uv_dKt71Iw"/>
+      <parameter id="_PuOc4kNKEeCcsKFd3RQ7Tg" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_PuOc40NKEeCcsKFd3RQ7Tg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_PuOc5ENKEeCcsKFd3RQ7Tg" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>update 	%x{md:physicalPath($CDC,'cdcTableName')}x%
+set 	CDC_CONSUMMATION = '1'
+where	(1=1)
+%x{$CDC/tech:cdcFilterPart($this)}x%</code>
+    </actionCode>
+    <actionCode id="_RD7rkENKEeCcsKFd3RQ7Tg" generationCondition="not(md:paramValue($this, 'unlockCdcTable')='false')" isBeginAction="false" name="Unlock of CDC table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$REF/ref:from()[tech:isCDC() and not(tech:isLoaded())]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter id="_RD7rkUNKEeCcsKFd3RQ7Tg" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_RD7rkkNKEeCcsKFd3RQ7Tg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_RD7rk0NKEeCcsKFd3RQ7Tg" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>Delete 	from 	%x{md:physicalPath($CDC,'cdcTableName')}x%
+Where	CDC_CONSUMMATION = '1'
+%x{$CDC/tech:cdcFilterPart($this)}x%</code>
+    </actionCode>
+    <actionCode id="_fcTSMIliEeadh5aIouMbSA" generationCondition="'${cdcWaitMode}$'='true'" isBeginAction="false" name="Select Count(*) on CDC" nbCycles="-1" repetitionMode="Parallelize" repetitionQuery="mdj:xpath($REF,'FROM_REF')[mdj:xpath(.,'IS_CDC')]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_iQFocIliEeadh5aIouMbSA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_PuOc4ENKEeCcsKFd3RQ7Tg"/>
+      <parameter id="_fcTSMoliEeadh5aIouMbSA" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_fcTSM4liEeadh5aIouMbSA" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+      <parameter id="_fcTSOIliEeadh5aIouMbSA" name="SQL_WAIT_COUNT_SELECT" type="String" value="Select count(*) from %x{$REF/ref:source()/tech:cdcTablePath()}x% &#xD;&#xA;where (1=1) %x{$CDC/tech:cdcFilterPart($this)}x%"/>
+      <parameter id="_a9mc0IljEeadh5aIouMbSA" name="SQL_WAIT_NB_ROWS" type="String" value="%x{md:paramValue($this, 'cdcWaitRowsNumber')}x%"/>
+      <parameter id="_bPJf0IljEeadh5aIouMbSA" name="SQL_WAIT_TIMEOUT" type="String" value="%x{md:paramValue($this, 'cdcWaitTimout')}x%"/>
+      <parameter id="_bUpD0IljEeadh5aIouMbSA" name="SQL_WAIT_POLL_INTERVAL" type="String" value="%x{md:paramValue($this, 'cdcWaitPollInterval')}x%"/>
+      <parameter id="_fCEX0IljEeadh5aIouMbSA" name="SQL_WAIT_DATA" type="String" value="%x{md:paramValue($this, 'cdcWaitMode')}x%"/>
+      <parameter id="_do-_0Il1Eeat5velJV23QQ" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code></code>
+    </actionCode>
+    <templateType>I-TP.RDBMS.INTEGRATING</templateType>
+    <xslVariable id="_SsihJGXFEeCsEvnGSErBgQ" code="md:ifEmpty(md:paramValue($this,'OUT_FILE_NAME'),$REF/ref:target()/tech:xmlFilePath(),$REF/ref:target()/tech:filePath(),concat('${/CORE_TEMPORARY_FOLDER}$/',$REF/ref:target()/@id,'.xml'))" name="fileName" type="xpath"/>
+  </subProcess>
+  <templateType>I-TP.RDBMS</templateType>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.2/notation#/?fileId=_brHmkaEoEd6xg_kipsVRYg?">
+  <notation:Diagram xmi:id="_sVw5AF4FEeqKV8jFHNg09A" type="Proc" measurementUnit="Pixel">
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_sVw5AV4FEeqKV8jFHNg09A"/>
+    <element xmi:type="proc:SubActionProcess" href="../../INTEGRATION%20Rdbms%20to%20Xml.proc#_1b6fEK6lEd6tEoMWC9noQg?fileId=_brHmkaEoEd6xg_kipsVRYg$type=proc$name=INT?"/>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_sVw5Al4FEeqKV8jFHNg09A" type="Proc" measurementUnit="Pixel">
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_sVw5A14FEeqKV8jFHNg09A"/>
+    <element xmi:type="proc:ActionProcess" href="../../INTEGRATION%20Rdbms%20to%20Xml.proc#_brHmkaEoEd6xg_kipsVRYg?fileId=_brHmkaEoEd6xg_kipsVRYg$type=proc$name=INTEGRATION%20Rdbms%20to%20Xml?"/>
+  </notation:Diagram>
+</xmi:XMI>
+]]></diagram>
+</proc:process>

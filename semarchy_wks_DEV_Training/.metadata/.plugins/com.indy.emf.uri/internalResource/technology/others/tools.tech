@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="UUID_TECH_PROCESS_PALETTE" name="Process Palette">
+  <level icon="/icons/palette_view.gif" iconBundleName="org.eclipse.gef" xmlName="processPalette" xpathDisplayName="internal:getMessage('LABEL', @name)" xpathIcon="'platform:/plugin/org.eclipse.gef/icons/palette_view.gif'" code="com.stambia.tools.processPalette" configurable="false" displayName="Process Palette" isFile="advanced">
+    <parent>com.stambia.tools.product</parent>
+    <messages key="LABEL" value="Process Palette %1"/>
+  </level>
+  <level icon="/icons/actionCode16x16.png" iconBundleName="com.indy.gmf.process.edit" xmlName="product" xpathDisplayName="internal:getMessage('LABEL')" code="com.stambia.tools.product" configurable="false" displayName="Process Tools" hasName="false" isFile="false">
+    <messages key="LABEL" value="ActionCodes Product"/>
+  </level>
+  <level xmlName="actionDefinition" xpathDisplayName="internal:getMessage('LABEL', @name)" xpathIcon="if (icon[@isLarge='false'])then icon[@isLarge='false']/@iconURI else 'platform:plugin/com.indy.gmf.process.edit/icons/actionCode16x16.png'" code="com.stambia.tools.actionDefinition" configurable="false" displayName="Action Definition" hasName="false">
+    <attribute xmlName="name" code="name" displayName="Name"/>
+    <attribute xmlName="class" code="class" displayName="Class"/>
+    <attribute xmlName="bindableSrc" code="bindableSrc" displayName="bindableAsSource" type="boolean"/>
+    <attribute xmlName="bindableTrg" code="bindableTrg" displayName="bindableAsTarget" type="boolean"/>
+    <attribute xmlName="displayName" code="displayName" displayName="Display Name"/>
+    <attribute xmlName="description" code="description" displayName="Description" multiLine="false"/>
+    <attribute xmlName="hidden" code="hidden" defaultValue="" displayName="isHidden" type="boolean"/>
+    <attribute xmlName="cycleNumber" code="cycleNumber" displayName="Default Cycle Number" type="integer"/>
+    <attribute xmlName="toleratedError" xpathCondition="" code="toleratedError" defaultValue="" displayName="toleratedError" type="boolean"/>
+    <attribute xmlName="paletteCategory" code="paletteCategory" displayName="Palette Category"/>
+    <attribute xmlName="longDescription" code="longDescription" displayName="Long Description" multiLine="true"/>
+    <attribute xmlName="initializationCode" code="initializationCode" displayName="Initialization Code" multiLine="true" toolTip="Initial for the newly created ActionCode"/>
+    <parent>com.stambia.tools.product</parent>
+    <messages key="LABEL" value="Action Definition %1"/>
+  </level>
+  <level icon="icons/full/custom/16x16/ActionDef-16x16-1.png" iconBundleName="com.indy.ui.md.edit" xmlName="extension" xpathDisplayName="internal:getMessage('LABEL', @name)" code="com.stambia.tools.actionDefExtension" configurable="false" displayName="Action Definition Extension" hasName="false">
+    <attribute xmlName="name" code="name" displayName="Name"/>
+    <attribute xmlName="displayName" code="displayName" displayName="Display Name"/>
+    <attribute xmlName="paletteCategory" code="paletteCategory" displayName="Palette Category"/>
+    <attribute iconBundleName="" xmlName="actionDefRef" code="actionDefRef" defaultValue="" displayName="ActionDefinition Reference" mdXpathAccess="ancestor-or-self::product[1]/actionDefinition" type="reference"/>
+    <attribute xmlName="code" code="code" displayName="Code" multiLine="true"/>
+    <attribute xmlName="description" code="description" displayName="Description" multiLine="true"/>
+    <attribute xmlName="longDescription" code="longDescription" displayName="Long Description" multiLine="true"/>
+    <xPathExpression description="ActionDef must evaluate their code during generation of the process,&#xD;&#xA;but we cannot use teh expected MdLink in a  %x{}x%  block because the Md&#xD;&#xA;evaluation is performed outside of the proc, which means this will fails&#xD;&#xA;because the $mdLink is unknown.&#xD;&#xA;We provide this function which is able to detect all $XXX[/xPathExpression]&#xD;&#xA;and evaluate during Process generation" expression="mdj:evaluateXPathVariableExpression(./@code)">
+      <code>EVALUATE_CODE</code>
+    </xPathExpression>
+    <messages key="LABEL" value="Action Definition Extended"/>
+  </level>
+  <level icon="icons/full/obj16/ActionProcessRef.png" iconBundleName="com.indy.gmf.process.edit" xmlName="processTool" xpathDisplayName="internal:getMessage('LABEL', @name)" xpathIcon="'platform:/plugin/com.indy.gmf.process.edit/icons/full/obj16/ActionProcessRef.png'" code="com.stambia.tools.processTool" configurable="false" displayName="Process Tool" hasName="false">
+    <attribute xmlName="name" code="name" displayName="Name"/>
+    <attribute metaInf="" xmlName="processRef" xpathCondition="" code="processRef" displayName="Process Reference" editable="true" mdXpathAccess="" type="reference">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.dnd.emfMetaInf" value="http://www.example.org/proc;ActionProcess;Process"/>
+    </attribute>
+    <attribute xmlName="paletteCategory" code="paletteCategory" displayName="Palette Category"/>
+    <attribute xmlName="displayName" code="displayName" displayName="Display Name"/>
+    <attribute xmlName="description" code="description" displayName="Description" multiLine="true"/>
+    <attribute xmlName="longDescription" code="longDescription" displayName="Long Description" multiLine="true"/>
+    <parent>com.stambia.tools.processPalette</parent>
+    <parent>com.stambia.tools.product</parent>
+    <messages key="LABEL" value="Process Tool  %1"/>
+  </level>
+  <level icon="icons/full/custom/16x16/UF-Parameter16x16-1.png" iconBundleName="com.indy.ui.md.edit" xmlName="parameter" xpathDisplayName="internal:getMessage('LABEL', @name)" xpathIcon="if (@type='String') then 'platform:plugin/com.indy.md.ui.edit/icons/full/custom/16x16/UF-Parameter-S-16x16-1.png' else if (@type='Boolean') then 'platform:plugin/com.indy.md.ui.edit/icons/full/custom/16x16/UF-Parameter-B-16x16-1.png' else if (@type='Integer') then 'platform:plugin/com.indy.md.ui.edit/icons/full/custom/16x16/UF-Parameter-I-16x16-1.png' else  'platform:plugin/com.indy.md.ui.edit/icons/full/custom/16x16/UF-Parameter16x16-1.png' " code="com.stambia.tools.parameter" configurable="false" displayName="Parameter" hasName="false" position="2" wizardClass="">
+    <attribute xmlName="name" code="name" displayName="Name"/>
+    <attribute xmlName="required" xpathCondition="" code="required" displayName="Mandatory" type="boolean"/>
+    <attribute xmlName="description" code="description" displayName="Description" multiLine="false"/>
+    <attribute xmlName="displayName" code="displayName" displayName="Display Name"/>
+    <attribute xmlName="type" code="type" displayName="Type" mdXpathAccess="tokenize('String Boolean Integer', ' ')" type="list"/>
+    <attribute xmlName="defaultValue" code="defaultValue" defaultValue="" displayName="Default Value"/>
+    <attribute xmlName="system" code="system" defaultValue="false" displayName="isSystem" type="boolean"/>
+    <attribute xmlName="hidden" code="hidden" defaultValue="false" displayName="isHidden" type="boolean"/>
+    <attribute xmlName="restriction" xpathCondition="" code="restriction" displayName="Restriction" type="string" unbounded="true"/>
+    <attribute xmlName="publication" xpathCondition="" code="publication" displayName="Publication Options" mdXpathAccess="tokenize('Input Output Fault', ' ')" type="list" unbounded="true"/>
+    <attribute xmlName="longDescription" code="longDescription" displayName="Long Description" multiLine="true"/>
+    <parent>com.stambia.tools.actionDefinition</parent>
+    <parent>com.stambia.tools.actionDefExtension</parent>
+    <messages key="LABEL" value="Parameter  %1"/>
+  </level>
+  <level icon="icons/full/custom/16x16/ActionDef-ParamValueBlue-16x16-1.png" iconBundleName="com.indy.ui.md.edit" xmlName="parameterValue" xpathCondition="" xpathDisplayName="if (@parameterRef != '') then concat(@parameterRef/ref:getRef()/@name, ' =', @value) else concat(@name, '=', @value)" xpathIcon="" code="com.stambia.tools.parameterValue" configurable="false" displayName="ParameterValue" hasName="false" position="2" wizardClass="">
+    <attribute iconBundleName="" xmlName="parameterRef" xpathCondition="../name()!='processTool'" code="parameterRef" displayName="Parameter" mdXpathAccess="ancestor-or-self::extension/@actionDefRef/ref:getRef()/parameter" type="reference"/>
+    <attribute xmlName="name" xpathCondition="../name()='processTool'" code="name" displayName="Parameter Name"/>
+    <attribute xmlName="value" code="value" displayName="Value" mdXpathAccess="if (@parameterRef/ref:getRef()/@type='Boolean') then tokenize('true false', ' ') else @parameterRef/ref:getRef()/restriction/string(.)  " type="list"/>
+    <parent>com.stambia.tools.actionDefExtension</parent>
+    <parent>com.stambia.tools.processTool</parent>
+  </level>
+  <level icon="icons/full/obj16/MdModelFile.gif" iconBundleName="com.indy.md.ui.editor" xmlName="metadata" xpathDisplayName="internal:getMessage('LABEL', @name)" code="com.stambia.tools.metadata" configurable="false" displayName="Metadata" hasName="false">
+    <attribute xmlName="name" code="name" displayName="Name"/>
+    <attribute xmlName="level" category="" code="level" displayName="Level Code" keyValue="true" multiLine="true" toolTip="Select some Tech level defType and specify an xPath expression which can be evaluated in native mode." type="list" unbounded="true">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.valueprovider.className" value="com.indy.ui.custom.out.common.properties.LevelCodeValueProvider"/>
+    </attribute>
+    <attribute xmlName="description" code="description" displayName="Description" mdXpathAccess="" multiLine="true"/>
+    <parent>com.stambia.tools.actionDefinition</parent>
+    <parent>com.stambia.tools.processTool</parent>
+    <parent>com.stambia.tools.actionDefExtension</parent>
+    <messages key="LABEL" value="MetaData  %1"/>
+  </level>
+  <level icon="icons/full/custom/16x16/ActionDef-Icon-16x16-1.png" iconBundleName="com.indy.ui.md.edit" xmlName="icon" xpathCondition="" code="com.stambia.tools.icon" configurable="false" displayName="Icon" hasName="false" position="1" unique="true">
+    <attribute icon="" xmlName="isUri" code="isUri" default="true" displayName="isURI" refreshPropertiesCompositeOnValueChange="true" type="boolean"/>
+    <attribute xmlName="iconURI" xpathCondition="not(@isUri) or @isUri=true()" code="iconURI" displayName="Icon URI"/>
+    <attribute xmlName="iconData" xpathCondition="@isUri=false()" code="iconData" displayName="Icon Base64 Data" multiLine="true"/>
+    <attribute xmlName="isLarge" code="isLarge" defaultValue="" displayName="isLarge" type="boolean"/>
+    <parent>com.stambia.tools.actionDefinition</parent>
+    <parent>com.stambia.tools.processTool</parent>
+    <parent>com.stambia.tools.actionDefExtension</parent>
+  </level>
+  <level xmlName="enablement" xpathDisplayName="" code="com.stambia.tools.enablement" configurable="false" displayName="Enablement" hasName="false" isFile="false">
+    <parent>com.stambia.tools.parameter</parent>
+  </level>
+  <level xmlName="operator" xpathDisplayName="@type" code="com.stambia.tools.enablement.operator" configurable="false" displayName="Logical Operator" hasName="false" isFile="false">
+    <attribute xmlName="type" xpathDisplayName="@type" code="type" displayName="Operator" mdXpathAccess="tokenize('and or not', ' ')" type="list"/>
+    <parent>com.stambia.tools.enablement</parent>
+    <parent>com.stambia.tools.enablement.operator</parent>
+  </level>
+  <level icon="icons/full/obj16x16/MappingTableCheck16x16_old.png" iconBundleName="com.indy.gmf.map.edit" xmlName="parameterCheck" xpathDisplayName="concat(@testType,'(',@parameterName,',',@parameterValue,')')" code="com.stambia.tools.enablement.parametercheck" configurable="false" displayName="Parameter Test" hasName="false" isFile="false">
+    <attribute xmlName="testType" xpathCondition="" code="testType" displayName="Test" mdXpathAccess="tokenize('Exist Value',' ')" refreshPropertiesCompositeOnValueChange="true" type="list"/>
+    <attribute xmlName="parameterName" code="parameterName" displayName="Parameter Name"/>
+    <attribute xmlName="parameterValue" xpathCondition="@testType='Value'" code="parameterValue" displayName="Parameter Value"/>
+    <parent>com.stambia.tools.enablement</parent>
+    <parent>com.stambia.tools.enablement.operator</parent>
+  </level>
+  <level icon="" xmlName="variable" xpathDisplayName="internal:getMessage('LABEL', @name)" code="com.stambia.tools.bindVariable" configurable="false" displayName="Bind Variable" hasName="false" position="3" wizardClass="">
+    <attribute xmlName="name" code="name" displayName="Name"/>
+    <attribute xmlName="type" code="type" displayName="Type" mdXpathAccess="tokenize('String Boolean Integer Long', ' ')" type="list"/>
+    <attribute xmlName="description" code="description" displayName="Description" multiLine="true"/>
+    <parent>com.stambia.tools.actionDefinition</parent>
+    <messages key="LABEL" value="Bind Variable   %1"/>
+  </level>
+  <level xmlName="mdLinkInitializer" code="com.stambia.tools.parameter.initializer" displayName="Initializer" hasName="false">
+    <attribute xmlName="level" xpathCondition="" code="level" displayName="Level" type="list" unbounded="true">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.valueprovider.className" value="com.indy.ui.custom.out.common.properties.LevelCodeValueProvider"/>
+    </attribute>
+    <attribute xmlName="xPathExpression" code="xPathExpression" displayName="xPath Exoression"/>
+    <parent>com.stambia.tools.parameter</parent>
+  </level>
+  <contributedRegistryID>com.indy.ui.custom.out.services.registry.ProcessToolDescriptor</contributedRegistryID>
+</tech:tech>

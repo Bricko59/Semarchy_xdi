@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="UUID_TECH_RDBMS_ORACLE" name="Oracle Technology" ref="resource.md#UUID_MD_RDBMS_DEFAULT?fileId=UUID_MD_RDBMS_DEFAULT$type=md$name=Rdbms%20MetaData?">
+  <level icon="icons/full/custom/DatabaseSEQ16x16.png" xmlName="sequence" code="com.stambia.rdbms.oracle.sequence" displayName="Sequence" position="100" reverseCode="SEQUENCE_NAME">
+    <attribute xmlName="min" code="min" displayName="Min Value" reverseCode="MIN_VALUE"/>
+    <attribute xmlName="increment" code="increment" displayName="Increment By" reverseCode="INCREMENT_BY"/>
+    <attribute xmlName="order" code="order" displayName="Order" reverseCode="ORDER_FLAG" type="boolean"/>
+    <parent>com.stambia.rdbms.schema</parent>
+  </level>
+  <level code="com.stambia.rdbms.column" override="true">
+    <attribute icon="" metaInf="" xmlName="charByte" category="" code="charByte" displayName="Char Or Byte" mdXpathAccess="tokenize('CHAR BYTE',' ')" reverseCode="CHAR_BYTE" type="list"/>
+    <xPathExpression expression="if ($version !='' and number($version)&lt;=8) then ''&#xD;&#xA;else md:ifEmpty(@charByte,'CHAR')">
+      <code>CHAR_BYTE</code>
+      <xPathParameter defaultValue="."/>
+      <xPathVariable expression="if ($productCode!='ORACLE') then '' else $p1/tech:databaseMajorVersion()" name="version"/>
+      <xPathVariable expression="$p1/tech:productCode()" name="productCode"/>
+    </xPathExpression>
+    <xPathExpression expression="if (@TYPE_NAME='NUMBER') then if (@COLUMN_SIZE='0' or (@COLUMN_SIZE='22' and not(@DECIMAL_DIGITS!='') ) ) then '' else @COLUMN_SIZE else @COLUMN_SIZE">
+      <code>SIZE</code>
+    </xPathExpression>
+  </level>
+  <level code="com.stambia.rdbms.check" override="true" reverse="true"/>
+  <level code="com.stambia.rdbms.schema" override="true">
+    <attribute xmlName="linkedServer" code="linkedServer" displayName="Database Link Name" externalize="true"/>
+    <attribute iconBundleName="" xmlName="enableRecycleBin" category="Advanced" code="enableRecycleBin" displayName="Enable Recycle Bin" reverseUpdateXpathQuery="" toolTip="When this parameter is set to true, the drop table statements generated for tables from this schema will not use the 'PURGE' keyword, so that the dropped tables are put to the recycle bin instead of being permanently deleted" type="boolean"/>
+    <attribute xmlName="defaultTempTableStorageClause" category="Temporary Objects" code="defaultTempTableStorageClause" default="NOLOGGING" defaultValue="" displayName="Default Table Storage Clause" externalize="true" multiLine="true"/>
+    <attribute xmlName="oracleErrorLogMask" category="Temporary Objects" code="oracleErrorLogMask" default="EL_[targetName]" displayName="Error Log Mask"/>
+    <xPathExpression description="Returns the database link associated to the schema" expression="@linkedServer">
+      <code>DATABASE_LINK</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@enableRecycleBin = 'true')&#xD;&#xA;&#x9;then 'true'&#xD;&#xA;&#x9;else 'false'">
+      <code>ENABLE_RECYCLE_BIN</code>
+    </xPathExpression>
+    <xPathExpression expression="@oracleErrorLogMask">
+      <code>ORACLE_ERROR_LOG_MASK</code>
+    </xPathExpression>
+  </level>
+  <level code="com.stambia.rdbms.datastore" displayName="" override="true">
+    <attribute xmlName="oracleErrorLogMask" category="Temporary Objects" code="oracleErrorLogMask" default="" displayName="Error Log Mask"/>
+    <xPathExpression expression="concat($p1/mdj:xpath(.,'ADD_DELIMITER',$name), if (not(empty(../tech:databaseLink()))) then concat('@', ../tech:databaseLink()) else '')">
+      <code>DEFAULT</code>
+      <code>PHYSICAL_NAME</code>
+      <code>CHECKED_NAME</code>
+      <code>WORK_NAME</code>
+      <code>TABLE_NAME</code>
+      <code>NAME</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathVariable expression="'DEFAULT'" name="defaultParentKind"/>
+      <xPathVariable expression="mdj:xpath(.,'PARENT_REF')" name="defaultParentRef"/>
+      <xPathVariable expression="if ($p2='upper') then upper-case($name2) else if ($p2='lower') then lower-case($name2) else $name2" name="name"/>
+      <xPathVariable expression="md:applyObjectNameMask(@defType,@TABLE_NAME) " name="name2"/>
+    </xPathExpression>
+    <xPathExpression expression="md:ifEmpty(@oracleErrorLogMask, ref:schema()/tech:oracleErrorLogMask())">
+      <code>ORACLE_ERROR_LOG_MASK</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'ADD_DELIMITER',if ($maxDatastoreNameSize!='' and not($hasMetadataVariable)) then substring($value,0,number($maxDatastoreNameSize)+1) else if($maxDatastoreNameSize!='' and $hasMetadataVariable) then $dynamicValue else $value)">
+      <code>ORACLE_ERROR_LOG_NAME</code>
+      <xPathVariable expression="if (tech:oracleErrorLogMask()!='') then mdj:pattern(tech:oracleErrorLogMask()) else @TABLE_NAME" name="value"/>
+      <xPathVariable expression="ref:product()/@maxDatastoreNameSize" name="maxDatastoreNameSize"/>
+      <xPathVariable expression="contains(tech:originalPhysicalName(), '${') and contains(tech:originalPhysicalName(), '}$')" name="hasMetadataVariable"/>
+      <xPathVariable expression="concat('%e(rhino){(&quot;',$value,&#xD;&#xA;'&quot;)','.substring(0,',$maxDatastoreNameSize,')',';}e(rhino)%')" name="dynamicValue"/>
+    </xPathExpression>
+    <xPathExpression expression="md:objectPath(ref:schema()/ref:reject(), tech:oracleErrorLogName())">
+      <code>ORACLE_ERROR_LOG_PATH</code>
+    </xPathExpression>
+  </level>
+  <xPathExpression expression="replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace($p1,'yyyy', 'YYYY'),'yy', 'YY'),'WW', 'W'),'ww', 'WW'),'w', 'WW'),'DDD', '¤¤¤'),'DD', '¤¤¤'),'D', '¤¤¤'),'¤¤¤', 'DDD'),'dd', 'DD'),'d', 'DD'),'EEEEE', 'DAY'),'EEE', 'DY'),'F', 'D'),'HH', '¤¤'),'H', '¤¤'),'¤¤', 'HH24'),'hh', 'HH'),'h', 'HH'),'SSS', 'FF3'),'SS', 'FF2'),'S', 'FF1'),'ss', 'SS'),'s', 'SS'),'aa', '¤b¤'),'a', '¤b¤'),'MMM(M)*', '¤o¤'),'mm', '¤n¤'),'m', '¤n¤'),'MM', '¤m¤'),'M', '¤m¤'),'G', 'AD'),'¤o¤', 'MONTH'),'¤m¤', 'MM'),'¤n¤', 'MI'),'¤b¤', 'AM')">
+    <code>CONVERT_JAVA_TIMESTAMP</code>
+    <xPathParameter defaultValue="''"/>
+  </xPathExpression>
+</tech:tech>

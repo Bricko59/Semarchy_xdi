@@ -1,0 +1,20 @@
+*** Step 2 ***
+**************
+
+Expression Editor of the Join between the 2 files
+-------------------------------------------------
+    upd_city_list.city_id = ref_city_list.city_id
+AND upd_city_list.country_code = ref_city_list.country_code
+
+Expression Editor of the stage
+------------------------------
+city_id			COALESCE(upd_city_list.city_id,ref_city_list.city_id)
+country_code	COALESCE(upd_city_list.country_code,ref_city_list.country_code)
+city_name		COALESCE(upd_city_list.city_name,ref_city_list.city_name)
+state			COALESCE(upd_city_list.state,ref_city_list.state)
+population		COALESCE(upd_city_list.population,ref_city_list.population)
+census_date		COALESCE(upd_city_list.census_date,ref_city_list.census_date)
+
+Order by expression property of the integration template
+--------------------------------------------------------
+country_code+LPAD(city_id,5,'0')

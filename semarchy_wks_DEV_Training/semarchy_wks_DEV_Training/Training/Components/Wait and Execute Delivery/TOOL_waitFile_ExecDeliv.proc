@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_jnpVgaMZEeWqfbig8KuUmw" description="This component allows to treat files or group of files and transmits automatically parameters to as subprocess.&#xD;&#xA;All the files corresponding to the value of &quot;Wait File Includes&quot; property in the folder dropped as a metadata link in this component will be moved in a sub directory &quot;to_treat&quot; folder. &#xD;&#xA;Once in the subprocess, the files will be moved in &quot;in_progress&quot; folder.&#xD;&#xA;After that, you will have to add your own file or group of files treatment.&#xD;&#xA;At the end of the subprocess, the files will be moved in &quot;treated&quot; folder.&#xD;&#xA;If there is an error, all the files are moved in &quot;to_treat&quot; folder.&#xD;&#xA;The list of files is stored in a &quot;in memory&quot; instance of HSQL DB. So, at the end of the process, all disappear ! The consequence is that the restriction of possible values in group treatment must be HSQL compatible.&#xD;&#xA;&#xD;&#xA;To treat the current file in a mapping or in a replicator action, you will have to replace in metadata the physicalName of the file &#xD;&#xA;- with ${~/p_file_name}$ if it's an individual treatment&#xD;&#xA;- with a part of ${~/p_file_group}$ if it's a group of files treatment (if you have BIL.001 and LOG.001, you will have 001 in p_file_group and you will have 2 metadata files, the physicalName of the first one will be BIL.${~/p_file_group}$ and LOG.${~/p_file_group}$ for the second one.&#xD;&#xA;&#xD;&#xA;The group functionality allows to treat group of files together in the subprocess :&#xD;&#xA;* For example, if you have the following files (suffix) :&#xD;&#xA;  FIC0001.BIL, FIC0002.BIL, FIC0003.BIL, FIC0001.LOG, FIC0002.LOG&#xD;&#xA;  And if you want to treat a file only if there is the BIL and the LOG files (you will not treat the FIC0003 file), you will define the following properties :&#xD;&#xA;  - Wait File Includes : FIC*.BIL;FIC*.LOG&#xD;&#xA;  - RegExp to extract the group constant : ^[a-zA-Z0-9]+&#xD;&#xA;  - Number of values in each group : 2&#xD;&#xA;* For example, if you have the followinf files (prefix) :&#xD;&#xA;  BIL.001, BIL.002, LOG.001&#xD;&#xA;  And if you want to treat a file only if there is the BIL and the LOG files (you will not treat the 002 file), you will define the following properties :&#xD;&#xA;  - Wait File Includes : BIL.*;LOG.*&#xD;&#xA;  - RegExp to extract the group constant : [0-9]+$&#xD;&#xA;  - Number of values in each group : 2">
+  <parameter id="_Ng8AQKMdEeWqfbig8KuUmw" label="WAIT_FILE_INCLUDES" name="p_wait_file_includes" type="String" value="*.txt"/>
+  <parameter id="_VBrN0KMdEeWqfbig8KuUmw" label="DELIV_NAME" name="p_deliv_name" type="String" value="TOOL_waitFile_Subproc"/>
+  <parameter id="_SMrxIKMyEeWqfbig8KuUmw" label="DELIV_ASYNCHRONE_EXECUTION" name="p_deliv_async_execution" type="Boolean" value="false"/>
+  <parameter id="_QsM8gK4MEeWbpPQe63GnHg" metaInf="" label="Group treatment" name="p_is_treated_as_group" type="Boolean" value="false"/>
+  <parameter id="_ww7rAK4REeWbpPQe63GnHg" label="RegExp to extract the group constant" name="p_regular_expression_to_group_files" type="String" value="^[a-zA-Z]+"/>
+  <parameter id="_mBoykK4YEeWbpPQe63GnHg" label="Number of values in each group" name="p_number_of_values_in_each_group" type="Integer" value="2"/>
+  <actionCode id="_92DbwKMcEeWqfbig8KuUmw" isBeginAction="false" name="FileWait" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileWaitActionCodeI">
+    <link id="_FawhsK1BEeWpjrdEhKa1Dg" generationCondition="'${p_is_treated_as_group}$'='false'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_B5JcIK1BEeWpjrdEhKa1Dg"/>
+    <link id="_nZW_AK4OEeWbpPQe63GnHg" generationCondition="'${p_is_treated_as_group}$'='true'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_ZHTOoK4OEeWbpPQe63GnHg"/>
+    <metaDataLink id="_SbdNUK1AEeWpjrdEhKa1Dg" name="PUBLIC" target="../Online%20DB/HSQLEngine.md#_xj7VVOjsEeSW8ee1frYByw?fileId=_xj7VUOjsEeSW8ee1frYByw$type=md$name=PUBLIC?"/>
+    <parameter id="_ATl1MKMdEeWqfbig8KuUmw" name="WAIT_FILE_DIR" type="String" value="%x{$TARGET_FOLDER/tech:path()}x%/to_treat"/>
+    <parameter id="_I5rhQKMdEeWqfbig8KuUmw" name="WAIT_FILE_NB_FILES" type="String" value="-1"/>
+    <parameter id="_4KtNEKMdEeWqfbig8KuUmw" name="WAIT_FILE_INCLUDES" type="String" value="${../p_wait_file_includes}$"/>
+  </actionCode>
+  <actionCode id="_C_VpwKMdEeWqfbig8KuUmw" isBeginAction="false" name="EmptyAction" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_DTWK4KMdEeWqfbig8KuUmw" generationCondition="exists($TARGET_FOLDER)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_L9j7AK17EeWbpPQe63GnHg"/>
+  </actionCode>
+  <actionCode id="_m8f0oKMdEeWqfbig8KuUmw" isBeginAction="false" name="ExecuteDelivery SIMPLE" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ExecDeliveryActionCodeI">
+    <link id="_3BafoK7XEeWbpPQe63GnHg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_p7BRIK7XEeWbpPQe63GnHg"/>
+    <parameter id="_nerUoKMdEeWqfbig8KuUmw" name="p_file_name" type="String" value=":{FILE_NAME}:"/>
+    <parameter id="_vXgbAK1CEeWpjrdEhKa1Dg" name="p_nb_files" type="Integer" value="${../FileWait/NB_FILES}$"/>
+    <parameter id="_m9FT8K1kEeWbpPQe63GnHg" name="p_file_position" type="Integer" value=":{FILE_ID}:"/>
+    <parameter id="_xD1hgK1kEeWbpPQe63GnHg" name="p_to_treat_dir" type="String" value=":{FILE_DIR}:"/>
+    <parameter id="_7KK4UK1kEeWbpPQe63GnHg" name="p_file_is_hidden" type="Boolean" value=":{FILE_IS_HIDDEN}:"/>
+    <parameter id="_gDrWsK1lEeWbpPQe63GnHg" name="p_file_last_modified_date" type="String" value=":{FILE_LAST_MODIFIED_DATE}:"/>
+    <parameter id="_keswgK1lEeWbpPQe63GnHg" name="p_file_can_read" type="Boolean" value=":{FILE_CAN_READ}:"/>
+    <parameter id="_qjgyoK1lEeWbpPQe63GnHg" name="p_file_can_write" type="Boolean" value=":{FILE_CAN_WRITE}:"/>
+    <parameter id="_LV5qoK1mEeWbpPQe63GnHg" name="p_file_can_execute" type="Boolean" value=":{FILE_CAN_EXECUTE}:"/>
+    <parameter id="_P3MrkK1mEeWbpPQe63GnHg" name="p_file_is_directory" type="Boolean" value=":{FILE_IS_DIRECTORY}:"/>
+    <parameter id="_0NE4cK1mEeWbpPQe63GnHg" name="p_file_length" type="Integer" value=":{FILE_LENGTH}:"/>
+    <parameter id="__WKFsK1mEeWbpPQe63GnHg" name="p_file_suffix" type="String" value=":{FILE_SUFFIX}:"/>
+    <parameter id="_E_klQK1nEeWbpPQe63GnHg" name="p_file_prefix" type="String" value=":{FILE_PREFIX}:"/>
+    <parameter id="_IkjH4K1nEeWbpPQe63GnHg" name="p_file_sequence" type="Integer" value=":{FILE_SEQUENCE}:"/>
+    <parameter id="_aItI4K1sEeWbpPQe63GnHg" name="p_file_operation_date" type="String" value=":{FILE_OPERATION_DATE}:"/>
+    <parameter id="_tYrkwK1sEeWbpPQe63GnHg" name="DELIV_NAME" type="String" value="${../p_deliv_name}$"/>
+    <parameter id="_vsO7wK1sEeWbpPQe63GnHg" name="DELIV_SESSION_NAME" type="String" value="Treatment of the file :{FILE_NAME}:"/>
+    <parameter id="_UPlugK1uEeWbpPQe63GnHg" name="DELIV_ASYNCHRONE_EXECUTION" type="String" value="${../p_deliv_async_execution}$"/>
+    <parameter id="_Z18BEK1wEeWbpPQe63GnHg" name="p_in_progress_dir" type="String" value="%x{$TARGET_FOLDER/tech:path()}x%/in_progress"/>
+    <parameter id="_gHyZoK1wEeWbpPQe63GnHg" name="p_treated_dir" type="String" value="%x{$TARGET_FOLDER/tech:path()}x%/treated"/>
+    <parameter id="_naoVIK1wEeWbpPQe63GnHg" name="p_source_dir" type="String" value="%x{$TARGET_FOLDER/tech:path()}x%"/>
+    <parameter id="_OxuPMK5AEeWbpPQe63GnHg" name="p_is_treated_as_group" type="Boolean" value="${../p_is_treated_as_group}$"/>
+    <parameter id="_yEejcK5GEeWbpPQe63GnHg" name="p_select_file" type="String" value="*:{FILE_NAME}:*"/>
+  </actionCode>
+  <actionCode id="_B5JcIK1BEeWpjrdEhKa1Dg" isBeginAction="false" name="SIMPLE SELECT" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <bindLink id="_psvusKMdEeWqfbig8KuUmw" bindType="DirectBind" targetId="_m8f0oKMdEeWqfbig8KuUmw"/>
+    <metaDataLink id="_DAp2wK1BEeWpjrdEhKa1Dg" name="PUBLIC" target="../Online%20DB/HSQLEngine.md#_xj7VVOjsEeSW8ee1frYByw?fileId=_xj7VUOjsEeSW8ee1frYByw$type=md$name=PUBLIC?"/>
+    <parameter id="_B5h2oK1BEeWpjrdEhKa1Dg" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+    <parameter id="_B5idsK1BEeWpjrdEhKa1Dg" name="SQL_CONNECTION" type="String"/>
+    <code>SELECT FILE_ID,FILE_NAME,FILE_DIR,FILE_OPERATION_DATE,&#xD;
+       CASE WHEN FILE_IS_HIDDEN=1 THEN 'true' ELSE 'false' END AS FILE_IS_HIDDEN,&#xD;
+       FILE_LAST_MODIFIED_DATE,&#xD;
+       CASE WHEN FILE_CAN_READ=1 THEN 'true' ELSE 'false' END AS FILE_CAN_READ,&#xD;
+       CASE WHEN FILE_CAN_WRITE=1 THEN 'true' ELSE 'false' END AS FILE_CAN_WRITE,&#xD;
+       CASE WHEN FILE_CAN_EXECUTE=1 THEN 'true' ELSE 'false' END AS FILE_CAN_EXECUTE,&#xD;
+       CASE WHEN FILE_IS_DIRECTORY=1 THEN 'true' ELSE 'false' END AS FILE_IS_DIRECTORY,&#xD;
+       FILE_LENGTH,&#xD;
+       SUBSTR(file_name,POSITION('.' IN FILE_NAME)) AS FILE_SUFFIX,&#xD;
+       REGEXP_SUBSTRING(file_name,'^[a-zA-Z]*') AS FILE_PREFIX,&#xD;
+       REGEXP_SUBSTRING(file_name,'[0-9]+') AS FILE_SEQUENCE&#xD;
+FROM   PUBLIC.IND_SESSION_FILE_OP_LST</code>
+  </actionCode>
+  <actionCode id="_1jCMgK1rEeWbpPQe63GnHg" isBeginAction="false" name="FileMove in to_treat dir" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileMoveActionCodeI">
+    <link id="_Kp-xEK1sEeWbpPQe63GnHg" generationCondition="" executionCondition="${./FileMove in to_treat dir/FILE_NB}$ != 0" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_92DbwKMcEeWqfbig8KuUmw"/>
+    <parameter id="_42bP4K1rEeWbpPQe63GnHg" name="FILE_FROM_DIR" type="String" value="%x{$TARGET_FOLDER/tech:path()}x%"/>
+    <parameter id="_50nWcK1rEeWbpPQe63GnHg" name="FILE_INCLUDES" type="String" value="${../p_wait_file_includes}$"/>
+    <parameter id="__fsC4K1rEeWbpPQe63GnHg" name="FILE_TO_DIR" type="String" value="%x{$TARGET_FOLDER/tech:path()}x%/to_treat"/>
+  </actionCode>
+  <actionCode id="_L9j7AK17EeWbpPQe63GnHg" isBeginAction="false" name="MkDir to_treat" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.MkDirActionCodeI">
+    <link id="_hW4pAK17EeWbpPQe63GnHg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_WH4Z8K17EeWbpPQe63GnHg"/>
+    <parameter id="_L9sd4K17EeWbpPQe63GnHg" name="FILE_DIR" type="String" value="%x{$TARGET_FOLDER/tech:path()}x%/to_treat"/>
+  </actionCode>
+  <actionCode id="_WH4Z8K17EeWbpPQe63GnHg" isBeginAction="false" name="MkDir in Progress" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.MkDirActionCodeI">
+    <link id="_eSzM8K17EeWbpPQe63GnHg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_Zt5eYK17EeWbpPQe63GnHg"/>
+    <parameter id="_WH62MK17EeWbpPQe63GnHg" name="FILE_DIR" type="String" value="%x{$TARGET_FOLDER/tech:path()}x%/in_progress"/>
+  </actionCode>
+  <actionCode id="_Zt5eYK17EeWbpPQe63GnHg" isBeginAction="false" name="MkDir treated" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.MkDirActionCodeI">
+    <link id="_fS5_EK17EeWbpPQe63GnHg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_1jCMgK1rEeWbpPQe63GnHg"/>
+    <parameter id="_Zt7TkK17EeWbpPQe63GnHg" name="FILE_DIR" type="String" value="%x{$TARGET_FOLDER/tech:path()}x%/treated"/>
+  </actionCode>
+  <actionCode id="_ZHTOoK4OEeWbpPQe63GnHg" description="" isBeginAction="false" name="GROUP SELECT" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <bindLink id="_kKWUQK4tEeWbpPQe63GnHg" bindType="DirectBind" targetId="_N08YgK4tEeWbpPQe63GnHg"/>
+    <metaDataLink id="_ZHTOo64OEeWbpPQe63GnHg" name="PUBLIC" target="../Online%20DB/HSQLEngine.md#_xj7VVOjsEeSW8ee1frYByw?fileId=_xj7VUOjsEeSW8ee1frYByw$type=md$name=PUBLIC?"/>
+    <parameter id="_ZHTOpK4OEeWbpPQe63GnHg" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+    <parameter id="_ZHTOpa4OEeWbpPQe63GnHg" name="SQL_CONNECTION" type="String"/>
+    <code>SELECT REGEXP_SUBSTRING(file_name,'${../p_regular_expression_to_group_files}$') AS FILE_GROUP&#xD;
+FROM   PUBLIC.IND_SESSION_FILE_OP_LST&#xD;
+GROUP  BY REGEXP_SUBSTRING(file_name,'${../p_regular_expression_to_group_files}$')&#xD;
+HAVING COUNT(*) = ${../p_number_of_values_in_each_group}$</code>
+  </actionCode>
+  <actionCode id="_N08YgK4tEeWbpPQe63GnHg" isBeginAction="false" name="ExecuteDelivery GROUP" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ExecDeliveryActionCodeI">
+    <link id="_FC75oK7YEeWbpPQe63GnHg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_p7BRIK7XEeWbpPQe63GnHg"/>
+    <parameter id="_N08Ygq4tEeWbpPQe63GnHg" name="p_file_group" type="String" value=":{FILE_GROUP}:"/>
+    <parameter id="_N08Yg64tEeWbpPQe63GnHg" name="p_nb_files" type="Integer" value="${../p_number_of_values_in_each_group}$"/>
+    <parameter id="_N08Yha4tEeWbpPQe63GnHg" name="p_to_treat_dir" type="String" value="%x{$TARGET_FOLDER/tech:path()}x%/to_treat"/>
+    <parameter id="_N08_k64tEeWbpPQe63GnHg" name="DELIV_NAME" type="String" value="${../p_deliv_name}$"/>
+    <parameter id="_N08_lK4tEeWbpPQe63GnHg" name="DELIV_SESSION_NAME" type="String" value="Treatment of the group of files containing &quot;:{FILE_GROUP}:&quot;"/>
+    <parameter id="_N08_la4tEeWbpPQe63GnHg" name="DELIV_ASYNCHRONE_EXECUTION" type="String" value="${../p_deliv_async_execution}$"/>
+    <parameter id="_N08_lq4tEeWbpPQe63GnHg" name="p_in_progress_dir" type="String" value="%x{$TARGET_FOLDER/tech:path()}x%/in_progress"/>
+    <parameter id="_N08_l64tEeWbpPQe63GnHg" name="p_treated_dir" type="String" value="%x{$TARGET_FOLDER/tech:path()}x%/treated"/>
+    <parameter id="_N08_mK4tEeWbpPQe63GnHg" name="p_source_dir" type="String" value="%x{$TARGET_FOLDER/tech:path()}x%"/>
+    <parameter id="_i3pboK5AEeWbpPQe63GnHg" name="p_is_treated_as_group" type="String" value="${../p_is_treated_as_group}$"/>
+    <parameter id="_pL8cgK5GEeWbpPQe63GnHg" name="p_select_file" type="String" value="*:{FILE_GROUP}:*"/>
+  </actionCode>
+  <actionCode id="_p7BRIK7XEeWbpPQe63GnHg" isBeginAction="false" name="DELETE " nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <metaDataLink id="_p7BRIq7XEeWbpPQe63GnHg" name="PUBLIC" target="../Online%20DB/HSQLEngine.md#_xj7VVOjsEeSW8ee1frYByw?fileId=_xj7VUOjsEeSW8ee1frYByw$type=md$name=PUBLIC?"/>
+    <parameter id="_p7BRI67XEeWbpPQe63GnHg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_p7BRJK7XEeWbpPQe63GnHg" name="SQL_CONNECTION" type="String"/>
+    <code>DELETE FROM PUBLIC.IND_SESSION_FILE_OP_LST</code>
+  </actionCode>
+  <xslVariable id="_qdlSkKMZEeWqfbig8KuUmw" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='directory'][1]" name="TARGET_FOLDER" type="xpath"/>
+</proc:process>

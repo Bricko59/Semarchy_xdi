@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ref:mapRef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:ref="http://www.indy.com/v2/ref" id="__u1B0DXDEe2goMzdputf-Q">
+  <dataModel>_MhlIIJb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map$name=Load%20dim_discount?</dataModel>
+  <containerRef xsi:type="ref:RDatastore" id="__u23ADXDEe2goMzdputf-Q" countShownFields="4" hierarchical="true">
+    <dataModel>_OXUhwJb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="__u23ATXDEe2goMzdputf-Q" size="12" type="Numeric" mandatory="true" position="6">
+      <dataModel>_OXjyUZb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map$name=min?</dataModel>
+      <usage>__u5TRDXDEe2goMzdputf-Q</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="__u23AjXDEe2goMzdputf-Q" mandatory="true" position="3">
+      <dataModel>_OXjyUJb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map$name=discount_range?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="__u23AzXDEe2goMzdputf-Q" size="12" type="Numeric" mandatory="true" position="9">
+      <dataModel>_OXkZYJb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map$name=max?</dataModel>
+      <usage>__u56UTXDEe2goMzdputf-Q</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="__u23BDXDEe2goMzdputf-Q" size="62" type="String" mandatory="true" position="12">
+      <dataModel>_OXkZYZb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map$name=range?</dataModel>
+      <usage>__u56UDXDEe2goMzdputf-Q</usage>
+    </fieldRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="__u3eEDXDEe2goMzdputf-Q" countShownFields="3" hierarchical="false">
+    <dataModel>_Pho_0Jb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="__u5TQDXDEe2goMzdputf-Q" precision="0" size="35" type="varchar" mandatory="true" position="3">
+      <dataModel>_Phpm4Zb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map$name=dis_range?</dataModel>
+      <expressionRef id="__u56UDXDEe2goMzdputf-Q" internalExpression="${DiscountRanges.range}$">
+        <dataModel>_QcSDIJb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map?</dataModel>
+        <sourceRef>__u23BDXDEe2goMzdputf-Q</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="__u5TQTXDEe2goMzdputf-Q" precision="0" size="3" type="numeric" position="6">
+      <dataModel>_PhqN8Jb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map$name=dis_min?</dataModel>
+      <expressionRef id="__u5TRDXDEe2goMzdputf-Q" internalExpression="${DiscountRanges.min}$">
+        <dataModel>_QcRcEJb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map?</dataModel>
+        <sourceRef>__u23ATXDEe2goMzdputf-Q</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="__u5TQjXDEe2goMzdputf-Q" precision="0" size="3" type="numeric" position="9">
+      <dataModel>_PhqN8Zb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map$name=dis_max?</dataModel>
+      <expressionRef id="__u56UTXDEe2goMzdputf-Q" internalExpression="${DiscountRanges.max}$">
+        <dataModel>_QcSDIZb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map?</dataModel>
+        <sourceRef>__u23AzXDEe2goMzdputf-Q</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <constraintRef id="__vAA8DXDEe2goMzdputf-Q" type="pk">
+      <dataModel>_PhrcEJb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map$name=pk_dim_discount?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <targetSetRef id="__u7vgTXDEe2goMzdputf-Q" sourceSet="__u7vgDXDEe2goMzdputf-Q">
+    <container>__u3eEDXDEe2goMzdputf-Q</container>
+  </targetSetRef>
+  <sourceSetRef id="__u7vgDXDEe2goMzdputf-Q" targetSet="__u7vgTXDEe2goMzdputf-Q">
+    <dataSet xsi:type="map:DataSet">#_OXsVMJb-EeytipfABCJWjQ</dataSet>
+  </sourceSetRef>
+  <templateRef id="__u56VzXDEe2goMzdputf-Q" description="Integration : dim_discount" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=POSTGRESSQL;trgPath=server:datamart/schema:datamart.hotel_datamart/datastore:dim_discount;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=FILE">
+    <dataModel>_QcamAJb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map$name=I_dim_discount?</dataModel>
+    <problem id="__vAoATXDEe2goMzdputf-Q" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <targetRef>_Pho_0Jb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="__u7IcDXDEe2goMzdputf-Q" description="Load : DiscountRanges" nodeCode="com.stambia.flow.step" templateCriteria="type=L-TP;trgProduct=POSTGRESSQL;trgPath=server:datamart/schema:datamart.hotel_datamart/datastore:dim_discount;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProduct=FILE;srcPath=server:null/directory:Reference_Files_Folder/file:discount_range;srcWorkspaceCapability=false;srcMapCapability=true;srcFilterCapability=true;srcJoinCapability=false">
+    <dataModel>_Qm5XsJb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map$name=L1_dim_discount?</dataModel>
+    <problem id="__vAoADXDEe2goMzdputf-Q" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <load>__u56VDXDEe2goMzdputf-Q</load>
+    <targetRef>_Pho_0Jb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map?</targetRef>
+  </templateRef>
+  <loadSet id="__u56VDXDEe2goMzdputf-Q">
+    <container>_OXUhwJb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map?</container>
+  </loadSet>
+  <loadSet id="__u56VjXDEe2goMzdputf-Q">
+    <container>_Pho_0Jb-EeytipfABCJWjQ?fileId=_MhlIIJb-EeytipfABCJWjQ$type=map?</container>
+  </loadSet>
+</ref:mapRef>

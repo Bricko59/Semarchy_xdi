@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_805YEeJIEeebpNpIPWPqBg">
+  <parameter id="_805YEuJIEeebpNpIPWPqBg" description="XPath Expression that specifies the path to the target file&#xD;&#xA;If specified, this expression will have precedence on any Metadata Link specifying the target file as well as the option Work File&#xD;&#xA;&#xD;&#xA;Example:&#xD;&#xA;$data/tech:path()" metaInf="" name="XPathExpressionForFilePath" type="String" value=""/>
+  <parameter id="_805YE-JIEeebpNpIPWPqBg" description="File to count&#xD;&#xA;This expression is used if no Metadata Link specifying the target file can be found and if XPath Expression For Work file is empty" metaInf="&lt;xslVariableName>filePath&lt;/xslVariableName>" name="filePath" type="String" value=""/>
+  <parameter id="_tt9YsOJJEeebpNpIPWPqBg" description="Parameter name that will be generated to receive the row count number" name="toolResultParamName" type="String" value="toolNbRows"/>
+  <actionCode id="_805YFOJIEeebpNpIPWPqBg" enable="true" isBeginAction="false" name="Scripting Jyton to count nb_lignes" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <parameter id="_805YFeJIEeebpNpIPWPqBg" name="SCRIPTING_LANGUAGE" type="String" value="jython"/>
+    <code>import os&#xD;
+cur_file = '%x{$COUNT_FILE}x%'&#xD;
+file_without_extention,file_extention = os.path.splitext(cur_file)&#xD;
+&#xD;
+my_file = open(cur_file)&#xD;
+try:&#xD;
+     nb_lines = 0&#xD;
+     buf_size = 1024 * 1024&#xD;
+     read_f = my_file.read # loop optimization&#xD;
+     buf = read_f(buf_size)&#xD;
+&#xD;
+     # Empty file&#xD;
+     if not buf:&#xD;
+        nb_lines = 0&#xD;
+&#xD;
+     while buf:&#xD;
+           nb_lines += buf.count('\n')&#xD;
+           buf = read_f(buf_size)&#xD;
+&#xD;
+finally:&#xD;
+     my_file.close()&#xD;
+     &#xD;
+__ctx__.publishVariable('~/'+__ctx__.getVariableValue('../toolResultParamName'),str(nb_lines))</code>
+  </actionCode>
+  <actionCode id="_805YFuJIEeebpNpIPWPqBg" isBeginAction="false" name="Start" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_805YF-JIEeebpNpIPWPqBg" generationCondition="exists($COUNT_FILE)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_805YFOJIEeebpNpIPWPqBg"/>
+  </actionCode>
+  <xslVariable id="_805YGOJIEeebpNpIPWPqBg" code="replace(md:ifEmpty(&#xD;&#xA;       mdj:evaluate($this,md:paramValue($this,'XPathExpressionForFilePath')),&#xD;&#xA;       $this/metaDataLink/mdj:getMetaDataRef(.)[name()='file'][1]/tech:filePath(),&#xD;&#xA;       md:paramValue($this,'filePath')&#xD;&#xA;),'\\','/')&#xD;&#xA;" name="COUNT_FILE" type="xpath"/>
+</proc:process>

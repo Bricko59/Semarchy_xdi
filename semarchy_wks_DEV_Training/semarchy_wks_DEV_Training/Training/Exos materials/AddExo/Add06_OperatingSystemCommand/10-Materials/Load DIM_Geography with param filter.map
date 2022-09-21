@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map:map xmlns:map="http://www.indy.com/v2/map" id="_okZ50LljEeqGVuTxU36Wdg" internalVersion="8" tech="resource.tech#_waYSMH8VEd2__Mzb_dB76A?fileId=_waYSMH8VEd2__Mzb_dB76A$type=tech$name=flow?">
+  <datastore id="_okZ50bljEeqGVuTxU36Wdg" alias="geography" dataset="_okag77ljEeqGVuTxU36Wdg" ref="resource.md#_okZUZbljEeqGVuTxU36Wdg?fileId=_okZUW7ljEeqGVuTxU36Wdg$type=md$name=geography?">
+    <field id="_okZ50rljEeqGVuTxU36Wdg" expand="true" name="state" parent="_okZ507ljEeqGVuTxU36Wdg" ref="resource.md#_okZUabljEeqGVuTxU36Wdg?fileId=_okZUW7ljEeqGVuTxU36Wdg$type=md$name=state?" updateKey="true"/>
+    <field id="_okZ507ljEeqGVuTxU36Wdg" expand="true" name="geography" ref="resource.md#_okZUZbljEeqGVuTxU36Wdg?fileId=_okZUW7ljEeqGVuTxU36Wdg$type=md$name=geography?" updateKey="true"/>
+    <field id="_okZ51LljEeqGVuTxU36Wdg" fullAlias="geography/state/city/@zipCode" name="zipCode" parent="_okZ517ljEeqGVuTxU36Wdg" ref="resource.md#_okZUeLljEeqGVuTxU36Wdg?fileId=_okZUW7ljEeqGVuTxU36Wdg$type=md$name=zipCode?"/>
+    <field id="_okZ51bljEeqGVuTxU36Wdg" fullAlias="geography/state/city/@cityName" name="cityName" parent="_okZ517ljEeqGVuTxU36Wdg" ref="resource.md#_okZUdLljEeqGVuTxU36Wdg?fileId=_okZUW7ljEeqGVuTxU36Wdg$type=md$name=cityName?"/>
+    <field id="_okZ51rljEeqGVuTxU36Wdg" fullAlias="geography/state/@upperCaseName" name="upperCaseName" parent="_okZ50rljEeqGVuTxU36Wdg" ref="resource.md#_okZUhLljEeqGVuTxU36Wdg?fileId=_okZUW7ljEeqGVuTxU36Wdg$type=md$name=upperCaseName?"/>
+    <field id="_okZ517ljEeqGVuTxU36Wdg" expand="true" name="city" parent="_okZ50rljEeqGVuTxU36Wdg" ref="resource.md#_okZUcLljEeqGVuTxU36Wdg?fileId=_okZUW7ljEeqGVuTxU36Wdg$type=md$name=city?" updateKey="true"/>
+    <field id="_okZ52LljEeqGVuTxU36Wdg" fullAlias="geography/state/@stateName" name="stateName" parent="_okZ50rljEeqGVuTxU36Wdg" ref="resource.md#_okZUgLljEeqGVuTxU36Wdg?fileId=_okZUW7ljEeqGVuTxU36Wdg$type=md$name=stateName?"/>
+    <field id="_okZ52bljEeqGVuTxU36Wdg" fullAlias="geography/state/@code" name="code" parent="_okZ50rljEeqGVuTxU36Wdg" ref="resource.md#_okZUfLljEeqGVuTxU36Wdg?fileId=_okZUW7ljEeqGVuTxU36Wdg$type=md$name=code?"/>
+  </datastore>
+  <datastore id="_okZ52rljEeqGVuTxU36Wdg" alias="DIM_GEOGRAPHY" dataset="_okag8LljEeqGVuTxU36Wdg" ref="resource.md#_okZTvbljEeqGVuTxU36Wdg?fileId=_okYr3bljEeqGVuTxU36Wdg$type=md$name=DIM_GEOGRAPHY?" subExpression="[A]">
+    <field id="_okag4LljEeqGVuTxU36Wdg" enable="true" insert="true" name="GEO_ZIP_CODE" ref="resource.md#_okZTyLljEeqGVuTxU36Wdg?fileId=_okYr3bljEeqGVuTxU36Wdg$type=md$name=GEO_ZIP_CODE?" update="true" updateKey="true">
+      <expression id="_okag4bljEeqGVuTxU36Wdg" setDescriptorRef="_okag67ljEeqGVuTxU36Wdg">
+        <expression>geography.geography/state/city/@zipCode</expression>
+      </expression>
+    </field>
+    <field id="_okag4rljEeqGVuTxU36Wdg" enable="true" insert="true" name="GEO_CITY" ref="resource.md#_okZTz7ljEeqGVuTxU36Wdg?fileId=_okYr3bljEeqGVuTxU36Wdg$type=md$name=GEO_CITY?" update="true">
+      <expression id="_okag47ljEeqGVuTxU36Wdg" setDescriptorRef="_okag67ljEeqGVuTxU36Wdg">
+        <expression>geography.geography/state/city/@cityName</expression>
+      </expression>
+    </field>
+    <field id="_okag5LljEeqGVuTxU36Wdg" enable="true" insert="true" name="GEO_STATE_CODE" ref="resource.md#_okZT1rljEeqGVuTxU36Wdg?fileId=_okYr3bljEeqGVuTxU36Wdg$type=md$name=GEO_STATE_CODE?" update="true">
+      <expression id="_okag5bljEeqGVuTxU36Wdg" setDescriptorRef="_okag67ljEeqGVuTxU36Wdg">
+        <expression>geography.geography/state/@code</expression>
+      </expression>
+    </field>
+    <field id="_okag5rljEeqGVuTxU36Wdg" enable="true" insert="true" name="GEO_STATE" ref="resource.md#_okZT3bljEeqGVuTxU36Wdg?fileId=_okYr3bljEeqGVuTxU36Wdg$type=md$name=GEO_STATE?" update="true">
+      <expression id="_okag57ljEeqGVuTxU36Wdg" setDescriptorRef="_okag67ljEeqGVuTxU36Wdg">
+        <expression>geography.geography/state/@stateName</expression>
+      </expression>
+    </field>
+    <field id="_okag6LljEeqGVuTxU36Wdg" enable="true" insert="true" name="GEO_KEY_ID" ref="resource.md#_okZTwLljEeqGVuTxU36Wdg?fileId=_okYr3bljEeqGVuTxU36Wdg$type=md$name=GEO_KEY_ID?" update="false" updateKey="false">
+      <expression id="_okag6bljEeqGVuTxU36Wdg" location="TRG" setDescriptorRef="_okag67ljEeqGVuTxU36Wdg">
+        <expression>next value for HOTEL_DATAMART.SEQ_GEO_KEY_ID</expression>
+      </expression>
+    </field>
+    <constraint id="_okag6rljEeqGVuTxU36Wdg" name="PK_DIM_GEOGRAPHY" ref="resource.md#_okZT5LljEeqGVuTxU36Wdg?fileId=_okYr3bljEeqGVuTxU36Wdg$type=md$name=PK_DIM_GEOGRAPHY?" reject="true"/>
+    <setDescriptor id="_okag67ljEeqGVuTxU36Wdg" label="A"/>
+  </datastore>
+  <filter id="_okag7LljEeqGVuTxU36Wdg" location="WRK">
+    <expression><![CDATA[    geography.geography/state/@code = '${~/STATE_CODE}$' 
+AND geography.geography/state/@upperCaseName = UPPER('${~/CITY_NAME}$')]]></expression>
+  </filter>
+  <template id="_okag7bljEeqGVuTxU36Wdg" name="I_DIM_GEOGRAPHY" process="resource.proc#_HFOfdjEZEd-WZe6cNi2k2w?fileId=_HFOfdjEZEd-WZe6cNi2k2w$type=proc$name=INTEGRATION%20Hsql?" targetId="_okZ52rljEeqGVuTxU36Wdg"/>
+  <template id="_okag7rljEeqGVuTxU36Wdg" name="L1_DIM_GEOGRAPHY" process="resource.proc#_eNVMMrdDEd6wPMNq-9tkHw?fileId=_eNVMMrdDEd6wPMNq-9tkHw$type=proc$name=Load%20Xml%20to%20Rdbms?" sourceId="_okZ50bljEeqGVuTxU36Wdg" targetId="_okZ52rljEeqGVuTxU36Wdg"/>
+  <dataSet id="_okag77ljEeqGVuTxU36Wdg">
+    <container>_okZ50bljEeqGVuTxU36Wdg</container>
+  </dataSet>
+  <dataSet id="_okag8LljEeqGVuTxU36Wdg">
+    <container>_okZ52rljEeqGVuTxU36Wdg</container>
+  </dataSet>
+  <hint>
+    <usedField>#_okZ51LljEeqGVuTxU36Wdg</usedField>
+    <usedField>#_okZ51bljEeqGVuTxU36Wdg</usedField>
+    <usedField>#_okZ51rljEeqGVuTxU36Wdg</usedField>
+    <usedField>#_okZ52LljEeqGVuTxU36Wdg</usedField>
+    <usedField>#_okZ52bljEeqGVuTxU36Wdg</usedField>
+  </hint>
+</map:map>

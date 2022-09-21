@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ref:mapRef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:ref="http://www.indy.com/v2/ref" id="_9i0RuZfgEeyNk-8PTn1xFw">
+  <dataModel>_SZgvYJb_EeytipfABCJWjQ?fileId=_SZgvYJb_EeytipfABCJWjQ$type=map$name=Integrate%20dim_payment_type?</dataModel>
+  <containerRef xsi:type="ref:RDatastore" id="_9i04sZfgEeyNk-8PTn1xFw" countShownFields="4" hierarchical="false">
+    <dataModel>_Xw2ngJb_EeytipfABCJWjQ?fileId=_SZgvYJb_EeytipfABCJWjQ$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_9i04spfgEeyNk-8PTn1xFw" precision="0" size="64" type="varchar" position="9">
+      <dataModel>_Xw5Dwpb_EeytipfABCJWjQ?fileId=_SZgvYJb_EeytipfABCJWjQ$type=map$name=pmt_description?</dataModel>
+      <usage>_9i1fxZfgEeyNk-8PTn1xFw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9i04s5fgEeyNk-8PTn1xFw" precision="0" size="10" type="numeric" position="12">
+      <dataModel>_Xw5q0Jb_EeytipfABCJWjQ?fileId=_SZgvYJb_EeytipfABCJWjQ$type=map$name=pmt_active?</dataModel>
+      <usage>_9i04sJfgEeyNk-8PTn1xFw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9i04tJfgEeyNk-8PTn1xFw" precision="0" size="8" type="varchar" mandatory="true" position="3">
+      <dataModel>_Xw5DwJb_EeytipfABCJWjQ?fileId=_SZgvYJb_EeytipfABCJWjQ$type=map$name=pmt_code?</dataModel>
+      <usage>_9i1fxJfgEeyNk-8PTn1xFw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9i04tZfgEeyNk-8PTn1xFw" precision="0" size="64" type="varchar" mandatory="true" position="6">
+      <dataModel>_Xw5DwZb_EeytipfABCJWjQ?fileId=_SZgvYJb_EeytipfABCJWjQ$type=map$name=pmt_name?</dataModel>
+      <usage>_9i1fxpfgEeyNk-8PTn1xFw</usage>
+    </fieldRef>
+    <constraintRef id="_9i04tpfgEeyNk-8PTn1xFw" type="pk">
+      <dataModel>_Xw5q0Zb_EeytipfABCJWjQ?fileId=_SZgvYJb_EeytipfABCJWjQ$type=map$name=pk_t_payment_type?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_9i04t5fgEeyNk-8PTn1xFw" countShownFields="3" hierarchical="false">
+    <dataModel>_Y8pFMJb_EeytipfABCJWjQ?fileId=_SZgvYJb_EeytipfABCJWjQ$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_9i04uJfgEeyNk-8PTn1xFw" precision="0" size="4" type="varchar" mandatory="true" position="3">
+      <dataModel>_Y8psQZb_EeytipfABCJWjQ?fileId=_SZgvYJb_EeytipfABCJWjQ$type=map$name=pmt_code?</dataModel>
+      <expressionRef id="_9i1fxJfgEeyNk-8PTn1xFw" internalExpression="${t_payment_type.pmt_code}$">
+        <dataModel>_ZbLbUJb_EeytipfABCJWjQ?fileId=_SZgvYJb_EeytipfABCJWjQ$type=map?</dataModel>
+        <sourceRef>_9i04tJfgEeyNk-8PTn1xFw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9i1fwJfgEeyNk-8PTn1xFw" precision="0" size="35" type="varchar" position="6">
+      <dataModel>_Y8qTUJb_EeytipfABCJWjQ?fileId=_SZgvYJb_EeytipfABCJWjQ$type=map$name=pmt_name?</dataModel>
+      <expressionRef id="_9i1fxpfgEeyNk-8PTn1xFw" internalExpression="${t_payment_type.pmt_name}$">
+        <dataModel>_ZbMCYZb_EeytipfABCJWjQ?fileId=_SZgvYJb_EeytipfABCJWjQ$type=map?</dataModel>
+        <sourceRef>_9i04tZfgEeyNk-8PTn1xFw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9i1fwZfgEeyNk-8PTn1xFw" precision="0" size="35" type="varchar" position="9">
+      <dataModel>_Y8qTUZb_EeytipfABCJWjQ?fileId=_SZgvYJb_EeytipfABCJWjQ$type=map$name=pmt_description?</dataModel>
+      <expressionRef id="_9i1fxZfgEeyNk-8PTn1xFw" internalExpression="${t_payment_type.pmt_description}$">
+        <dataModel>_ZbMCYJb_EeytipfABCJWjQ?fileId=_SZgvYJb_EeytipfABCJWjQ$type=map?</dataModel>
+        <sourceRef>_9i04spfgEeyNk-8PTn1xFw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <constraintRef id="_9i1fwpfgEeyNk-8PTn1xFw" type="pk">
+      <dataModel>_Y8qTUpb_EeytipfABCJWjQ?fileId=_SZgvYJb_EeytipfABCJWjQ$type=map$name=pk_dim_payment_type?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <clauseRef id="_9i04sJfgEeyNk-8PTn1xFw" internalExpression="${t_payment_type.pmt_active}$ = 1">
+    <dataModel>_Z7U7AJb_EeytipfABCJWjQ?fileId=_SZgvYJb_EeytipfABCJWjQ$type=map?</dataModel>
+    <sourceRef>_9i04s5fgEeyNk-8PTn1xFw</sourceRef>
+  </clauseRef>
+  <targetSetRef id="_9i2G2JfgEeyNk-8PTn1xFw" sourceSet="_9i2G15fgEeyNk-8PTn1xFw">
+    <container>_9i04t5fgEeyNk-8PTn1xFw</container>
+  </targetSetRef>
+  <sourceSetRef id="_9i2G15fgEeyNk-8PTn1xFw" targetSet="_9i2G2JfgEeyNk-8PTn1xFw">
+    <dataSet xsi:type="map:DataSet">#_Xw648Jb_EeytipfABCJWjQ</dataSet>
+  </sourceSetRef>
+  <templateRef id="_9i1fzJfgEeyNk-8PTn1xFw" description="Integration : dim_payment_type" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=POSTGRESSQL;trgPath=server:datamart/schema:datamart.hotel_datamart/datastore:dim_payment_type;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=POSTGRESSQL">
+    <dataModel>_ZbNQgJb_EeytipfABCJWjQ?fileId=_SZgvYJb_EeytipfABCJWjQ$type=map$name=I_dim_payment_type?</dataModel>
+    <problem id="_9i3U8JfgEeyNk-8PTn1xFw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <targetRef>_Y8pFMJb_EeytipfABCJWjQ?fileId=_SZgvYJb_EeytipfABCJWjQ$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_9i2G0JfgEeyNk-8PTn1xFw" description="Load : t_payment_type" nodeCode="com.stambia.flow.step" templateCriteria="type=L-TP;trgProduct=POSTGRESSQL;trgPath=server:datamart/schema:datamart.hotel_datamart/datastore:dim_payment_type;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProduct=POSTGRESSQL;srcPath=server:hotel/schema:hotel.hotel_management/datastore:t_payment_type;srcWorkspaceCapability=true;srcMapCapability=true;srcFilterCapability=true;srcJoinCapability=true">
+    <dataModel>_ZbZdwJb_EeytipfABCJWjQ?fileId=_SZgvYJb_EeytipfABCJWjQ$type=map$name=L1_dim_payment_type?</dataModel>
+    <problem id="_9i3U8ZfgEeyNk-8PTn1xFw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <load>_9i1fyZfgEeyNk-8PTn1xFw</load>
+    <targetRef>_Y8pFMJb_EeytipfABCJWjQ?fileId=_SZgvYJb_EeytipfABCJWjQ$type=map?</targetRef>
+  </templateRef>
+  <loadSet id="_9i1fyZfgEeyNk-8PTn1xFw">
+    <container>_Xw2ngJb_EeytipfABCJWjQ?fileId=_SZgvYJb_EeytipfABCJWjQ$type=map?</container>
+  </loadSet>
+  <loadSet id="_9i1fy5fgEeyNk-8PTn1xFw">
+    <container>_Y8pFMJb_EeytipfABCJWjQ?fileId=_SZgvYJb_EeytipfABCJWjQ$type=map?</container>
+  </loadSet>
+</ref:mapRef>

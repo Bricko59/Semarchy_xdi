@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="_YJ2lkY5sEd6bfM-eVLK6rg" name="scp">
+  <level icon="icons/full/custom/ftp.server.png" xmlName="server" code="com.stambia.scp.server" displayName="SCP Server" isFile="advanced">
+    <attribute xmlName="host" code="host" displayName="Host"/>
+    <attribute xmlName="port" code="port" displayName="Port"/>
+    <attribute xmlName="user" category="" code="user" displayName="User" type="string"/>
+    <attribute xmlName="password" code="password" displayName="Password" type="password"/>
+  </level>
+  <level icon="icons/full/custom/file.folder.png" xmlName="directory" code="com.stambia.scp.directory" displayName="Remote directory">
+    <attribute xmlName="path" code="path" displayName="Path"/>
+    <parent>com.stambia.ftp.server</parent>
+  </level>
+  <xPathExpression expression="ancestor-or-self::server[1]">
+    <code>SERVER_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="'SCP'">
+    <code>PRODUCT_CODE</code>
+  </xPathExpression>
+  <metaDataLinkType createAction="true" name="scpPutConnection">
+    <parameter name="SSH_HOST" value="ref:server()/@host"/>
+    <parameter name="SSH_USER" value="ref:server()/@user"/>
+    <parameter name="SSH_PASSWORD" value="ref:server()/@password"/>
+    <technology>com.indy.engine.actionCodes.ScpPutActionCodeI</technology>
+    <level>#com.stambia.scp.directory</level>
+    <level>#com.stambia.scp.server</level>
+  </metaDataLinkType>
+  <metaDataLinkType createAction="false" name="ScpPutDirectory">
+    <parameter name="SCP_REMOTE_PATH" value="@path"/>
+    <technology>com.indy.engine.actionCodes.ScpPutActionCodeI</technology>
+    <level>#com.stambia.scp.directory</level>
+  </metaDataLinkType>
+  <metaDataLinkType createAction="false" name="sshExecConnection">
+    <parameter name="SSH_HOST" value="ref:server()/@host"/>
+    <parameter name="SSH_USER" value="ref:server()/@user"/>
+    <parameter name="SSH_PASSWORD" value="ref:server()/@password"/>
+    <technology>com.indy.engine.actionCodes.SSHExecActionCodeI</technology>
+    <level>#com.stambia.scp.directory</level>
+    <level>#com.stambia.scp.server</level>
+  </metaDataLinkType>
+</tech:tech>

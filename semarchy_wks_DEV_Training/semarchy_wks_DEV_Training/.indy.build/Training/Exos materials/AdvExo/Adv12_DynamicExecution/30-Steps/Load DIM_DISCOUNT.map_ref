@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ref:mapRef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:ref="http://www.indy.com/v2/ref" id="_8HN5RTTDEe2K1spis4bODw">
+  <dataModel>_ytE0sME_Eeq6L8zfnBksuA?fileId=_ytE0sME_Eeq6L8zfnBksuA$type=map$name=Load%20DIM_DISCOUNT?</dataModel>
+  <containerRef xsi:type="ref:RDatastore" id="_8HciwDTDEe2K1spis4bODw" countShownFields="4" hierarchical="true">
+    <dataModel>_ytE0scE_Eeq6L8zfnBksuA?fileId=_ytE0sME_Eeq6L8zfnBksuA$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_8HciwTTDEe2K1spis4bODw" size="62" type="String" mandatory="true" position="12">
+      <dataModel>_ytE0ssE_Eeq6L8zfnBksuA?fileId=_ytE0sME_Eeq6L8zfnBksuA$type=map$name=range?</dataModel>
+      <usage>_8HtogDTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8HjQcDTDEe2K1spis4bODw" mandatory="true" position="3">
+      <dataModel>_ytE0s8E_Eeq6L8zfnBksuA?fileId=_ytE0sME_Eeq6L8zfnBksuA$type=map$name=DiscountRanges?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8HjQcTTDEe2K1spis4bODw" size="12" type="Numeric" mandatory="true" position="6">
+      <dataModel>_ytE0tME_Eeq6L8zfnBksuA?fileId=_ytE0sME_Eeq6L8zfnBksuA$type=map$name=min?</dataModel>
+      <usage>_8HsaYDTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8HjQcjTDEe2K1spis4bODw" size="12" type="Numeric" mandatory="true" position="9">
+      <dataModel>_ytE0tcE_Eeq6L8zfnBksuA?fileId=_ytE0sME_Eeq6L8zfnBksuA$type=map$name=max?</dataModel>
+      <usage>_8Hp-ITTDEe2K1spis4bODw</usage>
+    </fieldRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_8Hj3gDTDEe2K1spis4bODw" countShownFields="3" hierarchical="false">
+    <dataModel>_ytE0tsE_Eeq6L8zfnBksuA?fileId=_ytE0sME_Eeq6L8zfnBksuA$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_8HkekDTDEe2K1spis4bODw" size="35" type="VARCHAR" mandatory="true" position="3">
+      <dataModel>_ytE0u8E_Eeq6L8zfnBksuA?fileId=_ytE0sME_Eeq6L8zfnBksuA$type=map$name=DIS_RANGE?</dataModel>
+      <expressionRef id="_8HtogDTDEe2K1spis4bODw" internalExpression="${DiscountRanges.range}$">
+        <dataModel>_ytFbwME_Eeq6L8zfnBksuA?fileId=_ytE0sME_Eeq6L8zfnBksuA$type=map?</dataModel>
+        <sourceRef>_8HciwTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8HkekTTDEe2K1spis4bODw" precision="0" size="3" type="NUMERIC" position="6">
+      <dataModel>_ytE0ucE_Eeq6L8zfnBksuA?fileId=_ytE0sME_Eeq6L8zfnBksuA$type=map$name=DIS_MIN?</dataModel>
+      <expressionRef id="_8HsaYDTDEe2K1spis4bODw" internalExpression="${DiscountRanges.min}$">
+        <dataModel>_ytE0usE_Eeq6L8zfnBksuA?fileId=_ytE0sME_Eeq6L8zfnBksuA$type=map?</dataModel>
+        <sourceRef>_8HjQcTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8HkekjTDEe2K1spis4bODw" precision="0" size="3" type="NUMERIC" position="9">
+      <dataModel>_ytE0t8E_Eeq6L8zfnBksuA?fileId=_ytE0sME_Eeq6L8zfnBksuA$type=map$name=DIS_MAX?</dataModel>
+      <expressionRef id="_8Hp-ITTDEe2K1spis4bODw" internalExpression="${DiscountRanges.max}$">
+        <dataModel>_ytE0uME_Eeq6L8zfnBksuA?fileId=_ytE0sME_Eeq6L8zfnBksuA$type=map?</dataModel>
+        <sourceRef>_8HjQcjTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <constraintRef id="_8H09QDTDEe2K1spis4bODw" type="pk">
+      <dataModel>_ytFbwcE_Eeq6L8zfnBksuA?fileId=_ytE0sME_Eeq6L8zfnBksuA$type=map$name=PK_DIM_DISCOUNT?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <targetSetRef id="_8HvdsTTDEe2K1spis4bODw" sourceSet="_8HvdsDTDEe2K1spis4bODw">
+    <container>_8Hj3gDTDEe2K1spis4bODw</container>
+  </targetSetRef>
+  <sourceSetRef id="_8HvdsDTDEe2K1spis4bODw" targetSet="_8HvdsTTDEe2K1spis4bODw">
+    <dataSet xsi:type="map:DataSet">#_ytFbxcE_Eeq6L8zfnBksuA</dataSet>
+  </sourceSetRef>
+  <templateRef id="_8HtohjTDEe2K1spis4bODw" description="Integration : DIM_DISCOUNT" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=HYPERSONIC_SQL;trgPath=server:HSQL_Datamart/schema:HOTEL_DATAMART/datastore:DIM_DISCOUNT;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=FILE">
+    <dataModel>_ytFbw8E_Eeq6L8zfnBksuA?fileId=_ytE0sME_Eeq6L8zfnBksuA$type=map$name=I_DIM_DISCOUNT?</dataModel>
+    <problem id="_8H2LYDTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <targetRef>_ytE0tsE_Eeq6L8zfnBksuA?fileId=_ytE0sME_Eeq6L8zfnBksuA$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_8Hu2pjTDEe2K1spis4bODw" description="Load : DiscountRanges" nodeCode="com.stambia.flow.step" templateCriteria="type=L-TP;trgProduct=HYPERSONIC_SQL;trgPath=server:HSQL_Datamart/schema:HOTEL_DATAMART/datastore:DIM_DISCOUNT;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProduct=FILE;srcPath=server:null/directory:Reference_Files_Folder/file:DiscountRanges;srcWorkspaceCapability=false;srcMapCapability=true;srcFilterCapability=true;srcJoinCapability=false">
+    <dataModel>_ytFbxME_Eeq6L8zfnBksuA?fileId=_ytE0sME_Eeq6L8zfnBksuA$type=map$name=L1_DIM_DISCOUNT?</dataModel>
+    <problem id="_8H2LYTTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <load>_8HtogzTDEe2K1spis4bODw</load>
+    <targetRef>_ytE0tsE_Eeq6L8zfnBksuA?fileId=_ytE0sME_Eeq6L8zfnBksuA$type=map?</targetRef>
+  </templateRef>
+  <loadSet id="_8HtohTTDEe2K1spis4bODw">
+    <container>_ytE0tsE_Eeq6L8zfnBksuA?fileId=_ytE0sME_Eeq6L8zfnBksuA$type=map?</container>
+  </loadSet>
+  <loadSet id="_8HtogzTDEe2K1spis4bODw">
+    <container>_ytE0scE_Eeq6L8zfnBksuA?fileId=_ytE0sME_Eeq6L8zfnBksuA$type=map?</container>
+  </loadSet>
+</ref:mapRef>

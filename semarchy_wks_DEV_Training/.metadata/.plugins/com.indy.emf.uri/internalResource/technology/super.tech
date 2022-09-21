@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="UUID_TECH_SUPER" name="Super">
+  <level icon="" xmlName="super" code="com.stambia.super" displayName="Super" isFile="advanced">
+    <attribute xmlName="connectionDefinitionsRef" code="connectionDefinitionsRef" displayName="ConnectionDefinition" type="reference">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.dnd.emfMetaInf" value="http://www.stambia.com/md;MdNode"/>
+    </attribute>
+  </level>
+  <level xmlName="type" activeDisplayName="true" code="com.indy.super.type" displayName="Superype">
+    <attribute xmlName="java" code="java" displayName="Java Type"/>
+    <attribute xmlName="enable" category="" code="enable" displayName="Enable" type="boolean"/>
+    <parent>com.stambia.super</parent>
+  </level>
+  <xPathExpression description="Return an URI of the form&#xD;&#xA;platform:/plugin/&lt;bundleName>/&lt;className>&#xD;&#xA;&#xD;&#xA;className : &#xD;&#xA;&#x9;- must implements com.indy.ui.custom.out.common.IExpressionParser&#xD;&#xA;&#x9;- must have an empty public constructor&#xD;&#xA;&#xD;&#xA;available implementations : &#xD;&#xA;&#x9;- com.indy.map.validation.parsers.SQLExpressionParser [used as default]&#xD;&#xA;&#x9;- com.indy.map.validation.parsers.EmptyExpressionParser&#xD;&#xA;" expression="'platform:/plugin/com.indy.gmf.map/com.indy.map.validation.parsers.SQLExpressionParser'">
+    <code>INTERNAL_EXPRESSION_PARSER</code>
+  </xPathExpression>
+</tech:tech>

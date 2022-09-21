@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tpc:conf xmlns:tpc="http://www.stambia.com/tpc" id="_b2rhIJSuEd-oFuBizMGsgg">
+  <case name="I-TP">
+    <propertyState name="TYPE" value="I-TP"/>
+    <case name="RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="TRG MYSQL">
+        <propertyState name="trgProduct" value="MYSQL"/>
+        <template id="_f9ygc5SuEd-oFuBizMGsgg" ref="resource.proc#_Qm-ugZSuEd-oFuBizMGsgg?fileId=_Qm-ugZSuEd-oFuBizMGsgg$type=proc$name=INTEGRATION%20MySql?"/>
+      </case>
+    </case>
+  </case>
+  <case name="L-TP">
+    <propertyState name="TYPE" value="L-TP"/>
+    <case name="TRG_RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="SRC_RDBMS">
+        <or>
+          <propertyState mode="CONTAINS" name="srcCompatibleTechList" value="RDBMS"/>
+          <propertyState name="srcTech" value="RDBMS"/>
+        </or>
+        <case name="TRG_MYSQL">
+          <propertyState name="trgProduct" value="MYSQL"/>
+          <template id="_UBMlE5TOEd-A7bm8ettXjQ" ref="resource.proc#_NVzWAZTMEd-A7bm8ettXjQ?fileId=_NVzWAZTMEd-A7bm8ettXjQ$type=proc$name=LOAD%20Rdbms%20to%20MySQL%20(with%20LOAD)?"/>
+        </case>
+      </case>
+      <case name="SRC_FILE">
+        <propertyState name="srcTech" value="FILE"/>
+        <case name="TRG_MYSQL">
+          <propertyState name="trgProduct" value="MYSQL"/>
+          <template id="_RMbWFHDpEeSe57rGwx2yhw" ref="resource.proc#_a-mEoaIhEd68f8w2ej5O-w?fileId=_a-mEoaIhEd68f8w2ej5O-w$type=proc$name=LOAD%20File%20to%20Rdbms?"/>
+          <template id="_8w1N8mjMEeSogYjG_2p6lw" ref="resource.proc#_FZ8DsGjLEeSogYjG_2p6lw?fileId=_FZ8DsGjLEeSogYjG_2p6lw$type=proc$name=LOAD%20File%20to%20MySQL%20(with%20LOAD)?"/>
+        </case>
+      </case>
+      <case name="SRC_XML">
+        <or>
+          <propertyState name="srcTech" value="XML"/>
+          <propertyState name="srcTech" value="JSON"/>
+          <propertyState name="srcTech" value="WSDL"/>
+        </or>
+        <case name="TRG_MYSQL">
+          <propertyState name="trgProduct" value="MYSQL"/>
+          <template id="_oYSypt5qEeuLuZdMcvNQ_g" ref="resource.proc#_35kaEN5oEeuLuZdMcvNQ_g?fileId=_35kaEN5oEeuLuZdMcvNQ_g$type=proc$name=LOAD%20Xml%20to%20MySQL%20(with%20LOAD)?"/>
+        </case>
+      </case>
+    </case>
+  </case>
+  <case name="C-TP">
+    <propertyState name="TYPE" value="C-TP"/>
+    <case name="Tech RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="Product MYSQL">
+        <propertyState name="trgProduct" value="MYSQL"/>
+        <template id="_c-9PMdWHEeGtJo6VIje4NQ" ref="resource.proc#_5N2_0dWFEeGtJo6VIje4NQ?fileId=_5N2_0dWFEeGtJo6VIje4NQ$type=proc$name=REJECT%20MySql?"/>
+      </case>
+    </case>
+  </case>
+</tpc:conf>

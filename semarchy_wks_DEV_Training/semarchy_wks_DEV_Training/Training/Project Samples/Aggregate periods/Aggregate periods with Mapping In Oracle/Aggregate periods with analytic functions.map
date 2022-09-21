@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map:map xmlns:map="http://www.indy.com/v2/map" id="_AVmAoAH8EemNL-9oVsp3Bg" internalVersion="8" tech="resource.tech#_waYSMH8VEd2__Mzb_dB76A?fileId=_waYSMH8VEd2__Mzb_dB76A$type=tech$name=flow?">
+  <datastore id="_AVn10AH8EemNL-9oVsp3Bg" alias="JOB_HISTORY" dataset="_AVodJwH8EemNL-9oVsp3Bg" ref="resource.md#_cS-Bof6zEei_Z8ilfPg9pw?fileId=_BpwosNtkEeiZEKbbzoNoqw$type=md$name=JOB_HISTORY?">
+    <field id="_AVn10QH8EemNL-9oVsp3Bg" fullAlias="BEGIN_DATE" name="BEGIN_DATE" ref="resource.md#_caK11v6zEei_Z8ilfPg9pw?fileId=_BpwosNtkEeiZEKbbzoNoqw$type=md$name=BEGIN_DATE?" updateKey="true"/>
+    <field id="_AVn10gH8EemNL-9oVsp3Bg" fullAlias="JOB_CODE" name="JOB_CODE" ref="resource.md#_caLc6_6zEei_Z8ilfPg9pw?fileId=_BpwosNtkEeiZEKbbzoNoqw$type=md$name=JOB_CODE?"/>
+    <field id="_AVn10wH8EemNL-9oVsp3Bg" fullAlias="MATRICULE_NUMBER" name="MATRICULE_NUMBER" ref="resource.md#_caK10P6zEei_Z8ilfPg9pw?fileId=_BpwosNtkEeiZEKbbzoNoqw$type=md$name=MATRICULE_NUMBER?" updateKey="true"/>
+    <field id="_AVn11AH8EemNL-9oVsp3Bg" fullAlias="END_DATE" name="END_DATE" ref="resource.md#_caLc5f6zEei_Z8ilfPg9pw?fileId=_BpwosNtkEeiZEKbbzoNoqw$type=md$name=END_DATE?"/>
+    <constraint id="_AVn11QH8EemNL-9oVsp3Bg" name="PK_JOB_HISTORY" ref="resource.md#_ccNdMP6zEei_Z8ilfPg9pw?fileId=_BpwosNtkEeiZEKbbzoNoqw$type=md$name=PK_JOB_HISTORY?" reject="true"/>
+  </datastore>
+  <datastore id="_AVn11gH8EemNL-9oVsp3Bg" alias="CUMUL_JOB" dataset="_AVodLAH8EemNL-9oVsp3Bg" ref="resource.md#_oberkf6zEei_Z8ilfPg9pw?fileId=_BpwosNtkEeiZEKbbzoNoqw$type=md$name=CUMUL_JOB?" subExpression="[A]">
+    <field id="_AVn11wH8EemNL-9oVsp3Bg" enable="true" insert="true" name="MATRICULE_NUMBER" ref="resource.md#_oiSeMP6zEei_Z8ilfPg9pw?fileId=_BpwosNtkEeiZEKbbzoNoqw$type=md$name=MATRICULE_NUMBER?" update="true" updateKey="true">
+      <expression id="_AVn12AH8EemNL-9oVsp3Bg" setDescriptorRef="_AVoc4wH8EemNL-9oVsp3Bg">
+        <expression>union_tout.MATRICULE_NUMBER</expression>
+      </expression>
+    </field>
+    <field id="_AVn12QH8EemNL-9oVsp3Bg" enable="true" insert="true" name="BEGIN_DATE" ref="resource.md#_oiSeNv6zEei_Z8ilfPg9pw?fileId=_BpwosNtkEeiZEKbbzoNoqw$type=md$name=BEGIN_DATE?" update="true" updateKey="true">
+      <expression id="_AVn12gH8EemNL-9oVsp3Bg" setDescriptorRef="_AVoc4wH8EemNL-9oVsp3Bg">
+        <expression>union_tout.BEGIN_DATE</expression>
+      </expression>
+    </field>
+    <field id="_AVn12wH8EemNL-9oVsp3Bg" enable="true" insert="true" name="SUM_JOB_PERIOD" ref="resource.md#_oiTsUP6zEei_Z8ilfPg9pw?fileId=_BpwosNtkEeiZEKbbzoNoqw$type=md$name=SUM_JOB_PERIOD?" update="true">
+      <expression id="_AVn13AH8EemNL-9oVsp3Bg" aggregate="true" setDescriptorRef="_AVoc4wH8EemNL-9oVsp3Bg">
+        <expression>SUM(union_tout.CUMUL)</expression>
+      </expression>
+    </field>
+    <field id="_AVn13QH8EemNL-9oVsp3Bg" enable="true" insert="true" name="END_DATE" ref="resource.md#_oiTFQP6zEei_Z8ilfPg9pw?fileId=_BpwosNtkEeiZEKbbzoNoqw$type=md$name=END_DATE?" update="true">
+      <expression id="_AVn13gH8EemNL-9oVsp3Bg" aggregate="true" setDescriptorRef="_AVoc4wH8EemNL-9oVsp3Bg">
+        <expression>MAX(union_tout.END_DATE)</expression>
+      </expression>
+    </field>
+    <field id="_AVoc4AH8EemNL-9oVsp3Bg" enable="true" insert="true" name="JOB_CODE" ref="resource.md#_oiTFRv6zEei_Z8ilfPg9pw?fileId=_BpwosNtkEeiZEKbbzoNoqw$type=md$name=JOB_CODE?" update="true">
+      <expression id="_AVoc4QH8EemNL-9oVsp3Bg" aggregate="true" setDescriptorRef="_AVoc4wH8EemNL-9oVsp3Bg">
+        <expression>MAX(union_tout.JOB_CODE)</expression>
+      </expression>
+    </field>
+    <constraint id="_AVoc4gH8EemNL-9oVsp3Bg" name="PK_CUMUL_JOB" ref="resource.md#_okRbMP6zEei_Z8ilfPg9pw?fileId=_BpwosNtkEeiZEKbbzoNoqw$type=md$name=PK_CUMUL_JOB?" reject="true"/>
+    <setDescriptor id="_AVoc4wH8EemNL-9oVsp3Bg" label="A"/>
+  </datastore>
+  <template id="_AVoc5AH8EemNL-9oVsp3Bg" name="I_ajout_precedent" process="resource.proc#_8zSzQdu8EeWIdu0rdnx7VQ?fileId=_8zSzQdu8EeWIdu0rdnx7VQ$type=proc$name=STAGING%20Oracle%20As%20Table?" targetId="_AVoc7QH8EemNL-9oVsp3Bg"/>
+  <template id="_AVoc5QH8EemNL-9oVsp3Bg" name="I_sans_rupture" process="resource.proc#_8zSzQdu8EeWIdu0rdnx7VQ?fileId=_8zSzQdu8EeWIdu0rdnx7VQ$type=proc$name=STAGING%20Oracle%20As%20Table?" targetId="_AVoc-wH8EemNL-9oVsp3Bg"/>
+  <template id="_AVoc5gH8EemNL-9oVsp3Bg" name="I_rupture" process="resource.proc#_8zSzQdu8EeWIdu0rdnx7VQ?fileId=_8zSzQdu8EeWIdu0rdnx7VQ$type=proc$name=STAGING%20Oracle%20As%20Table?" targetId="_AVodCAH8EemNL-9oVsp3Bg"/>
+  <template id="_AVoc5wH8EemNL-9oVsp3Bg" name="I_union_tout" process="resource.proc#_8zSzQdu8EeWIdu0rdnx7VQ?fileId=_8zSzQdu8EeWIdu0rdnx7VQ$type=proc$name=STAGING%20Oracle%20As%20Table?" targetId="_AVodFQH8EemNL-9oVsp3Bg">
+    <parameter id="_AVoc6AH8EemNL-9oVsp3Bg" name="cleanTemporaryObjects " value="false"/>
+    <parameter id="_AVoc6QH8EemNL-9oVsp3Bg" name="useStageNameForTemporaryObjectName" value="true"/>
+  </template>
+  <template id="_AVoc6gH8EemNL-9oVsp3Bg" name="I_CUMUL_JOB" process="resource.proc#_jkWgEFEJEeO7Vo9WeM2sCg?fileId=_jkWgEFEJEeO7Vo9WeM2sCg$type=proc$name=INTEGRATION%20Oracle?" targetId="_AVn11gH8EemNL-9oVsp3Bg">
+    <parameter id="_AVoc6wH8EemNL-9oVsp3Bg" name="truncateTargetTable" value="true"/>
+    <parameter id="_AVoc7AH8EemNL-9oVsp3Bg" name="cleanTemporaryObjects" value="false"/>
+  </template>
+  <query id="_AVoc7QH8EemNL-9oVsp3Bg" alias="ajout_precedent" dataset="_AVodKAH8EemNL-9oVsp3Bg" stagingArea="resource.md#_S69gUN69Eeigr-DIqVP22A?fileId=_BpwosNtkEeiZEKbbzoNoqw$type=md$name=HOTEL_DATAMART?" subExpression="[A]">
+    <field id="_AVoc7gH8EemNL-9oVsp3Bg" name="MATRICULE_NUMBER">
+      <expression id="_AVoc7wH8EemNL-9oVsp3Bg" location="WRK" setDescriptorRef="_AVoc-gH8EemNL-9oVsp3Bg">
+        <expression>JOB_HISTORY.MATRICULE_NUMBER</expression>
+      </expression>
+    </field>
+    <field id="_AVoc8AH8EemNL-9oVsp3Bg" name="BEGIN_DATE">
+      <expression id="_AVoc8QH8EemNL-9oVsp3Bg" location="WRK" setDescriptorRef="_AVoc-gH8EemNL-9oVsp3Bg">
+        <expression>JOB_HISTORY.BEGIN_DATE</expression>
+      </expression>
+    </field>
+    <field id="_AVoc8gH8EemNL-9oVsp3Bg" name="END_DATE">
+      <expression id="_AVoc8wH8EemNL-9oVsp3Bg" location="WRK" setDescriptorRef="_AVoc-gH8EemNL-9oVsp3Bg">
+        <expression>COALESCE(JOB_HISTORY.END_DATE, date'2999-12-31')</expression>
+      </expression>
+    </field>
+    <field id="_AVoc9AH8EemNL-9oVsp3Bg" name="JOB_CODE">
+      <expression id="_AVoc9QH8EemNL-9oVsp3Bg" location="WRK" setDescriptorRef="_AVoc-gH8EemNL-9oVsp3Bg">
+        <expression>JOB_HISTORY.JOB_CODE</expression>
+      </expression>
+    </field>
+    <field id="_AVoc9gH8EemNL-9oVsp3Bg" name="LAG_JOB_CODE">
+      <expression id="_AVoc9wH8EemNL-9oVsp3Bg" location="WRK" setDescriptorRef="_AVoc-gH8EemNL-9oVsp3Bg">
+        <expression>lag(JOB_HISTORY.JOB_CODE) over (partition by JOB_HISTORY.MATRICULE_NUMBER order by JOB_HISTORY.BEGIN_DATE)</expression>
+      </expression>
+    </field>
+    <field id="_AVoc-AH8EemNL-9oVsp3Bg" name="LAG_BEGIN_DATE">
+      <expression id="_AVoc-QH8EemNL-9oVsp3Bg" location="WRK" setDescriptorRef="_AVoc-gH8EemNL-9oVsp3Bg">
+        <expression>lag(JOB_HISTORY.BEGIN_DATE) over (partition by JOB_HISTORY.MATRICULE_NUMBER order by JOB_HISTORY.BEGIN_DATE)</expression>
+      </expression>
+    </field>
+    <setDescriptor id="_AVoc-gH8EemNL-9oVsp3Bg" label="A"/>
+  </query>
+  <query id="_AVoc-wH8EemNL-9oVsp3Bg" alias="sans_rupture" dataset="_AVodKQH8EemNL-9oVsp3Bg" stagingArea="resource.md#_S69gUN69Eeigr-DIqVP22A?fileId=_BpwosNtkEeiZEKbbzoNoqw$type=md$name=HOTEL_DATAMART?" subExpression="[A]">
+    <field id="_AVoc_AH8EemNL-9oVsp3Bg" name="MATRICULE_NUMBER">
+      <expression id="_AVoc_QH8EemNL-9oVsp3Bg" aggregate="false" location="WRK" setDescriptorRef="_AVodBgH8EemNL-9oVsp3Bg">
+        <expression>ajout_precedent.MATRICULE_NUMBER</expression>
+      </expression>
+    </field>
+    <field id="_AVoc_gH8EemNL-9oVsp3Bg" name="BEGIN_DATE">
+      <expression id="_AVoc_wH8EemNL-9oVsp3Bg" aggregate="true" location="WRK" setDescriptorRef="_AVodBgH8EemNL-9oVsp3Bg">
+        <expression>MIN(ajout_precedent.LAG_BEGIN_DATE)</expression>
+      </expression>
+    </field>
+    <field id="_AVodAAH8EemNL-9oVsp3Bg" name="END_DATE">
+      <expression id="_AVodAQH8EemNL-9oVsp3Bg" aggregate="true" location="WRK" setDescriptorRef="_AVodBgH8EemNL-9oVsp3Bg">
+        <expression>MAX(ajout_precedent.END_DATE)</expression>
+      </expression>
+    </field>
+    <field id="_AVodAgH8EemNL-9oVsp3Bg" name="JOB_CODE">
+      <expression id="_AVodAwH8EemNL-9oVsp3Bg" aggregate="false" location="WRK" setDescriptorRef="_AVodBgH8EemNL-9oVsp3Bg">
+        <expression>ajout_precedent.JOB_CODE</expression>
+      </expression>
+    </field>
+    <field id="_AVodBAH8EemNL-9oVsp3Bg" name="CUMUL">
+      <expression id="_AVodBQH8EemNL-9oVsp3Bg" aggregate="true" location="WRK" setDescriptorRef="_AVodBgH8EemNL-9oVsp3Bg">
+        <expression>COUNT(*)</expression>
+      </expression>
+    </field>
+    <setDescriptor id="_AVodBgH8EemNL-9oVsp3Bg" label="A"/>
+    <targetFilter id="_AVodBwH8EemNL-9oVsp3Bg" enable="true" location="WRK" aggregate="false">
+      <expression>ajout_precedent.LAG_JOB_CODE = ajout_precedent.JOB_CODE</expression>
+    </targetFilter>
+  </query>
+  <query id="_AVodCAH8EemNL-9oVsp3Bg" alias="rupture" dataset="_AVodKgH8EemNL-9oVsp3Bg" stagingArea="resource.md#_S69gUN69Eeigr-DIqVP22A?fileId=_BpwosNtkEeiZEKbbzoNoqw$type=md$name=HOTEL_DATAMART?" subExpression="[debut_periode] union [fin_periode]">
+    <field id="_AVodCQH8EemNL-9oVsp3Bg" name="MATRICULE_NUMBER">
+      <expression id="_AVodCgH8EemNL-9oVsp3Bg" location="WRK" setDescriptorRef="_AVodEwH8EemNL-9oVsp3Bg">
+        <expression>ajout_precedent.MATRICULE_NUMBER</expression>
+      </expression>
+    </field>
+    <field id="_AVodCwH8EemNL-9oVsp3Bg" name="BEGIN_DATE">
+      <expression id="_AVodDAH8EemNL-9oVsp3Bg" location="WRK" setDescriptorRef="_AVodEwH8EemNL-9oVsp3Bg">
+        <expression>ajout_precedent.BEGIN_DATE</expression>
+      </expression>
+    </field>
+    <field id="_AVodDQH8EemNL-9oVsp3Bg" name="END_DATE">
+      <expression id="_AVodDgH8EemNL-9oVsp3Bg" location="WRK" setDescriptorRef="_AVodEwH8EemNL-9oVsp3Bg">
+        <expression>ajout_precedent.END_DATE</expression>
+      </expression>
+    </field>
+    <field id="_AVodDwH8EemNL-9oVsp3Bg" name="JOB_CODE">
+      <expression id="_AVodEAH8EemNL-9oVsp3Bg" location="WRK" setDescriptorRef="_AVodEwH8EemNL-9oVsp3Bg">
+        <expression>ajout_precedent.JOB_CODE</expression>
+      </expression>
+    </field>
+    <field id="_AVodEQH8EemNL-9oVsp3Bg" name="CUMUL">
+      <expression id="_AVodEgH8EemNL-9oVsp3Bg" location="WRK" setDescriptorRef="_AVodEwH8EemNL-9oVsp3Bg">
+        <expression>1</expression>
+      </expression>
+    </field>
+    <setDescriptor id="_AVodEwH8EemNL-9oVsp3Bg" label="debut_periode"/>
+    <targetFilter id="_AVodFAH8EemNL-9oVsp3Bg" enable="true" location="WRK" aggregate="false">
+      <expression><![CDATA[ajout_precedent.LAG_JOB_CODE is null or ajout_precedent.LAG_JOB_CODE <> ajout_precedent.JOB_CODE]]></expression>
+    </targetFilter>
+  </query>
+  <query id="_AVodFQH8EemNL-9oVsp3Bg" alias="union_tout" dataset="_AVodKwH8EemNL-9oVsp3Bg" stagingArea="resource.md#_S69gUN69Eeigr-DIqVP22A?fileId=_BpwosNtkEeiZEKbbzoNoqw$type=md$name=HOTEL_DATAMART?" subExpression="[rupture] union [sans_rupture]">
+    <field id="_AVodFgH8EemNL-9oVsp3Bg" name="MATRICULE_NUMBER">
+      <expression id="_AVodFwH8EemNL-9oVsp3Bg" location="WRK" setDescriptorRef="_AVodJQH8EemNL-9oVsp3Bg">
+        <expression>rupture.MATRICULE_NUMBER</expression>
+      </expression>
+      <expression id="_AVodGAH8EemNL-9oVsp3Bg" location="WRK" setDescriptorRef="_AVodJgH8EemNL-9oVsp3Bg">
+        <expression>sans_rupture.MATRICULE_NUMBER</expression>
+      </expression>
+    </field>
+    <field id="_AVodGQH8EemNL-9oVsp3Bg" name="BEGIN_DATE">
+      <expression id="_AVodGgH8EemNL-9oVsp3Bg" location="WRK" setDescriptorRef="_AVodJQH8EemNL-9oVsp3Bg">
+        <expression>rupture.BEGIN_DATE</expression>
+      </expression>
+      <expression id="_AVodGwH8EemNL-9oVsp3Bg" location="WRK" setDescriptorRef="_AVodJgH8EemNL-9oVsp3Bg">
+        <expression>sans_rupture.BEGIN_DATE</expression>
+      </expression>
+    </field>
+    <field id="_AVodHAH8EemNL-9oVsp3Bg" name="END_DATE">
+      <expression id="_AVodHQH8EemNL-9oVsp3Bg" location="WRK" setDescriptorRef="_AVodJQH8EemNL-9oVsp3Bg">
+        <expression>rupture.END_DATE</expression>
+      </expression>
+      <expression id="_AVodHgH8EemNL-9oVsp3Bg" location="WRK" setDescriptorRef="_AVodJgH8EemNL-9oVsp3Bg">
+        <expression>sans_rupture.END_DATE</expression>
+      </expression>
+    </field>
+    <field id="_AVodHwH8EemNL-9oVsp3Bg" name="JOB_CODE">
+      <expression id="_AVodIAH8EemNL-9oVsp3Bg" location="WRK" setDescriptorRef="_AVodJQH8EemNL-9oVsp3Bg">
+        <expression>rupture.JOB_CODE</expression>
+      </expression>
+      <expression id="_AVodIQH8EemNL-9oVsp3Bg" location="WRK" setDescriptorRef="_AVodJgH8EemNL-9oVsp3Bg">
+        <expression>sans_rupture.JOB_CODE</expression>
+      </expression>
+    </field>
+    <field id="_AVodIgH8EemNL-9oVsp3Bg" name="CUMUL">
+      <expression id="_AVodIwH8EemNL-9oVsp3Bg" location="WRK" setDescriptorRef="_AVodJQH8EemNL-9oVsp3Bg">
+        <expression>rupture.CUMUL</expression>
+      </expression>
+      <expression id="_AVodJAH8EemNL-9oVsp3Bg" location="WRK" setDescriptorRef="_AVodJgH8EemNL-9oVsp3Bg">
+        <expression>sans_rupture.CUMUL</expression>
+      </expression>
+    </field>
+    <setDescriptor id="_AVodJQH8EemNL-9oVsp3Bg" label="rupture"/>
+    <setDescriptor id="_AVodJgH8EemNL-9oVsp3Bg" label="sans_rupture"/>
+  </query>
+  <dataSet id="_AVodJwH8EemNL-9oVsp3Bg">
+    <container>_AVn10AH8EemNL-9oVsp3Bg</container>
+  </dataSet>
+  <dataSet id="_AVodKAH8EemNL-9oVsp3Bg">
+    <container>_AVoc7QH8EemNL-9oVsp3Bg</container>
+  </dataSet>
+  <dataSet id="_AVodKQH8EemNL-9oVsp3Bg">
+    <container>_AVoc-wH8EemNL-9oVsp3Bg</container>
+  </dataSet>
+  <dataSet id="_AVodKgH8EemNL-9oVsp3Bg">
+    <container>_AVodCAH8EemNL-9oVsp3Bg</container>
+  </dataSet>
+  <dataSet id="_AVodKwH8EemNL-9oVsp3Bg">
+    <container>_AVodFQH8EemNL-9oVsp3Bg</container>
+  </dataSet>
+  <dataSet id="_AVodLAH8EemNL-9oVsp3Bg">
+    <container>_AVn11gH8EemNL-9oVsp3Bg</container>
+  </dataSet>
+  <hint>
+    <usedField>#_AVn10QH8EemNL-9oVsp3Bg</usedField>
+    <usedField>#_AVn10gH8EemNL-9oVsp3Bg</usedField>
+    <usedField>#_AVn10wH8EemNL-9oVsp3Bg</usedField>
+    <usedField>#_AVn11AH8EemNL-9oVsp3Bg</usedField>
+  </hint>
+</map:map>

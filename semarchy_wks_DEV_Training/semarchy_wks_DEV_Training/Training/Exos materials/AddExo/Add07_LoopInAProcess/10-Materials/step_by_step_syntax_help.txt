@@ -1,0 +1,57 @@
+*** Step 1 ***
+**************
+
+Parameter Name
+--------------
+pre_from_sql_clause 		SELECT * 
+post_from_sql_clause		ORDER BY cus_id
+scan_time_interval			10000
+number_of_scan				5
+
+*** Step 2 ***
+**************
+
+Action Name
+--------------
+StartProcess
+StartLoop
+EndProcess
+
+*** Step 3 ***
+**************
+Generation condition on the link between StartProcess and EndProcess
+--------------------------------------------------------------------
+	${number_of_scan}$ = 0
+
+Generation condition on the link between StartProcess and StartLoop
+--------------------------------------------------------------------
+	${number_of_scan}$ > 0
+
+*** Step 4 ***
+**************
+Execution condition on the link between StartLoop and EndProcess
+----------------------------------------------------------------
+${StartLoop/CORE_NB_EXECUTIONS}$ > ${number_of_scan}$
+Note : if you want to test equality, the condition would be : ${StartLoop/CORE_NB_EXECUTIONS}$ == ${number_of_scan}$
+
+Execution condition on the link between StartLoop and SQLFileExport
+-----------------------------------------------------------------
+${StartLoop/CORE_NB_EXECUTIONS}$ <= ${number_of_scan}$
+
+*** Step 5 ***
+**************
+Expression Editor of the SQLFileExport action
+---------------------------------------------
+${~/pre_from_sql_clause}$
+FROM %x{$T_CUSTOMER/tech:physicalPath()}x%
+${~/post_from_sql_clause}$
+
+SQL_EXP_FILENAME property of the SQLFileExport action
+-----------------------------------------------------
+%x{$Loop_Folder/tech:path()}x%/Query number${../StartLoop/CORE_NB_EXECUTIONS}$.csv
+
+*** Step 6 ***
+**************
+SLEEP_DELAY property of the Sleep action
+----------------------------------------
+${~/scan_time_interval}$

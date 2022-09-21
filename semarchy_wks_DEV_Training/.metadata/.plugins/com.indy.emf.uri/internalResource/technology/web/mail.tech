@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="UUID_STAMBIA_TECH_MAIL" name="Email">
+  <level icon="icons/full/custom/com.stambia.mail.server.png" xmlName="server" code="com.stambia.mail.server" displayName="Email Server" isFile="true"/>
+  <level icon="icons/full/custom/com.stambia.mail.mailingList.png" xmlName="mailingList" code="com.stambia.mail.mailingList" displayName="Mailing List" position="3">
+    <attribute xmlName="toTextList" category="" code="toTextList" defaultValue="" displayName="Text List" externalize="true" multiLine="false" unbounded="false"/>
+    <attribute xmlName="toText" category="" code="toText" defaultValue="" displayName="List" externalize="true" multiLine="false" unbounded="true"/>
+    <attribute icon="" xmlName="toRef" category="" code="toRef" defaultValue="" displayName="Account" externalize="true" mdXpathAccess="../incomingAccount" nullable="false" type="reference" unbounded="true"/>
+    <parent>com.stambia.mail.server</parent>
+    <xPathExpression expression="mdj:getRef(@sender)">
+      <code>SENDER_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="md:list(@toTextList | toText | toRef/mdj:getRef(.)/tech:address(),'; ')">
+      <code>ADDRESS_LIST</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/com.stambia.mail.email.png" xmlName="incomingAccount" code="com.stambia.mail.incomingAccount" displayName="Incoming Account" position="1">
+    <attribute xmlName="address" code="address" defaultValue="" displayName="Address" externalize="true"/>
+    <attribute xmlName="displayName" code="displayName" displayName="Display Name"/>
+    <attribute iconBundleName="" xmlName="protocol" category="Standard:Server Information" code="protocol" displayName="Protocol" externalize="true" mdXpathAccess="tokenize('pop3 imap',' ')" type="list"/>
+    <attribute xmlName="host" category="Standard:Server Information" code="host" displayName="Host" externalize="true" mdXpathAccess=""/>
+    <attribute iconBundleName="" xmlName="port" category="Standard:Server Information" code="port" displayName="Port" externalize="true" type="integer"/>
+    <attribute xmlName="user" category="Standard:Server Information" code="user" defaultValue="" displayName="User" externalize="true"/>
+    <attribute xmlName="password" category="Standard:Server Information" code="password" displayName="Password" externalize="true" type="password"/>
+    <attribute iconBundleName="" xmlName="secureProtocol" xpathCondition="" category="Advanced:Security and Authentication" code="secureProtocol" displayName="Use secure protocol" mdXpathAccess="tokenize('TLS SSL',' ')" type="list"/>
+    <attribute xmlName="useSecureAuthentification" xpathCondition="" category="Advanced:Security and Authentication" code="useSecureAuthentification" displayName="Use secure authentication" type="boolean"/>
+    <attribute xmlName="properties" code="properties" displayName="Properties" keyValue="true" toolTip="Additional properties for the connection, which might be required for some server configuration. The complete list of available properties can be found under the Properties section of this page: https://javaee.github.io/javamail/docs/api/com/sun/mail/imap/package-summary.html#properties" unbounded="true"/>
+    <parent>com.stambia.mail.server</parent>
+    <xPathExpression expression="@user">
+      <code>USER</code>
+    </xPathExpression>
+    <xPathExpression expression="@password">
+      <code>PASSWORD</code>
+    </xPathExpression>
+    <xPathExpression expression="@address">
+      <code>ADDRESS</code>
+    </xPathExpression>
+    <xPathExpression expression="@host">
+      <code>HOST_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="@port">
+      <code>PORT</code>
+    </xPathExpression>
+    <xPathExpression expression="@protocol">
+      <code>PROTOCOL</code>
+    </xPathExpression>
+    <xPathExpression expression="@address">
+      <code>ADDRESS</code>
+    </xPathExpression>
+    <xPathExpression expression="@secureProtocol">
+      <code>SSL_PROTOCOL</code>
+    </xPathExpression>
+    <xPathExpression expression="@secureProtocol!=''">
+      <code>USE_SSL</code>
+    </xPathExpression>
+    <xPathExpression expression="string-join(properties/concat(@key, '=', text()), codepoints-to-string(10))">
+      <code>EXTRA_PROPERTIES</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/com.stambia.mail.outgoingServer.png" xmlName="outgoingServer" code="com.stambia.mail.outgoingServer" displayName="Outgoing Server (SMTP)" position="2">
+    <attribute xmlName="host" category="Standard:Server Information" code="host" defaultValue="" displayName="Host" externalize="true"/>
+    <attribute iconBundleName="" xmlName="port" category="Standard:Server Information" code="port" displayName="Port" externalize="true" type="integer"/>
+    <attribute xmlName="user" category="Standard:Security and Authentication" code="user" defaultValue="" displayName="User" externalize="true"/>
+    <attribute xmlName="password" category="Standard:Security and Authentication" code="password" displayName="Password" externalize="true" type="password"/>
+    <attribute iconBundleName="" xmlName="secureProtocol" xpathCondition="" category="Standard:Security and Authentication" code="secureProtocol" defaultValue="" displayName="Use secure protocol" mdXpathAccess="tokenize('TLS SSL',' ')" type="list"/>
+    <attribute xmlName="properties" code="properties" displayName="Properties" keyValue="true" toolTip="Additional properties for the connection, which might be required for some server configuration. &#xA;The complete list of available properties can be found under the Properties section of this page: &#xA;- https://javaee.github.io/javamail/docs/api/com/sun/mail/smtp/package-summary.html#properties" unbounded="true"/>
+    <parent>com.stambia.mail.server</parent>
+    <xPathExpression expression="@host">
+      <code>HOST_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="@user">
+      <code>USER</code>
+    </xPathExpression>
+    <xPathExpression expression="@password">
+      <code>PASSWORD</code>
+    </xPathExpression>
+    <xPathExpression expression="@port">
+      <code>PORT</code>
+    </xPathExpression>
+    <xPathExpression expression="@secureProtocol">
+      <code>SSL_PROTOCOL</code>
+    </xPathExpression>
+    <xPathExpression expression="@secureProtocol !=''">
+      <code>USE_SSL</code>
+    </xPathExpression>
+    <xPathExpression expression="string-join(properties/concat(@key, '=', text()), codepoints-to-string(10))">
+      <code>EXTRA_PROPERTIES</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/com.stambia.mail.message.png" xmlName="message" code="com.stambia.mail.message" displayName="Message" isFile="false" position="4">
+    <attribute xmlName="senderRef" xpathCondition="not(@senderText!='')" category="Standard:Sender" code="senderRef" displayName="Account" mdXpathAccess="../incomingAccount" type="reference"/>
+    <attribute xmlName="senderText" xpathCondition="not(@senderRef!='')" category="Standard:Sender" code="senderText" displayName="Or address" mdXpathAccess="" type="string"/>
+    <attribute xmlName="outgoingServer" category="Standard:Server Information" code="outgoingServer" displayName="Outgoing Server (SMTP)" mdXpathAccess="../outgoingServer" type="reference"/>
+    <attribute xmlName="toTextList" category="Standard:To" code="toTextList" defaultValue="" displayName="Text List" externalize="true" multiLine="false" unbounded="false"/>
+    <attribute xmlName="toText" category="Standard:To" code="toText" defaultValue="" displayName="List" multiLine="false" unbounded="true"/>
+    <attribute icon="" xmlName="toRef" category="Standard:To" code="toRef" defaultValue="" displayName="Account" mdXpathAccess="../(incomingAccount | mailingList)" nullable="false" type="reference" unbounded="true"/>
+    <attribute xmlName="ccTextList" category="Copy" code="ccTextList" defaultValue="" displayName="Text List" externalize="true" multiLine="false" unbounded="false"/>
+    <attribute xmlName="ccText" xpathCondition="" category="Copy" code="ccText" defaultValue="" displayName="List" multiLine="false" unbounded="true"/>
+    <attribute icon="" xmlName="ccRef" category="Copy" code="ccRef" defaultValue="" displayName="Account" mdXpathAccess="../(incomingAccount | mailingList)" nullable="false" type="reference" unbounded="true"/>
+    <attribute xmlName="bccTextList" category="Blind copy" code="bccTextList" defaultValue="" displayName="Text List" externalize="true" multiLine="false" unbounded="false"/>
+    <attribute icon="" xmlName="bccText" category="Blind copy" code="bccText" defaultValue="" displayName="List" multiLine="false" unbounded="true"/>
+    <attribute icon="" xmlName="bccRef" category="Blind copy" code="bccRef" defaultValue="" displayName="Account" mdXpathAccess="../(incomingAccount | mailingList)" nullable="false" type="reference" unbounded="true"/>
+    <attribute xmlName="subject" xpathCondition="" category="Standard:Message" code="subject" displayName="Subject"/>
+    <attribute xmlName="text" category="Standard:Message" code="text" defaultValue="" displayName="Text" multiLine="true"/>
+    <parent>com.stambia.mail.server</parent>
+    <xPathExpression expression="mdj:getRef(@outgoingServer)" isProvider="true">
+      <code>HOST_NAME</code>
+      <code>USER</code>
+      <code>PORT</code>
+      <code>PASSWORD</code>
+      <code>USE_SSL</code>
+      <code>SSL_PROTOCOL</code>
+    </xPathExpression>
+    <xPathExpression expression="(if (@senderRef!='') then mdj:getRef(@senderRef)/tech:address() else @senderText)">
+      <code>SENDER</code>
+    </xPathExpression>
+    <xPathExpression expression="md:list(distinct-values(@toTextList | toText | toRef/mdj:getRef(.)/tech:addressList()),';')">
+      <code>TO</code>
+    </xPathExpression>
+    <xPathExpression expression="md:list(distinct-values(@ccTextList | ccText | ccRef/mdj:getRef(.)/tech:addressList()),';')">
+      <code>CC</code>
+    </xPathExpression>
+    <xPathExpression expression="md:list(distinct-values(@bccTextList | bccText | bccRef/mdj:getRef(.)/tech:addressList()),';')">
+      <code>BCC</code>
+    </xPathExpression>
+    <xPathExpression expression="@text">
+      <code>MESSAGE</code>
+    </xPathExpression>
+    <xPathExpression expression="@subject">
+      <code>SUBJECT</code>
+    </xPathExpression>
+  </level>
+  <xPathExpression expression="'MAIL'">
+    <code>PRODUCT_CODE</code>
+  </xPathExpression>
+  <xPathExpression expression="'MAIL'">
+    <code>TECH_CODE</code>
+  </xPathExpression>
+  <metaDataLinkType name="Incoming_Account">
+    <parameter name="MAIL_HOSTNAME" value="tech:hostName()"/>
+    <parameter name="MAIL_PROTOCOL" value="tech:protocol()"/>
+    <parameter name="MAIL_USER" value="tech:user()"/>
+    <parameter name="MAIL_PASSWORD" value="tech:password()"/>
+    <parameter name="MAIL_SSL_PROTOCOL" value="tech:sslProtocol()"/>
+    <parameter name="MAIL_USE_SSL" value="string(tech:useSsl())"/>
+    <parameter name="MAIL_PORT" value="tech:port()"/>
+    <parameter name="MAIL_EXTRA_PROPERTIES" value="tech:extraProperties()"/>
+    <technology>com.indy.engine.actionCodes.ReadMailActionCodeI</technology>
+    <level>#com.stambia.mail.incomingAccount</level>
+  </metaDataLinkType>
+  <metaDataLinkType createAction="false" name="Outgoing_Message">
+    <parameter name="MAIL_TO" value="tech:to()"/>
+    <parameter name="MAIL_CC" value="tech:cc()"/>
+    <parameter name="MAIL_BBC" value="tech:bcc()"/>
+    <parameter name="MAIL_FROM" value="tech:sender()"/>
+    <parameter name="MAIL_SUBJECT" value="tech:subject()"/>
+    <parameter name="MAIL_TEXT" value="tech:message()"/>
+    <technology>com.indy.engine.actionCodes.SendMailActionCodeI</technology>
+    <level>#com.stambia.mail.message</level>
+  </metaDataLinkType>
+  <metaDataLinkType name="Outgoing_Server">
+    <parameter name="MAIL_USER" value="tech:user()"/>
+    <parameter name="MAIL_PASSWORD" value="tech:password()"/>
+    <parameter name="MAIL_HOSTNAME" value="tech:hostName()"/>
+    <parameter name="MAIL_PORT" value="tech:port()"/>
+    <parameter name="MAIL_USE_SSL" value="string(tech:useSsl())"/>
+    <parameter name="MAIL_SSL_PROTOCOL" value="tech:sslProtocol()"/>
+    <parameter name="MAIL_EXTRA_PROPERTIES" value="tech:extraProperties()"/>
+    <technology>com.indy.engine.actionCodes.SendMailActionCodeI</technology>
+    <level>#com.stambia.mail.outgoingServer</level>
+    <level>#com.stambia.mail.message</level>
+  </metaDataLinkType>
+  <metaDataLinkType name="Mailing_LIst">
+    <parameter name="MAIL_TO" value="tech:addressList()"/>
+    <technology>com.indy.engine.actionCodes.SendMailActionCodeI</technology>
+    <level>#com.stambia.mail.mailingList</level>
+  </metaDataLinkType>
+</tech:tech>

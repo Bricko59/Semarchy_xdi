@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_aVHYUamsEeeKFYlb4Oi-RA">
+  <actionCode id="_lZSdQKqlEeeX0tIG0qOg8g" isBeginAction="false" name="SQLFileExport STAT TAB schema2" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SqlFileExportActionCodeI">
+    <link id="_1SX5AKqpEeeX0tIG0qOg8g" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_v_bYsKqpEeeX0tIG0qOg8g"/>
+    <parameter id="_lZSdQaqlEeeX0tIG0qOg8g" name="SQL_EXP_FILENAME" type="String" value="%x{$DataFile2}x%"/>
+    <parameter id="_lZSdQ6qlEeeX0tIG0qOg8g" name="SQL_CONNECTION" type="String" value="%connection{$SCHEMA2}%"/>
+    <parameter id="_r5HVgKqnEeeX0tIG0qOg8g" name="SQL_EXP_FILE_APPEND" type="Boolean" value="true"/>
+    <code>SELECT ':{table_name}:' AS table_name,&#xD;
+       '' AS column_name,&#xD;
+       'Count(*)' AS action_type,&#xD;
+       COUNT(*) AS val&#xD;
+FROM   %x{$SCHEMA2/tech:schemaName()}x%.:{table_name}:</code>
+  </actionCode>
+  <actionCode id="_lZWHoKqlEeeX0tIG0qOg8g" isBeginAction="false" name="SqlOperation SELECT MSSQL tables" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <bindLink id="_mL8CMKqlEeeX0tIG0qOg8g" bindType="DirectBind" targetId="_lZWHo6qlEeeX0tIG0qOg8g"/>
+    <bindLink id="_minc0KqlEeeX0tIG0qOg8g" bindType="DirectBind" targetId="_lZSdQKqlEeeX0tIG0qOg8g"/>
+    <parameter id="_lZWHoaqlEeeX0tIG0qOg8g" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+    <parameter id="_lZWHoqqlEeeX0tIG0qOg8g" name="SQL_CONNECTION" type="String" value="%connection{$SCHEMA1}%"/>
+    <code>USE %x{$SCHEMA1/tech:catalogName()}x%&#xD;
+&#xD;
+SELECT    schema_table.name AS schema_name, table_list.name AS table_name&#xD;
+FROM      sys.schemas AS schema_table &#xD;
+INNER     JOIN  sys.tables AS table_list &#xD;
+          ON    schema_table.schema_id = table_list.schema_id &#xD;
+WHERE     schema_table.name = '%x{$SCHEMA1/tech:schemaName()}x%' &#xD;
+--AND       table_list.name IN ('ADR6','ADRC','AFRU','AFVC','AFVV','AGR_DEFINE','AGR_TCODES','AGR_TEXTS','AGR_USERS','ANEA','ANEK','ANEP','ANKA','ANKB','ANKP','ANKT','ANLA','ANLB','ANLC','ANLH','ANLP','ANLT','ANLZ')&#xD;
+ORDER     BY    table_list.name</code>
+  </actionCode>
+  <actionCode id="_lZWHo6qlEeeX0tIG0qOg8g" isBeginAction="false" name="SQLFileExport STAT TAB schema1" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SqlFileExportActionCodeI">
+    <link id="_07RAkKqpEeeX0tIG0qOg8g" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_v_bYsKqpEeeX0tIG0qOg8g"/>
+    <parameter id="_lZWHpKqlEeeX0tIG0qOg8g" name="SQL_EXP_FILENAME" type="String" value="%x{$DataFile1}x%"/>
+    <parameter id="_lZWHpqqlEeeX0tIG0qOg8g" name="SQL_CONNECTION" type="String" value="%connection{$SCHEMA1}%"/>
+    <parameter id="_ti4IoKqnEeeX0tIG0qOg8g" name="SQL_EXP_FILE_APPEND" type="Boolean" value="true"/>
+    <code>SELECT ':{table_name}:' AS table_name,&#xD;
+       NULL AS column_name,&#xD;
+       'Count(*)' AS action_type,&#xD;
+       COUNT(*) AS val&#xD;
+FROM   %x{$SCHEMA1/tech:catalogName()}x%.:{schema_name}:.:{table_name}:</code>
+  </actionCode>
+  <actionCode id="_v_bYsKqpEeeX0tIG0qOg8g" isBeginAction="false" name="SqlOperation SELECT MSSQL columns" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <bindLink id="_WhRKsKwGEeeX0tIG0qOg8g" bindType="DirectBind" targetId="_VzTRcKwGEeeX0tIG0qOg8g"/>
+    <bindLink id="_Wz3DYK8jEeeuLMvXYG2SQw" bindType="DirectBind" targetId="_v7kmYKv8EeeX0tIG0qOg8g"/>
+    <parameter id="_v_bYs6qpEeeX0tIG0qOg8g" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+    <parameter id="_v_bYtKqpEeeX0tIG0qOg8g" name="SQL_CONNECTION" type="String" value="%connection{$SCHEMA1}%"/>
+    <code>USE %x{$SCHEMA1/tech:catalogName()}x%&#xD;
+&#xD;
+SELECT    schema_table.name AS schema_name,&#xD;
+          table_list.name AS table_name, &#xD;
+          column_list.name AS column_name, &#xD;
+          column_list.column_id column_position,&#xD;
+          type_list.name AS column_type, &#xD;
+          CASE WHEN type_list.name IN ('nchar', 'nvarchar') THEN column_list.max_length / 2 ELSE column_list.max_length END AS max_length,&#xD;
+          action_list.action_type,&#xD;
+          replace(replace(replace(select_clause1,'@',column_list.name),'#',table_list.name),'LENGTH(','LEN(') AS select_clause1,&#xD;
+          replace(replace(replace(where_clause1,'@',column_list.name),'#','%x{$SCHEMA1/tech:schemaName()}x%.'+table_list.name),'LENGTH(','LEN(') AS where_clause1,&#xD;
+          replace(replace(select_clause1,'@',column_list.name),'#',table_list.name) AS select_clause2,&#xD;
+          replace(replace(where_clause1,'@',column_list.name),'#','%x{$SCHEMA2/tech:schemaName()}x%.'+table_list.name) AS where_clause2,&#xD;
+          replace(group_by_clause1,'@',column_list.name) AS group_by_clause1&#xD;
+FROM      sys.schemas AS schema_table &#xD;
+INNER     JOIN  sys.tables AS table_list &#xD;
+          ON    schema_table.schema_id = table_list.schema_id &#xD;
+INNER     JOIN  sys.columns AS column_list  &#xD;
+          ON    column_list.object_id = table_list.object_id &#xD;
+INNER     JOIN  sys.types AS type_list &#xD;
+          ON    type_list.system_type_id = column_list.system_type_id &#xD;
+          AND   type_list.system_type_id = type_list.user_type_id &#xD;
+          -- @ to replace the column and # for the table&#xD;
+CROSS     JOIN  (SELECT 'COUNT NOT NULL' AS action_type,'Num' AS num_permission ,'Str' AS str_permission,'COUNT(*)' AS select_clause1,&#xD;
+                        'WHERE &quot;@&quot; IS NOT NULL' AS where_clause1,'' AS group_by_clause1&#xD;
+                 UNION  ALL&#xD;
+                 SELECT 'COUNT NULL','Num','Str','COUNT(*)','WHERE &quot;@&quot; IS NULL',''&#xD;
+                 UNION  ALL&#xD;
+                 SELECT 'COUNT DISTINCT','Num',NULL,'COUNT(DISTINCT &quot;@&quot;)','',''&#xD;
+                 UNION  ALL&#xD;
+                 SELECT 'COUNT DISTINCT',NULL,'Str','COUNT(DISTINCT LTRIM(RTRIM(&quot;@&quot;)))','',''&#xD;
+                 UNION  ALL&#xD;
+                 SELECT 'MIN,MAX,SUM,AVG','Num',NULL,'MIN(&quot;@&quot;),MAX(&quot;@&quot;),SUM(&quot;@&quot;),AVG(&quot;@&quot;)','','' &#xD;
+                 UNION  ALL&#xD;
+                 SELECT 'MIN,MAX,SUM,AVG LENGTH',NULL,'Str','MIN(LENGTH(LTRIM(RTRIM(&quot;@&quot;)))),MAX(LENGTH(LTRIM(RTRIM(&quot;@&quot;)))),SUM(LENGTH(LTRIM(RTRIM(&quot;@&quot;)))),AVG(LENGTH(LTRIM(RTRIM(&quot;@&quot;))))','',''  &#xD;
+                 UNION  ALL&#xD;
+                 SELECT 'COUNT MIN or MAX VALUE','Num',NULL,'@, COUNT(*)','WHERE &quot;@&quot; IN (SELECT MIN(&quot;@&quot;) FROM # UNION ALL SELECT MAX(&quot;@&quot;) FROM #)','GROUP BY &quot;@&quot;' ) action_list&#xD;
+WHERE     schema_table.name = '%x{$SCHEMA1/tech:schemaName()}x%' &#xD;
+AND       (CASE   WHEN type_list.name IN('decimal','float','int','numeric','smallint') THEN 'Num' ELSE 'notNum' END=num_permission&#xD;
+           OR&#xD;
+          CASE   WHEN type_list.name IN('char','varchar','nvarchar') THEN 'Str' ELSE 'notStr' END=str_permission)&#xD;
+--AND       table_list.name IN ('ADR6','ADRC','AFRU','AFVC','AFVV','AGR_DEFINE','AGR_TCODES','AGR_TEXTS','AGR_USERS','ANEA','ANEK','ANEP','ANKA','ANKB','ANKP','ANKT','ANLA','ANLB','ANLC','ANLH','ANLP','ANLT','ANLZ')&#xD;
+ORDER     BY    table_list.name, column_list.column_id,action_list.action_type&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_v7kmYKv8EeeX0tIG0qOg8g" enable="true" isBeginAction="false" name="SQLFileExport STAT COL schema1" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SqlFileExportActionCodeI">
+    <link id="_EX2AAKwuEeeX0tIG0qOg8g" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_DTXEMKwuEeeX0tIG0qOg8g"/>
+    <parameter id="_v7kmYqv8EeeX0tIG0qOg8g" name="SQL_EXP_FILENAME" type="String" value="%x{$DataFile1}x%"/>
+    <parameter id="_v7kmY6v8EeeX0tIG0qOg8g" name="SQL_CONNECTION" type="String" value="%connection{$SCHEMA1}%"/>
+    <parameter id="_v7kmZKv8EeeX0tIG0qOg8g" name="SQL_EXP_FILE_APPEND" type="Boolean" value="true"/>
+    <code>SELECT ':{table_name}:' AS table_name,&#xD;
+       ':{column_name}:' AS column_name,&#xD;
+       ':{action_type}:' AS action_type,&#xD;
+       :{select_clause1}: AS val&#xD;
+FROM   %x{$SCHEMA1/tech:catalogName()}x%.:{schema_name}:.:{table_name}:&#xD;
+:{where_clause1}:&#xD;
+:{group_by_clause1}:</code>
+  </actionCode>
+  <actionCode id="_VzTRcKwGEeeX0tIG0qOg8g" enable="true" isBeginAction="false" name="SQLFileExport STAT COL schema2" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SqlFileExportActionCodeI">
+    <link id="_ECe0AKwuEeeX0tIG0qOg8g" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_DTXEMKwuEeeX0tIG0qOg8g"/>
+    <parameter id="_VzTRcawGEeeX0tIG0qOg8g" name="SQL_EXP_FILENAME" type="String" value="%x{$DataFile2}x%"/>
+    <parameter id="_VzTRcqwGEeeX0tIG0qOg8g" name="SQL_CONNECTION" type="String" value="%connection{$SCHEMA2}%"/>
+    <parameter id="_VzTRc6wGEeeX0tIG0qOg8g" name="SQL_EXP_FILE_APPEND" type="Boolean" value="true"/>
+    <code>SELECT ':{table_name}:' AS table_name,&#xD;
+       ':{column_name}:' AS column_name,&#xD;
+       ':{action_type}:' AS action_type,&#xD;
+       :{select_clause2}: AS val&#xD;
+FROM   %x{$SCHEMA2/tech:schemaName()}x%.:{table_name}:&#xD;
+:{where_clause2}:&#xD;
+:{group_by_clause1}:</code>
+  </actionCode>
+  <actionCode id="_DTXEMKwuEeeX0tIG0qOg8g" enable="true" isBeginAction="false" name="Compare Data Files" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.BeanScriptingActionCodeI">
+    <parameter id="_DTXEMawuEeeX0tIG0qOg8g" name="SCRIPTING_LANGUAGE" type="String" value="beanshell"/>
+    <code>import java.io.File;&#xD;
+import java.io.FileReader;&#xD;
+import java.io.FileWriter;&#xD;
+import java.io.BufferedReader;&#xD;
+&#xD;
+boolean areFilesIdentical = true;&#xD;
+&#xD;
+File sf = new File(&quot;%x{$DataFile1}x%&quot;);&#xD;
+File tf = new File(&quot;%x{$DataFile2}x%&quot;);&#xD;
+File df = new File(&quot;%x{$DiffFile}x%&quot;);&#xD;
+&#xD;
+if(sf.length() != tf.length()) {&#xD;
+	areFilesIdentical = areFilesIdentical &amp;&amp; false;&#xD;
+}&#xD;
+&#xD;
+FileReader sfr = null;&#xD;
+FileReader tfr = null;&#xD;
+FileWriter dfw = null;&#xD;
+BufferedReader sfbr = null;&#xD;
+BufferedReader tfbr = null;&#xD;
+BufferedWriter dfbw = null;&#xD;
+String ss = null;&#xD;
+&#xD;
+try {&#xD;
+	sfr = new FileReader(sf);&#xD;
+	tfr = new FileReader(tf);&#xD;
+	dfw = new FileWriter(df);&#xD;
+	sfbr = new BufferedReader(sfr);&#xD;
+	tfbr = new BufferedReader(tfr);&#xD;
+	dfbw = new BufferedWriter(dfw);&#xD;
+	&#xD;
+	ss = sfbr.readLine();&#xD;
+	ts = tfbr.readLine();&#xD;
+	&#xD;
+	if(ss==null || ts==null) {&#xD;
+		areFilesIdentical = areFilesIdentical &amp;&amp; false;&#xD;
+	}&#xD;
+	&#xD;
+	while(ss!=null) {&#xD;
+		if(!(ss.equals(ts))) {&#xD;
+			areFilesIdentical = areFilesIdentical &amp;&amp; false;&#xD;
+			dfbw.write(&quot;Schema1;&quot;);&#xD;
+			dfbw.write(ss);&#xD;
+			dfbw.newLine();&#xD;
+			dfbw.write(&quot;Schema2;&quot;);&#xD;
+			dfbw.write(ts);&#xD;
+			dfbw.newLine();&#xD;
+		}&#xD;
+		ss = sfbr.readLine();&#xD;
+		ts = tfbr.readLine();&#xD;
+	}&#xD;
+}&#xD;
+finally {&#xD;
+	if(sfbr != null) {&#xD;
+		sfbr.close();&#xD;
+	}&#xD;
+	if(tfbr != null) {&#xD;
+		tfbr.close();&#xD;
+	}&#xD;
+	if(dfbw != null) {&#xD;
+		dfbw.flush();&#xD;
+		dfbw.close();&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+if(areFilesIdentical) {&#xD;
+	sf.delete();&#xD;
+	tf.delete();&#xD;
+	df.delete();&#xD;
+	__ctx__.publishVariable(&quot;../COMPARISON_STATUS&quot;, &quot;Success&quot;);&#xD;
+} &#xD;
+else {&#xD;
+	__ctx__.publishVariable(&quot;../COMPARISON_STATUS&quot;, &quot;Failed&quot;);&#xD;
+}</code>
+  </actionCode>
+  <subProcess id="_pcjVoK9LEeeK1bUPahGlqw" isBeginAction="false" name="Init" nbCycles="-1" toleratedError="false">
+    <link id="_fw1loKpmEeeKFYlb4Oi-RA" generationCondition="$SCHEMA1/tech:productCode()='MICROSOFT_SQL_SERVER'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_lZWHoKqlEeeX0tIG0qOg8g"/>
+    <actionCode id="_t1Wh4K9LEeeK1bUPahGlqw" isBeginAction="false" name="Delete Diff File" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+      <parameter id="_t1Wh4a9LEeeK1bUPahGlqw" name="DEL_FILE" type="String" value="%x{$DiffFile}x%"/>
+    </actionCode>
+    <actionCode id="_t1XI8K9LEeeK1bUPahGlqw" isBeginAction="false" name="Recreate Report Folder" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.MkDirActionCodeI">
+      <parameter id="_t1XI8a9LEeeK1bUPahGlqw" name="FILE_DIR" type="String" value="${/CORE_JAVA_TEMPORARY_FOLDER}$/CompareTables"/>
+    </actionCode>
+    <actionCode id="_t1XI8q9LEeeK1bUPahGlqw" isBeginAction="false" name="Delete Data File Schema2" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+      <parameter id="_t1XI869LEeeK1bUPahGlqw" name="DEL_FILE" type="String" value="%x{$DataFile2}x%"/>
+    </actionCode>
+    <actionCode id="_t1XwAK9LEeeK1bUPahGlqw" isBeginAction="false" name="Delete Data File Schema1" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+      <parameter id="_t1XwAa9LEeeK1bUPahGlqw" name="DEL_FILE" type="String" value="%x{$DataFile1}x%"/>
+    </actionCode>
+  </subProcess>
+  <xslVariable id="_d0i4EKpmEeeKFYlb4Oi-RA" code="concat('${/CORE_JAVA_TEMPORARY_FOLDER}$/CompareTables/data_schema2_',lower-case($SCHEMA2/tech:schemaName()),'_',lower-case($SCHEMA2/tech:productCode()),'.csv')" name="DataFile2" type="xpath"/>
+  <xslVariable id="_d0i4FKpmEeeKFYlb4Oi-RA" code="concat('${/CORE_JAVA_TEMPORARY_FOLDER}$/CompareTables/data_schema1_',lower-case($SCHEMA1/tech:schemaName()),'_',lower-case($SCHEMA1/tech:productCode()),'.csv')" name="DataFile1" type="xpath"/>
+  <xslVariable id="_ZXv94KwtEeeX0tIG0qOg8g" code="concat('${/CORE_JAVA_TEMPORARY_FOLDER}$/CompareTables/diff_schema1_',lower-case($SCHEMA1/tech:schemaName()),'_schema2_',lower-case($SCHEMA2/tech:schemaName()),'.csv')" name="DiffFile" type="xpath"/>
+</proc:process>

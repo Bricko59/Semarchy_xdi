@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tpc:conf xmlns:tpc="http://www.stambia.com/tpc" id="_clwKkFE3Ed-SQuyZS8LpiA">
+  <case name="I-TP">
+    <propertyState name="TYPE" value="I-TP"/>
+    <case name="TRG RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="TRG ORACLE">
+        <propertyState name="trgProduct" value="ORACLE"/>
+        <template id="_rvlYI1E1EeO7Vo9WeM2sCg" ref="INTEGRATION%20Oracle.tp.proc#_jkWgEFEJEeO7Vo9WeM2sCg?fileId=_jkWgEFEJEeO7Vo9WeM2sCg$type=proc$name=INTEGRATION%20Oracle?"/>
+        <template id="_clwxoFE3Ed-SQuyZS8LpiA" ref="INTEGRATION%20Oracle%2020130715.tp.proc#_8c1f9be7-1fdc-457b-bc08-d3db9d701af9?fileId=_8c1f9be7-1fdc-457b-bc08-d3db9d701af9$type=proc$name=INTEGRATION%20Oracle%2020130715?"/>
+      </case>
+    </case>
+    <case name="TRG FILE">
+      <propertyState name="trgTech" value="FILE"/>
+      <case name="SRC RDBMS">
+        <propertyState name="srcTech" value="RDBMS"/>
+        <case name="SRC ORACLE">
+          <propertyState name="srcProduct" value="ORACLE"/>
+          <template id="_mAADJCqpEeyz_L3qtZMJAQ" ref="../../../../../MigrationODIParametersTICE/customDevelopments/templates/resource.proc#_S4fzICpvEeyn2YXZgvDpkw?fileId=_S4fzICpvEeyn2YXZgvDpkw$type=proc$name=INTEGRATION%20Oracle%20to%20File%20(Sqlplus)?"/>
+        </case>
+      </case>
+    </case>
+  </case>
+  <case name="L-TP">
+    <propertyState name="TYPE" value="L-TP"/>
+    <case name="TRG_RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="SRC_RDBMS">
+        <or>
+          <propertyState name="srcTech" value="RDBMS"/>
+          <propertyState mode="CONTAINS" name="srcCompatibleTechList" value="RDBMS"/>
+        </or>
+        <case name="TRG ORACLE">
+          <propertyState name="trgProduct" value="ORACLE"/>
+          <case name="SRC_ORACLE">
+            <propertyState name="srcProduct" value="ORACLE"/>
+            <template id="_clym0FE3Ed-SQuyZS8LpiA" ref="LOAD%20Oracle%20To%20Oracle%20(with%20DbLink).tp.proc#_7c9e6e87-7819-41ec-8620-fdae9c861ad4?fileId=_7c9e6e87-7819-41ec-8620-fdae9c861ad4$type=proc$name=LOAD%20Oracle%20to%20Oracle%20(with%20DBLINK)?"/>
+          </case>
+          <template id="_PkUeUVLMEeOo_oU69nSAZg" ref="LOAD%20Rdbms%20to%20Oracle.tp.proc#_V-05EVLLEeOo_oU69nSAZg?fileId=_V-05EVLLEeOo_oU69nSAZg$type=proc$name=LOAD%20Rdbms%20to%20Oracle?"/>
+          <template id="_clym0lE3Ed-SQuyZS8LpiA" ref="LOAD%20Rdbms%20to%20Oracle%20(with%20SQL%20Loader).tp.proc#_YtIBpnqrEd62PbJA05qq6Q?fileId=_YtIBpnqrEd62PbJA05qq6Q$type=proc$name=LOAD%20Rdbms%20to%20Oracle%20(with%20SQL%20Loader)?"/>
+        </case>
+      </case>
+      <case name="SRC_FILE">
+        <propertyState name="srcTech" value="FILE"/>
+        <case name="TRG_ORACLE">
+          <propertyState name="trgProduct" value="ORACLE"/>
+          <template id="_clzN5FE3Ed-SQuyZS8LpiA" ref="../../../templates.generic/File/LOAD%20File%20to%20Rdbms.tp.proc#_a-mEoaIhEd68f8w2ej5O-w?fileId=_a-mEoaIhEd68f8w2ej5O-w$type=proc$name=LOAD%20File%20to%20Rdbms?"/>
+          <template id="_clzN5VE3Ed-SQuyZS8LpiA" ref="LOAD%20File%20to%20Oracle%20(with%20Loader).proc#_34958055-949b-4112-b416-9a240d1de151?fileId=_34958055-949b-4112-b416-9a240d1de151$type=proc$name=LOAD%20File%20to%20Oracle%20(with%20Loader)?"/>
+        </case>
+      </case>
+      <case name="SRC_XML">
+        <propertyState name="srcTech" value="XML"/>
+        <case name="TRG_ORACLE">
+          <propertyState name="trgProduct" value="ORACLE"/>
+          <template id="_7bIENCkrEemIJ7znBbQGGQ" ref="../../../templates.generic/Xml/LOAD%20Xml%20to%20Rdbms.proc#_eNVMMrdDEd6wPMNq-9tkHw?fileId=_eNVMMrdDEd6wPMNq-9tkHw$type=proc$name=Load%20Xml%20to%20Rdbms?"/>
+          <template id="_IOI52CC_Eemg2_d2tbYNpw" ref="LOAD%20XML%20to%20Oracle%20(with%20SQL%20Loader).proc#_7EncwpiHEeeNWuw44hbC5g?fileId=_7EncwpiHEeeNWuw44hbC5g$type=proc$name=LOAD%20XML%20to%20Oracle%20(with%20SQL%20Loader)?"/>
+        </case>
+      </case>
+      <case name="SRC_SALESFORCE">
+        <propertyState name="srcTech" value="SALESFORCE"/>
+        <case name="TRG_ORACLE">
+          <propertyState name="trgProduct" value="ORACLE"/>
+          <template id="_CzahIaacEeqBEY-hacvGKA" ref="../../../../testSalesforce/Load%20Salesforce%20to%20Oracle.tp.proc#_Uw-4wqaCEeqBEY-hacvGKA?fileId=_Uw-4wqaCEeqBEY-hacvGKA$type=proc$name=Load%20Salesforce%20to%20Oracle.tp?"/>
+        </case>
+      </case>
+    </case>
+  </case>
+  <case name="C-TP">
+    <propertyState name="TYPE" value="C-TP"/>
+    <case name="RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="TRG ORACLE">
+        <propertyState name="trgProduct" value="ORACLE"/>
+        <template id="_clz081E3Ed-SQuyZS8LpiA" ref="REJECT%20Oracle.tp.proc#_cvMAIERgEd22W6kpnG-bRg?fileId=_cvMAIERgEd22W6kpnG-bRg$type=proc$name=REJECT%20Oracle?"/>
+      </case>
+    </case>
+  </case>
+  <case name="IS_TP">
+    <propertyState name="TYPE" value="IS-TP"/>
+    <case name="TRG RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="TRG ORACLE">
+        <propertyState name="trgProduct" value="ORACLE"/>
+        <template id="_4ImwUtu9EeWIdu0rdnx7VQ" ref="STAGING%20Oracle%20As%20Table.proc#_8zSzQdu8EeWIdu0rdnx7VQ?fileId=_8zSzQdu8EeWIdu0rdnx7VQ$type=proc$name=STAGING%20Oracle%20As%20Table?"/>
+      </case>
+    </case>
+  </case>
+</tpc:conf>

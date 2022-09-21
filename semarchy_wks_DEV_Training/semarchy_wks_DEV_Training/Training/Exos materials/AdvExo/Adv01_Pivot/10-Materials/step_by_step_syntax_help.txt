@@ -1,0 +1,39 @@
+*** Step 3 ***
+**************
+
+Mapping T_BILLING,T_BILLING_LINE --> ANNUAL_RESULT_PER_MONTH
+--------------------------------------------------------------
+        The join between the 2 sources is on BIL_ID
+
+	Field                     Mapping                                                                       Key	 Location  AGGREGATE
+    ------------------------- ----------------------------------------------------------------------------- -------- --------- ---------
+	YEAR                      YEAR(T_BILLING.BIL_DATE)                                                      Y        SOURCE    N
+	AMOUNT_Q1                 SUM(CASE WHEN QUARTER(BIL_DATE)=1 THEN T_BILLING_LINES.BLL_AMOUNT ELSE 0 END) N        SOURCE    Y
+	AMOUNT_Q2                 SUM(CASE WHEN QUARTER(BIL_DATE)=2 THEN T_BILLING_LINES.BLL_AMOUNT ELSE 0 END) N        SOURCE    Y
+	AMOUNT_Q3                 SUM(CASE WHEN QUARTER(BIL_DATE)=3 THEN T_BILLING_LINES.BLL_AMOUNT ELSE 0 END) N        SOURCE    Y
+	AMOUNT_Q4                 SUM(CASE WHEN QUARTER(BIL_DATE)=4 THEN T_BILLING_LINES.BLL_AMOUNT ELSE 0 END) N        SOURCE    Y
+	
+*** Step 4 ***
+**************
+EXPRESSION EDITOR of gen_semester_query Metadata
+------------------------------------------------
+	SELECT NEW_SEMESTER
+        FROM   UNNEST(SEQUENCE_ARRAY(1,2, 1)) AS generate_series(NEW_SEMESTER)
+
+*** Step 5 ***
+**************
+
+Mapping ANNUAL_RESULT_PER_MONTH,gen_semester_query --> BIANNUAL_RESULT
+----------------------------------------------------------------------
+        The join between the 2 sources is a CROSS JOIN
+
+	Field                     Mapping                                                                       Key	 Location  AGGREGATE
+    ------------------------- ----------------------------------------------------------------------------- -------- --------- ---------
+	YEAR                      ANNUAL_RESULT_PER_MONTH.YEAR                                                  Y        SOURCE    N
+	SEMESTER                  gen_semester_query.NEW_SEMESTER                                               Y        SOURCE    N
+	AMOUNT                    CASE WHEN gen_semester_query.NEW_SEMESTER=1                                   
+                                       THEN   ANNUAL_RESULT_PER_MONTH.AMOUNT_Q1
+                                            + ANNUAL_RESULT_PER_MONTH.AMOUNT_Q2
+                                       ELSE   ANNUAL_RESULT_PER_MONTH.AMOUNT_Q3
+                                            + ANNUAL_RESULT_PER_MONTH.AMOUNT_Q4
+                                  END                                                                           N        SOURCE    N 

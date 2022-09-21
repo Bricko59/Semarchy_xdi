@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" description="Semarchy xDM Get Load Status Process&#xD;&#xA;@Author: Semarchy&#xD;&#xA;Copyright (c) Semarchy&#xD;&#xA;&#xD;&#xA;About this process&#xD;&#xA;--------------------&#xD;&#xA;This process is used for automating Semarchy xDM load management.&#xD;&#xA;It retireves the current status of a given external load identified by its Load ID, and publishes it as a session variable.&#xD;&#xA;&#xD;&#xA;Tip: To get started with Semarchy xDM load management, see the &quot;Semarchy xDM Integrator Getting Started Guide&quot;&#xD;&#xA;&#xD;&#xA;Parameters&#xD;&#xA;------------&#xD;&#xA;- Load Id: the LoadID of the external load to get the status from&#xD;&#xA;- Output Session Variable: the path and name of the session variable on which to put the retrieved status.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;Using this template&#xD;&#xA;---------------------&#xD;&#xA;- From the Project Explorer, drag and drop the metadata schema hosting the data location on the metadata link SOURCE in the process editor. This creates a metadata link to the data server.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;Notes&#xD;&#xA;------&#xD;&#xA;- This process uses a metadata link through the &quot;SOURCE&quot; alias. This metadata link points to the metadata file corresponding to the schema hosting the data location.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;Change Log&#xD;&#xA;-------------&#xD;&#xA;01/12/2021 Initialize template history" id="_QLLaMEz-Eey0SLxXNcrEPA">
+  <parameter description="LoadID of the external load to get the status from" id="69ba80a4-b828-4752-b6c7-9d0c3b0952dd" name="loadID" type="String"/>
+  <parameter description="Path and name of the session variable to be used to retrieve the load status." id="24b2d37b-696c-40ab-afe8-a5bfb57ec2f7" name="outputSessionVariablePath" type="String" value="../LOAD_STATUS"/>
+  <actionCode id="_QLMBR0z-Eey0SLxXNcrEPA" isBeginAction="false" name="Start" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="60294a34-b3c0-421b-91ec-96087b90eda1" executionType="OK" generationType="OK_KO" mandatory="1" targetId="5150dc20-f813-4d27-b5cf-eb4d7e4972b8"/>
+  </actionCode>
+  <actionCode id="_QLMoU0z-Eey0SLxXNcrEPA" isBeginAction="false" name="End" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI"/>
+  <actionCode id="5150dc20-f813-4d27-b5cf-eb4d7e4972b8" isBeginAction="false" name="Sql To Parameters" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+    <link id="27a650cc-539f-4b86-abce-ccc4d513c43a" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_QLMoU0z-Eey0SLxXNcrEPA"/>
+    <parameter id="2c3d9bb2-a602-4934-b80d-9f9da2e5c726" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+    <code>&lt;sqlToParameters>&#xD;
+	&lt;parameter name=&quot;./${../outputSessionVariablePath}$&quot; type=&quot;String&quot;>&#xD;
+select &#xD;
+	B_STATUS&#xD;
+from %x{md:objectPath($SOURCE,'DL_BATCH')}x%&#xD;
+where B_LOADID = ${../loadID}$&#xD;
+	&lt;/parameter>&#xD;
+&lt;/sqlToParameters></code>
+  </actionCode>
+  <xslVariable id="_QLNPbkz-Eey0SLxXNcrEPA" code="%x{$SOURCE/tech:productCode()}x%" name="TargetTechno" type="xsl"/>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.3/notation#/?fileId=_QLLaMEz-Eey0SLxXNcrEPA?" xmi:id="1c90fa89-28b4-4eec-a394-7b559a9ad4c5" type="Proc" name="SubmitLoad.proc_diagram" measurementUnit="Pixel">
+  <children xmi:type="notation:Node" xmi:id="bec5fbe9-dba8-4309-af6a-30bcf5f14f98" type="2001">
+    <children xmi:type="notation:Node" xmi:id="412902e3-bffa-4cab-87c0-548bee6650e2" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="738c4a48-46f5-46f9-8910-5a1782b9544a" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="f58bc5a5-2577-4c93-9c62-0dd6a15ffa41"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="c9210ea0-c69e-4d23-92a8-74104501d1c9"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="1a230781-f312-41bd-bed4-9d1a9857282e"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="d0d6f670-7ab6-46a2-8109-6969e9efec81" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="77a5392f-e3b6-4ba6-9dee-10848ac44833"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="e8fd4d85-3e48-41b0-b5a9-62010f3a872d"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="5446f81d-bb51-4c11-8e53-e34aa7c06ffc"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="109c83fb-5f9d-4629-b11b-802a7c024187"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_QLMBR0z-Eey0SLxXNcrEPA?fileId=_QLLaMEz-Eey0SLxXNcrEPA$type=proc$name=Start?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="b07816a2-a3d7-49ab-b08c-d4ed21984d97" x="125" y="65"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="557db501-cffb-476f-b6e7-57c304f6d18c" type="2001">
+    <children xmi:type="notation:Node" xmi:id="94c3ba11-7abd-4639-88a1-3bc42b78152c" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="b191ebaf-8eb2-42c6-8f96-67cf467f5eff" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="7b500552-23fb-40ac-8143-213aec7d5276"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="47f76f4c-a82c-4e3c-ac45-1b37ecdc87db"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="0e28c9c0-b0f8-4f74-bdbb-95ee88a6579d"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="e20f4ae5-f46f-48df-9435-591b023a0031" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="5c57f7f1-7e73-40f8-b6c3-5d4c09e57bb8"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="74e342c0-8a83-4efc-bd68-15771bab66aa"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="9c01a9be-3322-4958-87e1-4261d26fbded"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="224b467d-7b9b-4dd7-8646-742c8abc70ec" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_QLMoU0z-Eey0SLxXNcrEPA?fileId=_QLLaMEz-Eey0SLxXNcrEPA$type=proc$name=End?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="f3fb4c83-43f4-4fad-8dea-612132534bb8" x="125" y="310"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="3a394cfb-960a-4f4b-acf0-a3f3bfd8197c" type="2007">
+    <children xmi:type="notation:Node" xmi:id="8dc70584-53c1-475a-8936-09384c57b75c" type="5007"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="7f016e88-2896-4e49-93bc-2488c27012a5" fontName="Segoe UI"/>
+    <element xmi:type="proc:XslVariable" href="resource.proc#_QLNPbkz-Eey0SLxXNcrEPA?fileId=_QLLaMEz-Eey0SLxXNcrEPA$type=proc?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="f45b6198-57be-4884-8675-b0d61cab3ece" x="1360" y="30"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_ddFVIEz-Eey0SLxXNcrEPA" type="2005">
+    <children xmi:type="notation:Node" xmi:id="_ddMC0Ez-Eey0SLxXNcrEPA" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_ddFVIUz-Eey0SLxXNcrEPA" fontName="Segoe UI"/>
+    <element xmi:type="proc:Parameter" href="resource.proc#69ba80a4-b828-4752-b6c7-9d0c3b0952dd?fileId=_QLLaMEz-Eey0SLxXNcrEPA$type=proc$name=loadID?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ddFVIkz-Eey0SLxXNcrEPA" x="1070" y="30"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_g-1koEz-Eey0SLxXNcrEPA" type="2005">
+    <children xmi:type="notation:Node" xmi:id="_g-5PAEz-Eey0SLxXNcrEPA" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_g-1koUz-Eey0SLxXNcrEPA" fontName="Segoe UI"/>
+    <element xmi:type="proc:Parameter" href="resource.proc#24b2d37b-696c-40ab-afe8-a5bfb57ec2f7?fileId=_QLLaMEz-Eey0SLxXNcrEPA$type=proc$name=outputSessionVariablePath?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_g-1kokz-Eey0SLxXNcrEPA" x="1070" y="55"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_XyhJkEz_Eey0SLxXNcrEPA" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_XyiXsEz_Eey0SLxXNcrEPA" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_Xyi-wEz_Eey0SLxXNcrEPA" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_Xyi-wUz_Eey0SLxXNcrEPA"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Xyi-wkz_Eey0SLxXNcrEPA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Xyi-w0z_Eey0SLxXNcrEPA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Xyi-xEz_Eey0SLxXNcrEPA" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_Xyi-xUz_Eey0SLxXNcrEPA"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Xyi-xkz_Eey0SLxXNcrEPA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Xyi-x0z_Eey0SLxXNcrEPA"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_XyhJkUz_Eey0SLxXNcrEPA" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#5150dc20-f813-4d27-b5cf-eb4d7e4972b8?fileId=_QLLaMEz-Eey0SLxXNcrEPA$type=proc$name=Sql%20To%20Parameters?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_XyhJkkz_Eey0SLxXNcrEPA" x="30" y="180"/>
+  </children>
+  <children xmi:type="notation:Shape" xmi:id="5d9943bb-1d57-4cb9-bb74-06ba5dd73bdc" type="Note" fontName="Segoe UI" description="Note: Read the process description  for detailed description and  usage information." fillColor="13369343" transparency="0" lineColor="6737151" lineWidth="1">
+    <children xmi:type="notation:BasicDecorationNode" xmi:id="6cd09e26-6cb2-436a-a49d-df282ad72178" type="DiagramName">
+      <element xsi:nil="true"/>
+    </children>
+    <children xmi:type="notation:BasicDecorationNode" xmi:id="e73e09a9-da22-40bc-a592-aea051ead39f" type="Description">
+      <element xsi:nil="true"/>
+    </children>
+    <styles xmi:type="notation:TextStyle" xmi:id="fcd1b4f7-065c-43ca-bcc2-d10df213b4bb"/>
+    <styles xmi:type="notation:LineTypeStyle" xmi:id="7fd60da9-b293-4695-aa79-76688a7005db"/>
+    <element xsi:nil="true"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="c67ce338-b894-4243-ad3c-6beb0d7811b3" x="590" y="65"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="cb0b6e29-fa05-4b1d-9cb3-a1dd81f5cd39"/>
+  <element xmi:type="proc:ActionProcess" href="resource.proc#_QLLaMEz-Eey0SLxXNcrEPA?fileId=_QLLaMEz-Eey0SLxXNcrEPA$type=proc$name=Get%20Load%20Status?"/>
+  <edges xmi:type="notation:Edge" xmi:id="_YI6QUEz_Eey0SLxXNcrEPA" type="4001" source="bec5fbe9-dba8-4309-af6a-30bcf5f14f98" target="_XyhJkEz_Eey0SLxXNcrEPA">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_YI6QUUz_Eey0SLxXNcrEPA"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_YI6QUkz_Eey0SLxXNcrEPA" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="resource.proc#60294a34-b3c0-421b-91ec-96087b90eda1?fileId=_QLLaMEz-Eey0SLxXNcrEPA$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_YI6QU0z_Eey0SLxXNcrEPA" points="[0, 0, 0, -72]$[0, 72, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_YI7ecEz_Eey0SLxXNcrEPA" id="(0.5,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_9c2A4Ez_Eey0SLxXNcrEPA" id="(0.5,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_-PMq4Ez_Eey0SLxXNcrEPA" type="4001" source="_XyhJkEz_Eey0SLxXNcrEPA" target="557db501-cffb-476f-b6e7-57c304f6d18c">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_-PMq4Uz_Eey0SLxXNcrEPA"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_-PMq4kz_Eey0SLxXNcrEPA" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="resource.proc#27a650cc-539f-4b86-abce-ccc4d513c43a?fileId=_QLLaMEz-Eey0SLxXNcrEPA$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_-PMq40z_Eey0SLxXNcrEPA" points="[1, 20, -13, -72]$[-26, 87, -40, -5]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_-PN5AEz_Eey0SLxXNcrEPA" id="(0.44814814814814813,1.0)"/>
+  </edges>
+</notation:Diagram>
+]]></diagram>
+</proc:process>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:com="http://stambia.org/samples/common" xmlns:mgt="http://stambia.org/samples/management" targetNamespace="http://stambia.org/samples/management" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://stambia.org/samples/common" schemaLocation="basic_types.xsd"/>
+	<xs:complexType name="CustomerDetail">
+		<xs:complexContent>
+			<xs:extension base="mgt:Customer">
+				<xs:sequence>
+					<xs:element name="address" type="com:Address" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="phone" type="com:Phone" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="email" type="com:Email" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="bill" type="com:Bill" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Bedroom">
+		<xs:sequence>
+			<xs:element name="priceRange" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="occupation" type="com:Occupation" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:attribute name="startDate" type="xs:dateTime"/>
+					<xs:attribute name="endDate" type="xs:dateTime"/>
+					<xs:attribute name="price" type="xs:decimal"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="bedroomId" type="xs:integer"/>
+		<xs:attribute name="roomNumber" type="xs:integer"/>
+		<xs:attribute name="floor" type="xs:short"/>
+		<xs:attribute name="bath" type="xs:boolean"/>
+		<xs:attribute name="shower" type="xs:boolean"/>
+		<xs:attribute name="bar" type="xs:boolean"/>
+		<xs:attribute name="bedCount" type="xs:short"/>
+		<xs:attribute name="phoneNumber" type="xs:string"/>
+		<xs:attribute name="bedroomType" type="xs:string"/>
+	</xs:complexType>
+	<xs:complexType name="Customer">
+		<xs:attribute name="customerId" type="xs:integer"/>
+		<xs:attribute name="titleCode" type="xs:string"/>
+		<xs:attribute name="title" type="xs:string"/>
+		<xs:attribute name="firstName" type="xs:string"/>
+		<xs:attribute name="lastName" type="xs:string"/>
+		<xs:attribute name="company" type="xs:string"/>
+		<xs:attribute name="birthDate" type="xs:dateTime"/>
+	</xs:complexType>
+	<xs:complexType name="PhoningCampaign">
+		<xs:sequence>
+			<xs:element name="customer"  minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="mgt:Customer">
+							<xs:sequence>
+								<xs:element name="phone" type="com:Phone" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="campaignId" type="xs:integer"/>
+		<xs:attribute name="name" type="xs:string"/>
+		<xs:attribute name="startDate" type="xs:dateTime"/>
+		<xs:attribute name="endDate" type="xs:dateTime"/>
+	</xs:complexType>
+	<xs:complexType name="MailingCampaign">
+		<xs:sequence>
+			<xs:element name="customer"  minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="mgt:Customer">
+							<xs:sequence>
+								<xs:element name="email" type="com:Email" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="campaignId" type="xs:integer"/>
+		<xs:attribute name="name" type="xs:string"/>
+		<xs:attribute name="startDate" type="xs:dateTime"/>
+		<xs:attribute name="endDate" type="xs:dateTime"/>
+	</xs:complexType>
+	<xs:element name="marketingCampaign">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="phoningCampaign" type="mgt:PhoningCampaign" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="mailingCampaign" type="mgt:MailingCampaign" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="customerSummary">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="customer" type="mgt:Customer" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="hotelManagement">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="customer" type="mgt:CustomerDetail" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="bedroom" type="mgt:Bedroom" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

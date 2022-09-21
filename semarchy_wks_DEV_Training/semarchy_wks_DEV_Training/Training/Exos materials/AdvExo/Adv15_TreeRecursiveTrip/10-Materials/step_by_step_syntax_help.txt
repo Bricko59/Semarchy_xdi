@@ -1,0 +1,180 @@
+*** Step 3 ***
+**************
+
+Create a process named "Generate recursive employeeList1"
+	
+	Create an empty action named "Start"
+	Create a SQL Operation named "TRUNCATE denormalized_employee"
+		SQL_ACTION_TYPE property value : DDL_DML
+		Expression Editor
+		-----------------
+		Truncate table %x{$DENORMALIZED_EMPLOYEE/tech:physicalPath()}x% 
+		
+	Create a SQL Operation named "SELECT current_employee"
+	    SQL_ACTION_TYPE property value : SELECT
+		Expression Editor
+		-----------------
+	    SELECT MATRICULE_NUMBER,FIRSTNAME,LASTNAME,
+	    	   FIRSTNAME+' '+LASTNAME AS NAME,SUPERVISOR_MATRICULE_NUMBER,
+	    	   %e(rhino){ __ctx__.retValue =__ctx__.getVariableValue("../hierarchical_level");}e(rhino)%+1 HIERARCHICAL_LEVEL,
+	    	   CASE WHEN %e(rhino){ __ctx__.retValue =__ctx__.getVariableValue("../hierarchical_level");}e(rhino)%=0 THEN NULL ELSE '%e(rhino){ __ctx__.retValue =__ctx__.getVariableValue("../supervisorName");}e(rhino)%' END AS SUPERVISOR_NAME,
+	    	   CASE WHEN %e(rhino){ __ctx__.retValue =__ctx__.getVariableValue("../hierarchical_level");}e(rhino)%=0 THEN FIRSTNAME+' '+LASTNAME ELSE '%e(rhino){ __ctx__.retValue =__ctx__.getVariableValue("../directorName");}e(rhino)%' END AS DIRECTOR_NAME,
+	    	   CASE WHEN %e(rhino){ __ctx__.retValue =__ctx__.getVariableValue("../hierarchical_level");}e(rhino)%=0 THEN NULL ELSE '%e(rhino){ __ctx__.retValue =__ctx__.getVariableValue("../hierarchyName");}e(rhino)%' END AS HIERARCHY_NAME,
+	    	   CASE WHEN %e(rhino){ __ctx__.retValue =__ctx__.getVariableValue("../hierarchical_level");}e(rhino)%=0 THEN '' ELSE '%e(rhino){ __ctx__.retValue =__ctx__.getVariableValue("../hierarchyMatriculeNumber");}e(rhino)%' END AS HIERARCHY_MATRICULE_NUMBER
+	    FROM   %x{$EMPLOYEE/tech:physicalPath()}x% 
+	    WHERE  SUPERVISOR_MATRICULE_NUMBER='%e(rhino){  __ctx__.retValue =__ctx__.getVariableValue("../supervisor"); }e(rhino)%'
+	
+	Create a link between "Start" and SQL Operation named "TRUNCATE denormalized_employee"
+		Execution condition on the link : __ctx__.getVariableValue("~/hierarchical_level")==0 
+
+	Create a link between "Start" and SQL Operation named "SELECT current_employee"
+	 	Execution condition on the link : __ctx__.getVariableValue("~/hierarchical_level")!=0 
+	 	Triggering behaviour : Not mandatory
+
+	Create a link between SQL Operation named "TRUNCATE denormalized_employee" and SQL Operation named "SELECT current_employee"
+	 	Triggering behaviour : Not mandatory
+	
+*** Step 4 ***
+**************
+
+Create the following parameters in the process
+
+    Name							Type		Value		Meta-inf tab
+    ------------------------------- ----------  ---------   -------------------------------------------------
+    generateReport  				Boolean		true		<xslVariableName>generateReport</xslVariableName>
+    hierarchical_level				Integer		0
+    hierarchyMatriculeNumber		String		
+    hierarchyName					String		
+    supervisor						String		000
+    supervisorName					String		
+    directorName					String		
+    
+	
+*** Step 5 ***
+**************
+
+	Create a SQL Operation action named "INSERT current_employee"
+	    SQL_ACTION_TYPE property value : INSERT
+	    SQL_ACTION_TYPE_STAT property value : INSERT
+		Expression Editor
+		-----------------
+		INSERT INTO %x{$DENORMALIZED_EMPLOYEE/tech:physicalPath()}x% 
+		VALUES (:{MATRICULE_NUMBER}:,:{FIRSTNAME}:,:{LASTNAME}:,
+			   :{SUPERVISOR_MATRICULE_NUMBER}:,:{HIERARCHICAL_LEVEL}:,
+			   :{SUPERVISOR_NAME}:,:{DIRECTOR_NAME}:,:{HIERARCHY_NAME}:,
+			   CASE WHEN :{HIERARCHY_MATRICULE_NUMBER}:='' THEN :{MATRICULE_NUMBER}: 
+			   ELSE :{HIERARCHY_MATRICULE_NUMBER}:+'.'+:{MATRICULE_NUMBER}: END)
+ 		
+	Create an ExecDelivery action named "ExecDeliv Recursive treatmnt of current employee subordinates"
+		DELIV_NAME property value : Generate recursive employeeList1
+		DELIV_SESSION_NAME property value : Exec hierarchical level %e(jython){__ctx__.retValue = str(int(${../hierarchical_level}$ + 1))}e(jython)% - Employee matricule number :{MATRICULE_NUMBER}: - Supervisor matricule number %e(jython){__ctx__.retValue = '${../supervisor}$'}e(jython)%
+		creation of new parameters in the ExecDelivery action
+		    Name							Type		Value
+		    ------------------------------- ----------  ---------
+		    generateReport  				Boolean		%e(rhino){ __ctx__.retValue ="${~/generateReport}$"}e(rhino)%
+		    hierarchical_level				Integer		:{HIERARCHICAL_LEVEL}:
+		    hierarchyMatriculeNumber		String		%e(rhino){ if (${../hierarchical_level}$==0) {':{MATRICULE_NUMBER}:'} else {'${../hierarchyMatriculeNumber}$'+'.'+':{MATRICULE_NUMBER}:'} }e(rhino)%
+		    hierarchyName					String		%e(rhino){ if (${../hierarchical_level}$==0) {':{NAME}:'} else {'${../hierarchyName}$'+'/'+':{NAME}:'} }e(rhino)%
+		    supervisor						String		:{MATRICULE_NUMBER}:
+		    supervisorName					String		:{NAME}:
+		    directorName					String	    %e(rhino){ if (${../hierarchical_level}$==0) {':{NAME}:'} else {'${../directorName}$'} }e(rhino)%
+
+	Create a bind link between SQL Operation named "SELECT current_employee" and SQL Operation action named "INSERT current_employee"
+
+	Create a bind link between SQL Operation named "SELECT current_employee" and ExecDelivery action named "ExecDeliv Recursive treatmnt of current employee subordinates"
+
+*** Step 6 ***
+**************
+
+	Create a SQLFileExport action
+	
+		Expression Editor of the SQLFileExport 
+		--------------------------------------------------------------------------
+		SELECT * 
+		FROM   HUMAN_RESOURCE.DENORMALIZED_EMPLOYEE
+		ORDER  BY HIERARCHY_MATRICULE_NUMBER
+
+		Property value for 
+		------------------
+		SQL_EXP_FILENAME			%x{$humanResource_folder/tech:path()}x%/employeeList1_%x{md:formatDate("yyyyMMdd_HHmmss")}x%.csv
+		SQL_EXP_GENERATE_HEADER		true
+	
+	Create a link between the execDelivery action and SQL file export action
+		Execution condition on the link : __ctx__.getVariableValue("~/hierarchical_level")==0 
+		Generation condition on the link : md:paramValue($this,'generateReport') = 'true'	
+	
+*** Step 7 ***
+**************
+
+Create a query folder on hotel_datamart metadata under HUMAN_RESOURCE schema named "QF_HUMAN_RESOURCE"
+
+Create a query under the query folder named "QF_HUMAN_RESOURCE" :
+	Name : q_denormalized_employee 
+	Expression :
+WITH   RECURSIVE denormalized_employee (matricule_number,firstname,lastname,supervisor_matricule_number,hierarchical_level,
+                                        supervisor_name,director_name,hierarchical_name,hierarchy_matricule_number) AS (
+SELECT matricule_number,firstname,lastname,supervisor_matricule_number,1 as hierarchical_level,null as supervisor_name,firstname+' '+lastname as director_name,
+             CAST(null AS VARCHAR(500)) as hierarchical_name,CAST(matricule_number AS VARCHAR(100)) AS hierarchy_matricule_number
+FROM   HUMAN_RESOURCE.employee
+WHERE  supervisor_matricule_number='000'      
+UNION  
+SELECT a.matricule_number,a.firstname,a.lastname,a.supervisor_matricule_number,b.hierarchical_level+1,b.firstname+' '+b.lastname  as supervisor_name,
+             b.director_name,CASE WHEN hierarchical_name IS null THEN b.firstname+' '+b.lastname 
+                                                  ELSE b.hierarchical_name+'/'+b.firstname+' '+b.lastname END as hierarchical_name,
+             b.hierarchy_matricule_number+'.'+a.matricule_number AS hierarchy_matricule_number
+FROM   HUMAN_RESOURCE.employee a
+             INNER JOIN denormalized_employee b ON a.supervisor_matricule_number=b.matricule_number)
+SELECT * FROM DENORMALIZED_EMPLOYEE
+ORDER  BY HIERARCHY_MATRICULE_NUMBER
+	
+*** Step 8 ***
+**************
+
+Create a VAR_Set metadata
+	Create a connection and drag & drop HUMAN_RESOURCE schema on it
+		Name of the connection : c_hotel_datamart
+	Create a variable
+		name of the variable : v_current_moment
+		Refresh query :
+			SELECT CAST(YEAR(current_timestamp)*10000+MONTH(current_timestamp)*100+DAY(current_timestamp) AS VARCHAR)+'_'+
+                   SUBSTR(CAST(HOUR(current_timestamp)*10000+MINUTE(current_timestamp)*100+SECOND(current_timestamp) AS VARCHAR),1,6)
+            FROM   (VALUES(0))
+		Refresh query connection : Set.c_hotel_datamart
+		Type : String
+	
+*** Step 9 ***
+**************
+
+Update FILE_server metadata
+	Physical Name of employeeList2 file : employeeList2_%{v_current_moment}%.csv
+	
+*** Step 10 ***
+***************
+	
+Create a mapping named "Generate recursive employeeList2"	
+	
+*** Step 11 ***
+***************
+
+Create a process named "Generate recursive employeeList3"
+
+	Create a SQL FILE Export action
+		Property SQL_EXP_FILENAME value : %x{$humanResource_folder/tech:path()}x%/employeeList3_%x{md:formatDate("yyyyMMdd_HHmmss")}x%.csv
+		Property SQL_EXP_GENERATE_HEADER value : true
+		Expression Editor :
+			WITH   RECURSIVE denormalized_employee (matricule_number,firstname,lastname,supervisor_matricule_number,hierarchical_level,
+                                        			supervisor_name,director_name,hierarchical_name,hierarchy_matricule_number) AS (
+			SELECT matricule_number,firstname,lastname,supervisor_matricule_number,1 as hierarchical_level,
+			       null as supervisor_name,firstname+' '+lastname as director_name,CAST(null AS VARCHAR(500)) as hierarchical_name,CAST(matricule_number AS VARCHAR(100)) AS hierarchy_matricule_number
+			FROM   HUMAN_RESOURCE.employee
+			WHERE  supervisor_matricule_number='000'      
+			UNION  
+			SELECT a.matricule_number,a.firstname,a.lastname,a.supervisor_matricule_number,b.hierarchical_level+1,
+			       b.firstname+' '+b.lastname  as supervisor_name,b.director_name,
+			       CASE WHEN hierarchical_name IS null THEN b.firstname+' '+b.lastname ELSE b.hierarchical_name+'/'+b.firstname+' '+b.lastname END as hierarchical_name,
+			       b.hierarchy_matricule_number+'.'+a.matricule_number AS hierarchy_matricule_number
+			FROM   HUMAN_RESOURCE.employee a
+			       INNER JOIN denormalized_employee b ON a.supervisor_matricule_number=b.matricule_number
+			)
+			SELECT * FROM DENORMALIZED_EMPLOYEE
+			ORDER  BY HIERARCHY_MATRICULE_NUMBER		

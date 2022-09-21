@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" description="Semarchy xDM Integration template&#xD;&#xA;@Author: Semarchy&#xD;&#xA;Copyright (c) 2012-2018 Semarchy&#xD;&#xA;&#xD;&#xA;About this template&#xD;&#xA;---------------------&#xD;&#xA;This template is to be used for integrating only changed data into data locations' SD and SA tables. It optionally compares the data incoming flow with the existing master (MI) or golden (GD) records, and integrates only the data new or updated since the last run.&#xD;&#xA;&#xD;&#xA;The following columns are not taken into account for the comparison:&#xD;&#xA;- Built-in columns (B_xxx),&#xD;&#xA;- Columns from the update key,&#xD;&#xA;- Unmapped columns,&#xD;&#xA;- Columns flagged with an IGNORE tag.&#xD;&#xA;&#xD;&#xA;Parameters&#xD;&#xA;------------&#xD;&#xA;- Use Distinct (Default False): Use this option to force a DISTINCT clause when integrating records to the MDM hub.&#xD;&#xA;- Skip Unchanged Records (Default True): Use this option to enable the comparison between the incoming flow and the existing records in order to avoid integrating records that have not been changed.&#xD;&#xA;&#xD;&#xA;Using this template&#xD;&#xA;---------------------&#xD;&#xA;- Map source columns to the SD table's columns.&#xD;&#xA;- Explicitly configure the mapping's update key to use B_PUBID.&#xD;&#xA;- Add to the update key B_SOURCEID (for a fuzzy matched entity), or the &lt;record id> (for an ID matched or basic entity). DO NOT USE the SD/SA table primary key as the update key.&#xD;&#xA;- Flag with an IGNORE tag those of the mapped columns that should NOT be part of the comparison.&#xD;&#xA;- Binary Objects (LOB, CLOB) must be flagged as IGNORE as they cannot be used in the comparison.&#xD;&#xA;&#xD;&#xA;Notes&#xD;&#xA;------&#xD;&#xA;- This template may not be appropriate if some of the attributes are enriched through enrichers. Indeed, the comparison is performed against Master records, which has been transformed through enrichers.&#xD;&#xA;&#xD;&#xA;Change Log&#xD;&#xA;------------&#xD;&#xA;- 3.2.0: Added the &quot;Skip Unchanged Records&quot; (Internal Name: UseCDC) option to the template.&#xD;&#xA;- 4.4.0: Renamed the template and reviewed the documentation&#xD;&#xA;         Support for v3.x and v4.x table structures and PostgreSQL data locations/repositories" id="_Swl0UB0xEeKyH73dp8sGvg" name="Semarchy xDM" nbCycles="-1" repetitionPublishParameters="true">
+  <parameter description="Distinct Values" id="_bAOdUB0zEeKyH73dp8sGvg" label="Use Distinct" name="useDistinct" type="Boolean" value="false"/>
+  <parameter description="" id="_Ir7mQGjfEeWdvNYuMwrrIQ" label="Skip Unchanged Records" name="useCDC" type="Boolean" value="true"/>
+  <subProcess id="_HM5K0B01EeKyH73dp8sGvg" isBeginAction="false" name="INTEGRATION" nbCycles="-1" toleratedError="false">
+    <actionCode id="_Nu-XzB01EeKyH73dp8sGvg" generationCondition="empty($REF/ref:target()/ref:columns()[replace(upper-case(tech:name()),'[\[\]]', '') ='B_ERROR_STATUS'])" enable="true" isBeginAction="false" name="Insert rows into target MDM table V3" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter description="Sql Action type (DDL_DML or SELECT, INSERT, UPDATE, DELETE)" id="_Nu-XzR01EeKyH73dp8sGvg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter description="SQL Connection" id="_Nu-Xzh01EeKyH73dp8sGvg" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_Nu-Xzx01EeKyH73dp8sGvg" name="SQL_ACTION_TYPE_STAT" type="String" value="INSERT"/>
+      <parameter id="_XXzdwB02EeKyH73dp8sGvg" name="SQL_TRANSACTION_TYPE" type="String" value="COMMIT"/>
+      <code>%xsl preserveSpace=&quot;true&quot;{&#xD;
+insert into	%x{md:physicalPath($REF/ref:target())}x%&#xD;
+( &#xD;
+	%x{md:patternList($REF/ref:columns()[tech:isIns()],'[name]', ',\n\t')}x%&#xD;
+) &#xD;
+select	%x{if (md:paramValue($this,'useDistinct')='true') then 'DISTINCT ' else ''}x%&#xD;
+		%x{md:patternList($REF/ref:columns()[tech:isIns()],'[expression]', ',\n\t\t')}x%&#xD;
+from	%x{$REF/tech:fromPart()}x%&#xD;
+where	(1=1)&#xD;
+%x{$REF/tech:joinPart()}x% &#xD;
+%x{$REF/tech:filterPart()}x% &#xD;
+%x{$REF/tech:cdcFilterPart()}x% &#xD;
+%xsl { &#xD;
+&lt;xsl:choose>&#xD;
+&lt;xsl:when test =&quot;md:paramValue($this,'useCDC')='true'&quot;>&#xD;
+and not exists (&#xD;
+	select 1&#xD;
+	from %x{$REF/ref:target()/ref:parent()/tech:physicalName()}x%.%x{$REF/ref:target()/replace(tech:physicalName(),'^(.)?SD_', '$1MI_')}x% XXX&#xD;
+	where &#xD;
+		((XXX.B_STATUS is null) or (XXX.B_STATUS is not null and XXX.B_STATUS != 'ERROR'))&#xD;
+	and	%x{md:patternList($REF/ref:columns()[tech:isUk()],'XXX.[name] \t= [expression]', '\n\tand\t')}x%&#xD;
+	%x{md:patternList($REF/ref:columns()[not(tech:isUk()) and not(starts-with(replace(upper-case(tech:name()),'[\[\]]',''),'B_')) and not(tech:tag()='IGNORE')],' and ((XXX.[name] = [expression]) or (XXX.[name] IS NULL and [expression] IS NULL))', '\n\t\t')}x%&#xD;
+)&#xD;
+&lt;/xsl:when>&#xD;
+&lt;/xsl:choose>&#xD;
+}xsl%&#xD;
+%x{$REF/tech:groupByPart()}x%&#xD;
+%x{$REF/tech:havingPart()}x%&#xD;
+}xsl%</code>
+    </actionCode>
+    <actionCode id="_dvKksJiSEeeqXJk2Bp3mgg" generationCondition="not(empty($REF/ref:target()/ref:columns()[replace(upper-case(tech:name()),'[\[\]]', '')='B_ERROR_STATUS'])) and empty($REF/ref:target()/ref:columns()[replace(upper-case(tech:name()), '[\[\]]', '')='B_PUBID'])" enable="true" isBeginAction="false" name="Insert rows into target MDM table V4 Basic" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter description="Sql Action type (DDL_DML or SELECT, INSERT, UPDATE, DELETE)" id="_dvKksZiSEeeqXJk2Bp3mgg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter description="SQL Connection" id="_dvKkspiSEeeqXJk2Bp3mgg" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_dvKks5iSEeeqXJk2Bp3mgg" name="SQL_ACTION_TYPE_STAT" type="String" value="INSERT"/>
+      <parameter id="_dvKktJiSEeeqXJk2Bp3mgg" name="SQL_TRANSACTION_TYPE" type="String" value="COMMIT"/>
+      <code>%xsl preserveSpace=&quot;true&quot;{&#xD;
+insert into	%x{md:physicalPath($REF/ref:target())}x%&#xD;
+( &#xD;
+	%x{md:patternList($REF/ref:columns()[tech:isIns()],'[name]', ',\n\t')}x%&#xD;
+) &#xD;
+select	%x{if (md:paramValue($this,'useDistinct')='true') then 'DISTINCT ' else ''}x%&#xD;
+		%x{md:patternList($REF/ref:columns()[tech:isIns()],'[expression]', ',\n\t\t')}x%&#xD;
+from	%x{$REF/tech:fromPart()}x%&#xD;
+where	(1=1)&#xD;
+%x{$REF/tech:joinPart()}x% &#xD;
+%x{$REF/tech:filterPart()}x% &#xD;
+%x{$REF/tech:cdcFilterPart()}x% &#xD;
+%xsl { &#xD;
+&lt;xsl:choose>&#xD;
+&lt;xsl:when test =&quot;md:paramValue($this,'useCDC')='true'&quot;>&#xD;
+and not exists (&#xD;
+	select 1&#xD;
+	from %x{$REF/ref:target()/ref:parent()/tech:physicalName()}x%.%x{$REF/ref:target()/replace(tech:physicalName(),'^(.)?SA_', '$1GD_')}x% XXX&#xD;
+	where &#xD;
+	%x{md:patternList($REF/ref:columns()[tech:isUk()],'XXX.[name] \t= [expression]', '\n\tand\t')}x%&#xD;
+	%x{md:patternList($REF/ref:columns()[not(tech:isUk()) and not(starts-with(replace(upper-case(tech:name()),'[\[\]]',''),'B_')) and not(tech:tag()='IGNORE')],' and ((XXX.[name] = [expression]) or (XXX.[name] IS NULL and [expression] IS NULL))', '\n\t\t')}x%&#xD;
+)&#xD;
+&lt;/xsl:when>&#xD;
+&lt;/xsl:choose>&#xD;
+}xsl%&#xD;
+%x{$REF/tech:groupByPart()}x%&#xD;
+%x{$REF/tech:havingPart()}x%&#xD;
+}xsl%</code>
+    </actionCode>
+    <actionCode id="_hQeS0JiTEeeqXJk2Bp3mgg" generationCondition="not(empty($REF/ref:target()/ref:columns()[replace(upper-case(tech:name()), '[\[\]]', '') ='B_ERROR_STATUS'])) and not(empty($REF/ref:target()/ref:columns()[replace(upper-case(tech:name()), '[\[\]]', '')='B_PUBID']))" enable="true" isBeginAction="false" name="Insert rows into target MDM table V4 ID or Fuzzy" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter description="Sql Action type (DDL_DML or SELECT, INSERT, UPDATE, DELETE)" id="_hQeS0ZiTEeeqXJk2Bp3mgg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter description="SQL Connection" id="_hQeS0piTEeeqXJk2Bp3mgg" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_hQeS05iTEeeqXJk2Bp3mgg" name="SQL_ACTION_TYPE_STAT" type="String" value="INSERT"/>
+      <parameter id="_hQeS1JiTEeeqXJk2Bp3mgg" name="SQL_TRANSACTION_TYPE" type="String" value="COMMIT"/>
+      <code>%xsl preserveSpace=&quot;true&quot;{&#xD;
+insert into	%x{md:physicalPath($REF/ref:target())}x%&#xD;
+( &#xD;
+	%x{md:patternList($REF/ref:columns()[tech:isIns()],'[name]', ',\n\t')}x%&#xD;
+) &#xD;
+select	%x{if (md:paramValue($this,'useDistinct')='true') then 'DISTINCT ' else ''}x%&#xD;
+		%x{md:patternList($REF/ref:columns()[tech:isIns()],'[expression]', ',\n\t\t')}x%&#xD;
+from	%x{$REF/tech:fromPart()}x%&#xD;
+where	(1=1)&#xD;
+%x{$REF/tech:joinPart()}x% &#xD;
+%x{$REF/tech:filterPart()}x% &#xD;
+%x{$REF/tech:cdcFilterPart()}x% &#xD;
+%xsl { &#xD;
+&lt;xsl:choose>&#xD;
+&lt;xsl:when test =&quot;md:paramValue($this,'useCDC')='true'&quot;>&#xD;
+and not exists (&#xD;
+	select 1&#xD;
+	from %x{$REF/ref:target()/ref:parent()/tech:physicalName()}x%.%x{$REF/ref:target()/replace(tech:physicalName(),'^(.)?S[AD]_', '$1MI_')}x% XXX&#xD;
+	where %x{md:patternList($REF/ref:columns()[tech:isUk()],'XXX.[name] \t= [expression]', '\n\tand\t')}x%&#xD;
+	%x{md:patternList($REF/ref:columns()[not(tech:isUk()) and not(starts-with(replace(upper-case(tech:name()), '[\[\]]', ''),'B_')) and not(tech:tag()='IGNORE')],' and ((XXX.[name] = [expression]) or (XXX.[name] IS NULL and [expression] IS NULL))', '\n\t\t')}x%&#xD;
+)&#xD;
+&lt;/xsl:when>&#xD;
+&lt;/xsl:choose>&#xD;
+}xsl%&#xD;
+%x{$REF/tech:groupByPart()}x%&#xD;
+%x{$REF/tech:havingPart()}x%&#xD;
+}xsl%</code>
+    </actionCode>
+    <templateType>I-TP.RDBMS.INTEGRATING</templateType>
+  </subProcess>
+  <subProcess id="_e8vtAB6CEeKmG8rwePyHWA" name="PREPARE_INTEGRATION" nbCycles="-1">
+    <link id="_gIcrIB6CEeKmG8rwePyHWA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_HM5K0B01EeKyH73dp8sGvg?fileId=_Swl0UB0xEeKyH73dp8sGvg$type=proc$name=INTEGRATION?"/>
+    <templateType>I-TP.RDBMS.PREPARING</templateType>
+  </subProcess>
+  <templateType>I-TP.RDBMS</templateType>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.3/notation#/?fileId=_Swl0UB0xEeKyH73dp8sGvg?">
+  <notation:Diagram xmi:id="_DtYtMHLkEeyR6NStkZ3JEw" type="Proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_Dts2QHLkEeyR6NStkZ3JEw" type="2004">
+      <children xmi:type="notation:Node" xmi:id="_DttdUHLkEeyR6NStkZ3JEw" type="5004"/>
+      <children xmi:type="notation:Node" xmi:id="_DtuEYHLkEeyR6NStkZ3JEw" type="7005">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_DtuEYXLkEeyR6NStkZ3JEw"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_DtuEYnLkEeyR6NStkZ3JEw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_DtuEY3LkEeyR6NStkZ3JEw"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_DtuEZHLkEeyR6NStkZ3JEw" type="7006">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_DtuEZXLkEeyR6NStkZ3JEw"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_DtuEZnLkEeyR6NStkZ3JEw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_DtuEZ3LkEeyR6NStkZ3JEw"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_Dts2QXLkEeyR6NStkZ3JEw" fontName="Segoe UI"/>
+      <styles xmi:type="notation:HintedDiagramLinkStyle" xmi:id="_Dts2QnLkEeyR6NStkZ3JEw"/>
+      <element xmi:type="proc:SubActionProcess" href="resource.proc#_HM5K0B01EeKyH73dp8sGvg?fileId=_Swl0UB0xEeKyH73dp8sGvg$type=proc$name=INTEGRATION?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Dts2Q3LkEeyR6NStkZ3JEw" x="72" y="168"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_DturcHLkEeyR6NStkZ3JEw" type="2004">
+      <children xmi:type="notation:Node" xmi:id="_DturdHLkEeyR6NStkZ3JEw" type="5004"/>
+      <children xmi:type="notation:Node" xmi:id="_DturdXLkEeyR6NStkZ3JEw" type="7005">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_DturdnLkEeyR6NStkZ3JEw"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_Dturd3LkEeyR6NStkZ3JEw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_DtureHLkEeyR6NStkZ3JEw"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_DtureXLkEeyR6NStkZ3JEw" type="7006">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_DturenLkEeyR6NStkZ3JEw"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_Dture3LkEeyR6NStkZ3JEw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_DturfHLkEeyR6NStkZ3JEw"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_DturcXLkEeyR6NStkZ3JEw" fontName="Segoe UI"/>
+      <styles xmi:type="notation:HintedDiagramLinkStyle" xmi:id="_DturcnLkEeyR6NStkZ3JEw"/>
+      <element xmi:type="proc:SubActionProcess" href="resource.proc#_e8vtAB6CEeKmG8rwePyHWA?fileId=_Swl0UB0xEeKyH73dp8sGvg$type=proc$name=PREPARE_INTEGRATION?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Dturc3LkEeyR6NStkZ3JEw" x="30" y="66"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_DturfXLkEeyR6NStkZ3JEw" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_DtvSgHLkEeyR6NStkZ3JEw" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_DturfnLkEeyR6NStkZ3JEw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_bAOdUB0zEeKyH73dp8sGvg?fileId=_Swl0UB0xEeKyH73dp8sGvg$type=proc$name=useDistinct?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Dturf3LkEeyR6NStkZ3JEw" x="264" y="60"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_DtvSgXLkEeyR6NStkZ3JEw" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_Dtv5kHLkEeyR6NStkZ3JEw" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_DtvSgnLkEeyR6NStkZ3JEw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_Ir7mQGjfEeWdvNYuMwrrIQ?fileId=_Swl0UB0xEeKyH73dp8sGvg$type=proc$name=useCDC?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_DtvSg3LkEeyR6NStkZ3JEw" x="264" y="30"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_DtYtMXLkEeyR6NStkZ3JEw"/>
+    <element xmi:type="proc:ActionProcess" href="resource.proc#_Swl0UB0xEeKyH73dp8sGvg?fileId=_Swl0UB0xEeKyH73dp8sGvg$type=proc$name=Semarchy%20xDM?"/>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_DtYtMnLkEeyR6NStkZ3JEw" type="Proc" measurementUnit="Pixel">
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_DtYtM3LkEeyR6NStkZ3JEw"/>
+    <element xmi:type="proc:SubActionProcess" href="resource.proc#_HM5K0B01EeKyH73dp8sGvg?fileId=_Swl0UB0xEeKyH73dp8sGvg$type=proc$name=INTEGRATION?"/>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_DtYtNHLkEeyR6NStkZ3JEw" type="Proc" measurementUnit="Pixel">
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_DtYtNXLkEeyR6NStkZ3JEw"/>
+    <element xmi:type="proc:SubActionProcess" href="resource.proc#_e8vtAB6CEeKmG8rwePyHWA?fileId=_Swl0UB0xEeKyH73dp8sGvg$type=proc$name=PREPARE_INTEGRATION?"/>
+  </notation:Diagram>
+</xmi:XMI>
+]]></diagram>
+</proc:process>

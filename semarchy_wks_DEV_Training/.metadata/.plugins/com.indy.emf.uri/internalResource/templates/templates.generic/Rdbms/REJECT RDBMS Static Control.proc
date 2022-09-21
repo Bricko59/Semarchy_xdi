@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_ciOoMQEkEeixVaWGXlT7Rg" description="This template is used for reject detection on any database in a standalone mode (used for static control)&#xD;&#xA;This can be achived by drag and dropping the template into a Process then drag and dropping the table or a schema on the template. The corresponding Metadata Link must be renamed &quot;SOURCE&quot;.&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;26/01/2018   New template created for static control.">
+  <parameter id="_96zCQAHbEei18rCFnL05Bw" name="query" type="String" value="$SOURCE//(datastore)"/>
+  <parameter id="_cwF7cAHcEei18rCFnL05Bw" description="If true, the operations on the reject and checked tables will be executed through a transaction in NOCOMMIT mode.&#xD;&#xA;If the process is executed successfully, a commit will be performed at the end, otherwise, a rollback will be performed.&#xD;&#xA;&#xD;&#xA;If false, the actions will use the AUTOCOMMIT connections." name="transactionalModeOnRejectTable" type="Boolean" value="false"/>
+  <parameter id="_cwF7cQHcEei18rCFnL05Bw" description="If true, the reject table is dropped and re-created before processing." name="dropRejectTable" type="Boolean" value="false"/>
+  <parameter id="_cwF7cgHcEei18rCFnL05Bw" description="Name of the transaction when Transactional Mode is set to true." name="transactionName" type="String" value="T1"/>
+  <parameter id="_cwF7cwHcEei18rCFnL05Bw" description="If true, an index is created on the checked table for each primary and unique keys." name="createIndexOnRejectTable" type="Boolean" value="false"/>
+  <parameter id="_cwF7dAHcEei18rCFnL05Bw" description="Set to true to delete the rejects detected during previous executions." name="deletePreviousRejects" type="Boolean" value="true"/>
+  <parameter id="_l7LK8AHcEei18rCFnL05Bw" name="rejectsPK" type="Boolean" value="true"/>
+  <parameter id="_r_ePsAHcEei18rCFnL05Bw" name="rejectsFK" type="Boolean" value="true"/>
+  <parameter id="_tvs3MAHcEei18rCFnL05Bw" name="rejectsAK" type="Boolean" value="true"/>
+  <parameter id="_vbbZMAHcEei18rCFnL05Bw" name="rejectsNotNull" type="Boolean" value="true"/>
+  <parameter id="_xPzg4AHcEei18rCFnL05Bw" name="rejectsCK" type="Boolean" value="true"/>
+  <parameter id="_5aznoAdnEei0g-tby7Mwxg" description="If true, rejects are removed from the checked table.&#xD;&#xA;If false, rejects are kept in the checked table and are just logged in the reject table." name="deleteRejectsOnCheckedTable" type="Boolean" value="false"/>
+  <actionProcessRef id="_1C08AAHbEei18rCFnL05Bw" isBeginAction="false" name="REJECT Rdbms.tp" nbCycles="-1" repetitionQuery="${query}$" repetitionVariableName="REF" toleratedError="false" targetName="REJECT%20Rdbms.tp.proc#_826062e8-1075-4019-b24b-3310febef468?fileId=_826062e8-1075-4019-b24b-3310febef468$type=proc$name=REJECT%20Rdbms?">
+    <parameter id="_KxenMAgmEei0g-tby7Mwxg" name="transactionName" ref="#_cwF7cgHcEei18rCFnL05Bw" type="String" value=""/>
+    <parameter id="_cj13YApcEeiVtvim_D2DuA" name="createIndexOnRejectTable" ref="#_cwF7cwHcEei18rCFnL05Bw" type="Boolean" value=""/>
+    <parameter id="_iMlBgApcEeiVtvim_D2DuA" name="deletePreviousRejects" ref="#_cwF7dAHcEei18rCFnL05Bw" type="Boolean"/>
+    <parameter id="_pz278ApcEeiVtvim_D2DuA" name="deleteRejectsOnCheckedTable" ref="#_5aznoAdnEei0g-tby7Mwxg" type="Boolean"/>
+    <parameter id="_ua0gAApcEeiVtvim_D2DuA" name="dropRejectTable" ref="#_cwF7cQHcEei18rCFnL05Bw" type="Boolean"/>
+    <parameter id="_zIGHcApcEeiVtvim_D2DuA" name="transactionalModeOnRejectTable" ref="#_cwF7cAHcEei18rCFnL05Bw" type="Boolean"/>
+  </actionProcessRef>
+</proc:process>

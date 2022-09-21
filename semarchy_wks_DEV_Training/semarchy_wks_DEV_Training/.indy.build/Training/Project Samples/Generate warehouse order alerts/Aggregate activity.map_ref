@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ref:mapRef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:ref="http://www.indy.com/v2/ref" id="_92RcEDTDEe2K1spis4bODw">
+  <dataModel>_68tjsFerEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=Aggregate%20activity?</dataModel>
+  <containerRef xsi:type="ref:RDatastore" id="_92SDITTDEe2K1spis4bODw" countShownFields="4" hierarchical="true">
+    <dataModel>_7-kpUFerEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_92VtgDTDEe2K1spis4bODw" size="12" type="Numeric" mandatory="true" position="6">
+      <dataModel>_7-tMMlerEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=delivery_order_number?</dataModel>
+      <usage>_92xyYTTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92XisDTDEe2K1spis4bODw" size="19" type="Timestamp" mandatory="true" position="9">
+      <dataModel>_7-tMM1erEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=delivery_timestamp?</dataModel>
+      <usage>_92tg8DTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92XisTTDEe2K1spis4bODw" mandatory="true" position="3">
+      <dataModel>_7-tMMVerEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_delivery_order?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92XisjTDEe2K1spis4bODw" size="56" type="String" mandatory="true" position="12">
+      <dataModel>_7-tMNFerEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_cod?</dataModel>
+      <usage>_92tg8DTDEe2K1spis4bODw</usage>
+    </fieldRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_92YJwDTDEe2K1spis4bODw" countShownFields="6" hierarchical="false">
+    <dataModel>_8s-AYFerEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_92fegDTDEe2K1spis4bODw" precision="0" size="1" type="boolean" position="12">
+      <dataModel>_PvubIFkWEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=is_lower_threshold_qty?</dataModel>
+      <expressionRef id="_92xyYjTDEe2K1spis4bODw">
+        <dataModel>_PvubIVkWEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92llIDTDEe2K1spis4bODw" precision="0" size="1" type="boolean" position="15">
+      <dataModel>_PvvCMFkWEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=is_previous_lower_threshold_qty?</dataModel>
+      <expressionRef id="_92xyYzTDEe2K1spis4bODw">
+        <dataModel>_PvvCMVkWEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92llITTDEe2K1spis4bODw" precision="0" size="10" type="integer" position="18">
+      <dataModel>_I9nHIFljEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=cumulative_period_quantity?</dataModel>
+      <expressionRef id="_92xyZDTDEe2K1spis4bODw">
+        <dataModel>_I9nHIVljEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92llIjTDEe2K1spis4bODw" precision="6" size="29" type="timestamp" mandatory="true" position="3">
+      <dataModel>_8s-ncVerEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=timeslot?</dataModel>
+      <usage>_92uvEjTDEe2K1spis4bODw</usage>
+      <expressionRef id="_92wkRTTDEe2K1spis4bODw" internalExpression="${stage.defined_timeslot}$">
+        <dataModel>_9tMuUFerEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+        <sourceRef>_92uIADTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92llIzTDEe2K1spis4bODw" precision="0" size="20" type="varchar" mandatory="true" position="6">
+      <dataModel>_8s_OgFerEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_cod?</dataModel>
+      <usage>_92uIATTDEe2K1spis4bODw</usage>
+      <usage>_92xyaTTDEe2K1spis4bODw</usage>
+      <expressionRef id="_92xyYDTDEe2K1spis4bODw" internalExpression="${stage.warehouse_cod}$">
+        <dataModel>_9tNVYFerEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+        <sourceRef>_92tg8TTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92llJDTDEe2K1spis4bODw" precision="0" size="10" type="integer" position="9">
+      <dataModel>_8s_OgVerEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=quantity?</dataModel>
+      <usage>_92xyajTDEe2K1spis4bODw</usage>
+      <usage>_92xybDTDEe2K1spis4bODw</usage>
+      <expressionRef id="_92xyYTTDEe2K1spis4bODw" internalExpression="COUNT(${warehouse_delivery_order.delivery_order_number}$)">
+        <dataModel>_9tNVYVerEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+        <sourceRef>_92VtgDTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <constraintRef id="_92mzQDTDEe2K1spis4bODw" type="pk">
+      <dataModel>_8s_OglerEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=pk_warehouse_activity?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_92mzQTTDEe2K1spis4bODw" countShownFields="6" hierarchical="false">
+    <dataModel>_3O4_YFexEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_92mzQjTDEe2K1spis4bODw" precision="0" size="20" type="varchar" mandatory="true" position="6">
+      <dataModel>_3PSoAFexEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_cod?</dataModel>
+      <usage>_92SDIDTDEe2K1spis4bODw</usage>
+      <usage>_92wkQTTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92mzQzTDEe2K1spis4bODw" precision="0" size="10" type="integer" mandatory="true" position="3">
+      <dataModel>_HOw8oFfXEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_id?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92mzRDTDEe2K1spis4bODw" precision="0" size="10" type="integer" position="9">
+      <dataModel>_HOw8oVfXEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_alert_hour_interval?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92mzRTTDEe2K1spis4bODw" precision="0" size="10" type="integer" position="15">
+      <dataModel>_HOxjsVfXEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_alert_threshold_qty?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92mzRjTDEe2K1spis4bODw" precision="0" size="100" type="varchar" position="12">
+      <dataModel>_HOxjsFfXEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_alert_mail_address?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92mzRzTDEe2K1spis4bODw" precision="0" size="5" type="character" position="18">
+      <dataModel>_c2pEAFfXEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_alert_cod?</dataModel>
+    </fieldRef>
+    <constraintRef id="_92naUDTDEe2K1spis4bODw" type="pk">
+      <dataModel>_3PTPEFexEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=pk_warehouse?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_92naUTTDEe2K1spis4bODw" countShownFields="1" hierarchical="false">
+    <dataModel>_tXoNEFe2Eem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_92naUjTDEe2K1spis4bODw" precision="6" size="35" type="timestamp with time zone" position="3">
+      <dataModel>_tXpbMFe2Eem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=defined_timeslot?</dataModel>
+      <usage>_92SDIDTDEe2K1spis4bODw</usage>
+      <usage>_92uvETTDEe2K1spis4bODw</usage>
+      <usage>_92wkQjTDEe2K1spis4bODw</usage>
+    </fieldRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_92oocDTDEe2K1spis4bODw" countShownFields="6" hierarchical="false">
+    <dataModel>_29NqIFkdEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_92oocTTDEe2K1spis4bODw" precision="0" size="10" type="integer" mandatory="true" position="3">
+      <dataModel>_29rkMFkdEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_id?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92oocjTDEe2K1spis4bODw" precision="0" size="10" type="integer" position="15">
+      <dataModel>_29rkNFkdEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_alert_threshold_qty?</dataModel>
+      <usage>_92xyajTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92ooczTDEe2K1spis4bODw" precision="0" size="100" type="varchar" position="12">
+      <dataModel>_29rkM1kdEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_alert_mail_address?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92oodDTDEe2K1spis4bODw" precision="0" size="10" type="integer" position="9">
+      <dataModel>_29rkMlkdEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_alert_hour_interval?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92oodTTDEe2K1spis4bODw" precision="0" size="20" type="varchar" mandatory="true" position="6">
+      <dataModel>_29rkMVkdEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_cod?</dataModel>
+      <usage>_92uIATTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92oodjTDEe2K1spis4bODw" precision="0" size="5" type="character" position="18">
+      <dataModel>_29rkNVkdEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_alert_cod?</dataModel>
+    </fieldRef>
+    <constraintRef id="_92oodzTDEe2K1spis4bODw" type="pk">
+      <dataModel>_29rkNlkdEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=pk_warehouse?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_92pPgDTDEe2K1spis4bODw" countShownFields="6" hierarchical="false">
+    <dataModel>_boXjcFkeEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_92pPgTTDEe2K1spis4bODw" precision="0" size="10" type="integer" position="9">
+      <dataModel>_boZYoVkeEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=quantity?</dataModel>
+      <expressionRef id="_92xyZzTDEe2K1spis4bODw">
+        <dataModel>_hQGA8FkeEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92pPgjTDEe2K1spis4bODw" precision="0" size="1" type="boolean" position="15">
+      <dataModel>_boZ_sVkeEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=is_previous_lower_threshold_qty?</dataModel>
+      <expressionRef id="_92xyazTDEe2K1spis4bODw">
+        <dataModel>_hQH2IVkeEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92pPgzTDEe2K1spis4bODw" precision="6" size="29" status="VALID" type="timestamp" mandatory="true" position="3">
+      <dataModel>_boYxkFkeEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=timeslot?</dataModel>
+      <usage>_92vWIDTDEe2K1spis4bODw</usage>
+      <usage>_92xycDTDEe2K1spis4bODw</usage>
+      <usage>_92yZcTTDEe2K1spis4bODw</usage>
+      <expressionRef id="_92xyaDTDEe2K1spis4bODw" internalExpression="to_timestamp('${~/current_timestamp}$', 'YYYY/MM/DD HH24:MI:SS')">
+        <dataModel>_hQGoAFkeEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+        <problem id="_93fkFjTDEe2K1spis4bODw" code="INFO_USING_SESSION_VARIABLE" message=""/>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92pPhDTDEe2K1spis4bODw" precision="0" size="20" type="varchar" mandatory="true" position="6">
+      <dataModel>_boZYoFkeEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_cod?</dataModel>
+      <usage>_92xycTTDEe2K1spis4bODw</usage>
+      <usage>_92yZcTTDEe2K1spis4bODw</usage>
+      <expressionRef id="_92xyaTTDEe2K1spis4bODw" internalExpression="${warehouse_activity.warehouse_cod}$">
+        <dataModel>_hQHPEFkeEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+        <sourceRef>_92llIzTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92pPhTTDEe2K1spis4bODw" precision="0" size="1" type="boolean" position="12">
+      <dataModel>_boZ_sFkeEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=is_lower_threshold_qty?</dataModel>
+      <usage>_92yZcTTDEe2K1spis4bODw</usage>
+      <expressionRef id="_92xyajTDEe2K1spis4bODw" internalExpression="sum(${warehouse_activity.quantity}$)&lt;max(${warehouse_2.warehouse_alert_threshold_qty}$)">
+        <dataModel>_hQH2IFkeEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+        <sourceRef>_92llJDTDEe2K1spis4bODw</sourceRef>
+        <sourceRef>_92oocjTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92p2kDTDEe2K1spis4bODw" precision="0" size="10" type="integer" position="18">
+      <dataModel>_I_IKEFljEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=cumulative_period_quantity?</dataModel>
+      <expressionRef id="_92xybDTDEe2K1spis4bODw" internalExpression="sum(${warehouse_activity.quantity}$)">
+        <dataModel>_I_IKEVljEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+        <sourceRef>_92llJDTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <constraintRef id="_92p2kTTDEe2K1spis4bODw" type="pk">
+      <dataModel>_boZ_slkeEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=pk_warehouse_activity?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_92p2kjTDEe2K1spis4bODw" countShownFields="6" hierarchical="false">
+    <dataModel>_3lOIgFkhEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_92p2kzTDEe2K1spis4bODw" precision="0" size="10" type="integer" position="9">
+      <dataModel>_3leAIVkhEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=quantity?</dataModel>
+      <usage>_92yZdTTDEe2K1spis4bODw</usage>
+      <expressionRef id="_92xybzTDEe2K1spis4bODw">
+        <dataModel>_4df0UFkhEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92qdoDTDEe2K1spis4bODw" precision="0" size="1" type="boolean" position="12">
+      <dataModel>_3leAIlkhEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=is_lower_threshold_qty?</dataModel>
+      <usage>_92vWITTDEe2K1spis4bODw</usage>
+      <expressionRef id="_92yZcDTDEe2K1spis4bODw">
+        <dataModel>_4dhCcFkhEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92qdoTTDEe2K1spis4bODw" precision="0" size="10" type="integer" position="18">
+      <dataModel>_I_f9gFljEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=cumulative_period_quantity?</dataModel>
+      <usage>_92znkzTDEe2K1spis4bODw</usage>
+      <expressionRef id="_92yZcjTDEe2K1spis4bODw">
+        <dataModel>_I_f9gVljEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92qdojTDEe2K1spis4bODw" precision="6" size="29" type="timestamp" mandatory="true" position="3">
+      <dataModel>_3ldZEVkhEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=timeslot?</dataModel>
+      <usage>_92vWITTDEe2K1spis4bODw</usage>
+      <usage>_92znkDTDEe2K1spis4bODw</usage>
+      <usage>_92znkTTDEe2K1spis4bODw</usage>
+      <expressionRef id="_92xycDTDEe2K1spis4bODw" internalExpression="${warehouse_activity_2.timeslot}$">
+        <dataModel>_4dgbYFkhEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+        <sourceRef>_92pPgzTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92qdozTDEe2K1spis4bODw" precision="0" size="20" type="varchar" mandatory="true" position="6">
+      <dataModel>_3leAIFkhEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_cod?</dataModel>
+      <usage>_92uvEDTDEe2K1spis4bODw</usage>
+      <usage>_92zAgDTDEe2K1spis4bODw</usage>
+      <expressionRef id="_92xycTTDEe2K1spis4bODw" internalExpression="${warehouse_activity_2.warehouse_cod}$">
+        <dataModel>_4dgbYVkhEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+        <sourceRef>_92pPhDTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92qdpDTDEe2K1spis4bODw" precision="0" size="1" type="boolean" position="15">
+      <dataModel>_3leAI1khEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=is_previous_lower_threshold_qty?</dataModel>
+      <usage>_92vWITTDEe2K1spis4bODw</usage>
+      <expressionRef id="_92yZcTTDEe2K1spis4bODw" internalExpression="LAG(${warehouse_activity_2.is_lower_threshold_qty}$,1,false) OVER (partition by ${warehouse_activity_2.warehouse_cod}$ order by ${warehouse_activity_2.timeslot}$)">
+        <dataModel>_4dhpgFkhEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+        <sourceRef>_92pPhTTDEe2K1spis4bODw</sourceRef>
+        <sourceRef>_92pPhDTDEe2K1spis4bODw</sourceRef>
+        <sourceRef>_92pPgzTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <constraintRef id="_92qdpTTDEe2K1spis4bODw" type="pk">
+      <dataModel>_3leAJFkhEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=pk_warehouse_activity?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_92rEsDTDEe2K1spis4bODw" countShownFields="6" hierarchical="false">
+    <dataModel>_B54GAFlgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_92rEsTTDEe2K1spis4bODw" precision="0" size="10" type="integer" mandatory="true" position="3">
+      <dataModel>_B5-zsVlgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_id?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92rEsjTDEe2K1spis4bODw" precision="0" size="20" type="varchar" mandatory="true" position="6">
+      <dataModel>_B5-zsllgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_cod?</dataModel>
+      <usage>_92uvEDTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92rEszTDEe2K1spis4bODw" precision="0" size="5" type="character" position="18">
+      <dataModel>_B5-ztllgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_alert_cod?</dataModel>
+      <usage>_92zAgTTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92rEtDTDEe2K1spis4bODw" precision="0" size="10" type="integer" position="15">
+      <dataModel>_B5-ztVlgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_alert_threshold_qty?</dataModel>
+      <usage>_92znkjTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92rEtTTDEe2K1spis4bODw" precision="0" size="10" type="integer" position="9">
+      <dataModel>_B5-zs1lgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_alert_hour_interval?</dataModel>
+      <usage>_92znkTTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92rEtjTDEe2K1spis4bODw" precision="0" size="100" type="varchar" position="12">
+      <dataModel>_B5-ztFlgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_alert_mail_address?</dataModel>
+      <usage>_92zAgjTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <constraintRef id="_92rEtzTDEe2K1spis4bODw" type="pk">
+      <dataModel>_B5-zt1lgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=pk_warehouse?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_92rrwDTDEe2K1spis4bODw" countShownFields="9" hierarchical="false">
+    <dataModel>_GhYcoFlgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_92sS0DTDEe2K1spis4bODw" precision="0" size="20" type="varchar" mandatory="true" position="3">
+      <dataModel>_GhZDsVlgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_cod?</dataModel>
+      <expressionRef id="_92zAgDTDEe2K1spis4bODw" internalExpression="${warehouse_activity_3.warehouse_cod}$">
+        <dataModel>_hyRa8VlgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+        <sourceRef>_92qdozTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92sS0TTDEe2K1spis4bODw" precision="6" size="29" type="timestamp" mandatory="true" position="6">
+      <dataModel>_GhZDsllgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=timestamp_alert?</dataModel>
+      <expressionRef id="_92znkDTDEe2K1spis4bODw" internalExpression="${warehouse_activity_3.timeslot}$">
+        <dataModel>_hySCAVlgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+        <sourceRef>_92qdojTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92s54DTDEe2K1spis4bODw" precision="6" size="29" type="timestamp" position="9">
+      <dataModel>_GhZDs1lgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=timestamp_begin_period?</dataModel>
+      <expressionRef id="_92znkTTDEe2K1spis4bODw" internalExpression="${warehouse_activity_3.timeslot}$ - (interval '1 hour')*${warehouse_3.warehouse_alert_hour_interval}$">
+        <dataModel>_hySCAllgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+        <sourceRef>_92qdojTDEe2K1spis4bODw</sourceRef>
+        <sourceRef>_92rEtTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92s54TTDEe2K1spis4bODw" precision="0" size="5" type="character" position="12">
+      <dataModel>_GhZDtFlgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_alert_cod?</dataModel>
+      <expressionRef id="_92zAgTTDEe2K1spis4bODw" internalExpression="${warehouse_3.warehouse_alert_cod}$">
+        <dataModel>_hyRa8llgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+        <sourceRef>_92rEszTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92s54jTDEe2K1spis4bODw" precision="0" size="1" type="boolean" position="15">
+      <dataModel>_GhZqwFlgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=sent_alert_flag?</dataModel>
+      <expressionRef id="_92zAgzTDEe2K1spis4bODw" internalExpression="false">
+        <dataModel>_hySCAFlgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92s54zTDEe2K1spis4bODw" precision="0" size="100" type="varchar" position="18">
+      <dataModel>_GhZqwVlgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_alert_mail_address?</dataModel>
+      <expressionRef id="_92zAgjTDEe2K1spis4bODw" internalExpression="${warehouse_3.warehouse_alert_mail_address}$">
+        <dataModel>_hyRa81lgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+        <sourceRef>_92rEtjTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92s55DTDEe2K1spis4bODw" precision="0" size="10" type="integer" position="21">
+      <dataModel>_GhZqwllgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=hour_quantity?</dataModel>
+      <expressionRef id="_92yZdTTDEe2K1spis4bODw" internalExpression="${warehouse_activity_3.quantity}$">
+        <dataModel>_hyRa8FlgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+        <sourceRef>_92p2kzTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92s55TTDEe2K1spis4bODw" precision="0" size="10" type="integer" position="24">
+      <dataModel>_GhZqw1lgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=warehouse_alert_threshold_qty?</dataModel>
+      <expressionRef id="_92znkjTDEe2K1spis4bODw" internalExpression="${warehouse_3.warehouse_alert_threshold_qty}$">
+        <dataModel>_hySCA1lgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+        <sourceRef>_92rEtDTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_92s55jTDEe2K1spis4bODw" precision="0" size="10" type="integer" position="27">
+      <dataModel>_cP_WwFljEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=cumulative_period_quantity?</dataModel>
+      <expressionRef id="_92znkzTDEe2K1spis4bODw" internalExpression="${warehouse_activity_3.cumulative_period_quantity}$">
+        <dataModel>_cP_WwVljEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+        <sourceRef>_92qdoTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <constraintRef id="_92s55zTDEe2K1spis4bODw" type="pk">
+      <dataModel>_GhZqxFlgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=pk_alert?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef id="_92tg8jTDEe2K1spis4bODw">
+    <dataModel>_0OjooFe2Eem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+    <fieldRef id="_92tg8TTDEe2K1spis4bODw">
+      <dataModel>_1jCIQFe2Eem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+      <usage>_92tg8DTDEe2K1spis4bODw</usage>
+      <usage>_92xyYDTDEe2K1spis4bODw</usage>
+      <expressionRef id="_92wkQTTDEe2K1spis4bODw" internalExpression="${warehouse.warehouse_cod}$">
+        <dataModel>_1jCvUVe2Eem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+        <sourceRef>_92mzQjTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_92uIADTDEe2K1spis4bODw">
+      <dataModel>_2C4tAFe2Eem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+      <usage>_92tg8DTDEe2K1spis4bODw</usage>
+      <usage>_92wkRTTDEe2K1spis4bODw</usage>
+      <expressionRef id="_92wkQjTDEe2K1spis4bODw" internalExpression="${q_gen_hour.defined_timeslot}$">
+        <dataModel>_2C5UEFe2Eem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+        <sourceRef>_92naUjTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+  </containerRef>
+  <clauseRef id="_92SDIDTDEe2K1spis4bODw" internalExpression="${q_gen_hour.defined_timeslot}$ = ${warehouse.warehouse_cod}$">
+    <dataModel>_w_TeYFe2Eem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+    <sourceRef>_92naUjTDEe2K1spis4bODw</sourceRef>
+    <sourceRef>_92mzQjTDEe2K1spis4bODw</sourceRef>
+  </clauseRef>
+  <clauseRef id="_92tg8DTDEe2K1spis4bODw" internalExpression="${stage.warehouse_cod}$ = ${warehouse_delivery_order.warehouse_cod}$&#xA;and ${stage.defined_timeslot}$ = date_trunc('hour',${warehouse_delivery_order.delivery_timestamp}$ + interval '1 hour')">
+    <dataModel>_4o0NcFe2Eem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+    <sourceRef>_92tg8TTDEe2K1spis4bODw</sourceRef>
+    <sourceRef>_92XisjTDEe2K1spis4bODw</sourceRef>
+    <sourceRef>_92uIADTDEe2K1spis4bODw</sourceRef>
+    <sourceRef>_92XisDTDEe2K1spis4bODw</sourceRef>
+  </clauseRef>
+  <clauseRef id="_92uIATTDEe2K1spis4bODw" internalExpression="${warehouse_activity.warehouse_cod}$ = ${warehouse_2.warehouse_cod}$">
+    <dataModel>_Xoo-gFkeEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+    <sourceRef>_92llIzTDEe2K1spis4bODw</sourceRef>
+    <sourceRef>_92oodTTDEe2K1spis4bODw</sourceRef>
+  </clauseRef>
+  <clauseRef id="_92uvEDTDEe2K1spis4bODw" internalExpression="${warehouse_3.warehouse_cod}$ = ${warehouse_activity_3.warehouse_cod}$">
+    <dataModel>_DbaxQFlgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+    <sourceRef>_92rEsjTDEe2K1spis4bODw</sourceRef>
+    <sourceRef>_92qdozTDEe2K1spis4bODw</sourceRef>
+  </clauseRef>
+  <clauseRef id="_92uvETTDEe2K1spis4bODw" internalExpression="${q_gen_hour.defined_timeslot}$ > to_timestamp('${~/previous_timestamp}$', 'YYYY/MM/DD HH24:MI:SS') AND ${q_gen_hour.defined_timeslot}$ &lt;= to_timestamp('${~/current_timestamp}$', 'YYYY/MM/DD HH24:MI:SS')" status="VALID">
+    <dataModel>_U92UEFfdEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+    <problem id="_93fkEzTDEe2K1spis4bODw" code="INFO_USING_SESSION_VARIABLE" message=""/>
+    <sourceRef>_92naUjTDEe2K1spis4bODw</sourceRef>
+  </clauseRef>
+  <clauseRef id="_92uvEjTDEe2K1spis4bODw" internalExpression="${warehouse_activity.timeslot}$ between to_timestamp('${~/current_timestamp}$', 'YYYY/MM/DD HH24:MI:SS') - (interval '1 hour'*(warehouse_alert_hour_interval-1)) &#xA;                                and to_timestamp('${~/current_timestamp}$', 'YYYY/MM/DD HH24:MI:SS')&#xA; " status="VALID">
+    <dataModel>_EHZ3sFkXEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+    <problem id="_93fkFDTDEe2K1spis4bODw" code="INFO_USING_SESSION_VARIABLE" message=""/>
+    <sourceRef>_92llIjTDEe2K1spis4bODw</sourceRef>
+  </clauseRef>
+  <clauseRef id="_92vWIDTDEe2K1spis4bODw" internalExpression="${warehouse_activity_2.timeslot}$ between to_timestamp('${~/current_timestamp}$', 'YYYY/MM/DD HH24:MI:SS') - (interval '1 hour') &#xA;                                and to_timestamp('${~/current_timestamp}$', 'YYYY/MM/DD HH24:MI:SS')" status="VALID">
+    <dataModel>_FWkYgFkiEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+    <problem id="_93fkGDTDEe2K1spis4bODw" code="INFO_USING_SESSION_VARIABLE" message=""/>
+    <sourceRef>_92pPgzTDEe2K1spis4bODw</sourceRef>
+  </clauseRef>
+  <clauseRef id="_92vWITTDEe2K1spis4bODw" internalExpression="${warehouse_activity_3.is_lower_threshold_qty}$ &#xA;and not(${warehouse_activity_3.is_previous_lower_threshold_qty}$)&#xA;and ${warehouse_activity_3.timeslot}$ = to_timestamp('${~/current_timestamp}$', 'YYYY/MM/DD HH24:MI:SS')" status="VALID">
+    <dataModel>_OvIhMFlgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</dataModel>
+    <problem id="_93fkETTDEe2K1spis4bODw" code="INFO_USING_SESSION_VARIABLE" message=""/>
+    <sourceRef>_92qdoDTDEe2K1spis4bODw</sourceRef>
+    <sourceRef>_92qdpDTDEe2K1spis4bODw</sourceRef>
+    <sourceRef>_92qdojTDEe2K1spis4bODw</sourceRef>
+  </clauseRef>
+  <targetSetRef id="_93EGVjTDEe2K1spis4bODw" sourceSet="_93EGVTTDEe2K1spis4bODw">
+    <container>_92tg8jTDEe2K1spis4bODw</container>
+  </targetSetRef>
+  <targetSetRef id="_93EGWDTDEe2K1spis4bODw" sourceSet="_93EGVzTDEe2K1spis4bODw">
+    <container>_92YJwDTDEe2K1spis4bODw</container>
+  </targetSetRef>
+  <targetSetRef id="_93EGWjTDEe2K1spis4bODw" sourceSet="_93EGWTTDEe2K1spis4bODw">
+    <container>_92pPgDTDEe2K1spis4bODw</container>
+  </targetSetRef>
+  <targetSetRef id="_93EGXDTDEe2K1spis4bODw" sourceSet="_93EGWzTDEe2K1spis4bODw">
+    <container>_92p2kjTDEe2K1spis4bODw</container>
+  </targetSetRef>
+  <targetSetRef id="_93EGXjTDEe2K1spis4bODw" sourceSet="_93EGXTTDEe2K1spis4bODw">
+    <container>_92rrwDTDEe2K1spis4bODw</container>
+  </targetSetRef>
+  <sourceSetRef id="_93EGVTTDEe2K1spis4bODw" targetSet="_93EGVjTDEe2K1spis4bODw">
+    <dataSet xsi:type="map:DataSet">#_OuReIFe2Eem34vJR1a7WCA</dataSet>
+  </sourceSetRef>
+  <sourceSetRef id="_93EGVzTDEe2K1spis4bODw" targetSet="_93EGWDTDEe2K1spis4bODw">
+    <dataSet xsi:type="map:DataSet">#_wNVO4Fe2Eem34vJR1a7WCA</dataSet>
+  </sourceSetRef>
+  <sourceSetRef id="_93EGWTTDEe2K1spis4bODw" targetSet="_93EGWjTDEe2K1spis4bODw">
+    <dataSet xsi:type="map:DataSet">#_29v1oFkdEemPFZ5tyi-nXQ</dataSet>
+  </sourceSetRef>
+  <sourceSetRef id="_93EGWzTDEe2K1spis4bODw" targetSet="_93EGXDTDEe2K1spis4bODw">
+    <dataSet xsi:type="map:DataSet">#_boe4MFkeEemPFZ5tyi-nXQ</dataSet>
+  </sourceSetRef>
+  <sourceSetRef id="_93EGXTTDEe2K1spis4bODw" targetSet="_93EGXjTDEe2K1spis4bODw">
+    <dataSet xsi:type="map:DataSet">#_3lgcYFkhEemPFZ5tyi-nXQ</dataSet>
+  </sourceSetRef>
+  <templateRef id="_92znnzTDEe2K1spis4bODw" description="Integration : warehouse_activity" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=POSTGRESSQL;trgPath=server:PGSQL_SampleDB/schema:postgres.alert_flow/datastore:warehouse_activity;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=POSTGRESSQL|FILE">
+    <dataModel>_9tQYsFerEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=I_warehouse_activity?</dataModel>
+    <problem id="_93fkFTTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <targetRef>_8s-AYFerEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_9235ADTDEe2K1spis4bODw" description="Load : warehouse_delivery_order" nodeCode="com.stambia.flow.step" templateCriteria="type=L-TP;trgProduct=POSTGRESSQL;trgPath=server:PGSQL_SampleDB/schema:postgres.alert_flow/datastore:warehouse_activity;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProduct=FILE;srcPath=server:null/directory:genAlert_Folder/file:warehouse_delivery_order;srcWorkspaceCapability=false;srcMapCapability=true;srcFilterCapability=true;srcJoinCapability=false">
+    <dataModel>_c6AkEFe2Eem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=L1_warehouse_activity?</dataModel>
+    <problem id="_93fkGTTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <load>_92znlzTDEe2K1spis4bODw</load>
+    <targetRef>_8s-AYFerEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_9268UDTDEe2K1spis4bODw" description="Stage Integration : stage" nodeCode="com.stambia.flow.step" templateCriteria="type=IS-TP;trgProduct=POSTGRESSQL;trgPath=server:PGSQL_SampleDB/schema:postgres.alert_flow;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=POSTGRESSQL">
+    <dataModel>_1jHAwFe2Eem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=I_stage?</dataModel>
+    <targetRef>_0OjooFe2Eem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_929_oDTDEe2K1spis4bODw" description="Integration : warehouse_activity_2" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=POSTGRESSQL;trgPath=server:PGSQL_SampleDB/schema:postgres.alert_flow/datastore:warehouse_activity;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=POSTGRESSQL">
+    <dataModel>_hQV4kFkeEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=I_warehouse_activity_2?</dataModel>
+    <problem id="_93fkFzTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <targetRef>_boXjcFkeEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_93BqADTDEe2K1spis4bODw" description="Integration : warehouse_activity_3" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=POSTGRESSQL;trgPath=server:PGSQL_SampleDB/schema:postgres.alert_flow/datastore:warehouse_activity;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=POSTGRESSQL">
+    <dataModel>_4dsBkFkhEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=I_warehouse_activity_3?</dataModel>
+    <problem id="_93fkEjTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <targetRef>_3lOIgFkhEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_93EGQDTDEe2K1spis4bODw" description="Integration : alert" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=POSTGRESSQL;trgPath=server:PGSQL_SampleDB/schema:postgres.alert_flow/datastore:alert;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=POSTGRESSQL">
+    <dataModel>_hyW6gFlgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map$name=I_alert?</dataModel>
+    <problem id="_93fkEDTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <targetRef>_GhYcoFlgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</targetRef>
+  </templateRef>
+  <loadSet id="_92znlTTDEe2K1spis4bODw">
+    <container>_tXoNEFe2Eem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</container>
+    <container>_3O4_YFexEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</container>
+  </loadSet>
+  <loadSet id="_92znnDTDEe2K1spis4bODw">
+    <container>_3lOIgFkhEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</container>
+    <container>_B54GAFlgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</container>
+  </loadSet>
+  <loadSet id="_92znmzTDEe2K1spis4bODw">
+    <container>_boXjcFkeEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</container>
+  </loadSet>
+  <loadSet id="_92znlzTDEe2K1spis4bODw">
+    <container>_7-kpUFerEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</container>
+  </loadSet>
+  <loadSet id="_92znmDTDEe2K1spis4bODw">
+    <container>_0OjooFe2Eem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</container>
+  </loadSet>
+  <loadSet id="_92znmTTDEe2K1spis4bODw">
+    <container>_29NqIFkdEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</container>
+    <container>_8s-AYFerEem34vJR1a7WCA?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</container>
+  </loadSet>
+  <loadSet id="_92znnjTDEe2K1spis4bODw">
+    <container>_GhYcoFlgEemPFZ5tyi-nXQ?fileId=_68tjsFerEem34vJR1a7WCA$type=map?</container>
+  </loadSet>
+</ref:mapRef>

@@ -1,0 +1,27 @@
+*** Step 1 ***
+**************
+JDBC url of the Excel File
+-------------------------------
+	jdbc:stambia:excel://%{env:workspace_loc}%\Training\Files_In\Excel_Files\customers.xlsx?forceDatatypeAsString=true&columnNameStyle=FLAT
+
+*** Step 2 ***
+**************
+Stage name
+----------
+union_two_Excel_Sheets
+
+Set names
+-----------
+Sheet_S1
+named_range_S2
+
+Expression editor of the stage
+---------------------------------
+[Sheet_S1] UNION [named_range_S2]
+
+*** Step 3 ***
+**************
+		
+Option on the integration template on the target Excel sheet
+------------------------------------------------------------
+		Truncate Target Table = true

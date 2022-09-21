@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_WHzYk6xYEd6CLY_pPN2dqg" name="REPLICATION SCRIPT Rdbms">
+  <parameter id="_Do-3YKxZEd6CLY_pPN2dqg" name="scriptFileName" type="String" value=""/>
+  <parameter id="_WHzYoKxYEd6CLY_pPN2dqg" name="query" type="String" value="$SOURCE/datastore"/>
+  <parameter id="_WHzYnqxYEd6CLY_pPN2dqg" name="dropFk" type="Boolean" value="false"/>
+  <parameter id="_WHzYm6xYEd6CLY_pPN2dqg" name="dropPk" type="Boolean" value="false"/>
+  <parameter id="_WHzYlKxYEd6CLY_pPN2dqg" name="dropTables" type="Boolean" value="false"/>
+  <parameter id="_WHzYlaxYEd6CLY_pPN2dqg" name="createTables" type="Boolean" value="false"/>
+  <parameter id="_WHzYl6xYEd6CLY_pPN2dqg" name="disableConstraints" type="Boolean" value="false"/>
+  <parameter id="_WHzYmqxYEd6CLY_pPN2dqg" name="dropIndexes" type="Boolean" value="false"/>
+  <parameter id="_WHzYmaxYEd6CLY_pPN2dqg" name="createIndexes" type="Boolean" value="false"/>
+  <parameter id="_WHzYnKxYEd6CLY_pPN2dqg" name="createPk" type="Boolean" value="false"/>
+  <parameter id="_WHzYnaxYEd6CLY_pPN2dqg" name="createFk" type="Boolean" value="false"/>
+  <parameter id="_WHzYmKxYEd6CLY_pPN2dqg" name="enableConstraints" type="Boolean" value="false"/>
+  <actionCode id="_txdxgKxYEd6CLY_pPN2dqg" isBeginAction="false" name="Init Script File" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+    <link id="_wi7zkKxYEd6CLY_pPN2dqg" executionType="OK" generationType="OK" mandatory="1" targetId="_WHzY4qxYEd6CLY_pPN2dqg?fileId=_WHzYk6xYEd6CLY_pPN2dqg$type=proc$name=Drop+FK?"/>
+    <parameter id="_txdxgaxYEd6CLY_pPN2dqg" name="TXT_WRITE_FILENAME" ref="#_Do-3YKxZEd6CLY_pPN2dqg" type="String"/>
+    <code>/*&#xD;
+&#xD;
+	Creation script for technology : %x{$TARGET/tech:productCode()}x%&#xD;
+ &#xD;
+*/&#xD;
+</code>
+  </actionCode>
+  <subProcess id="_WHzYzKxYEd6CLY_pPN2dqg" generationCondition="'${dropTables}$'='true'" isBeginAction="false" name="Drop tables" nbCycles="-1" repetitionMode="" repetitionQuery="" repetitionVariableName="" toleratedError="false">
+    <link id="_WHzYzaxYEd6CLY_pPN2dqg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_WHzY0axYEd6CLY_pPN2dqg?fileId=_WHzYk6xYEd6CLY_pPN2dqg$type=proc$name=Create+tables?"/>
+    <actionCode id="_WHzYzqxYEd6CLY_pPN2dqg" generationCondition="'${dropTables}$'='true'" isBeginAction="false" name="Drop table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$ " repetitionVariableName="SOURCE" toleratedError="true" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+      <parameter id="_yEIEEKxZEd6CLY_pPN2dqg" name="TXT_WRITE_FILENAME" ref="#_Do-3YKxZEd6CLY_pPN2dqg" type="String"/>
+      <parameter id="_zKAuEKxZEd6CLY_pPN2dqg" name="TXT_WRITE_APPEND" type="Boolean" value="true"/>
+      <code>&#xD;
+%x{$SOURCE/tech:dropDdl($TARGET)}x%&#xD;
+&#xD;
+</code>
+    </actionCode>
+  </subProcess>
+  <subProcess id="_WHzY0axYEd6CLY_pPN2dqg" generationCondition="'${createTables}$'='true'" isBeginAction="false" name="Create tables" nbCycles="-1" toleratedError="false">
+    <link id="_WHzY0qxYEd6CLY_pPN2dqg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_WHzY1qxYEd6CLY_pPN2dqg?fileId=_WHzYk6xYEd6CLY_pPN2dqg$type=proc$name=Disable+PK?"/>
+    <actionCode id="_WHzY06xYEd6CLY_pPN2dqg" description="" generationCondition="'${createTables}$'='true'" isBeginAction="false" name="Create table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$" repetitionVariableName="SOURCE" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+      <parameter id="_4R1jgKxZEd6CLY_pPN2dqg" name="TXT_WRITE_FILENAME" ref="#_Do-3YKxZEd6CLY_pPN2dqg" type="String"/>
+      <parameter id="_5cyTsKxZEd6CLY_pPN2dqg" name="TXT_WRITE_APPEND" type="Boolean" value="true"/>
+      <code>&#xD;
+%x{$SOURCE/tech:creationDdl($TARGET,false(),false())}x%&#xD;
+</code>
+    </actionCode>
+  </subProcess>
+  <subProcess id="_WHzY1qxYEd6CLY_pPN2dqg" generationCondition="'${disableConstraints}$'='true'" isBeginAction="false" name="Disable PK" nbCycles="-1" toleratedError="false">
+    <link id="_WHzY16xYEd6CLY_pPN2dqg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_WHzY3KxYEd6CLY_pPN2dqg?fileId=_WHzYk6xYEd6CLY_pPN2dqg$type=proc$name=Disable+FK?"/>
+    <subProcess id="_WHzY2KxYEd6CLY_pPN2dqg" isBeginAction="false" name="Pk for table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$" repetitionVariableName="SOURCE" toleratedError="false">
+      <actionCode id="_WHzY2axYEd6CLY_pPN2dqg" generationCondition="'${disableConstraints}$'='true'" isBeginAction="false" name="Disable PK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$SOURCE/pk" repetitionVariableName="CONSTRAINT" toleratedError="true" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+        <parameter id="_iyIj4KxdEd6CLY_pPN2dqg" name="TXT_WRITE_FILENAME" ref="#_Do-3YKxZEd6CLY_pPN2dqg" type="String"/>
+        <parameter id="_lFqFsKxdEd6CLY_pPN2dqg" name="TXT_WRITE_APPEND" type="Boolean" value="true"/>
+        <code>&#xD;
+%x{$CONSTRAINT/tech:disableDdl($TARGET)}x%&#xD;
+</code>
+      </actionCode>
+    </subProcess>
+  </subProcess>
+  <subProcess id="_WHzY3KxYEd6CLY_pPN2dqg" generationCondition="'${disableConstraints}$'='true'" isBeginAction="false" name="Disable FK" nbCycles="-1" repetitionQuery="" toleratedError="false">
+    <link id="_WHzY3axYEd6CLY_pPN2dqg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_WHzY-qxYEd6CLY_pPN2dqg?fileId=_WHzYk6xYEd6CLY_pPN2dqg$type=proc$name=Drop+Indexes?"/>
+    <subProcess id="_WHzY3qxYEd6CLY_pPN2dqg" isBeginAction="false" name="Fk for table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$" repetitionVariableName="SOURCE" toleratedError="false">
+      <actionCode id="_WHzY36xYEd6CLY_pPN2dqg" generationCondition="'${enableConstraints}$'='true'" isBeginAction="false" name="Disable FK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$SOURCE/fk" repetitionVariableName="CONSTRAINT" toleratedError="true" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+        <parameter id="_rKIJkKxdEd6CLY_pPN2dqg" name="TXT_WRITE_FILENAME" ref="#_Do-3YKxZEd6CLY_pPN2dqg" type="String"/>
+        <parameter id="_s1uIsKxdEd6CLY_pPN2dqg" name="TXT_WRITE_APPEND" type="Boolean" value="true"/>
+        <code>&#xD;
+%x{$CONSTRAINT/tech:disableDdl($TARGET)}x%&#xD;
+</code>
+      </actionCode>
+    </subProcess>
+  </subProcess>
+  <subProcess id="_WHzY4qxYEd6CLY_pPN2dqg" generationCondition="'${dropFk}$'='true'" isBeginAction="false" name="Drop FK" nbCycles="-1" toleratedError="false">
+    <link id="_WHzY46xYEd6CLY_pPN2dqg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_WHzY6KxYEd6CLY_pPN2dqg?fileId=_WHzYk6xYEd6CLY_pPN2dqg$type=proc$name=Drop+PK?"/>
+    <subProcess id="_WHzY5KxYEd6CLY_pPN2dqg" isBeginAction="false" name="Fk for table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$" repetitionVariableName="SOURCE" toleratedError="false">
+      <actionCode id="_WHzY5axYEd6CLY_pPN2dqg" description="" generationCondition="'${dropFk}$'='true'" isBeginAction="false" name="Drop FK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$SOURCE/fk" repetitionVariableName="CONSTRAINT" toleratedError="true" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+        <parameter id="_kruVAKxYEd6CLY_pPN2dqg" name="TXT_WRITE_FILENAME" ref="#_Do-3YKxZEd6CLY_pPN2dqg" type="String"/>
+        <parameter id="_qd3SwKxYEd6CLY_pPN2dqg" name="TXT_WRITE_APPEND" type="Boolean" value="true"/>
+        <code>&#xD;
+%x{$CONSTRAINT/tech:dropDdl($TARGET)}x%&#xD;
+</code>
+      </actionCode>
+    </subProcess>
+  </subProcess>
+  <subProcess id="_WHzY6KxYEd6CLY_pPN2dqg" generationCondition="'${dropPk}$'='true'" isBeginAction="false" name="Drop PK" nbCycles="-1" toleratedError="false">
+    <link id="_WHzY6axYEd6CLY_pPN2dqg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_WHzYzKxYEd6CLY_pPN2dqg?fileId=_WHzYk6xYEd6CLY_pPN2dqg$type=proc$name=Drop+tables?"/>
+    <subProcess id="_WHzY6qxYEd6CLY_pPN2dqg" isBeginAction="false" name="Pk for table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$" repetitionVariableName="SOURCE" toleratedError="false">
+      <actionCode id="_WHzY66xYEd6CLY_pPN2dqg" generationCondition="'${dropPk}$'='true'" isBeginAction="false" name="Drop PK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$SOURCE/pk" repetitionVariableName="CONSTRAINT" toleratedError="true" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+        <parameter id="_n_WMcKxZEd6CLY_pPN2dqg" name="TXT_WRITE_FILENAME" ref="#_Do-3YKxZEd6CLY_pPN2dqg" type="String"/>
+        <parameter id="_p0UxEKxZEd6CLY_pPN2dqg" name="TXT_WRITE_APPEND" type="Boolean" value="true"/>
+        <code>&#xD;
+%x{$CONSTRAINT/tech:dropDdl($TARGET)}x%&#xD;
+</code>
+      </actionCode>
+    </subProcess>
+  </subProcess>
+  <subProcess id="_WHzY7qxYEd6CLY_pPN2dqg" generationCondition="'${createPk}$'='true'" isBeginAction="false" name="Create PK" nbCycles="-1" toleratedError="false">
+    <link id="_WHzY76xYEd6CLY_pPN2dqg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_WHzY9KxYEd6CLY_pPN2dqg?fileId=_WHzYk6xYEd6CLY_pPN2dqg$type=proc$name=Create+FK?"/>
+    <subProcess id="_WHzY8KxYEd6CLY_pPN2dqg" isBeginAction="false" name="PK for table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$" repetitionVariableName="SOURCE" toleratedError="false">
+      <actionCode id="_WHzY8axYEd6CLY_pPN2dqg" description="" generationCondition="'${createPk}$'='true'" enable="true" isBeginAction="false" name="Create PK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$SOURCE/pk" repetitionVariableName="CONSTRAINT" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+        <parameter id="_KbprwKxeEd6CLY_pPN2dqg" name="TXT_WRITE_FILENAME" ref="#_Do-3YKxZEd6CLY_pPN2dqg" type="String"/>
+        <parameter id="_PEyaEKxeEd6CLY_pPN2dqg" name="TXT_WRITE_APPEND" type="Boolean" value="true"/>
+        <code>&#xD;
+%x{$CONSTRAINT/tech:addDdl($TARGET)}x%&#xD;
+</code>
+      </actionCode>
+    </subProcess>
+  </subProcess>
+  <subProcess id="_WHzY9KxYEd6CLY_pPN2dqg" generationCondition="'${createFk}$'='true'" isBeginAction="false" name="Create FK" nbCycles="-1" toleratedError="false">
+    <link id="_WHzY9axYEd6CLY_pPN2dqg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_WHzZAKxYEd6CLY_pPN2dqg?fileId=_WHzYk6xYEd6CLY_pPN2dqg$type=proc$name=Create+Indexes?"/>
+    <subProcess id="_WHzY9qxYEd6CLY_pPN2dqg" isBeginAction="false" name="Fk for table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$" repetitionVariableName="SOURCE" toleratedError="false">
+      <actionCode id="_WHzY96xYEd6CLY_pPN2dqg" description="" generationCondition="'${createFk}$'='true'" isBeginAction="false" name="Create FK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$SOURCE/fk" repetitionVariableName="CONSTRAINT" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+        <parameter id="_UYYaoKxeEd6CLY_pPN2dqg" name="TXT_WRITE_FILENAME" ref="#_Do-3YKxZEd6CLY_pPN2dqg" type="String"/>
+        <parameter id="_WsM3YKxeEd6CLY_pPN2dqg" name="TXT_WRITE_APPEND" type="Boolean" value="true"/>
+        <code>&#xD;
+%x{$CONSTRAINT/tech:addDdl($TARGET)}x%&#xD;
+</code>
+      </actionCode>
+    </subProcess>
+  </subProcess>
+  <subProcess id="_WHzY-qxYEd6CLY_pPN2dqg" generationCondition="'${dropIndexes}$'='true'" isBeginAction="false" name="Drop Indexes" nbCycles="-1" toleratedError="false">
+    <link id="_fcczwKxYEd6CLY_pPN2dqg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_WHzY7qxYEd6CLY_pPN2dqg?fileId=_WHzYk6xYEd6CLY_pPN2dqg$type=proc$name=Create+PK?"/>
+    <subProcess id="_WHzY_KxYEd6CLY_pPN2dqg" isBeginAction="false" name="Indexes for table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$" repetitionVariableName="SOURCE" toleratedError="false">
+      <actionCode id="_WHzY_axYEd6CLY_pPN2dqg" generationCondition="'${dropIndexes}$'='true'" isBeginAction="false" name="Drop Indexes" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$SOURCE/index" repetitionVariableName="CONSTRAINT" toleratedError="true" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+        <parameter id="_yViAUKxdEd6CLY_pPN2dqg" name="TXT_WRITE_FILENAME" ref="#_Do-3YKxZEd6CLY_pPN2dqg" type="String"/>
+        <parameter id="_0thycKxdEd6CLY_pPN2dqg" name="TXT_WRITE_APPEND" type="Boolean" value="true"/>
+        <code>&#xD;
+%x{$CONSTRAINT/tech:dropDdl($TARGET)}x%&#xD;
+</code>
+      </actionCode>
+    </subProcess>
+  </subProcess>
+  <subProcess id="_WHzZAKxYEd6CLY_pPN2dqg" generationCondition="'${createIndexes}$'='true'" isBeginAction="false" name="Create Indexes" nbCycles="-1" toleratedError="false">
+    <link id="_WHzZAaxYEd6CLY_pPN2dqg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_WHzZBqxYEd6CLY_pPN2dqg?fileId=_WHzYk6xYEd6CLY_pPN2dqg$type=proc$name=Enable+Constraints?"/>
+    <subProcess id="_WHzZAqxYEd6CLY_pPN2dqg" isBeginAction="false" name="Index for table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$" repetitionVariableName="SOURCE" toleratedError="false">
+      <actionCode id="_WHzZA6xYEd6CLY_pPN2dqg" generationCondition="'${createIndexes}$'='true'" isBeginAction="false" name="Create Indexes" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$SOURCE/index" repetitionVariableName="CONSTRAINT" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+        <parameter id="_a_R2IKxeEd6CLY_pPN2dqg" name="TXT_WRITE_FILENAME" ref="#_Do-3YKxZEd6CLY_pPN2dqg" type="String"/>
+        <parameter id="_cMURAKxeEd6CLY_pPN2dqg" name="TXT_WRITE_APPEND" type="Boolean" value="true"/>
+        <code>&#xD;
+%x{$CONSTRAINT/tech:creationDdl($TARGET)}x%&#xD;
+</code>
+      </actionCode>
+    </subProcess>
+  </subProcess>
+  <subProcess id="_WHzZBqxYEd6CLY_pPN2dqg" generationCondition="'${enableConstraints}$'='true'" isBeginAction="false" name="Enable Constraints" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$" repetitionVariableName="SOURCE" toleratedError="false">
+    <actionCode id="_WHzZB6xYEd6CLY_pPN2dqg" description="" generationCondition="'${enableConstraints}$'='true'" isBeginAction="false" name="enable PK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$SOURCE/pk" repetitionVariableName="CONSTRAINT" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+      <link id="_WHzZCKxYEd6CLY_pPN2dqg" executionType="OK" generationType="OK" mandatory="1" targetId="_WHzZC6xYEd6CLY_pPN2dqg"/>
+      <parameter id="_gHZmgKxeEd6CLY_pPN2dqg" name="TXT_WRITE_FILENAME" ref="#_Do-3YKxZEd6CLY_pPN2dqg" type="String"/>
+      <parameter id="_kXC2wKxeEd6CLY_pPN2dqg" name="TXT_WRITE_APPEND" type="Boolean" value="true"/>
+      <code>&#xD;
+%x{$CONSTRAINT/tech:enableDdl($TARGET)}x%&#xD;
+</code>
+    </actionCode>
+    <actionCode id="_WHzZC6xYEd6CLY_pPN2dqg" generationCondition="'${enableConstraints}$'='true'" isBeginAction="false" name="enable FK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$SOURCE/fk" repetitionVariableName="CONSTRAINT" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+      <parameter id="_gYPe4KxeEd6CLY_pPN2dqg" name="TXT_WRITE_FILENAME" ref="#_Do-3YKxZEd6CLY_pPN2dqg" type="String"/>
+      <parameter id="_lnXPIKxeEd6CLY_pPN2dqg" name="TXT_WRITE_APPEND" type="Boolean" value="true"/>
+      <code>&#xD;
+%x{$CONSTRAINT/tech:enableDdl($TARGET)}x%&#xD;
+</code>
+    </actionCode>
+  </subProcess>
+</proc:process>

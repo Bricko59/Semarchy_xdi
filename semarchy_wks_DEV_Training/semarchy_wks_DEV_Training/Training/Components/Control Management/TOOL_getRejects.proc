@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_KZIzoeTPEeebpNpIPWPqBg" description="How to use it ?&#xD;&#xA;----------------&#xD;&#xA;1-Drag &amp; Drop this template at the top (main) level of a process&#xD;&#xA;2-Drag &amp; Drop FIRST a table used &#xD;&#xA;    --> in a &quot;enable rejects&quot; mapping &#xD;&#xA;    --> in a process which used the reject template&#xD;&#xA;3-Drag &amp; Drop AFTER a mailing list &#xD;&#xA;4-Link the end of the process to this template &#xD;&#xA;4-Define the properties of the template&#xD;&#xA;&#xD;&#xA;What will be done ?&#xD;&#xA;---------------------&#xD;&#xA;The template will send an email with information on the rejects of the current session&#xD;&#xA;The template can generate an error that could be treated by another ERROR template&#xD;&#xA;&#xD;&#xA;What are your options ?&#xD;&#xA;-------------------------&#xD;&#xA;You can add a process reference/code, different to the process name. It will work even if there is no value&#xD;&#xA;You can choose to define the email of the sender&#xD;&#xA;You can define the lable of the error generated&#xD;&#xA;You can choose to generate an error and combine it with another ERRORTemplate&#xD;&#xA;You can choose which type of email content that will be generated : AGGREGATED / DETAILLED / BOTH" generationCondition="">
+  <parameter id="_KZIzouTPEeebpNpIPWPqBg" label="Process reference" name="PROCESS_REFERENCE" type="String" value=""/>
+  <parameter id="_KZIzo-TPEeebpNpIPWPqBg" label="Generate an error in case of reject" name="GENERATE_ERROR" type="Boolean" value="false"/>
+  <parameter id="_KZIzpOTPEeebpNpIPWPqBg" label="Label to generate as an error in case of reject" name="ERROR_LABEL" type="String" value="Data quality reject"/>
+  <parameter id="_KZIzpeTPEeebpNpIPWPqBg" metaInf="&lt;metaInf id=&quot;value&quot; value=&quot;AGGREGATED&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;DETAILLED&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;BOTH&quot;/>" label="Detail level of the email content to send" name="EMAIL_CONTENT" type="String" value="AGGREGATED"/>
+  <parameter id="_KZIzpuTPEeebpNpIPWPqBg" metaInf="&lt;metaInf id=&quot;value&quot; value=&quot;&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;Warning&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;Reject&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;Fatal&quot;/>" name="SEVERITY_LEVEL" type="String" value="Reject"/>
+  <actionCode id="_KZIzp-TPEeebpNpIPWPqBg" generationCondition="" enable="true" isBeginAction="false" name="SendMail with mailing list" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SendMailActionCodeI">
+    <link id="_KZIzqOTPEeebpNpIPWPqBg" generationCondition="exists($MAILING_LIST)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_KZIztOTPEeebpNpIPWPqBg"/>
+    <parameter id="_KZIzqeTPEeebpNpIPWPqBg" description="SMTP Host name" name="MAIL_HOSTNAME" type="String" value="%x{$MAILING_LIST/../outgoingServer[1]/tech:hostName()}x%"/>
+    <parameter id="_KZIzquTPEeebpNpIPWPqBg" description="Mail sender" name="MAIL_FROM" type="String" value="%x{$MAILING_LIST/../outgoingServer[1]/tech:user()}x% "/>
+    <parameter id="_KZIzq-TPEeebpNpIPWPqBg" name="MAIL_TO" type="String" value="%x{$MAILING_LIST/tech:addressList()}x%"/>
+    <parameter id="_KZIzrOTPEeebpNpIPWPqBg" name="MAIL_SUBJECT" type="String" value="${../ERROR_LABEL}$ in ${/CORE_SESSION_NAME}$ for session id ${/CORE_SESSION_ID}$"/>
+    <parameter id="_KZIzreTPEeebpNpIPWPqBg" name="MAIL_PORT" type="String" value="%x{$MAILING_LIST/../outgoingServer[1]/tech:port()}x%"/>
+    <parameter id="_KZIzruTPEeebpNpIPWPqBg" name="MAIL_USER" type="String" value="%x{$MAILING_LIST/../outgoingServer[1]/tech:user()}x%"/>
+    <parameter id="_KZIzr-TPEeebpNpIPWPqBg" name="MAIL_PASSWORD" type="String" value="%x{$MAILING_LIST/../outgoingServer[1]/tech:password()}x%"/>
+    <parameter id="_KZIzsOTPEeebpNpIPWPqBg" name="MAIL_SSL_PROTOCOL" type="String" value="%x{$MAILING_LIST/../outgoingServer[1]/tech:sslProtocol()}x%"/>
+    <parameter id="_KZIzseTPEeebpNpIPWPqBg" name="MAIL_USE_SSL" type="String" value="%x{$MAILING_LIST/../outgoingServer[1]/tech:useSsl()}x%"/>
+    <parameter id="_KZIzsuTPEeebpNpIPWPqBg" name="MAIL_HTML_MODE" type="String" value="true"/>
+    <parameter id="_KZIzs-TPEeebpNpIPWPqBg" name="MAIL_CONTENT_FILE" type="String" value="${/CORE_TEMPORARY_FOLDER}$/reject_${/CORE_SESSION_ID}$_%x{md:physicalPath($MAPPING_TABLE,'rejectName')}x%.html"/>
+    <code></code>
+  </actionCode>
+  <actionCode id="_KZIztOTPEeebpNpIPWPqBg" generationCondition="'${GENERATE_ERROR}$'='true'" isBeginAction="false" name="Throw a data quality error" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <parameter id="_KZIzteTPEeebpNpIPWPqBg" description="Scripting language (Rhino, Jython, etc.)" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+    <code>throw(&quot;${../ERROR_LABEL}$ stored in %x{md:physicalPath($MAPPING_TABLE,'rejectName')}x%&quot;)</code>
+  </actionCode>
+  <actionCode id="_KZIztuTPEeebpNpIPWPqBg" generationCondition="'${EMAIL_CONTENT}$'='DETAILLED' or '${EMAIL_CONTENT}$'='BOTH'" isBeginAction="false" name="SQLFileExport detailed" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SqlFileExportActionCodeI">
+    <link id="_KZIzt-TPEeebpNpIPWPqBg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_KZIzweTPEeebpNpIPWPqBg"/>
+    <parameter id="_KZIzuOTPEeebpNpIPWPqBg" description="Exported File Name" name="SQL_EXP_FILENAME" type="String" value="${/CORE_TEMPORARY_FOLDER}$/reject_${/CORE_SESSION_ID}$_%x{md:physicalPath($MAPPING_TABLE,'rejectName')}x%.html"/>
+    <parameter id="_KZIzueTPEeebpNpIPWPqBg" name="SQL_CONNECTION" type="String" value="%targetConnection{$MAPPING_TABLE}%"/>
+    <parameter id="_KZIzuuTPEeebpNpIPWPqBg" name="SQL_EXP_FILE_APPEND" type="String" value="true"/>
+    <parameter id="_KZIzu-TPEeebpNpIPWPqBg" name="SQL_EXP_ROW_SEP" type="String" value="&lt;/TD> &lt;/TR> &lt;TR> &lt;TD>"/>
+    <parameter id="_KZIzvOTPEeebpNpIPWPqBg" name="SQL_EXP_FIELD_SEP" type="String" value="&lt;/TD> &lt;TD>"/>
+    <code>SELECT REJECT_MESSAGE,REJECT_CODE,&#xD;
+       %e(rhino){ if (('%x{tech:productCode()}x%' != 'MICROSOFT_SQL_SERVER') &amp;&amp; ('%x{tech:productCode()}x%' != 'IBM_DB2_400')) {__ctx__.retValue = 'SUBSTR(REJECTED_BY,1,LENGTH(REJECTED_BY)-26),' ; } else {__ctx__.retValue = 'SUBSTRING(REJECTED_BY,1,LENGTH(REJECTED_BY)-26),' ;} }e(rhino)%&#xD;
+       RULE_NAME,RULE_TYPE,RULE_SEVERITY,REJECT_DATE,&#xD;
+       %x{md:patternList($MAPPING_TABLE/ref:columns()[tech:isMapped()],'[name]', ',')}x%  &#xD;
+FROM   %x{md:physicalPath($MAPPING_TABLE,'rejectName')}x%&#xD;
+WHERE  SESSION_ID='${/CORE_SESSION_ID}$'&#xD;
+%e(rhino){ switch ('${../SEVERITY_LEVEL}$')&#xD;
+           {  &#xD;
+              case ''        : __ctx__.retValue = '';&#xD;
+                               break;&#xD;
+              case 'Warning' : __ctx__.retValue = &quot; AND (RULE_SEVERITY = 'WARNING')&quot;;&#xD;
+                               break;&#xD;
+              case 'Reject'  : __ctx__.retValue = &quot; AND (RULE_SEVERITY = 'REJECT')&quot;;&#xD;
+                               break;&#xD;
+              case 'Fatal'   : __ctx__.retValue = &quot; AND (RULE_SEVERITY = 'FATAL')&quot;;&#xD;
+                               break;&#xD;
+           }&#xD;
+}e(rhino)%   </code>
+  </actionCode>
+  <actionCode id="_KZIzveTPEeebpNpIPWPqBg" generationCondition="'${EMAIL_CONTENT}$'='DETAILLED' or '${EMAIL_CONTENT}$'='BOTH'" isBeginAction="false" name="WriteTxtFile Begin HTML detailled" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+    <link id="_KZIzvuTPEeebpNpIPWPqBg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_KZIztuTPEeebpNpIPWPqBg"/>
+    <parameter id="_KZIzv-TPEeebpNpIPWPqBg" description="Name of the file" name="TXT_WRITE_FILENAME" type="String" value="${/CORE_TEMPORARY_FOLDER}$/reject_${/CORE_SESSION_ID}$_%x{md:physicalPath($MAPPING_TABLE,'rejectName')}x%.html"/>
+    <parameter id="_KZIzwOTPEeebpNpIPWPqBg" name="TXT_WRITE_APPEND" type="String" value="after"/>
+    <code>&lt;TABLE BORDER=&quot;1&quot;> &#xD;
+  &lt;CAPTION> DETAILLED REJECT LIST &lt;/CAPTION> &#xD;
+  &lt;TR> &#xD;
+      &lt;TH> REJECT MESSAGE &lt;/TH> &#xD;
+      &lt;TH> REJECT CODE &lt;/TH> &#xD;
+      &lt;TH> REJECTED BY &lt;/TH> &#xD;
+      &lt;TH> RULE NAME &lt;/TH> &#xD;
+      &lt;TH> RULE TYPE &lt;/TH> &#xD;
+      &lt;TH> RULE SEVERITY &lt;/TH> &#xD;
+      &lt;TH> REJECT_DATE &lt;/TH>&#xD;
+      &lt;TH> &#xD;
+           %x{md:patternList($MAPPING_TABLE/ref:columns()[tech:isMapped()],'[name]', '&amp;lt;/TH&amp;gt;  &amp;lt;TH&amp;gt; ')}x% &#xD;
+      &lt;/TH>&#xD;
+  &lt;/TR> &#xD;
+</code>
+  </actionCode>
+  <actionCode id="_KZIzweTPEeebpNpIPWPqBg" generationCondition="'${EMAIL_CONTENT}$'='DETAILLED' or '${EMAIL_CONTENT}$'='BOTH'" isBeginAction="false" name="WriteTxtFile End HTML detailled" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+    <link id="_KZIzwuTPEeebpNpIPWPqBg" generationCondition="exists($MAILING_LIST)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_KZIzp-TPEeebpNpIPWPqBg"/>
+    <link id="_KZIzw-TPEeebpNpIPWPqBg" generationCondition="exists($TARGET_MESSAGE)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_KZIz6eTPEeebpNpIPWPqBg"/>
+    <parameter id="_KZIzxOTPEeebpNpIPWPqBg" description="Name of the file" name="TXT_WRITE_FILENAME" type="String" value="${/CORE_TEMPORARY_FOLDER}$/reject_${/CORE_SESSION_ID}$_%x{md:physicalPath($MAPPING_TABLE,'rejectName')}x%.html"/>
+    <parameter id="_KZIzxeTPEeebpNpIPWPqBg" name="TXT_WRITE_APPEND" type="String" value="after"/>
+    <code>&lt;/TD> &lt;/TR>&#xD;
+&lt;/TABLE> &#xD;
+  &#xD;
+</code>
+  </actionCode>
+  <actionCode id="_KZIzxuTPEeebpNpIPWPqBg" generationCondition="'${EMAIL_CONTENT}$'='AGGREGATED' or '${EMAIL_CONTENT}$'='BOTH'" isBeginAction="false" name="WriteTxtFile Begin HTML aggregated" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+    <link id="_KZIzx-TPEeebpNpIPWPqBg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_KZIzyuTPEeebpNpIPWPqBg"/>
+    <parameter id="_KZIzyOTPEeebpNpIPWPqBg" description="Name of the file" name="TXT_WRITE_FILENAME" type="String" value="${/CORE_TEMPORARY_FOLDER}$/reject_${/CORE_SESSION_ID}$_%x{md:physicalPath($MAPPING_TABLE,'rejectName')}x%.html"/>
+    <parameter id="_KZIzyeTPEeebpNpIPWPqBg" name="TXT_WRITE_APPEND" type="String" value="after"/>
+    <code>&#xD;
+&lt;TABLE BORDER=&quot;1&quot;> &#xD;
+  &lt;CAPTION> AGGREGATED REJECT LIST &lt;/CAPTION> &#xD;
+  &lt;TR> &#xD;
+      &lt;TH> REJECT CODE &lt;/TH> &#xD;
+      &lt;TH> REJECT MESSAGE &lt;/TH> &#xD;
+      &lt;TH> REJECTED BY &lt;/TH> &#xD;
+      &lt;TH> RULE NAME &lt;/TH> &#xD;
+      &lt;TH> RULE TYPE &lt;/TH> &#xD;
+      &lt;TH> RULE SEVERITY &lt;/TH> &#xD;
+      &lt;TH> REJECT_DATE &lt;/TH>&#xD;
+      &lt;TH> ERROR_COUNT &lt;/TH>&#xD;
+  &lt;/TR> &#xD;
+</code>
+  </actionCode>
+  <actionCode id="_KZIzyuTPEeebpNpIPWPqBg" generationCondition="'${EMAIL_CONTENT}$'='AGGREGATED' or '${EMAIL_CONTENT}$'='BOTH'" isBeginAction="false" name="SQLFileExport aggregated" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SqlFileExportActionCodeI">
+    <link id="_KZIzy-TPEeebpNpIPWPqBg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_KZIz0eTPEeebpNpIPWPqBg"/>
+    <parameter id="_KZIzzOTPEeebpNpIPWPqBg" description="Exported File Name" name="SQL_EXP_FILENAME" type="String" value="${/CORE_TEMPORARY_FOLDER}$/reject_${/CORE_SESSION_ID}$_%x{md:physicalPath($MAPPING_TABLE,'rejectName')}x%.html"/>
+    <parameter id="_KZIzzeTPEeebpNpIPWPqBg" name="SQL_CONNECTION" type="String" value="%targetConnection{$MAPPING_TABLE}%"/>
+    <parameter id="_KZIzzuTPEeebpNpIPWPqBg" name="SQL_EXP_FILE_APPEND" type="String" value="true"/>
+    <parameter id="_KZIzz-TPEeebpNpIPWPqBg" name="SQL_EXP_ROW_SEP" type="String" value="&lt;/TD> &lt;/TR> &lt;TR> &lt;TD>"/>
+    <parameter id="_KZIz0OTPEeebpNpIPWPqBg" name="SQL_EXP_FIELD_SEP" type="String" value="&lt;/TD> &lt;TD>"/>
+    <code>SELECT REJECT_CODE,REJECT_MESSAGE, &#xD;
+       %e(rhino){ if (('%x{tech:productCode()}x%' != 'MICROSOFT_SQL_SERVER') &amp;&amp; ('%x{tech:productCode()}x%' != 'IBM_DB2_400')) {__ctx__.retValue = 'SUBSTR(REJECTED_BY,1,LENGTH(REJECTED_BY)-26),' ; } else {__ctx__.retValue = 'SUBSTRING(REJECTED_BY,1,LENGTH(REJECTED_BY)-26),' ;} }e(rhino)%&#xD;
+       RULE_NAME,RULE_TYPE,RULE_SEVERITY,REJECT_DATE,&#xD;
+       COUNT(*) AS ERROR_COUNT  &#xD;
+FROM   %x{md:physicalPath($MAPPING_TABLE,'rejectName')}x%&#xD;
+WHERE  SESSION_ID='${/CORE_SESSION_ID}$'&#xD;
+%e(rhino){ switch ('${../SEVERITY_LEVEL}$')&#xD;
+           {  &#xD;
+              case ''        : __ctx__.retValue = '';&#xD;
+                               break;&#xD;
+              case 'Warning' : __ctx__.retValue = &quot; AND (RULE_SEVERITY = 'WARNING')&quot;;&#xD;
+                               break;&#xD;
+              case 'Reject'  : __ctx__.retValue = &quot; AND (RULE_SEVERITY = 'REJECT')&quot;;&#xD;
+                               break;&#xD;
+              case 'Fatal'   : __ctx__.retValue = &quot; AND (RULE_SEVERITY = 'FATAL')&quot;;&#xD;
+                               break;&#xD;
+           }&#xD;
+}e(rhino)%   &#xD;
+GROUP  BY REJECT_CODE,REJECT_MESSAGE,REJECTED_BY,&#xD;
+       RULE_NAME,RULE_TYPE,RULE_SEVERITY,REJECT_DATE</code>
+  </actionCode>
+  <actionCode id="_KZIz0eTPEeebpNpIPWPqBg" generationCondition="'${EMAIL_CONTENT}$'='AGGREGATED' or '${EMAIL_CONTENT}$'='BOTH'" isBeginAction="false" name="WriteTxtFile End HTML aggregated" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+    <link id="_KZIz0uTPEeebpNpIPWPqBg" executionType="OK" generationType="OK_KO" mandatory="0" targetId="_KZIzveTPEeebpNpIPWPqBg"/>
+    <parameter id="_KZIz0-TPEeebpNpIPWPqBg" description="Name of the file" name="TXT_WRITE_FILENAME" type="String" value="${/CORE_TEMPORARY_FOLDER}$/reject_${/CORE_SESSION_ID}$_%x{md:physicalPath($MAPPING_TABLE,'rejectName')}x%.html"/>
+    <parameter id="_KZIz1OTPEeebpNpIPWPqBg" name="TXT_WRITE_APPEND" type="String" value="after"/>
+    <code>&lt;/TD> &lt;/TR>&#xD;
+&lt;/TABLE> &#xD;
+&lt;br> &#xD;
+&lt;br> &#xD;
+</code>
+  </actionCode>
+  <actionCode id="_KZIz1eTPEeebpNpIPWPqBg" generationCondition="" isBeginAction="false" name="Internal Reject treatment" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_KZIz1uTPEeebpNpIPWPqBg" executionType="KO" generationType="OK_KO" mandatory="1" targetId="_KZIz9uTPEeebpNpIPWPqBg"/>
+    <link id="_KZIz1-TPEeebpNpIPWPqBg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_KZIz2uTPEeebpNpIPWPqBg"/>
+    <parameter id="_KZIz2OTPEeebpNpIPWPqBg" name="SQL_CONNECTION" type="String" value="%targetConnection{$MAPPING_TABLE}%"/>
+    <parameter id="_KZIz2eTPEeebpNpIPWPqBg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <code>create table %x{md:physicalPath($MAPPING_TABLE,'rejectName')}x%
+(
+	SESSION_ID			%x{$MAPPING_TABLE/ref:target()/tech:varcharDdl(35)}x% %x{$MAPPING_TABLE/tech:nullWord()}x%,
+	REJECT_MODE			%x{$MAPPING_TABLE/ref:target()/tech:varcharDdl(1)}x% %x{$MAPPING_TABLE/tech:nullWord()}x%,
+	REJECT_MESSAGE		%x{$MAPPING_TABLE/ref:target()/tech:varcharDDL(250)}x% %x{$MAPPING_TABLE/tech:nullWord()}x%, 
+	REJECT_CODE			%x{$MAPPING_TABLE/ref:target()/tech:varcharDDL(35)}x% %x{$MAPPING_TABLE/tech:nullWord()}x%,
+	REJECTED_BY			%x{$MAPPING_TABLE/ref:target()/tech:varcharDDL(100)}x% %x{$MAPPING_TABLE/tech:nullWord()}x%,
+	RULE_NAME			%x{$MAPPING_TABLE/ref:target()/tech:varcharDDL(35)}x% %x{$MAPPING_TABLE/tech:nullWord()}x%,
+	RULE_TYPE			%x{$MAPPING_TABLE/ref:target()/tech:varcharDDL(2)}x% %x{$MAPPING_TABLE/tech:nullWord()}x%,
+	RULE_SEVERITY		%x{$MAPPING_TABLE/ref:target()/tech:varcharDDL(10)}x% %x{$MAPPING_TABLE/tech:nullWord()}x%,
+	REJECT_DATE			%x{$MAPPING_TABLE/ref:target()/tech:dateDDL()}x% %x{$MAPPING_TABLE/tech:nullWord()}x%,
+	%x{md:patternList($MAPPING_TABLE/ref:targetColumns(),'[colName]\t\t[targetWritableType] [nullWord]', ',\n\t')}x%
+)
+</code>
+  </actionCode>
+  <actionCode id="_KZIz2uTPEeebpNpIPWPqBg" generationCondition="" isBeginAction="false" name="drop of reject table" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <parameter id="_KZIz2-TPEeebpNpIPWPqBg" name="SQL_CONNECTION" type="String" value="%targetConnection{$MAPPING_TABLE}%"/>
+    <parameter id="_KZIz3OTPEeebpNpIPWPqBg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <code>drop table %x{md:physicalPath($MAPPING_TABLE,'rejectName')}x%</code>
+  </actionCode>
+  <actionCode id="_KZIz3eTPEeebpNpIPWPqBg" generationCondition="" isBeginAction="false" name="WriteTxtFile Begin HTML Title" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+    <link id="_KZIz3uTPEeebpNpIPWPqBg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_KZIzxuTPEeebpNpIPWPqBg"/>
+    <parameter id="_KZIz3-TPEeebpNpIPWPqBg" description="Name of the file" name="TXT_WRITE_FILENAME" type="String" value="${/CORE_TEMPORARY_FOLDER}$/reject_${/CORE_SESSION_ID}$_%x{md:physicalPath($MAPPING_TABLE,'rejectName')}x%.html"/>
+    <code>&lt;h1> REJECT LIST on %x{md:physicalName($MAPPING_TABLE)}x% TABLE &lt;/h1>&#xD;
+&lt;br> &#xD;
+&lt;br></code>
+  </actionCode>
+  <actionCode id="_KZIz4OTPEeebpNpIPWPqBg" isBeginAction="false" name="EmptyAction" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_KZIz4eTPEeebpNpIPWPqBg" generationCondition="exists($MAPPING_TABLE) and ( exists($MAILING_LIST)  or  exists($TARGET_MESSAGE) )" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_KZIz1eTPEeebpNpIPWPqBg"/>
+  </actionCode>
+  <actionCode id="_KZIz4uTPEeebpNpIPWPqBg" generationCondition="" isBeginAction="false" name="SQLFileExportCount" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SqlFileExportActionCodeI">
+    <link id="_KZIz4-TPEeebpNpIPWPqBg" executionCondition="__ctx__.sumVariable(&quot;SQL_NB_ROWS&quot;,&quot;SQLFileExportCount&quot;) != 0" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_KZIz3eTPEeebpNpIPWPqBg"/>
+    <parameter id="_KZIz5OTPEeebpNpIPWPqBg" description="Exported File Name" name="SQL_EXP_FILENAME" type="String" value="${/CORE_TEMPORARY_FOLDER}$/reject_${/CORE_SESSION_ID}$_%x{md:physicalPath($MAPPING_TABLE,'rejectName')}x%_1.txt"/>
+    <parameter id="_KZIz5eTPEeebpNpIPWPqBg" name="SQL_CONNECTION" type="String" value="%targetConnection{$MAPPING_TABLE}%"/>
+    <parameter id="_KZIz5uTPEeebpNpIPWPqBg" name="SQL_EXP_FILE_APPEND" type="String" value="true"/>
+    <parameter id="_KZIz5-TPEeebpNpIPWPqBg" name="SQL_EXP_ROW_SEP" type="String" value="&lt;/TD> &lt;/TR> &lt;TR> &lt;TD>"/>
+    <parameter id="_KZIz6OTPEeebpNpIPWPqBg" name="SQL_EXP_FIELD_SEP" type="String" value="&lt;/TD> &lt;TD>"/>
+    <code>SELECT *&#xD;
+FROM   %x{md:physicalPath($MAPPING_TABLE,'rejectName')}x%&#xD;
+WHERE  SESSION_ID='${/CORE_SESSION_ID}$'&#xD;
+%e(rhino){ switch ('${../SEVERITY_LEVEL}$')&#xD;
+           {  &#xD;
+              case ''        : __ctx__.retValue = '';&#xD;
+                               break;&#xD;
+              case 'Warning' : __ctx__.retValue = &quot; AND (RULE_SEVERITY = 'WARNING')&quot;;&#xD;
+                               break;&#xD;
+              case 'Reject'  : __ctx__.retValue = &quot; AND (RULE_SEVERITY = 'REJECT')&quot;;&#xD;
+                               break;&#xD;
+              case 'Fatal'   : __ctx__.retValue = &quot; AND (RULE_SEVERITY = 'FATAL')&quot;;&#xD;
+                               break;&#xD;
+           }&#xD;
+}e(rhino)%       </code>
+  </actionCode>
+  <actionCode id="_KZIz6eTPEeebpNpIPWPqBg" generationCondition="exists($TARGET_MESSAGE)" enable="true" isBeginAction="false" name="SendMail with message" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SendMailActionCodeI">
+    <link id="_KZIz6uTPEeebpNpIPWPqBg" generationCondition="exists($TARGET_MESSAGE)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_KZIztOTPEeebpNpIPWPqBg"/>
+    <parameter id="_KZIz6-TPEeebpNpIPWPqBg" description="SMTP Host name" name="MAIL_HOSTNAME" type="String" value="%x{$TARGET_MESSAGE/tech:hostName()}x%"/>
+    <parameter id="_KZIz7OTPEeebpNpIPWPqBg" description="Mail sender" name="MAIL_FROM" type="String" value="%x{$TARGET_MESSAGE/tech:user()}x%"/>
+    <parameter id="_KZIz7eTPEeebpNpIPWPqBg" name="MAIL_TO" type="String" value="%x{$TARGET_MESSAGE/tech:To()}x%"/>
+    <parameter id="_KZIz7uTPEeebpNpIPWPqBg" name="MAIL_SUBJECT" type="String" value="${../ERROR_LABEL}$ in ${/CORE_SESSION_NAME}$ process (Sessionn id ${/CORE_SESSION_ID}$)"/>
+    <parameter id="_KZIz7-TPEeebpNpIPWPqBg" name="MAIL_PORT" type="String" value="%x{$TARGET_MESSAGE/tech:port()}x%"/>
+    <parameter id="_KZIz8OTPEeebpNpIPWPqBg" name="MAIL_USER" type="String" value="%x{$TARGET_MESSAGE/tech:user()}x%"/>
+    <parameter id="_KZIz8eTPEeebpNpIPWPqBg" name="MAIL_PASSWORD" type="String" value="%x{$TARGET_MESSAGE/tech:password()}x%"/>
+    <parameter id="_KZIz8uTPEeebpNpIPWPqBg" name="MAIL_SSL_PROTOCOL" type="String" value="%x{$TARGET_MESSAGE/tech:sslProtocol()}x%"/>
+    <parameter id="_KZIz8-TPEeebpNpIPWPqBg" name="MAIL_USE_SSL" type="String" value="%x{$TARGET_MESSAGE/tech:useSsl()}x%"/>
+    <parameter id="_KZIz9OTPEeebpNpIPWPqBg" name="MAIL_HTML_MODE" type="String" value="true"/>
+    <parameter id="_KZIz9eTPEeebpNpIPWPqBg" name="MAIL_CONTENT_FILE" type="String" value="${/CORE_TEMPORARY_FOLDER}$/reject_${/CORE_SESSION_ID}$_%x{md:physicalPath($MAPPING_TABLE,'rejectName')}x%.html"/>
+    <code></code>
+  </actionCode>
+  <actionCode id="_KZIz9uTPEeebpNpIPWPqBg" isBeginAction="false" name="Rejects exists" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_KZIz9-TPEeebpNpIPWPqBg" generationCondition="'${EMAIL_CONTENT}$'='AGGREGATED' or '${EMAIL_CONTENT}$'='BOTH'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_KZIz4uTPEeebpNpIPWPqBg"/>
+    <link id="_KZIz-OTPEeebpNpIPWPqBg" generationCondition="'${EMAIL_CONTENT}$'='DETAILLED' " executionType="OK" generationType="OK_KO" mandatory="1" targetId="_KZIz-eTPEeebpNpIPWPqBg"/>
+  </actionCode>
+  <actionCode id="_KZIz-eTPEeebpNpIPWPqBg" generationCondition="" isBeginAction="false" name="WriteTxtFile Begin HTML Title (2)" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+    <link id="_KZIz-uTPEeebpNpIPWPqBg" executionType="OK" generationType="OK_KO" mandatory="0" targetId="_KZIzveTPEeebpNpIPWPqBg"/>
+    <parameter id="_KZIz--TPEeebpNpIPWPqBg" description="Name of the file" name="TXT_WRITE_FILENAME" type="String" value="${/CORE_TEMPORARY_FOLDER}$/reject_${/CORE_SESSION_ID}$_%x{md:physicalPath($MAPPING_TABLE,'rejectName')}x%.html"/>
+    <code>&lt;h1> REJECT LIST on %x{md:physicalName($MAPPING_TABLE)}x% TABLE &lt;/h1>&#xD;
+&lt;br> &#xD;
+&lt;br></code>
+  </actionCode>
+  <xslVariable id="_KZIz_OTPEeebpNpIPWPqBg" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='mailingList'][1]" name="MAILING_LIST" type="xpath"/>
+  <xslVariable id="_KZIz_eTPEeebpNpIPWPqBg" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='datastore'][1]" name="MAPPING_TABLE" type="xpath"/>
+  <xslVariable id="_KZIz_uTPEeebpNpIPWPqBg" description="How to use it ?&#xD;&#xA;----------------&#xD;&#xA;1-Drag &amp; Drop this template at the top (main) level of a process&#xD;&#xA;2-Drag &amp; Drop a RDBMS schema in this template&#xD;&#xA;3-Link the end of the process to this template with a &quot;Unsuccessful Link&quot;&#xD;&#xA;4-Define the properties of the template&#xD;&#xA;&#xD;&#xA;What will be done ?&#xD;&#xA;---------------------&#xD;&#xA;The template will try to CREATE the STB_ERROR_LOG table in the schema &#xD;&#xA;The template will INSERT error properties in the STB_ERROR_LOG table , one record per error&#xD;&#xA;At the end, an error is generated to keep the process in error&#xD;&#xA;&#xD;&#xA;What are your options ?&#xD;&#xA;-------------------------&#xD;&#xA;You can add a process reference/code, different to the process name. It will work even if there is no value&#xD;&#xA;You can choose to drop the STB_ERROR_LOG table at the begin of the template&#xD;&#xA;You can choose to insert also the TOLERATED errors in the table&#xD;&#xA;&#xD;&#xA;mdj:getMetaDataRef($this/metaDataLink[1])" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='message'][1]" name="TARGET_MESSAGE" type="xpath"/>
+</proc:process>

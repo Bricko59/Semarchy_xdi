@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="ASCII"?>
+<cross:root xmlns:cross="http://www.stambia.com/cross" id="_oxc-kPIEEeeYj5neBLIRPw?fileId=_oxc-kPIEEeeYj5neBLIRPw?" type="MAPPING" modelVersion="1.0">
+  <property key="name" value="Load FACT_BILLING"/>
+  <ref id="_BlNZMOYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="SCHEMA"/>
+    <property key="name" value="HOTEL_MANAGEMENT"/>
+    <property key="level" value="com.stambia.rdbms.schema"/>
+    <property key="fullPath" value="HSQL_Hotel/HOTEL_MANAGEMENT"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <container>_BfcIYOYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_MKEfEeYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="DATASTORE"/>
+    <property key="name" value="FACT_BILLING"/>
+    <property key="level" value="com.stambia.rdbms.datastore"/>
+    <property key="fullPath" value="HSQL_Datamart/HOTEL_DATAMART/FACT_BILLING"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <container>_I5XjUOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="d!currentTimestamp!0?fileId=UUID_REGISTRY_UDF$name=d::currentTimestamp$type=udf?" type="METADATA">
+    <property key="name" value="d::currentTimestamp"/>
+    <property key="level" value="com.stambia.function.function"/>
+    <target>_MKQFReYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+  </ref>
+  <ref id="_GsKr8OYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="FIELD"/>
+    <property key="name" value="BLL_QTY"/>
+    <property key="level" value="com.stambia.rdbms.column"/>
+    <property key="fullPath" value="HSQL_Hotel/HOTEL_MANAGEMENT/T_BILLING_LINES/BLL_QTY"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <target>_MKPeOOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <container>_GsCJEOYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_MKO3IuYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="FIELD"/>
+    <property key="name" value="PMT_CODE"/>
+    <property key="level" value="com.stambia.rdbms.column"/>
+    <property key="fullPath" value="HSQL_Datamart/HOTEL_DATAMART/FACT_BILLING/PMT_CODE"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <container>_MKEfEeYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_GsCJEOYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="DATASTORE"/>
+    <property key="name" value="T_BILLING_LINES"/>
+    <property key="level" value="com.stambia.rdbms.datastore"/>
+    <property key="fullPath" value="HSQL_Hotel/HOTEL_MANAGEMENT/T_BILLING_LINES"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <target>_MKEfEeYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <container>_BlNZMOYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_I1PRQOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="SERVER"/>
+    <property key="name" value="HSQL_Datamart"/>
+    <property key="level" value="com.stambia.rdbms.server"/>
+    <property key="fullPath" value="HSQL_Datamart"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+  </ref>
+  <ref id="_MKOQF-YqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="FIELD"/>
+    <property key="name" value="DIS_RANGE"/>
+    <property key="level" value="com.stambia.rdbms.column"/>
+    <property key="fullPath" value="HSQL_Datamart/HOTEL_DATAMART/FACT_BILLING/DIS_RANGE"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <container>_MKEfEeYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_MKA0seYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="FIELD"/>
+    <property key="name" value="DIS_MIN"/>
+    <property key="level" value="com.stambia.rdbms.column"/>
+    <property key="fullPath" value="HSQL_Datamart/HOTEL_DATAMART/DIM_DISCOUNT/DIS_MIN"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <target>_MKQFReYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKOQEOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKO3IuYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKPeMOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKOQF-YqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKPeOOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKNpAOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKNB8OYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <container>_MJ5f8eYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_MKPeMOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="FIELD"/>
+    <property key="name" value="BIL_AMOUNT"/>
+    <property key="level" value="com.stambia.rdbms.column"/>
+    <property key="fullPath" value="HSQL_Datamart/HOTEL_DATAMART/FACT_BILLING/BIL_AMOUNT"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <container>_MKEfEeYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_GtYz8OYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="DATASTORE"/>
+    <property key="name" value="T_BILLING"/>
+    <property key="level" value="com.stambia.rdbms.datastore"/>
+    <property key="fullPath" value="HSQL_Hotel/HOTEL_MANAGEMENT/T_BILLING"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <target>_MKEfEeYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <container>_BlNZMOYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_MKNpAOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="FIELD"/>
+    <property key="name" value="CUS_ID"/>
+    <property key="level" value="com.stambia.rdbms.column"/>
+    <property key="fullPath" value="HSQL_Datamart/HOTEL_DATAMART/FACT_BILLING/CUS_ID"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <container>_MKEfEeYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_GsLTB-YqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="FIELD"/>
+    <property key="name" value="BLL_DISCOUNT_AMOUNT"/>
+    <property key="level" value="com.stambia.rdbms.column"/>
+    <property key="fullPath" value="HSQL_Hotel/HOTEL_MANAGEMENT/T_BILLING_LINES/BLL_DISCOUNT_AMOUNT"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <target>_MKQFReYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKOQEOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKO3IuYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKPeMOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKOQF-YqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKPeOOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKNpAOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKNB8OYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <container>_GsCJEOYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_I5XjUOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="SCHEMA"/>
+    <property key="name" value="HOTEL_DATAMART"/>
+    <property key="level" value="com.stambia.rdbms.schema"/>
+    <property key="fullPath" value="HSQL_Datamart/HOTEL_DATAMART"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <container>_I1PRQOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_GsKE6OYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="FIELD"/>
+    <property key="name" value="BIL_ID"/>
+    <property key="level" value="com.stambia.rdbms.column"/>
+    <property key="fullPath" value="HSQL_Hotel/HOTEL_MANAGEMENT/T_BILLING_LINES/BIL_ID"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <target>_MKQFReYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKOQEOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKO3IuYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKPeMOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKOQF-YqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKPeOOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKNpAOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKNB8OYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <container>_GsCJEOYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_GtjzEOYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="FIELD"/>
+    <property key="name" value="BIL_DATE"/>
+    <property key="level" value="com.stambia.rdbms.column"/>
+    <property key="fullPath" value="HSQL_Hotel/HOTEL_MANAGEMENT/T_BILLING/BIL_DATE"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <target>_MKQFReYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKOQEOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKO3IuYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKPeMOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKOQF-YqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKPeOOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKNpAOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKNB8OYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <container>_GtYz8OYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_MKPeOOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="FIELD"/>
+    <property key="name" value="BIL_QTY"/>
+    <property key="level" value="com.stambia.rdbms.column"/>
+    <property key="fullPath" value="HSQL_Datamart/HOTEL_DATAMART/FACT_BILLING/BIL_QTY"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <container>_MKEfEeYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_MKBbwOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="FIELD"/>
+    <property key="name" value="DIS_MAX"/>
+    <property key="level" value="com.stambia.rdbms.column"/>
+    <property key="fullPath" value="HSQL_Datamart/HOTEL_DATAMART/DIM_DISCOUNT/DIS_MAX"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <target>_MKQFReYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKOQEOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKO3IuYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKPeMOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKOQF-YqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKPeOOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKNpAOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKNB8OYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <container>_MJ5f8eYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_GtjMAOYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="FIELD"/>
+    <property key="name" value="PMT_CODE"/>
+    <property key="level" value="com.stambia.rdbms.column"/>
+    <property key="fullPath" value="HSQL_Hotel/HOTEL_MANAGEMENT/T_BILLING/PMT_CODE"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <target>_MKO3IuYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <container>_GtYz8OYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_BfcIYOYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="SERVER"/>
+    <property key="name" value="HSQL_Hotel"/>
+    <property key="level" value="com.stambia.rdbms.server"/>
+    <property key="fullPath" value="HSQL_Hotel"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+  </ref>
+  <ref id="_Gtik-OYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="FIELD"/>
+    <property key="name" value="CUS_ID"/>
+    <property key="level" value="com.stambia.rdbms.column"/>
+    <property key="fullPath" value="HSQL_Hotel/HOTEL_MANAGEMENT/T_BILLING/CUS_ID"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <target>_MKNpAOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <container>_GtYz8OYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_MKQFReYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="FIELD"/>
+    <property key="name" value="UPDATE_DATE"/>
+    <property key="level" value="com.stambia.rdbms.column"/>
+    <property key="fullPath" value="HSQL_Datamart/HOTEL_DATAMART/FACT_BILLING/UPDATE_DATE"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <container>_MKEfEeYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_MKNB8OYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="FIELD"/>
+    <property key="name" value="BIL_ID"/>
+    <property key="level" value="com.stambia.rdbms.column"/>
+    <property key="fullPath" value="HSQL_Datamart/HOTEL_DATAMART/FACT_BILLING/BIL_ID"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <container>_MKEfEeYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_MKhyEeYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="DATASTORE"/>
+    <property key="name" value="DIM_TIME"/>
+    <property key="level" value="com.stambia.rdbms.datastore"/>
+    <property key="fullPath" value="HSQL_Datamart/HOTEL_DATAMART/DIM_TIME"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <target>_MKEfEeYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <container>_I5XjUOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_GsLTAOYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="FIELD"/>
+    <property key="name" value="BLL_DISCOUNT_RATE"/>
+    <property key="level" value="com.stambia.rdbms.column"/>
+    <property key="fullPath" value="HSQL_Hotel/HOTEL_MANAGEMENT/T_BILLING_LINES/BLL_DISCOUNT_RATE"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <target>_MKQFReYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKOQEOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKO3IuYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKPeMOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKOQF-YqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKPeOOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKNpAOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKNB8OYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <container>_GsCJEOYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_MKOQEOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="FIELD"/>
+    <property key="name" value="TIME_KEY_DAY"/>
+    <property key="level" value="com.stambia.rdbms.column"/>
+    <property key="fullPath" value="HSQL_Datamart/HOTEL_DATAMART/FACT_BILLING/TIME_KEY_DAY"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <container>_MKEfEeYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_MJ5f8eYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="DATASTORE"/>
+    <property key="name" value="DIM_DISCOUNT"/>
+    <property key="level" value="com.stambia.rdbms.datastore"/>
+    <property key="fullPath" value="HSQL_Datamart/HOTEL_DATAMART/DIM_DISCOUNT"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <target>_MKEfEeYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <container>_I5XjUOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_Gtik8OYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="FIELD"/>
+    <property key="name" value="BIL_ID"/>
+    <property key="level" value="com.stambia.rdbms.column"/>
+    <property key="fullPath" value="HSQL_Hotel/HOTEL_MANAGEMENT/T_BILLING/BIL_ID"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <target>_MKNB8OYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKQFReYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKOQEOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKO3IuYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKPeMOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKOQF-YqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKPeOOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKNpAOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <container>_GtYz8OYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_MKANoOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="FIELD"/>
+    <property key="name" value="DIS_RANGE"/>
+    <property key="level" value="com.stambia.rdbms.column"/>
+    <property key="fullPath" value="HSQL_Datamart/HOTEL_DATAMART/DIM_DISCOUNT/DIS_RANGE"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <target>_MKOQF-YqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <container>_MJ5f8eYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_GsL6EOYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="FIELD"/>
+    <property key="name" value="BLL_AMOUNT"/>
+    <property key="level" value="com.stambia.rdbms.column"/>
+    <property key="fullPath" value="HSQL_Hotel/HOTEL_MANAGEMENT/T_BILLING_LINES/BLL_AMOUNT"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <target>_MKPeMOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKQFReYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKOQEOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKO3IuYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKOQF-YqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKPeOOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKNpAOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKNB8OYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <container>_GsCJEOYqEeeg4IHoU6igbw?fileId=_BfcIYOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_MKpG0OYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="FIELD"/>
+    <property key="name" value="TIME_KEY_DAY"/>
+    <property key="level" value="com.stambia.rdbms.column"/>
+    <property key="fullPath" value="HSQL_Datamart/HOTEL_DATAMART/DIM_TIME/TIME_KEY_DAY"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <target>_MKOQEOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <container>_MKhyEeYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</container>
+  </ref>
+  <ref id="_MKpt4OYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?" type="METADATA">
+    <property key="containerLevel" value="FIELD"/>
+    <property key="name" value="TIME_DATE"/>
+    <property key="level" value="com.stambia.rdbms.column"/>
+    <property key="fullPath" value="HSQL_Datamart/HOTEL_DATAMART/DIM_TIME/TIME_DATE"/>
+    <property key="productCode" value="HYPERSONIC_SQL"/>
+    <target>_MKQFReYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKOQEOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKO3IuYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKPeMOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKOQF-YqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKPeOOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKNpAOYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <target>_MKNB8OYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</target>
+    <container>_MKhyEeYqEeeg4IHoU6igbw?fileId=_I1PRQOYqEeeg4IHoU6igbw?</container>
+  </ref>
+</cross:root>

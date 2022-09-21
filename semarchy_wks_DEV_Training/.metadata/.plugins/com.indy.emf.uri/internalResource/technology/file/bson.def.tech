@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="UUID_DEF_TECH_BSON1" name="bsondef" ref="resource.tech#UUID_DEF_TECH_JSON1?fileId=UUID_DEF_TECH_JSON1$type=tech$name=json?">
+  <level code="com.stambia.json.value" override="true">
+    <icons name="first" xpath="if (ends-with(../lower-case(@defType),'array') and @name!='item') then 'icons/full/custom/json.datatype.error.gif' else &#xD;&#xA;if (@type='string') then 'icons/full/custom/json.string.gif' else &#xD;&#xA;if (@type='boolean') then 'icons/full/custom/json.boolean.gif' else &#xD;&#xA;if (@type='number') then 'icons/full/custom/json.number.gif' else  if (@type!='') then  'icons/full/custom/json.string.gif'  else 'icons/full/custom/json.datatype.error.gif'"/>
+    <attribute xmlName="type" xpathCondition="" code="type" mdXpathAccess="tokenize('string date int long double boolean binary regex javascript symbol objectId', ' ')">
+      <mappingInfo>Type</mappingInfo>
+    </attribute>
+    <xPathExpression expression="if (@type='string' or @type='int' or @type='long' or @type='double' or @type='boolean' ) then @type else&#xD;&#xA;if (@type='date') then 'dateTime' else if (@type='binary') then 'base64Binary' else concat('bson:',@type)">
+      <code>XML_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@type='string' or @type='int' or @type='long' or @type='double' or @type='boolean' ) then @type else&#xD;&#xA;if (@type='date') then 'dateTime' else if (@type='binary') then 'base64Binary' else 'string'">
+      <code>SUPER_TYPE_NAME</code>
+    </xPathExpression>
+  </level>
+</tech:tech>

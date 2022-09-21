@@ -1,0 +1,28 @@
+*** Step 3 ***
+**************
+
+Joins expressions for the join between Address and Customer records
+-------------------------------------------------------------------
+Address.FK_CUS = Customer.PK_CUS
+
+Joins expressions for the join between Address record and DIM_GEOGRAPHY table
+-----------------------------------------------------------------------------
+Address.ZIP_CODE = DIM_GEOGRAPHY.GEO_ZIP_CODE
+
+Mapping expressions
+---------------------
+CUS_ID		Customer.CUS_ID													On Source
+CUS_TITLE	Customer.CUS_TITLE												On Source
+CUS_NAME	Customer.CUS_LAST_NAME + ' ' + Customer.CUS_FIRST_NAME			On Staging
+CUS_COMPANY	Customer.CUS_COMPANY											On Source
+GEO_KEY_ID	DIM_GEOGRAPHY.GEO_KEY_ID										On Source
+UPDATE_DATE	current_timestamp												On Target
+
+*** Step 5 ***
+**************
+
+Outfile Mask property
+---------------------
+customersDetails [TITLE].csv
+
+

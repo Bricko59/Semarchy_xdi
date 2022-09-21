@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ref:mapRef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:ref="http://www.indy.com/v2/ref" id="_81Fr4DTDEe2K1spis4bODw">
+  <dataModel>_q6vBwZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=Generate%20xml%20customerDetails%20WS?</dataModel>
+  <containerRef xsi:type="ref:RDatastore" id="_81GS8TTDEe2K1spis4bODw" countShownFields="28" hierarchical="true">
+    <dataModel>_q6vBwpmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_81IvMDTDEe2K1spis4bODw" mandatory="true" position="3">
+      <dataModel>_q6vo4pmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=customerDetails?</dataModel>
+      <expressionRef id="_81nQUDTDEe2K1spis4bODw">
+        <dataModel>_q6vo45mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81QD8DTDEe2K1spis4bODw" type="mgt:CustomerDetail" mandatory="true" position="6">
+      <dataModel>_q6vouJmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=customer?</dataModel>
+      <expressionRef id="_81hwwTTDEe2K1spis4bODw" internalExpression="${t_customer.cus_last_name}$||${t_customer.cus_first_name}$||${t_customer.cus_id}$">
+        <dataModel>_q6vouZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81U8dTTDEe2K1spis4bODw</sourceRef>
+        <sourceRef>_81U8cjTDEe2K1spis4bODw</sourceRef>
+        <sourceRef>_81U8cTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81QD8TTDEe2K1spis4bODw" mandatory="true" position="9">
+      <dataModel>_q6vo5pmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=sort1?</dataModel>
+      <expressionRef id="_81nQUjTDEe2K1spis4bODw" internalExpression="${t_customer.cus_last_name}$">
+        <dataModel>_q6vo55mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81U8dTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81QD8jTDEe2K1spis4bODw" mandatory="true" position="12">
+      <dataModel>_q6vo5JmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=sort2?</dataModel>
+      <expressionRef id="_81nQUTTDEe2K1spis4bODw" internalExpression="${t_customer.cus_first_name}$">
+        <dataModel>_q6vo5ZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81U8cjTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81QD8zTDEe2K1spis4bODw" type="integer" mandatory="true" position="15">
+      <dataModel>_q6vozJmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=customerId?</dataModel>
+      <expressionRef id="_81k0EDTDEe2K1spis4bODw" internalExpression="${t_customer.cus_id}$">
+        <dataModel>_q6vozZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81U8cTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81QrADTDEe2K1spis4bODw" type="string" mandatory="true" position="18">
+      <dataModel>_q6vo4JmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=titleCode?</dataModel>
+      <expressionRef id="_81mpQzTDEe2K1spis4bODw" internalExpression="${t_customer.tit_code}$">
+        <dataModel>_q6vo4ZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81U8dDTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81QrATTDEe2K1spis4bODw" type="string" mandatory="true" position="21">
+      <dataModel>_q6voxpmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=title?</dataModel>
+      <expressionRef id="_81kNBDTDEe2K1spis4bODw" internalExpression="${t_title.tit_name}$">
+        <dataModel>_q6vox5mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81VjgTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81QrAjTDEe2K1spis4bODw" type="string" mandatory="true" position="24">
+      <dataModel>_q6votpmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=firstName?</dataModel>
+      <expressionRef id="_81hwwDTDEe2K1spis4bODw" internalExpression="${t_customer.cus_first_name}$">
+        <dataModel>_q6vot5mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81U8cjTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81QrAzTDEe2K1spis4bODw" type="string" mandatory="true" position="27">
+      <dataModel>_q6votJmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=lastName?</dataModel>
+      <expressionRef id="_81hJszTDEe2K1spis4bODw" internalExpression="${t_customer.cus_last_name}$">
+        <dataModel>_q6votZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81U8dTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81QrBDTDEe2K1spis4bODw" type="string" mandatory="true" position="30">
+      <dataModel>_q6voypmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=company?</dataModel>
+      <expressionRef id="_81kNBjTDEe2K1spis4bODw" internalExpression="${t_customer.cus_company}$">
+        <dataModel>_q6voy5mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81U8djTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81QrBTTDEe2K1spis4bODw" type="dateTime" mandatory="true" position="33">
+      <dataModel>_q6vo1JmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=birthDate?</dataModel>
+      <expressionRef id="_81mCMDTDEe2K1spis4bODw" internalExpression="${t_customer.cus_birth_date}$">
+        <dataModel>_q6vo1ZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81U8czTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81QrBjTDEe2K1spis4bODw" type="com:Address" mandatory="true" position="36">
+      <dataModel>_q6vo1pmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=address?</dataModel>
+      <expressionRef id="_81mCMTTDEe2K1spis4bODw" internalExpression="${t_address.adr_zip_code}$||${t_address.adr_id}$">
+        <dataModel>_q6vo15mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81ZN5zTDEe2K1spis4bODw</sourceRef>
+        <sourceRef>_81ZN5DTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81RSEDTDEe2K1spis4bODw" type="integer" mandatory="true" position="39">
+      <dataModel>_q6voupmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=addressId?</dataModel>
+      <expressionRef id="_81hwwjTDEe2K1spis4bODw" internalExpression="${t_address.adr_id}$">
+        <dataModel>_q6vou5mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81ZN5DTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81RSETTDEe2K1spis4bODw" type="string" mandatory="true" position="42">
+      <dataModel>_q6vo2pmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=addressDetails?</dataModel>
+      <expressionRef id="_81mpQDTDEe2K1spis4bODw" internalExpression="${t_address.adr_details}$">
+        <dataModel>_q6vo25mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81ZN5TTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81RSEjTDEe2K1spis4bODw" type="string" mandatory="true" position="45">
+      <dataModel>_q6vovpmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=zipCode?</dataModel>
+      <expressionRef id="_81kNADTDEe2K1spis4bODw" internalExpression="${t_address.adr_zip_code}$">
+        <dataModel>_q6vov5mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81ZN5zTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81RSEzTDEe2K1spis4bODw" type="string" mandatory="true" position="48">
+      <dataModel>_q6vo3pmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=city?</dataModel>
+      <expressionRef id="_81mpQjTDEe2K1spis4bODw" internalExpression="${t_address.adr_city}$">
+        <dataModel>_q6vo35mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81ZN5jTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81R5IDTDEe2K1spis4bODw" type="string" mandatory="true" position="51">
+      <dataModel>_q6vosJmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=stateCode?</dataModel>
+      <expressionRef id="_81hJsTTDEe2K1spis4bODw" internalExpression="${t_address.adr_state_code}$">
+        <dataModel>_q6vosZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81ZN6DTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81R5ITTDEe2K1spis4bODw" type="com:Phone" mandatory="true" position="54">
+      <dataModel>_q6vowpmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=phone?</dataModel>
+      <expressionRef id="_81kNAjTDEe2K1spis4bODw" internalExpression="${t_phone.pho_number}$||${t_phone.pho_id}$">
+        <dataModel>_q6vow5mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81bDFDTDEe2K1spis4bODw</sourceRef>
+        <sourceRef>_81bDEjTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81R5IjTDEe2K1spis4bODw" type="integer" mandatory="true" position="57">
+      <dataModel>_q6vospmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=phoneId?</dataModel>
+      <expressionRef id="_81hJsjTDEe2K1spis4bODw" internalExpression="${t_phone.pho_id}$">
+        <dataModel>_q6vos5mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81bDEjTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81R5IzTDEe2K1spis4bODw" type="string" mandatory="true" position="60">
+      <dataModel>_q6vovJmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=phoneTypeCode?</dataModel>
+      <expressionRef id="_81i-4DTDEe2K1spis4bODw" internalExpression="${t_phone.pht_code}$">
+        <dataModel>_q6vovZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81bDFTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81R5JDTDEe2K1spis4bODw" type="string" mandatory="true" position="63">
+      <dataModel>_q6vowJmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=phoneNumber?</dataModel>
+      <expressionRef id="_81kNATTDEe2K1spis4bODw" internalExpression="${t_phone.pho_number}$">
+        <dataModel>_q6vowZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81bDFDTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81R5JTTDEe2K1spis4bODw" type="string" mandatory="true" position="66">
+      <dataModel>_q6voxJmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=phoneType?</dataModel>
+      <expressionRef id="_81kNAzTDEe2K1spis4bODw" internalExpression="${t_phone_type.pht_name}$">
+        <dataModel>_q6voxZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81bqJTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81R5JjTDEe2K1spis4bODw" type="boolean" mandatory="true" position="69">
+      <dataModel>_q6vozpmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=phoningAllowed?</dataModel>
+      <expressionRef id="_81k0ETTDEe2K1spis4bODw" internalExpression="${t_phone.pho_phoning_allowed}$">
+        <dataModel>_q6voz5mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81bDETTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81R5JzTDEe2K1spis4bODw" type="com:Email" mandatory="true" position="72">
+      <dataModel>_q6vo3JmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=email?</dataModel>
+      <expressionRef id="_81mpQTTDEe2K1spis4bODw" internalExpression="${t_email.eml_address}$||${t_email.eml_id}$">
+        <dataModel>_q6vo3ZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81acAjTDEe2K1spis4bODw</sourceRef>
+        <sourceRef>_81acATTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81R5KDTDEe2K1spis4bODw" type="integer" mandatory="true" position="75">
+      <dataModel>_q6vo0JmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=emailId?</dataModel>
+      <expressionRef id="_81lbIDTDEe2K1spis4bODw" internalExpression="${t_email.eml_id}$">
+        <dataModel>_q6vo0ZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81acATTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81SgMDTDEe2K1spis4bODw" type="string" mandatory="true" position="78">
+      <dataModel>_q6voyJmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=emailAddress?</dataModel>
+      <expressionRef id="_81kNBTTDEe2K1spis4bODw" internalExpression="${t_email.eml_address}$">
+        <dataModel>_q6voyZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81acAjTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81SgMTTDEe2K1spis4bODw" type="string" mandatory="true" position="81">
+      <dataModel>_q6vo0pmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=emailType?</dataModel>
+      <expressionRef id="_81lbITTDEe2K1spis4bODw" internalExpression="${t_email.eml_type}$">
+        <dataModel>_q6vo05mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81acBTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81SgMjTDEe2K1spis4bODw" type="boolean" mandatory="true" position="84">
+      <dataModel>_q6vo2JmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=mailingAllowed?</dataModel>
+      <expressionRef id="_81mCMjTDEe2K1spis4bODw" internalExpression="${t_email.eml_mailing_allowed}$">
+        <dataModel>_q6vo2ZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+        <sourceRef>_81acAzTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_81U8cDTDEe2K1spis4bODw" countShownFields="6" hierarchical="false">
+    <dataModel>_q6vo6ZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_81U8cTTDEe2K1spis4bODw" precision="0" size="10" type="integer" mandatory="true" position="3">
+      <dataModel>_q6vo6pmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=cus_id?</dataModel>
+      <usage>_81cRMDTDEe2K1spis4bODw</usage>
+      <usage>_81eGYDTDEe2K1spis4bODw</usage>
+      <usage>_81etcDTDEe2K1spis4bODw</usage>
+      <usage>_81fUgTTDEe2K1spis4bODw</usage>
+      <usage>_81hwwTTDEe2K1spis4bODw</usage>
+      <usage>_81k0EDTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81U8cjTDEe2K1spis4bODw" precision="0" size="25" type="varchar" position="12">
+      <dataModel>_q6vo65mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=cus_first_name?</dataModel>
+      <usage>_81hwwDTDEe2K1spis4bODw</usage>
+      <usage>_81hwwTTDEe2K1spis4bODw</usage>
+      <usage>_81nQUTTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81U8czTDEe2K1spis4bODw" precision="6" size="29" type="timestamp" position="18">
+      <dataModel>_q6vo7JmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=cus_birth_date?</dataModel>
+      <usage>_81mCMDTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81U8dDTDEe2K1spis4bODw" precision="0" size="8" type="varchar" position="6">
+      <dataModel>_q6vo7ZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=tit_code?</dataModel>
+      <usage>_81GS8DTDEe2K1spis4bODw</usage>
+      <usage>_81mpQzTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81U8dTTDEe2K1spis4bODw" precision="0" size="32" type="varchar" mandatory="true" position="9">
+      <dataModel>_q6vo7pmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=cus_last_name?</dataModel>
+      <usage>_81hJszTDEe2K1spis4bODw</usage>
+      <usage>_81hwwTTDEe2K1spis4bODw</usage>
+      <usage>_81nQUjTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81U8djTDEe2K1spis4bODw" precision="0" size="100" type="varchar" position="15">
+      <dataModel>_q6vo75mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=cus_company?</dataModel>
+      <usage>_81kNBjTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <constraintRef id="_81U8dzTDEe2K1spis4bODw" type="pk">
+      <dataModel>_q6vo8JmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=pk_t_customer?</dataModel>
+    </constraintRef>
+    <constraintRef id="_81U8eDTDEe2K1spis4bODw" type="fk">
+      <dataModel>_q6vo8ZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=fk_customer_title?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_81VjgDTDEe2K1spis4bODw" countShownFields="2" hierarchical="false">
+    <dataModel>_q6vo8pmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_81VjgTTDEe2K1spis4bODw" precision="0" size="32" type="varchar" mandatory="true" position="6">
+      <dataModel>_q6vo85mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=tit_name?</dataModel>
+      <usage>_81kNBDTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81VjgjTDEe2K1spis4bODw" precision="0" size="8" type="varchar" mandatory="true" position="3">
+      <dataModel>_q6vo9JmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=tit_code?</dataModel>
+      <usage>_81GS8DTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <constraintRef id="_81VjgzTDEe2K1spis4bODw" type="pk">
+      <dataModel>_q6vo9ZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=pk_t_title?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_81ZN4DTDEe2K1spis4bODw" countShownFields="8" hierarchical="false">
+    <dataModel>_q6vo9pmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_81ZN4TTDEe2K1spis4bODw" precision="6" size="19" type="numeric" position="21">
+      <dataModel>_q6vo95mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=adr_lat?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81ZN4jTDEe2K1spis4bODw" precision="6" size="19" type="numeric" position="24">
+      <dataModel>_q6vo-JmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=adr_lon?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81ZN4zTDEe2K1spis4bODw" precision="0" size="10" type="integer" mandatory="true" position="6">
+      <dataModel>_q6vo-ZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=cus_id?</dataModel>
+      <usage>_81eGYDTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81ZN5DTDEe2K1spis4bODw" precision="0" size="10" type="integer" mandatory="true" position="3">
+      <dataModel>_q6vo-pmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=adr_id?</dataModel>
+      <usage>_81hwwjTDEe2K1spis4bODw</usage>
+      <usage>_81mCMTTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81ZN5TTDEe2K1spis4bODw" precision="0" size="200" type="varchar" mandatory="true" position="9">
+      <dataModel>_q6vo-5mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=adr_details?</dataModel>
+      <usage>_81mpQDTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81ZN5jTDEe2K1spis4bODw" precision="0" size="32" type="varchar" mandatory="true" position="15">
+      <dataModel>_q6vo_JmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=adr_city?</dataModel>
+      <usage>_81mpQjTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81ZN5zTDEe2K1spis4bODw" precision="0" size="5" type="varchar" mandatory="true" position="12">
+      <dataModel>_q6vo_ZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=adr_zip_code?</dataModel>
+      <usage>_81kNADTDEe2K1spis4bODw</usage>
+      <usage>_81mCMTTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81ZN6DTDEe2K1spis4bODw" precision="0" size="3" type="varchar" position="18">
+      <dataModel>_q6vo_pmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=adr_state_code?</dataModel>
+      <usage>_81hJsTTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <constraintRef id="_81Z08DTDEe2K1spis4bODw" type="pk">
+      <dataModel>_q6vo_5mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=pk_t_address?</dataModel>
+    </constraintRef>
+    <constraintRef id="_81Z08TTDEe2K1spis4bODw" type="fk">
+      <dataModel>_q6vpAJmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=fk_address_customer?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_81acADTDEe2K1spis4bODw" countShownFields="5" hierarchical="false">
+    <dataModel>_q6vpAZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_81acATTDEe2K1spis4bODw" precision="0" size="10" type="integer" mandatory="true" position="3">
+      <dataModel>_q6vpApmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=eml_id?</dataModel>
+      <usage>_81lbIDTDEe2K1spis4bODw</usage>
+      <usage>_81mpQTTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81acAjTDEe2K1spis4bODw" precision="0" size="100" type="varchar" mandatory="true" position="9">
+      <dataModel>_q6vpA5mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=eml_address?</dataModel>
+      <usage>_81kNBTTDEe2K1spis4bODw</usage>
+      <usage>_81mpQTTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81acAzTDEe2K1spis4bODw" precision="0" size="1" type="boolean" position="15">
+      <dataModel>_q6vpBJmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=eml_mailing_allowed?</dataModel>
+      <usage>_81mCMjTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81acBDTDEe2K1spis4bODw" precision="0" size="10" type="integer" mandatory="true" position="6">
+      <dataModel>_q6vpBZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=cus_id?</dataModel>
+      <usage>_81cRMDTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81acBTTDEe2K1spis4bODw" precision="0" size="64" type="varchar" position="12">
+      <dataModel>_q6vpBpmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=eml_type?</dataModel>
+      <usage>_81lbITTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <constraintRef id="_81acBjTDEe2K1spis4bODw" type="pk">
+      <dataModel>_q6vpB5mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=pk_t_email?</dataModel>
+    </constraintRef>
+    <constraintRef id="_81acBzTDEe2K1spis4bODw" type="fk">
+      <dataModel>_q6vpCJmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=fk_email_customer?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_81bDEDTDEe2K1spis4bODw" countShownFields="5" hierarchical="false">
+    <dataModel>_q6vpCZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_81bDETTDEe2K1spis4bODw" precision="0" size="1" type="boolean" position="15">
+      <dataModel>_q6vpCpmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=pho_phoning_allowed?</dataModel>
+      <usage>_81k0ETTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81bDEjTDEe2K1spis4bODw" precision="0" size="10" type="integer" mandatory="true" position="3">
+      <dataModel>_q6vpC5mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=pho_id?</dataModel>
+      <usage>_81hJsjTDEe2K1spis4bODw</usage>
+      <usage>_81kNAjTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81bDEzTDEe2K1spis4bODw" precision="0" size="10" type="integer" mandatory="true" position="6">
+      <dataModel>_q6vpDJmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=cus_id?</dataModel>
+      <usage>_81etcDTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81bDFDTDEe2K1spis4bODw" precision="0" size="20" type="varchar" mandatory="true" position="12">
+      <dataModel>_q6vpDZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=pho_number?</dataModel>
+      <usage>_81kNATTDEe2K1spis4bODw</usage>
+      <usage>_81kNAjTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81bDFTTDEe2K1spis4bODw" precision="0" size="8" type="varchar" mandatory="true" position="9">
+      <dataModel>_q6vpDpmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=pht_code?</dataModel>
+      <usage>_81fUgDTDEe2K1spis4bODw</usage>
+      <usage>_81i-4DTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <constraintRef id="_81bqIDTDEe2K1spis4bODw" type="fk">
+      <dataModel>_q6vpD5mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=fk_phone_customer?</dataModel>
+    </constraintRef>
+    <constraintRef id="_81bqITTDEe2K1spis4bODw" type="pk">
+      <dataModel>_q6vpEJmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=pk_t_phone?</dataModel>
+    </constraintRef>
+    <constraintRef id="_81bqIjTDEe2K1spis4bODw" type="fk">
+      <dataModel>_q6vpEZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=fk_phone_phone_type?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_81bqIzTDEe2K1spis4bODw" countShownFields="2" hierarchical="false">
+    <dataModel>_q6vpEpmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_81bqJDTDEe2K1spis4bODw" precision="0" size="8" type="varchar" mandatory="true" position="3">
+      <dataModel>_q6vpE5mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=pht_code?</dataModel>
+      <usage>_81fUgDTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_81bqJTTDEe2K1spis4bODw" precision="0" size="32" type="varchar" mandatory="true" position="6">
+      <dataModel>_q6vpFJmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=pht_name?</dataModel>
+      <usage>_81kNAzTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <constraintRef id="_81bqJjTDEe2K1spis4bODw" type="pk">
+      <dataModel>_q6vpFZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=pk_t_phone_type?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <clauseRef id="_81GS8DTDEe2K1spis4bODw" internalExpression="${t_customer.tit_code}$ = ${t_title.tit_code}$">
+    <dataModel>_q6vpFpmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+    <sourceRef>_81U8dDTDEe2K1spis4bODw</sourceRef>
+    <sourceRef>_81VjgjTDEe2K1spis4bODw</sourceRef>
+  </clauseRef>
+  <clauseRef id="_81cRMDTDEe2K1spis4bODw" internalExpression="${t_customer.cus_id}$ = ${t_email.cus_id}$">
+    <dataModel>_q6vpF5mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+    <sourceRef>_81U8cTTDEe2K1spis4bODw</sourceRef>
+    <sourceRef>_81acBDTDEe2K1spis4bODw</sourceRef>
+  </clauseRef>
+  <clauseRef id="_81eGYDTDEe2K1spis4bODw" internalExpression="${t_customer.cus_id}$ = ${t_address.cus_id}$">
+    <dataModel>_q6vpGJmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+    <sourceRef>_81U8cTTDEe2K1spis4bODw</sourceRef>
+    <sourceRef>_81ZN4zTDEe2K1spis4bODw</sourceRef>
+  </clauseRef>
+  <clauseRef id="_81etcDTDEe2K1spis4bODw" internalExpression="${t_customer.cus_id}$ = ${t_phone.cus_id}$">
+    <dataModel>_q6vpGZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+    <sourceRef>_81U8cTTDEe2K1spis4bODw</sourceRef>
+    <sourceRef>_81bDEzTDEe2K1spis4bODw</sourceRef>
+  </clauseRef>
+  <clauseRef id="_81fUgDTDEe2K1spis4bODw" internalExpression="${t_phone.pht_code}$ = ${t_phone_type.pht_code}$">
+    <dataModel>_q6vpGpmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+    <sourceRef>_81bDFTTDEe2K1spis4bODw</sourceRef>
+    <sourceRef>_81bqJDTDEe2K1spis4bODw</sourceRef>
+  </clauseRef>
+  <clauseRef id="_81fUgTTDEe2K1spis4bODw" internalExpression="${t_customer.cus_id}$ = ${~/cus_id}$" status="VALID">
+    <dataModel>_xikRQJmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</dataModel>
+    <problem id="_82EjUTTDEe2K1spis4bODw" code="INFO_USING_SESSION_VARIABLE" message=""/>
+    <sourceRef>_81U8cTTDEe2K1spis4bODw</sourceRef>
+  </clauseRef>
+  <targetSetRef id="_81pFgTTDEe2K1spis4bODw" sourceSet="_81pFgDTDEe2K1spis4bODw">
+    <container>_81GS8TTDEe2K1spis4bODw</container>
+  </targetSetRef>
+  <sourceSetRef id="_81pFgDTDEe2K1spis4bODw" targetSet="_81pFgTTDEe2K1spis4bODw">
+    <dataSet xsi:type="map:DataSet">#_q6vpHZmgEeyjqJcu_tQBzg</dataSet>
+  </sourceSetRef>
+  <templateRef id="_81nQVzTDEe2K1spis4bODw" description="Integration : customerDetails" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=XML;trgPath=xsd:customerDetails/element:customerDetails;trgWorkspaceCapability=false;trgMapCapability=false;trgFilterCapability=false;trgJoinCapability=false;srcProduct=POSTGRESSQL;srcPath=server:hotel/schema:hotel.hotel_management/datastore:t_title;srcWorkspaceCapability=true;srcMapCapability=true;srcFilterCapability=true;srcJoinCapability=true;NO_LOAD=true;;srcProductList=POSTGRESSQL">
+    <dataModel>_q6vpG5mgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map$name=I_customerDetails?</dataModel>
+    <problem id="_82EjUDTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <targetRef>_q6vBwpmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</targetRef>
+  </templateRef>
+  <loadSet id="_81nQVTTDEe2K1spis4bODw">
+    <container>_q6vBwpmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</container>
+  </loadSet>
+  <loadSet id="_81nQVjTDEe2K1spis4bODw">
+    <container>_q6vpCZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</container>
+    <container>_q6vpAZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</container>
+    <container>_q6vo8pmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</container>
+    <container>_q6vpEpmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</container>
+    <container>_q6vo9pmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</container>
+    <container>_q6vo6ZmgEeyjqJcu_tQBzg?fileId=_q6vBwZmgEeyjqJcu_tQBzg$type=map?</container>
+  </loadSet>
+</ref:mapRef>

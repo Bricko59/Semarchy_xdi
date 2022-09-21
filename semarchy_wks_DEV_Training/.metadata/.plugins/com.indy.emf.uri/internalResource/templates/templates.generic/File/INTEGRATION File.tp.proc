@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:UUID="java.util.UUID" xmlns:common="http://exslt.org/common" xmlns:mdj="java:com.indy.xsl.global.Functions" xmlns:proc="http://www.example.org/proc" xmlns:saxon="http://saxon.sf.net/" id="_4WVbt4c7Ed6NdYXLsd44UQ" description="This template is used to load flat files with the file driver.&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;08/09/2020&#x9; When using &quot;generate header&quot; parameter alongside with &quot;truncate=true&quot; and &quot;line separator=after&quot;, the generate header line was unexpectedly missing a line separator after it&#xD;&#xA;16/06/2020&#x9;New Parameters 'Unlock Cdc Table' and 'Lock Cdc Table'&#xD;&#xA;10/03/2020&#x9; Parameter orderByExpression now supports Xpath expressions&#xD;&#xA;06/03/2020   Report the inserted rows in the Statistics as SQL_STAT_INSERT&#xD;&#xA;08/12/2017   New option &quot;No data behaviour&quot;&#xD;&#xA;16/03/2017&#x9; New 'Cdc Subscriber' parameter&#xD;&#xA;16/03/2017&#x9; Fix incorrect CDC filter part&#xD;&#xA;16/03/2017   Initialize template history" metaInf="&lt;template-feature-support name=&quot;stagingArea&quot; enable=&quot;true&quot; evaluation=&quot;NATIVE&quot;/>" isBeginAction="true" name="INTEGRATION File" nbCycles="-1" toleratedError="false">
+  <parameter id="_4WVbuIc7Ed6NdYXLsd44UQ" description="Specifies if source data should be inserted into the target file." name="doInsert" type="Boolean" value="true"/>
+  <parameter id="_4WVbvIc7Ed6NdYXLsd44UQ" description="If true, a DISTINCT statement will be added on the query retrieving source data.&#xD;&#xA;This is used to avoid having duplicates in the target table." name="useDistinct" type="Boolean" value="false"/>
+  <parameter id="_4WVbwYc7Ed6NdYXLsd44UQ" description="Defines if the target file should be deleted and re-created before processing&#xD;&#xA;&#xD;&#xA;- If true, the file is deleted and re-created&#xD;&#xA;&#xD;&#xA;- If false, the file will be processed as is.&#xD;&#xA;If it doesn't exist yet, it will be created automatically." name="truncateTargetFile" type="Boolean" value="false"/>
+  <parameter id="_A7VZIIjdEd6J0vXEjWXHhw" description="Specifies if a header line containing the columns' name should be generated and written in the target file, and when.&#xD;&#xA;&#xD;&#xA;- true: the header is always generated and written before data rows&#xD;&#xA;- false: the header is never generated, data is appended directly to the file&#xD;&#xA;- OnFileCreation: the header is generated only at file's creation&#xD;&#xA;" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;true&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;false&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;onFileCreation&quot;/>" name="generateHeader" type="String" value="false"/>
+  <parameter id="_2H1P1GSDEeGiWo0xCjmD8w" description="Defines where the file separator should be written.&#xD;&#xA;&#xD;&#xA;It corresponds to a line delimiter that is appended at the beginning or at the end of the file depending on the chosen value.&#xD;&#xA;&#xD;&#xA;- before: the file separator is appended before writing all data&#xD;&#xA;- after: the file separator is appended after writing all data" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;before&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;after&quot;/>" name="fileSeparator" type="String" value="before"/>
+  <parameter id="_NggecNwiEeeanvK_wem8lQ" description="Defines if the file should be written even if there is no source data returned.&#xD;&#xA;&#xD;&#xA;- keepCurrentFile: the existing file is kept as it is&#xD;&#xA;- deleteExistingFile: the file is deleted if it already exists&#xD;&#xA;- createEmptyFile: an empty file is created&#xD;&#xA;- raiseException: an exception is raised" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;keepCurrentFile&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;deleteExistingFile&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;createEmptyFile&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;raiseException&quot;/>&#xD;&#xA;" name="noDataBehaviour" type="String" value="keepCurrentFile"/>
+  <parameter id="_2_huIJuVEeKZvJYXVv7GXQ" description="Defines the behavior to follow when source data is larger than the size expected in the target file Metadata.&#xD;&#xA;&#xD;&#xA;- true: the driver will simply accept the data overflow and write it into the file, even if it is larger than the expected size on the field.&#xD;&#xA;&#xD;&#xA;- false: when source data is larger than expected for a field, an error is thrown&#xD;&#xA;&#xD;&#xA;- leftTruncation: when source data is larger than expected for a field, the value will be truncated from the left&#xD;&#xA;&#xD;&#xA;- rightTruncation: when source data is larger than expected for a field, the value will be truncated from the right" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;true&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;false&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;leftTruncation&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;rightTruncation&quot;/>" name="acceptDataOverflow" type="String" value="false"/>
+  <parameter id="_9_ys8FZqEeKrHaC_6Nt5ag" description="Used to specify an order by expression to be added to the query retrieving source data.&#xD;&#xA;This can help to order the data in the target file.&#xD;&#xA;&#xD;&#xA;E.g.&#xD;&#xA;T_CUSTOMER.CUS_ID DESC" metaInf="&lt;xslVariableName>_orderByExpression&lt;/xslVariableName>" name="orderByExpression" type="String" value=""/>
+  <parameter id="_wWt6AH7uEeSVfb1NDuO7pw" description="Offers the possibility to override the expression generated in the query selecting source data for each mapped column in the target file.&#xD;&#xA;&#xD;&#xA;Note:&#xD;&#xA;- the syntax to use is XPath and the [expression] keyword can be used as a replacement for the mapping value.&#xD;&#xA;- this will impact all columns mapped in the target file.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;For instance:&#xD;&#xA;In the mapping, you have two fields that are mapped on the target file with the following expressions:&#xD;&#xA;- T_CUSTOMER.CUS_FIRST_NAME&#xD;&#xA;- T_CUSTOMER.CUS_LAST_NAME&#xD;&#xA;&#xD;&#xA;Then, this parameter is configured with the following value:&#xD;&#xA;LOWER([expression])&#xD;&#xA;&#xD;&#xA;At generation, the select query retrieving source data will looks like this:&#xD;&#xA;select (LOWER(T_CUSTOMER.CUS_FIRST_NAME), LOWER(T_CUSTOMER.CUS_LAST_NAME)) from [...]&#xD;&#xA;Note that the [expression] is automatically substituted with the mapping expression&#xD;&#xA;&#xD;&#xA;" name="expression" type="String"/>
+  <parameter id="_QJI_gAoqEee5x8WYvhFALg" description="CDC Subscriber to use when CDC has been enabled on a source table." name="cdcSubscriber" type="String"/>
+  <parameter id="_s8Z3MK_TEeqGH6AaH3PDiA" description="When a source table is used as CDC a lock is performed on it. It makes the changed data available in the Mapping.&#xD;&#xA;If set to false, the Lock must have been performed as part of a previous Mapping." name="lockCdcTable" type="Boolean" value="true"/>
+  <parameter id="_s8f90K_TEeqGH6AaH3PDiA" description="When a source table is used as CDC an unlock is performed on it after processing. It marks the changed data as consumed.&#xD;&#xA;If set to false, the Unlock must be performed as part of an upcoming Mapping." name="unlockCdcTable" type="Boolean" value="true"/>
+  <subProcess id="_4WVcGoc7Ed6NdYXLsd44UQ" name="INTEGRATION">
+    <parameter id="_4WVcG4c7Ed6NdYXLsd44UQ" name="TPL_STEP" type="String" value="Integration.AfterControl"/>
+    <actionCode id="_VvTg6Ic8Ed6NdYXLsd44UQ" generationCondition="'${doInsert}$'='true'" isBeginAction="false" name="Select on source table (SRC)" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <bindLink id="_VvTg6Yc8Ed6NdYXLsd44UQ" bindType="DirectBind" executionType="OK" targetId="_VvTg7Ic8Ed6NdYXLsd44UQ"/>
+      <parameter id="_VvTg6oc8Ed6NdYXLsd44UQ" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_VvTg64c8Ed6NdYXLsd44UQ" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+      <code>select		%x{if (md:paramValue($this,'useDistinct')='true') then 'DISTINCT' else ''}x%&#xD;
+			%x{md:patternList($REF/ref:columns()[not(tech:onTrg())],concat(md:ifEmpty(md:paramValue($this,'expression'),'[expression]'),' [columnAliasWord] [name]'), ',\n\t\t\t')}x%&#xD;
+from	%x{$REF/tech:fromPart()}x%&#xD;
+where	(1=1)%xsl{&#xD;
+%x{$REF/tech:joinPart()}x%&#xD;
+%x{$REF/tech:filterPart()}x%&#xD;
+%x{$REF/ref:from()/tech:cdcFilterPart($this)}x%&#xD;
+%x{$REF/tech:groupByPart()}x%&#xD;
+%x{$REF/tech:havingPart()}x%}xsl%&#xD;
+&#xD;
+&#xD;
+%x{if($REF/ref:columns()[ref:target()/tech:xmlName()='internalProperty:sortKey']) &#xD;
+      then  concat('order by ',&#xD;
+                   md:patternList($REF/ref:columns()[ref:target()/tech:xmlName()='internalProperty:sortKey'],&#xD;
+                                  '[name] {&#xD;
+                                  if (tech:tag()=''SORT_DESC'') then ''DESC'' else ''ASC''} '&#xD;
+                                  , ',\n\t\t\t'&#xD;
+                                  )&#xD;
+                  ) &#xD;
+   else if($_orderByExpression!='')&#xD;
+           then concat('order by ',$_orderByExpression) &#xD;
+   else ''}x%&#xD;
+&#xD;
+ </code>
+    </actionCode>
+    <actionCode id="_VvTg7Ic8Ed6NdYXLsd44UQ" generationCondition="'${doInsert}$'='true'" isBeginAction="false" name="Load of data (TRG)" nbCycles="-1" repetitionQuery="" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_VvTg7Yc8Ed6NdYXLsd44UQ" executionType="OK" generationType="OK" mandatory="1"/>
+      <link id="_uilKIN2UEd6IN6o7L7Uzcg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_tLHA7N2UEd6IN6o7L7Uzcg"/>
+      <link id="_b-OMkNwfEeeanvK_wem8lQ" generationCondition="" executionCondition="${Load of data (TRG)/SQL_NB_ROWS}$ == 0" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_wuTHQNw1Eee4M9atcfCp3g"/>
+      <parameter id="_VvTg7oc8Ed6NdYXLsd44UQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_VvTg74c8Ed6NdYXLsd44UQ" name="SQL_ACTION_TYPE" type="String" value="INSERT"/>
+      <parameter id="_VvTg8Ic8Ed6NdYXLsd44UQ" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <parameter id="_Y5VBYF34EeqmM765dDHLRQ" name="SQL_ACTION_TYPE_STAT" type="String" value="INSERT"/>
+      <code>insert into %x{$REF/ref:target()/@name}x%&#xD;
+(&#xD;
+	%x{md:patternList($REF/ref:columns()[not(tech:onTrg()) and not(ref:target()/tech:xmlName()='internalProperty:sortKey')],'[name]', ',\n\t')}x%&#xD;
+	%x{md:patternList($REF/ref:columns()[tech:onTrg() and not(ref:target()/tech:xmlName()='internalProperty:sortKey')],'[name]', ',\n\t',',\n\t')}x%&#xD;
+)&#xD;
+values&#xD;
+(&#xD;
+	%x{md:patternList($REF/ref:columns()[not(tech:onTrg()) and not(ref:target()/tech:xmlName()='internalProperty:sortKey')],':{{[name]}}:', ',\n\t')}x%&#xD;
+	%x{md:patternList($REF/ref:columns()[tech:onTrg() and not(ref:target()/tech:xmlName()='internalProperty:sortKey')],'[expression]', ',\n\t',',\n\t')}x%&#xD;
+)&#xD;
+&#xD;
+/* &lt;properties verifyLength=&quot;%x{if (md:paramValue($this,'acceptDataOverflow')='false') &#xD;
+									then 'true' &#xD;
+									else if (md:paramValue($this,'acceptDataOverflow')='true') &#xD;
+										then 'false' &#xD;
+										else md:paramValue($this,'acceptDataOverflow')}x%&quot; generateHeader=&quot;%x{md:paramValue($this,'generateHeader')}%&quot; lineSeparatorBefore=&quot;%x{md:paramValue($this,'fileSeparator')='before'}%&quot; lineSeparatorAfter=&quot;%x{md:paramValue($this,'fileSeparator')='after'}%&quot;>&lt;/properties> */&#xD;
+&#xD;
+%x{$REF/ref:target()/tech:xmlMetadata()}x%</code>
+    </actionCode>
+    <actionCode id="_dw9WHYjcEd6J0vXEjWXHhw" generationCondition="'${truncateTargetFile}$' = 'true'" isBeginAction="false" name="Create File" nbCycles="-1" repetitionQuery="" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_dw9WHojcEd6J0vXEjWXHhw" executionType="OK" generationType="OK" mandatory="1"/>
+      <link id="_IqMiQIjdEd6J0vXEjWXHhw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_VvTg6Ic8Ed6NdYXLsd44UQ"/>
+      <parameter id="_dw9WH4jcEd6J0vXEjWXHhw" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_dw9WIIjcEd6J0vXEjWXHhw" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_dw9WIYjcEd6J0vXEjWXHhw" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>Truncate table %x{$REF/ref:target()/@name}x%&#xD;
+&#xD;
+%x{$REF/ref:target()/tech:xmlMetadata()}x%</code>
+    </actionCode>
+    <actionCode id="_oW9VbN2UEd6IN6o7L7Uzcg" generationCondition="not(md:paramValue($this, 'lockCdcTable')='false')" isBeginAction="false" name="Lock of CDC table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="mdj:xpath($REF,'FROM_REF')[mdj:xpath(.,'IS_CDC')]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_o2_gUN2UEd6IN6o7L7Uzcg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dw9WHYjcEd6J0vXEjWXHhw"/>
+      <parameter id="_oW9Vbt2UEd6IN6o7L7Uzcg" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_oW9Vb92UEd6IN6o7L7Uzcg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_oW9VcN2UEd6IN6o7L7Uzcg" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>update 	%x{md:physicalPath($CDC,'cdcTableName')}x%
+set 	CDC_CONSUMMATION = '1'
+where	(1=1)
+%x{$CDC/tech:cdcFilterPart($this)}x%</code>
+    </actionCode>
+    <actionCode id="_tLHA7N2UEd6IN6o7L7Uzcg" generationCondition="not(md:paramValue($this, 'unlockCdcTable')='false')" isBeginAction="false" name="Unlock of CDC table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="mdj:xpath($REF,'FROM_REF')[mdj:xpath(.,'IS_CDC')]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter id="_tLHA7t2UEd6IN6o7L7Uzcg" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_tLHA792UEd6IN6o7L7Uzcg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_tLHA8N2UEd6IN6o7L7Uzcg" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>Delete 	from 	%x{md:physicalPath($CDC,'cdcTableName')}x%
+Where	CDC_CONSUMMATION = '1'
+%x{$CDC/tech:cdcFilterPart($this)}x%</code>
+    </actionCode>
+    <actionCode id="_bS4wkNwfEeeanvK_wem8lQ" generationCondition="'${noDataBehaviour}$' = 'createEmptyFile'" isBeginAction="false" name="Create Empty File" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+      <parameter id="_bVUZgNwfEeeanvK_wem8lQ" name="TXT_WRITE_FILENAME" type="String" value="%x{$REF/ref:target()/tech:filePath()}x%"/>
+    </actionCode>
+    <actionCode id="_DFy9oNwjEeeanvK_wem8lQ" generationCondition="'${noDataBehaviour}$' = 'deleteExistingFile' or '${noDataBehaviour}$' = 'createEmptyFile'" isBeginAction="false" name="Delete Existing File if no results" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+      <link id="_McpYQNwjEeeanvK_wem8lQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_bS4wkNwfEeeanvK_wem8lQ"/>
+      <parameter id="_EwdIoNwjEeeanvK_wem8lQ" name="DEL_FILE" type="String" value="%x{$REF/ref:target()/tech:filePath()}x%"/>
+    </actionCode>
+    <actionCode id="_TpLIANwxEeeanvK_wem8lQ" generationCondition="'${noDataBehaviour}$' = 'raiseException'" isBeginAction="false" name="Raise Exception if empty File" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+      <link id="_bcSfANwxEeeanvK_wem8lQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_DFy9oNwjEeeanvK_wem8lQ"/>
+      <parameter id="_TpM9MNwxEeeanvK_wem8lQ" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+      <code>throw &quot;Target File cannot be empty&quot;;</code>
+    </actionCode>
+    <actionCode id="_wuTHQNw1Eee4M9atcfCp3g" isBeginAction="false" name="NoDataBehaviour" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+      <link id="_x0zcUNw1Eee4M9atcfCp3g" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_TpLIANwxEeeanvK_wem8lQ"/>
+    </actionCode>
+    <templateType>I-TP.RDBMS.INTEGRATING</templateType>
+  </subProcess>
+  <templateType>I-TP.RDBMS</templateType>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.2/notation#/?fileId=_4WVbt4c7Ed6NdYXLsd44UQ?">
+  <notation:Diagram xmi:id="_RDFSMP47Eeq397ZJzm0sgA" type="Proc" measurementUnit="Pixel">
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_RDFSMf47Eeq397ZJzm0sgA"/>
+    <element xmi:type="proc:ActionProcess" href="../../INTEGRATION%20File.tp.proc#_4WVbt4c7Ed6NdYXLsd44UQ?fileId=_4WVbt4c7Ed6NdYXLsd44UQ$type=proc$name=INTEGRATION%20File?"/>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_RDFSMv47Eeq397ZJzm0sgA" type="Proc" measurementUnit="Pixel">
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_RDFSM_47Eeq397ZJzm0sgA"/>
+    <element xmi:type="proc:SubActionProcess" href="../../INTEGRATION%20File.tp.proc#_4WVcGoc7Ed6NdYXLsd44UQ?fileId=_4WVbt4c7Ed6NdYXLsd44UQ$type=proc$name=INTEGRATION?"/>
+  </notation:Diagram>
+</xmi:XMI>
+]]></diagram>
+</proc:process>

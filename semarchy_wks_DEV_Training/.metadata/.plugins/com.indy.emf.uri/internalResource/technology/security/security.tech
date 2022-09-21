@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="UUID_TECH_SECURITY" name="Security">
+  <level icon="icons/full/custom/16x16/padlock.png" xmlName="security" code="com.stambia.security" connection="true" displayName="HTTP Security" isFile="true"/>
+  <level icon="icons/full/custom/rdbms.ak.png" xmlName="basic" code="com.stambia.security.basic" displayName="Basic" position="1" wizardBundleName="com.indy.addons" wizardClass="com.indy.addons.oauth1.wizard.OAuthWizard">
+    <attribute xmlName="userName" category="Standard:Username" code="userName" displayName="UserName" externalize="true"/>
+    <attribute xmlName="password" category="Standard:Username" code="password" displayName="Password" externalize="true" type="password"/>
+    <parent>com.stambia.security</parent>
+    <xPathExpression expression="@userName">
+      <code>USERNAME</code>
+    </xPathExpression>
+    <xPathExpression expression="@password">
+      <code>PASSWORD</code>
+    </xPathExpression>
+    <xPathExpression description="" expression="('password')">
+      <code>CRYPTED_ATTRIBUTES</code>
+    </xPathExpression>
+    <xPathExpression expression="1=1">
+      <code>INTERNAL_REFERENCEABLE_REGISTRY</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/wsdl.oauth.png" xmlName="oauth" code="com.stambia.security.oauth" displayName="OAuth security" position="2" wizardBundleName="com.indy.addons" wizardClass="com.indy.addons.oauth1.wizard.OAuthWizard">
+    <attribute xmlName="token" code="token" defaultValue="" displayName="Token" externalize="true"/>
+    <attribute xmlName="tokenSecret" code="tokenSecret" defaultValue="" displayName="Token Secret" externalize="true" type="password"/>
+    <attribute xmlName="consumerKey" code="consumerKey" displayName="Consumer Key"/>
+    <attribute xmlName="consumerSecret" xpathCondition="" code="consumerSecret" displayName="Consumer Secret" type="password"/>
+    <attribute xmlName="signatureMethod" category="Token Generation" code="signatureMethod" displayName="Signature Method" externalize="true"/>
+    <attribute xmlName="requestTokenURL" category="Token Generation:Request Token" code="requestTokenURL" displayName="Request Token URL"/>
+    <attribute xmlName="requestTokenHttpMethod" category="Token Generation:Request Token" code="requestTokenHttpMethod" displayName="Request Token Http Method"/>
+    <attribute iconBundleName="" xmlName="requestTokenParameter" xpathCondition="" category="Token Generation:Request Token" code="requestTokenParameter" displayName="Request Token Parameters" keyValue="true" mdXpathAccess="" unbounded="true"/>
+    <attribute xmlName="authorizationURL" xpathCondition="" category="Token Generation:Authorization" code="authorizationURL" displayName="Service Provider Authorization URL"/>
+    <attribute iconBundleName="" xmlName="authorizationParameter" xpathCondition="" category="Token Generation:Authorization" code="authorizationParameter" displayName="Authorization Parameters" keyValue="true" mdXpathAccess="" unbounded="true"/>
+    <attribute xmlName="accessTokenURL" category="Token Generation:Access Token" code="accessTokenURL" displayName="Access Token URL"/>
+    <attribute xmlName="accessTokenHttpMethod" category="Token Generation:Access Token" code="accessTokenHttpMethod" displayName="Access Token Http Method"/>
+    <attribute xmlName="callbackURL" code="callbackURL" defaultValue="" displayName="Callback URL"/>
+    <parent>com.stambia.security</parent>
+    <xPathExpression expression="@token">
+      <code>TOKEN</code>
+    </xPathExpression>
+    <xPathExpression expression="@consumerKey">
+      <code>CONSUMER_KEY</code>
+    </xPathExpression>
+    <xPathExpression expression="@consumerSecret">
+      <code>CONSUMER_SECRET</code>
+    </xPathExpression>
+    <xPathExpression expression="@tokenSecret">
+      <code>TOKEN_SECRET</code>
+    </xPathExpression>
+    <xPathExpression expression="@signatureMethod">
+      <code>SIGNATURE_METHOD</code>
+    </xPathExpression>
+    <xPathExpression expression="concat(&#xA;md:list(authorizationParameter/concat('&quot;',@key,'&quot;:&quot;',.,'&quot;'),',',',&quot;authorizationParameter&quot;:{','}')&#xA;,md:list(requestTokenParameter/concat('&quot;',@key,'&quot;:&quot;',.,'&quot;'),',',',&quot;requestTokenParameter&quot;:{','}')&#xA;)">
+      <code>ADDITIONAL_JSON</code>
+    </xPathExpression>
+    <xPathExpression description="" expression="('consumerSecret','tokenSecret')">
+      <code>CRYPTED_ATTRIBUTES</code>
+    </xPathExpression>
+    <xPathExpression expression="1=1">
+      <code>INTERNAL_REFERENCEABLE_REGISTRY</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/wsdl.oauth2.png" xmlName="oauth2" code="com.stambia.security.oauth2" displayName="OAuth2 security" position="3" wizardBundleName="com.indy.addons" wizardClass="com.indy.addons.oauth2.wizard.OAuth2Wizard">
+    <attribute icon="" xmlName="flowType" category="Token Generation" code="flowType" default="Authorization Code Grant" displayName="Flow Type" initialValue="" mdXpathAccess="tokenize('Authorization Code Grant|Implicit Grant|Resource Owner Password Credentials Grant|Client Credentials Grant', '\|')" refreshPropertiesCompositeOnValueChange="true" type="list"/>
+    <attribute icon="" xmlName="clientId" xpathCondition="" category="Token Generation:Credential" code="clientId" defaultValue="" displayName="Client ID" externalize="true"/>
+    <attribute xmlName="clientSecret" category="Token Generation:Credential" code="clientSecret" defaultValue="" displayName="Client Secret" externalize="true" type="password"/>
+    <attribute xmlName="username" xpathCondition="@flowType='Resource Owner Password Credentials Grant'" category="Token Generation:Credential" code="username" displayName="Username" mdXpathAccess=""/>
+    <attribute xmlName="password" xpathCondition="@flowType='Resource Owner Password Credentials Grant'" category="Token Generation:Credential" code="password" displayName="Password" mdXpathAccess="" type="password"/>
+    <attribute xmlName="accessToken" xpathCondition="not(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" category="Generated Token:Token" code="accessToken" defaultValue="" displayName="Access Token" externalize="true" multiLine="true"/>
+    <attribute xmlName="refreshToken" xpathCondition="not(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" category="Generated Token:Token" code="refreshToken" displayName="Refresh Token" externalize="true" multiLine="true"/>
+    <attribute xmlName="expiresIn" xpathCondition="not(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" category="Generated Token:Token" code="expiresIn" defaultValue="" displayName="Validity Duration"/>
+    <attribute xmlName="tokenEndpoint" xpathCondition="not(@flowType='Implicit Grant')" category="Token Generation:Generation Properties" code="tokenEndpoint" displayName="Token Endpoint"/>
+    <attribute xmlName="authorizationEndpoint" xpathCondition="not(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" category="Token Generation:Generation Properties" code="authorizationEndpoint" displayName="Authorization Endpoint"/>
+    <attribute xmlName="redirectionEndpoint" xpathCondition="not(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" category="Token Generation:Generation Properties" code="redirectionEndpoint" displayName="Redirection Endpoint"/>
+    <attribute xmlName="connectionTimeout" xpathCondition="not(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" category="Token Generation:Generation Properties" code="connectionTimeout" displayName="Refreshing Timeout"/>
+    <attribute xmlName="numberOfAttempts" xpathCondition="not(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" category="Token Generation:Generation Properties" code="numberOfAttempts" defaultValue="" displayName="Number Of Attempts"/>
+    <attribute icon="" xmlName="scope" xpathCondition="" category="Token Generation:Generation Properties" code="scope" defaultValue="" displayName="Scope" externalize="false" unbounded="true"/>
+    <attribute xmlName="authorizationParameter" xpathCondition="" category="Token Generation:Generation Properties" code="authorizationParameter" displayName="Authorization Parameters" keyValue="true" toolTip="Parameters sent to the authorization Endpoint" unbounded="true"/>
+    <attribute icon="" xmlName="properties" xpathCondition="not(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" category="Generated Token:Token" code="authorizationProperties" displayName="Additionnal Properties" keyValue="true" toolTip="Properties returned by the Authorization Endpoint" unbounded="true"/>
+    <attribute xmlName="tokenEndpointHttpMethod" xpathCondition="(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" category="Token Generation:Generation Properties" code="tokenEndpointHttpMethod" default="POST" displayName="Http Method" mdXpathAccess="tokenize('GET POST', ' ')" toolTip="The http method used to generate a token." type="list"/>
+    <attribute xmlName="useJsonProperties" xpathCondition="" xpathDisplayName="" category="Advanced" code="useJsonProperties" default="false" displayName="Use Json Properties" editable="false" mdDefaultXpath="" toolTip="Set this attribute to &quot;true&quot; if you want Templates to use the 'Json Properties' attribute to define the OAuth2 security.&#xA;&#xA;Templates default behaviour is to pass each OAuth2 attributes separately, which requires to externalize each of them if you want them to be configurable.&#xA;&#xA;When using this option, they will instead pass the OAuth2 security through the 'Json Properties' attribute which allows to externalize everything in one attribute.&#xA;" type="boolean"/>
+    <attribute xmlName="jsonProperties" xpathCondition="" xpathDisplayName="" category="Advanced" code="jsonProperties" default="" displayName="Json Properties" editable="false" externalize="true" mdDefaultXpath="concat('{&quot;security&quot;:{',&#xA;internal:list(internal:join(&#xA;&#x9;concat('&quot;type&quot;:',internal:encloseIfNotEmpty(name(),'&quot;','&quot;','null'))&#xA;&#x9;,internal:list((@*[.!='' and name()!='id' and name()!='defType' and name()!='name' and name()!='jsonProperties' and name()!= 'useJsonProperties' and not(starts-with(name(),'tech:')) and not(name() = ('password','clientSecret'))])/concat('&quot;',name(),'&quot;:&quot;',.,'&quot;'),',')&#xA;&#x9;,internal:list((@*[name() = ('password','clientSecret')])/concat('&quot;',name(),'&quot;:&quot;','%s(rhino){ __ctx__.decryptPassword(''',.,''');}s(rhino)%','&quot;'),',')&#xA;&#x9;,internal:list(scope,'&quot;,&quot;','&quot;scope&quot;:[&quot;','&quot;]')&#xA;&#x9;,internal:list(authorizationParameter/concat('&quot;',@key,'&quot;:&quot;',.,'&quot;'),',','&quot;authorizationParameter&quot;:{','}')&#xA;&#x9;,internal:list(properties/concat('&quot;',@key,'&quot;:&quot;',text(),'&quot;'),',','&quot;properties&quot;:{','}')&#xA;)[.!=''],','),&#xA;'}}')" toolTip="This attribute represents and centralize the whole OAuth2 configuration as a JSON structure.&#xA;&#xA;This can be used if you want to externalize the whole structure instead of externalizing each attribute separately.&#xA;&#xA;If you want to do so, set the &quot;Use Json Properties&quot; attribute to true, Templates will then use this field to pass the OAuth2 security instead of separate attributes.&#xA;"/>
+    <attribute xmlName="useClientId4TokenGeneration" xpathCondition="(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" category="Deprecated: Token Generation" code="useClientId4TokenGeneration" displayName="Send Client Id" type="boolean">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.deprecated.message" value="Use 'Send Client Credentials' instead."/>
+    </attribute>
+    <attribute iconBundleName="" xmlName="useClientSecret4TokenGeneration" xpathCondition="(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" category="Deprecated: Token Generation" code="useClientSecret4TokenGeneration" displayName="Send Client Secret" type="boolean">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.deprecated.message" value="Use 'Send Client Credentials' instead."/>
+    </attribute>
+    <attribute xmlName="sendClientCredentialsPolicy" xpathCondition="(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" category="Token Generation:Generation Properties" code="sendClientCredentialsPolicy" displayName="Send Client Credentials" mdXpathAccess="tokenize('Send Client Id as parameter,Send Client Id and Client Secret as parameters,Send Client Id and Client Secret as Basic Auth header', ',')" toolTip="Defines if the client_id and client_secret should be sent when generating the token and how, depending on the target server requirements.&#xA;&#xA;Note that sending them alongside the requests is necessary only for some OAuth2 servers, depending on their requirements.&#xA;&#xA;When this attribute is empty, they are not sent.&#xA;&#xA;&#xA;The following values are available:&#xA;&#xA;- &quot;Send Client Id and Client Secret as Basic Auth header&quot;&#xA;The client id and the client secret are sent alongside the requests as HTTP Basic Auth header.&#xA;&#xA;- &quot;Send Client Id and Client Secret as parameters&quot;&#xA;The client id and the client secret are sent alongside the requests as parameters.&#xA;When using GET HTTP Method, they are sent as URL Parameters.&#xA;When using POST HTTP Method, they are sent in the body of the request.&#xA;&#xA;- &quot;Send Client Id as parameter&quot;&#xA;The client id is sent alongside the requests as parameters.&#xA;When using GET HTTP Method, it is sent as URL Parameters.&#xA;When using POST HTTP Method, it is sent in the body of the request." type="list"/>
+    <attribute xmlName="additionalHttpHeaders" category="Token Generation:Generation Properties" code="additionalHttpHeaders" displayName="Additional HTTP Headers" keyValue="true" toolTip="Additional headers that will be sent in requests to the token and authorization endpoints." unbounded="true"/>
+    <attribute xmlName="enableHostnameVerification" category="Token Generation:Generation Properties" code="enableHostnameVerification" default="true" displayName="Enable Hostname Verification" toolTip="When set to false, the runtime will not verify that the certificate given by the server matches its hostname." type="boolean"/>
+    <attribute xmlName="enableCertificateVerification" category="Token Generation:Generation Properties" code="enableCertificateVerification" default="true" displayName="Enable Certificate Verification" toolTip="When set to false, the runtime will not verify that the certificate given by the server is valid." type="boolean"/>
+    <parent>com.stambia.security</parent>
+    <xPathExpression expression="@accessToken">
+      <code>ACCESS_TOKEN</code>
+    </xPathExpression>
+    <xPathExpression expression="@refreshToken">
+      <code>REFRESH_TOKEN</code>
+    </xPathExpression>
+    <xPathExpression expression="@expiresIn">
+      <code>EXPIRES_IN</code>
+    </xPathExpression>
+    <xPathExpression expression="@clientId">
+      <code>CLIENT_ID</code>
+    </xPathExpression>
+    <xPathExpression expression="@tokenEndpoint">
+      <code>TOKEN_ENDPOINT</code>
+    </xPathExpression>
+    <xPathExpression expression="@clientSecret">
+      <code>CLIENT_SECRET</code>
+    </xPathExpression>
+    <xPathExpression expression="@numberOfAttempts">
+      <code>NUMBER_OF_ATTEMPTS</code>
+    </xPathExpression>
+    <xPathExpression expression="@connectionTimeout">
+      <code>CONNECTION_TIMEOUT</code>
+    </xPathExpression>
+    <xPathExpression expression="concat(&#xA;md:list(scope,'&quot;,&quot;',',&quot;scope&quot;:[&quot;','&quot;]')&#xA;,md:list(authorizationParameter/concat('&quot;',@key,'&quot;:&quot;',.,'&quot;'),',',',&quot;authorizationParameter&quot;:{','}')&#xA;,md:list(additionalHttpHeaders/concat('&quot;',@key,'&quot;:&quot;',.,'&quot;'),',',',&quot;additionalHttpHeaders&quot;:{','}')&#xA;,md:list(properties/concat('&quot;',@key,'&quot;:&quot;',.,'&quot;'),',',',&quot;properties&quot;:{','}')&#xA;)">
+      <code>ADDITIONAL_JSON</code>
+    </xPathExpression>
+    <xPathExpression expression="('password','clientSecret')">
+      <code>CRYPTED_ATTRIBUTES</code>
+    </xPathExpression>
+    <xPathExpression expression="1=1">
+      <code>INTERNAL_REFERENCEABLE_REGISTRY</code>
+    </xPathExpression>
+    <xPathExpression expression="@useJsonProperties">
+      <code>USE_JSON_PROPERTIES</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/rdbms.ak.png" iconBundleName="" xmlName="ntlm" xpathIcon="" code="com.stambia.security.ntlm" displayName="NTLM security" wizardBundleName="com.indy.addons.httprest" wizardClass="com.indy.addons.httprest.wizard.ntlm.NTLMWizard">
+    <attribute xmlName="userName" category="Standard:Username" code="userName" displayName="UserName" externalize="true"/>
+    <attribute xmlName="password" category="Standard:Username" code="password" displayName="Password" externalize="true" type="password"/>
+    <attribute xmlName="domain" category="Standard:Username" code="domain" displayName="Domain"/>
+    <parent>com.stambia.security</parent>
+    <xPathExpression expression="@userName">
+      <code>USERNAME</code>
+    </xPathExpression>
+    <xPathExpression expression="@password">
+      <code>PASSWORD</code>
+    </xPathExpression>
+    <xPathExpression expression="@domain">
+      <code>DOMAIN</code>
+    </xPathExpression>
+    <xPathExpression expression="1=1">
+      <code>INTERNAL_REFERENCEABLE_REGISTRY</code>
+    </xPathExpression>
+    <xPathExpression description="" expression="('password')">
+      <code>CRYPTED_ATTRIBUTES</code>
+    </xPathExpression>
+  </level>
+  <xPathExpression description="" expression="if(tech:useJsonProperties()='true')&#xA;&#x9;then @jsonProperties&#xA;else&#xA;&#x9;concat(&#xA;&#x9;&#x9;'{&quot;',$p1,'&quot;:{','&quot;type&quot;:&quot;',name(),'&quot;,'&#xA;&#x9;&#x9;,md:list($plainAttributes/concat('&quot;',name(),'&quot;:&quot;',.,'&quot;'),','),','&#xA;&#x9;&#x9;,md:list($cryptedAttributes/concat('&quot;',name(),'&quot;:&quot;','%s(rhino){ __ctx__.decryptPassword(''',.,''');}s(rhino)%','&quot;'),',')&#xA;&#x9;&#x9;,tech:additionalJson(),'}}'&#xA;&#x9;)">
+    <code>MD_TO_JSON</code>
+    <xPathParameter defaultValue="'security'"/>
+    <xPathVariable expression="@*[.!='' and name()!='id' and name()!='defType' and name()!='name' and name()!='jsonProperties' and name()!='useJsonProperties' and not(name() = ../tech:cryptedAttributes())]" name="plainAttributes"/>
+    <xPathVariable expression="@*[name() = ../tech:cryptedAttributes()]" name="cryptedAttributes"/>
+  </xPathExpression>
+  <xPathExpression description="Generate a String representation of a MdNode attributes.\r\nMultivalues are postFixed by their position for the keys.\r\nkeyValues have an additional properties for their label propXmlName.position.key=&lt;KeyValue>" expression="mdj:toJavaProperties(.)">
+    <code>TO_JAVA_PROPERTIES</code>
+  </xPathExpression>
+  <contributedRegistryID>com.indy.ui.custom.out.services.registry.ReferencableObject</contributedRegistryID>
+</tech:tech>

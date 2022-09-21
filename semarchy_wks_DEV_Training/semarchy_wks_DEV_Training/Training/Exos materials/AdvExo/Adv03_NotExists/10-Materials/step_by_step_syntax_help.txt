@@ -1,0 +1,17 @@
+*** Step 2 ***
+**************
+
+Old syntax on FILTER ON THE MAPPING "Load CUSTOMER with not exists on Source DB"
+--------------------------------------------------------------------------------
+NOT EXISTS (SELECT 1 
+            FROM   %x{md:objectPath(./ref:schema('OLTP'),'OLTP_BANISHED_CUSTOMER')}x% OLTP_BANISHED_CUSTOMER
+            WHERE  OLTP_BANISHED_CUSTOMER.ID_BAN_CUSTOMER= OLTP_CUSTOMER.ID_CUSTOMER )
+
+*** Step 3 ***
+**************
+
+Old syntax on FILTER ON THE MAPPING "Load CUSTOMER with not exists on Target DB"
+--------------------------------------------------------------------------------			 
+NOT EXISTS (SELECT 1 
+            FROM   %x{md:objectPath(./ref:schema('ODS'),'ODS_BANISHED_CUSTOMER')}x% ODS_BANISHED_CUSTOMER
+            WHERE  ODS_BANISHED_CUSTOMER.ID_BAN_CUSTOMER = stage.ID_CUSTOMER )

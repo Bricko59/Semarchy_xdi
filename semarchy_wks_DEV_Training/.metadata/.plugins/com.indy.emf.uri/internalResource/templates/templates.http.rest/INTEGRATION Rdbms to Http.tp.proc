@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" description="This template is used to call APIs defined using the HTTP REST Technology.&#xD;&#xA;&#xD;&#xA;Refer to the description of each Parameter for more information.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;23/09/2021&#x9;New parameter &quot;Json Node Null Behaviour&quot;&#xD;&#xA;28/01/2020&#x9; Support Staging Area&#xD;&#xA;10/03/2021 New parameter 'Write XML Key values'&#xD;&#xA;16/11/2020&#x9;New parameter 'Nil Behaviour'&#xD;&#xA;16/11/2020&#x9;Initialize template history" id="_4fRz0MvFEeiRAvOrIMI3zg" metaInf="&lt;template-feature-support name=&quot;stagingArea&quot; enable=&quot;true&quot; evaluation=&quot;NATIVE&quot;/>">
+  <parameter description="If true, a DISTINCT statement will be added on the query retrieving source data.&#xD;&#xA;This is used to avoid having duplicates." id="_4fSa4cvFEeiRAvOrIMI3zg" name="DISTINCT" type="Boolean" value="true"/>
+  <parameter description="If true, the XML Descriptor file used to retrieve source data is written into the temp folder of the Runtime.&#xD;&#xA;This is optional and used for debug purposes." id="_4fSa4svFEeiRAvOrIMI3zg" name="WRITE_XML_DESCRIPTOR" type="Boolean" value="false"/>
+  <parameter description="Option used to export information about the execution.&#xD;&#xA;This is used for debug purposes only.&#xD;&#xA;The following modes are available:&#xD;&#xA;- off: Nothing is done.&#xD;&#xA;- console: debug information is printed to the Runtime console during execution.&#xD;&#xA;- file: debug information is printed in the runtime actionCodes log file during execution." id="_4fTB8cvFEeiRAvOrIMI3zg" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;off&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;console&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;file&quot;/>" name="debug" type="String" value="off"/>
+  <parameter description="JDBC Fetch size (number of lines) used when querying the source database.&#xD;&#xA;Larger values provide better performance but consume more memory in the Runtime as the data is stored in the Memory before being sent to the Load table.&#xD;&#xA;When this value is empty, the Fetch Size specified in the Metadata of the source Server is used." id="_4fSa48vFEeiRAvOrIMI3zg" name="SQL_FETCH_SIZE" type="Integer" value=""/>
+  <parameter description="Defines the connection timeout that should be used when trying to invoke this REST API operation. Note that it overrides the default timeout defined in Metadata. You can leave this empty if you want the default timeout defined in Metadata to be used." id="_4fTpAcvFEeiRAvOrIMI3zg" label="Connection Timeout" name="connectionTimeout" type="Integer" value=""/>
+  <parameter description="Defines the read timeout that should be used when invoking this REST API operation. Note that it overrides the default timeout defined in Metadata. You can leave this empty if you want the default timeout defined in Metadata to be used." id="97d31111-1c2b-4f5a-94dd-64c0ccfab8f0" label="Read Timeout" name="readTimeout" type="Integer" value=""/>
+  <parameter description="Defines what to do when a null value is loaded into a target xml element or JSON value:&#xD;&#xA;&#xD;&#xA;- ForceToTrue: The element is created with the xsi:nil=&quot;true&quot; attribute.&#xD;&#xA;- ForceToFalse: The element or JSON value is not created.&#xD;&#xA;- TrueIfNotDefined: When the 'isNullable' property is not defined in Metadata, the element is created with the xsi:nil=&quot;true&quot; attribute.&#xD;&#xA;- FalseIfNotDefined: When the 'isNullable' property is not defined in Metadata, the element is not created.&#xD;&#xA;&#xD;&#xA;Note that this applies to all the elements that are loaded and that the 'ForceToTrue' and 'ForceToFalse' options override what is defined in Metadata.&#xD;&#xA;These two options allow to force manually in the template to create or not elements with xsi:nil=&quot;true&quot; attribute when a null value is encountered.&#xD;&#xA;&#xD;&#xA;If you want to impact only the behavior of elements where the 'isNullable' property is not defined in Metadata, use the two other options.&#xD;&#xA;They allow to choose what to do when it is the case, and simply follow what is defined in Metadata when it is already defined in.&#xD;&#xA;&#xD;&#xA;Note:&#xD;&#xA;From Runtime S17.5.6, the 'ForceToFalse' option is also supported for JSON values.&#xD;&#xA;When this option is set the JSON values will not be created when the source value is null.&#xD;&#xA;All other options are supported for XML elements only." id="09565dae-fa7a-43dc-888c-5dbf426d560b" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;FalseIfNotDefined&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;TrueIfNotDefined&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;ForceToFalse&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;ForceToTrue&quot;/>" name="nilBehaviour" type="String" value="FalseIfNotDefined"/>
+  <parameter description="Defines what to do when a null value is loaded into a JSON array or a JSON object&#xD;&#xA;&#xD;&#xA;- Do Not Write Node: The JSON array or Object is not created in the target file.&#xD;&#xA;- Write Empty Node: The JSON array or Object is created in the target file with an empty array of an empty object&#xD;&#xA;- Write Null Node: The JSON array or Object is created in the target file with null as value&#xD;&#xA; " id="8bc2def9-ba5f-4f7e-a96e-d6f35a1551ce" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;Do Not Write Node&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;Write Null Node&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;Write Empty Node&quot;/>" name="jsonNodeNullBehaviour" type="String" value="Do Not Write Node"/>   
+  <parameter description="If true, mapped XML element nodes that are used as a key will be written to the request even if they don't have a datatype.&#xD;&#xA;Important note: setting this to false will prevent runtime from sending requests when only key nodes are mapped (for example if only the root element of the http datastore is mapped)." id="c4a09ede-9cc7-41c0-ade1-ce2c20d3bf0b" label="Write XML Key values" name="WRITE_KEY_VALUES" type="Boolean" value="true"/>
+  <parameter id="969d23fc-656e-47ee-ba4d-25fde5b02df3" label="" name="delayBetweenInvocations" type="Integer" value=""/>
+  <parameter id="31dfbdaf-4952-4662-9502-90e331cedf3f" name="functionalErrorAcceptanceNumber" type="Integer" value="-1"/>
+  <parameter id="700ea2eb-8bee-4acf-bce9-37f01aebda75" name="functionalErrorRetryNumber" type="Integer" value=""/>
+  <parameter id="65cb9ac9-bf11-4c7b-a6d4-3c8193e9ae3a" name="functionalErrorRetryDelay" type="Integer" value=""/>
+  <parameter id="5266e9d5-6092-4167-9fb9-550b486f9888" name="technicalErrorRetryDelay" type="Integer" value=""/>
+  <parameter id="fb25785a-ae57-4770-a425-0578dcc77a69" name="technicalErrorRetryNumber" type="Integer" value=""/>
+  <parameter id="dd8acd1b-4472-443c-a900-090c3abde3e6" name="technicalErrorAcceptanceNumber" type="Integer" value=""/>
+  <subProcess id="_4fTpA8vFEeiRAvOrIMI3zg" isBeginAction="false" name="INT" nbCycles="-1" toleratedError="false">
+    <parameter id="_dvbF0NCCEeiOf9ayXU6ZXg" name="XML_FACTORY_CLASS_NAME" type="String" value="com.sun.xml.internal.stream.XMLOutputFactoryImpl"/>
+    <actionProcessRef id="_4fU3JsvFEeiRAvOrIMI3zg" enable="true" isBeginAction="false" name="INT" nbCycles="-1" toleratedError="false" targetName="resource.proc#_1b6fEK6lEd6tEoMWC9noQg?fileId=_brHmkaEoEd6xg_kipsVRYg$type=proc$name=INT?">
+      <parameter id="_4fU3J8vFEeiRAvOrIMI3zg" name="streamHook01" type="Integer" value="class=com.stambia.httprest.impl.WebServiceJavaHandler&#xD;&#xA;class.module=%x{$REF/ref:target()/tech:module()}x%&#xD;&#xA;outputFactory=%x{md:ifEmpty($REF/ref:target()/tech:xmlOutputFactoryClass(),md:paramValue($this,'XML_FACTORY_CLASS_NAME'))}x%&#xD;&#xA;BASE64BINARY_AS_BYTE_ARRAY=true&#xD;&#xA;KEEP_EMPTY_VALUE=true&#xD;&#xA;handler.property.ITERATIVE_MAP_VALUES_AS_LIST=true&#xD;&#xA;metadata.json.content.1=%x{$REF/ref:target()/ancestor-or-self::operation/tech:metadataToJson()}x%&#xD;&#xA;metadata.json.content.2=%x{$REF/ref:target()/ancestor-or-self::httprest/ref:security()/tech:mdToJson()}x%&#xD;&#xA;metadata.json.content.proxy=%x{$REF/ref:target()/ancestor-or-self::httprest/ref:proxy()/tech:mdToJson('proxy')}x%&#xD;&#xA;metadata.json.root.baseUrl=%x{$REF/ref:target()/ancestor-or-self::httprest/@url}x%&#xD;&#xA;metadata.json.root.resource=%x{$REF/ref:target()/ancestor-or-self::path/@path}x%&#xD;&#xA;metadata.json.root.outputFileFolder=%x{md:paramValue($this, 'outputFileFolder')}x%&#xD;&#xA;metadata.json.root.logReqRes=%x{md:paramValue($this, 'debug')}x%&#xD;&#xA;metadata.json.root.timeout=%x{md:ifEmpty(md:paramValue($this,'readTimeout'), $REF/ref:target()/ancestor-or-self::operation/tech:defaultReadTimeout())}x%&#xD;&#xA;metadata.json.root.connectionTimeout=%x{md:ifEmpty(md:paramValue($this,'connectionTimeout'), $REF/ref:target()/ancestor-or-self::operation/tech:defaultConnectionTimeout())}x%&#xD;&#xA;metadata.json.root.delayBetweenInvocations=%x{md:paramValue($this, 'delayBetweenInvocations')}x%&#xD;&#xA;metadata.json.root.functionalErrorAcceptanceNumber=%x{md:paramValue($this, 'functionalErrorAcceptanceNumber')}x%&#xD;&#xA;metadata.json.root.functionalErrorRetryNumber=%x{md:paramValue($this, 'functionalErrorRetryNumber')}x%&#xD;&#xA;metadata.json.root.functionalErrorRetryDelay=%x{md:paramValue($this, 'functionalErrorRetryDelay')}x%&#xD;&#xA;metadata.json.root.technicalErrorAcceptanceNumber=%x{md:paramValue($this, 'technicalErrorAcceptanceNumber')}x%&#xD;&#xA;metadata.json.root.technicalErrorRetryNumber=%x{md:paramValue($this, 'technicalErrorRetryNumber')}x%&#xD;&#xA;metadata.json.root.technicalErrorRetryDelay=%x{md:paramValue($this, 'technicalErrorRetryDelay')}x%"/>
+    </actionProcessRef>
+    <templateType>I-TP.RDBMS.INTEGRATING</templateType>
+  </subProcess>
+  <templateType>I-TP.RDBMS</templateType>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.2/notation#/?fileId=_4fRz0MvFEeiRAvOrIMI3zg?">
+  <notation:Diagram xmi:id="_AGe4sDbKEea1W4n7FrgGhg" type="Proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_S4mmQYlQEeaMGe2i9k_2xg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_S4nNUIlQEeaMGe2i9k_2xg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_S4mmQolQEeaMGe2i9k_2xg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_4fSa4cvFEeiRAvOrIMI3zg?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=DISTINCT?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_S4mmQ4lQEeaMGe2i9k_2xg" x="445" y="30"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_S4nNUYlQEeaMGe2i9k_2xg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_S4nNVIlQEeaMGe2i9k_2xg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_S4nNUolQEeaMGe2i9k_2xg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_4fSa4svFEeiRAvOrIMI3zg?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=WRITE_XML_DESCRIPTOR?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_S4nNU4lQEeaMGe2i9k_2xg" x="445" y="110"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_S4n0YIlQEeaMGe2i9k_2xg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_S4n0Y4lQEeaMGe2i9k_2xg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_S4n0YYlQEeaMGe2i9k_2xg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_4fSa48vFEeiRAvOrIMI3zg?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=SQL_FETCH_SIZE?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_S4n0YolQEeaMGe2i9k_2xg" x="445" y="55"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_S4obcYlQEeaMGe2i9k_2xg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_S4pCgIlQEeaMGe2i9k_2xg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_S4obcolQEeaMGe2i9k_2xg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_4fTB8cvFEeiRAvOrIMI3zg?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=debug?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_S4obc4lQEeaMGe2i9k_2xg" x="445" y="165"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_2L40EIlYEeaMGe2i9k_2xg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_2L6CMIlYEeaMGe2i9k_2xg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_2L40EYlYEeaMGe2i9k_2xg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_4fTpAcvFEeiRAvOrIMI3zg?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=connectionTimeout?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2L40EolYEeaMGe2i9k_2xg" x="445" y="140"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_S4aZAIlQEeaMGe2i9k_2xg" type="2004">
+      <children xmi:type="notation:Node" xmi:id="_S4eqcIlQEeaMGe2i9k_2xg" type="5004"/>
+      <children xmi:type="notation:Node" xmi:id="_S4htwIlQEeaMGe2i9k_2xg" type="7005">
+        <children xmi:type="notation:Node" xmi:id="_SvnNcBMqEemj2-AdPDuoLA" type="3005">
+          <element xmi:type="proc:Parameter" href="resource.proc#_dvbF0NCCEeiOf9ayXU6ZXg?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=XML_FACTORY_CLASS_NAME?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_SvnNcRMqEemj2-AdPDuoLA"/>
+        </children>
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_S4htwYlQEeaMGe2i9k_2xg"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_S4htwolQEeaMGe2i9k_2xg"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_S4htw4lQEeaMGe2i9k_2xg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_S4kKAIlQEeaMGe2i9k_2xg" type="7006">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_S4kKAYlQEeaMGe2i9k_2xg"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_S4kKAolQEeaMGe2i9k_2xg"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_S4kKA4lQEeaMGe2i9k_2xg"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_S4aZAYlQEeaMGe2i9k_2xg" fontName="Segoe UI"/>
+      <styles xmi:type="notation:HintedDiagramLinkStyle" xmi:id="_S4aZAolQEeaMGe2i9k_2xg"/>
+      <element xmi:type="proc:SubActionProcess" href="resource.proc#_4fTpA8vFEeiRAvOrIMI3zg?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=INT?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_S4aZA4lQEeaMGe2i9k_2xg" x="30" y="65"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_I583MPJvEeqkd6TmnoRJ2g" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_I59eQPJvEeqkd6TmnoRJ2g" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_I583MfJvEeqkd6TmnoRJ2g" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#97d31111-1c2b-4f5a-94dd-64c0ccfab8f0?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=readTimeout?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_I583MvJvEeqkd6TmnoRJ2g" x="445" y="325"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_I4N-wP8yEeusjZClRuU_-A" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_I4Pz8P8yEeusjZClRuU_-A" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_I4N-wf8yEeusjZClRuU_-A" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#09565dae-fa7a-43dc-888c-5dbf426d560b?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=nilBehaviour?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_I4N-wv8yEeusjZClRuU_-A" x="445" y="300"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_I4N-wP8yEeusjZClRuU_-A" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_I4Pz8P8yEeusjZClRuU_-A" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_I4N-wf8yEeusjZClRuU_-A" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#09565dae-fa7a-43dc-888c-5dbf426d560b?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=jsonNodeNullBehaviour?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_I4N-wv8yEeusjZClRuU_-A" x="445" y="315"/>
+    </children>    
+    <children xmi:type="notation:Node" xmi:id="_I4QbAP8yEeusjZClRuU_-A" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_I4QbA_8yEeusjZClRuU_-A" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_I4QbAf8yEeusjZClRuU_-A" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#c4a09ede-9cc7-41c0-ade1-ce2c20d3bf0b?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=WRITE_KEY_VALUES?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_I4QbAv8yEeusjZClRuU_-A" x="445" y="85"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Q3I9IP8yEeusjZClRuU_-A" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_Q3Y0wP8yEeusjZClRuU_-A" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_Q3I9If8yEeusjZClRuU_-A" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#969d23fc-656e-47ee-ba4d-25fde5b02df3?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=delayBetweenInvocations?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Q3I9Iv8yEeusjZClRuU_-A" x="445" y="190"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_VEl1AP8yEeusjZClRuU_-A" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_VE26wP8yEeusjZClRuU_-A" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_VEl1Af8yEeusjZClRuU_-A" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#31dfbdaf-4952-4662-9502-90e331cedf3f?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=functionalErrorAcceptanceNumber?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_VEl1Av8yEeusjZClRuU_-A" x="445" y="220"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_wPp4IP8yEeusjZClRuU_-A" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_wPxz8P8yEeusjZClRuU_-A" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_wPp4If8yEeusjZClRuU_-A" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#700ea2eb-8bee-4acf-bce9-37f01aebda75?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=functionalErrorRetryNumber?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_wPp4Iv8yEeusjZClRuU_-A" x="445" y="275"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_wjxuAP8yEeusjZClRuU_-A" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_wjyVEP8yEeusjZClRuU_-A" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_wjxuAf8yEeusjZClRuU_-A" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#65cb9ac9-bf11-4c7b-a6d4-3c8193e9ae3a?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=functionalErrorRetryDelay?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_wjxuAv8yEeusjZClRuU_-A" x="445" y="245"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_7wB8UP84EeudhIo4OZzXKw" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_7wG00P84EeudhIo4OZzXKw" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_7wB8Uf84EeudhIo4OZzXKw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#5266e9d5-6092-4167-9fb9-550b486f9888?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=technicalErrorRetryDelay?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_7wB8Uv84EeudhIo4OZzXKw" x="445" y="380"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_7wHb4P84EeudhIo4OZzXKw" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_7wHb4_84EeudhIo4OZzXKw" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_7wHb4f84EeudhIo4OZzXKw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#fb25785a-ae57-4770-a425-0578dcc77a69?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=technicalErrorRetryNumber?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_7wHb4v84EeudhIo4OZzXKw" x="445" y="410"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_7wIC8P84EeudhIo4OZzXKw" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_7wIC8_84EeudhIo4OZzXKw" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_7wIC8f84EeudhIo4OZzXKw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#dd8acd1b-4472-443c-a900-090c3abde3e6?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=technicalErrorAcceptanceNumber?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_7wIC8v84EeudhIo4OZzXKw" x="445" y="355"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_AGffwDbKEea1W4n7FrgGhg"/>
+    <element xmi:type="proc:ActionProcess" href="resource.proc#_4fRz0MvFEeiRAvOrIMI3zg?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=INTEGRATION%20Rdbms%20to%20Http.tp?"/>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_AKbkkDbKEea1W4n7FrgGhg" type="Proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_kUU3WUkHEeaWBPyoZ5ANHg" type="2003">
+      <children xmi:type="notation:Node" xmi:id="_kUVeYEkHEeaWBPyoZ5ANHg" type="5003"/>
+      <children xmi:type="notation:Node" xmi:id="_kUVeYUkHEeaWBPyoZ5ANHg" type="7003">
+        <children xmi:type="notation:Node" xmi:id="_pkCeMBTwEemsA-5PeU6nRA" type="3003">
+          <element xmi:type="proc:Parameter" href="resource.proc#_4fU3J8vFEeiRAvOrIMI3zg?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=streamHook01?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_pkCeMRTwEemsA-5PeU6nRA"/>
+        </children>
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_kUVeYkkHEeaWBPyoZ5ANHg"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_kUVeY0kHEeaWBPyoZ5ANHg"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_kUVeZEkHEeaWBPyoZ5ANHg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_kUVeZUkHEeaWBPyoZ5ANHg" type="7004">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_kUVeZkkHEeaWBPyoZ5ANHg"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_kUVeZ0kHEeaWBPyoZ5ANHg"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_kUVeaEkHEeaWBPyoZ5ANHg"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_kUU3WkkHEeaWBPyoZ5ANHg" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionProcessRef" href="resource.proc#_4fU3JsvFEeiRAvOrIMI3zg?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=INT?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_kUU3W0kHEeaWBPyoZ5ANHg" x="30" y="65"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_dvq9cNCCEeiOf9ayXU6ZXg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_dv4_4NCCEeiOf9ayXU6ZXg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_dvq9cdCCEeiOf9ayXU6ZXg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_dvbF0NCCEeiOf9ayXU6ZXg?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=XML_FACTORY_CLASS_NAME?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_dvq9ctCCEeiOf9ayXU6ZXg" x="645" y="30"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_AKbkkTbKEea1W4n7FrgGhg"/>
+    <element xmi:type="proc:SubActionProcess" href="resource.proc#_4fTpA8vFEeiRAvOrIMI3zg?fileId=_4fRz0MvFEeiRAvOrIMI3zg$type=proc$name=INT?"/>
+  </notation:Diagram>
+</xmi:XMI>
+]]></diagram>
+</proc:process>

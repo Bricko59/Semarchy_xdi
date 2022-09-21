@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_6T2VgS7jEeaEudnvkSFAVQ" description="It's a tool to compare a grant specification csv file with the real Grants defined in Oracle.&#xD;&#xA;To do this, we select a Oracle Catalog table.&#xD;&#xA;The format of the grant specification file is :&#xD;&#xA;- The first line contains headers&#xD;&#xA;&#xD;&#xA;_Instance;_Schéma;_Table;;_GRANT&#xD;&#xA;ORA_GMP;USER1;TABLE1;;&quot;GRANT DELETE, INSERT, UPDATE ON USER1.TABLE1 TO WORKETL;&quot;&#xD;&#xA;&lt;DB_NM>,&lt;SCHEMA>,&lt;TABLE>,&quot;&lt;GRANT EXPRESSION WITH GRANTEE;&quot;&#xD;&#xA;&#xD;&#xA;You need to drag &amp; drop on the component :&#xD;&#xA;- A schema where the tables are created&#xD;&#xA;- A folder where the file is stored&#xD;&#xA;- A mailing list or a message (to send the list of differences)&#xD;&#xA;&#xD;&#xA;And you need to define :&#xD;&#xA;- the name of the grant specification file&#xD;&#xA;- the DB Name (instance)&#xD;&#xA;- the grantee schema name&#xD;&#xA;">
+  <parameter id="_clEFQDbiEeaJGbsP6B4HOA" metaInf="&lt;xslVariableName>DBInstanceName&lt;/xslVariableName>" name="DBInstanceName" type="String" value="ORA_GMP"/>
+  <parameter id="_Ol414DipEeaJGbsP6B4HOA" metaInf="&lt;xslVariableName>DBInstanceName&lt;/xslVariableName>" name="GranteeSchemaName" type="String" value="WORKETL"/>
+  <parameter id="_nRMi0HTSEeacg47JPaAhmQ" metaInf="&lt;xslVariableName>initResultFile&lt;/xslVariableName>" name="initResultFile" type="Boolean" value="true"/>
+  <parameter id="_U3mtMIGHEean7JATlUQCiw" metaInf="&lt;xslVariableName>oracleCatalogTableUsed&lt;/xslVariableName>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;ALL_TAB_PRIVS&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;DBA_TAB_PRIVS&quot;/>" name="oracleCatalogTableUsed" type="String" value="ALL_TAB_PRIVS"/>
+  <actionCode id="_7ycacC7jEeaEudnvkSFAVQ" isBeginAction="false" name="Start" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_8tFoUC7kEeaEudnvkSFAVQ" generationCondition="exists($TARGET_SCHEMA) and exists($SOURCE_FILE)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_njwIwDbUEeaJGbsP6B4HOA"/>
+  </actionCode>
+  <actionCode id="_PgWysC7oEeaEudnvkSFAVQ" isBeginAction="false" name="MkDir file_to_treat" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.MkDirActionCodeI">
+    <link id="_RJQqMC7oEeaEudnvkSFAVQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_1ukT0DikEeaJGbsP6B4HOA"/>
+    <parameter id="_PgWytC7oEeaEudnvkSFAVQ" name="FILE_DIR" type="String" value="%x{$SOURCE_FILE/../tech:path()}x%/file_to_treat"/>
+  </actionCode>
+  <actionCode id="_ZEXiwC7sEeaEudnvkSFAVQ" isBeginAction="false" name="FileCopy" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileCopyActionCodeI">
+    <link id="_a-axcC7oEeaEudnvkSFAVQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_Uk1H0H_qEeaj4KlE2YQIaQ"/>
+    <parameter id="_bDgwAC7sEeaEudnvkSFAVQ" name="FILE_TO_DIR" type="String" value="%x{$SOURCE_FILE/../tech:path()}x%/file_to_treat"/>
+    <parameter id="_caYcUC7sEeaEudnvkSFAVQ" name="FILE_FROM_FILE" type="String" value="%x{$SOURCE_FILE/../tech:path()}x%\%x{$SOURCE_FILE/tech:physicalName()}x%"/>
+    <parameter id="_oIgt0DikEeaJGbsP6B4HOA" name="FILE_OVERWRITE_MODE" type="String" value="ALWAYS"/>
+  </actionCode>
+  <actionCode id="_njwIwDbUEeaJGbsP6B4HOA" isBeginAction="false" name="CREATE TABLE PUBLIC.GRANT_DETAILS" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_qxHcoDbUEeaJGbsP6B4HOA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_PgWysC7oEeaEudnvkSFAVQ"/>
+    <metaDataLink id="_t20CQDbUEeaJGbsP6B4HOA" name="PUBLIC" target="../global/components/Online%20DB/HSQLEngine.md#_xj7VVOjsEeSW8ee1frYByw?fileId=_xj7VUOjsEeSW8ee1frYByw$type=md$name=PUBLIC?"/>
+    <parameter id="_nmwZcDbUEeaJGbsP6B4HOA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_nmwZcTbUEeaJGbsP6B4HOA" name="SQL_CONNECTION" type="String"/>
+    <code>CREATE TABLE PUBLIC.GRANT_DETAILS&#xD;
+(SOURCE_ORIGIN CHAR(3),&#xD;
+ DB_NAME VARCHAR(100),&#xD;
+ SCHEMA_NAME VARCHAR(100),&#xD;
+ GRANTEE     VARCHAR(100),&#xD;
+ TABLE_NAME VARCHAR(100),&#xD;
+ DELETE VARCHAR(100),&#xD;
+ UPDATE VARCHAR(100),&#xD;
+ INSERT VARCHAR(100));</code>
+  </actionCode>
+  <actionCode id="_7_HRUDbiEeaJGbsP6B4HOA" isBeginAction="false" name="INSERT FILE INTO PUBLIC.GRANT_DETAILS" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_ILqrgDeYEeaJGbsP6B4HOA" generationCondition="md:paramValue($this,'oracleCatalogTableUsed') = 'ALL_TAB_PRIVS'" executionCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_GaheADeYEeaJGbsP6B4HOA"/>
+    <link id="_Ccp00IGHEean7JATlUQCiw" generationCondition="md:paramValue($this,'oracleCatalogTableUsed') = 'DBA_TAB_PRIVS'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_BcQu0IGHEean7JATlUQCiw"/>
+    <metaDataLink id="_-ZtEcDbiEeaJGbsP6B4HOA" name="PUBLIC" target="../global/components/Online%20DB/HSQLEngine.md#_xj7VVOjsEeSW8ee1frYByw?fileId=_xj7VUOjsEeSW8ee1frYByw$type=md$name=PUBLIC?"/>
+    <parameter id="_7_LiwDbiEeaJGbsP6B4HOA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_7_LiwTbiEeaJGbsP6B4HOA" name="SQL_CONNECTION" type="String"/>
+    <code>INSERT INTO PUBLIC.GRANT_DETAILS VALUES ('FIL',&#xD;
+                                        ':{Instance_name}:',&#xD;
+                                        ':{Schema_name}:',&#xD;
+                                        '%x{md:paramValue($this,'GranteeSchemaName')}x%',&#xD;
+                                        ':{Table_name}:',&#xD;
+                                        CASE WHEN ':{Grant_content}:' LIKE '%DELETE%' THEN 'Yes' ELSE 'No' END,&#xD;
+                                        CASE WHEN ':{Grant_content}:' LIKE '%UPDATE%' THEN 'Yes' ELSE 'No' END,&#xD;
+                                        CASE WHEN ':{Grant_content}:' LIKE '%INSERT%' THEN 'Yes' ELSE 'No' END)&#xD;
+                                        -- %x{'md:paramValue($this,''oracleCatalogTableUsed'')'}x%</code>
+  </actionCode>
+  <actionCode id="_GaheADeYEeaJGbsP6B4HOA" isBeginAction="false" name="SELECT FROM ALL_TAB_PRIVS" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <bindLink id="_Up2DcDeYEeaJGbsP6B4HOA" bindType="DirectBind" targetId="_MdtvgDeYEeaJGbsP6B4HOA"/>
+    <parameter id="_GaisIDeYEeaJGbsP6B4HOA" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+    <parameter id="_GajTMDeYEeaJGbsP6B4HOA" name="SQL_CONNECTION" type="String" value="%targetConnection{$TARGET_SCHEMA}%"/>
+    <code>SELECT '${../DBInstanceName}$' AS DB_NAME,TABLE_SCHEMA AS SCHEMA_NAME,TABLE_NAME,&#xD;
+       CASE WHEN SUM(CASE WHEN PRIVILEGE='DELETE' THEN 1 ELSE 0 END)!=0 THEN 'Yes' ELSE 'No' END AS DELETE_COL,&#xD;
+       CASE WHEN SUM(CASE WHEN PRIVILEGE='UPDATE' THEN 1 ELSE 0 END)!=0 THEN 'Yes' ELSE 'No' END AS UPDATE_COL,&#xD;
+       CASE WHEN SUM(CASE WHEN PRIVILEGE='INSERT' THEN 1 ELSE 0 END)!=0 THEN 'Yes' ELSE 'No' END AS INSERT_COL,&#xD;
+       GRANTEE&#xD;
+FROM ALL_TAB_PRIVS&#xD;
+WHERE PRIVILEGE IN ('UPDATE','DELETE','INSERT')&#xD;
+AND TABLE_SCHEMA ='%x{$TARGET_SCHEMA/tech:schemaName()}x%'&#xD;
+AND GRANTEE = '${../GranteeSchemaName}$'&#xD;
+GROUP BY TABLE_SCHEMA,TABLE_NAME,GRANTEE&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_MdtvgDeYEeaJGbsP6B4HOA" isBeginAction="false" name="INSERT CAT INTO PUBLIC.GRANT_DETAILS" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_CmUPwDecEeaJGbsP6B4HOA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_770tsDebEeaJGbsP6B4HOA"/>
+    <metaDataLink id="_TNNtYDeYEeaJGbsP6B4HOA" name="PUBLIC" target="../global/components/Online%20DB/HSQLEngine.md#_xj7VVOjsEeSW8ee1frYByw?fileId=_xj7VUOjsEeSW8ee1frYByw$type=md$name=PUBLIC?"/>
+    <parameter id="_Mdu9oDeYEeaJGbsP6B4HOA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_Mdu9oTeYEeaJGbsP6B4HOA" name="SQL_CONNECTION" type="String"/>
+    <code>INSERT INTO PUBLIC.GRANT_DETAILS VALUES ('CAT',&#xD;
+                                        ':{DB_NAME}:',&#xD;
+                                        ':{SCHEMA_NAME}:',&#xD;
+                                        ':{GRANTEE}:',&#xD;
+                                        ':{TABLE_NAME}:',&#xD;
+                                        ':{DELETE_COL}:',&#xD;
+                                        ':{UPDATE_COL}:',&#xD;
+                                        ':{INSERT_COL}:')</code>
+  </actionCode>
+  <actionCode id="_770tsDebEeaJGbsP6B4HOA" isBeginAction="false" name="SQLFileExport" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SqlFileExportActionCodeI">
+    <link id="_Bm1u8HTVEeacg47JPaAhmQ" generationCondition="exists($TARGET_MESSAGE) or exists($MAILING_LIST)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_svi6gHTVEeacg47JPaAhmQ"/>
+    <metaDataLink id="_APCPUDecEeaJGbsP6B4HOA" name="PUBLIC" target="../global/components/Online%20DB/HSQLEngine.md#_xj7VVOjsEeSW8ee1frYByw?fileId=_xj7VUOjsEeSW8ee1frYByw$type=md$name=PUBLIC?"/>
+    <parameter id="_78A68DebEeaJGbsP6B4HOA" name="SQL_EXP_FILENAME" type="String" value="%x{$SOURCE_FILE/../tech:path()}x%/Result_%x{md:paramValue($this,'DBInstanceName')}x%_%x{$TARGET_SCHEMA/tech:schemaName()}x%.csv"/>
+    <parameter id="_KwmJkDecEeaJGbsP6B4HOA" name="SQL_EXP_GENERATE_HEADER" type="String" value="true"/>
+    <code>SELECT *&#xD;
+FROM   (&#xD;
+&#xD;
+&#xD;
+SELECT COALESCE(A.DB_NAME,B.DB_NAME) AS DB_NAME,&#xD;
+       COALESCE(A.SCHEMA_NAME,B.SCHEMA_NAME) AS SCHEMA,&#xD;
+       COALESCE(A.GRANTEE,B.GRANTEE) AS GRANTEE,&#xD;
+       A.TABLE_NAME AS FILE_TABLE_NAME,&#xD;
+       A.DELETE AS FILE_DELETE_PERMISSION,&#xD;
+       A.UPDATE AS FILE_UPDATE_PERMISSION,&#xD;
+       A.INSERT AS FILE_INSERT_PERMISSION,&#xD;
+       B.TABLE_NAME AS CATALOG_TABLE_NAME,&#xD;
+       B.DELETE AS CATALOG_DELETE_PERMISSION,&#xD;
+       B.UPDATE AS CATALOG_UPDATE_PERMISSION,&#xD;
+       B.INSERT AS CATALOG_INSERT_PERMISSION  &#xD;
+ FROM (SELECT DB_NAME,SCHEMA_NAME,GRANTEE,TABLE_NAME,DELETE,UPDATE,INSERT &#xD;
+       FROM   PUBLIC.GRANT_DETAILS &#xD;
+       WHERE  DB_NAME='${../DBInstanceName}$'&#xD;
+       AND    SCHEMA_NAME='%x{$TARGET_SCHEMA/tech:schemaName()}x%'&#xD;
+       AND    GRANTEE='${../GranteeSchemaName}$'&#xD;
+       AND    SOURCE_ORIGIN='FIL') A&#xD;
+      FULL OUTER JOIN&#xD;
+      (SELECT  DB_NAME,SCHEMA_NAME,GRANTEE,TABLE_NAME,DELETE,UPDATE,INSERT &#xD;
+       FROM    PUBLIC.GRANT_DETAILS &#xD;
+       WHERE  DB_NAME='${../DBInstanceName}$'&#xD;
+       AND    SCHEMA_NAME='%x{$TARGET_SCHEMA/tech:schemaName()}x%'&#xD;
+       AND    GRANTEE='${../GranteeSchemaName}$'&#xD;
+       AND    SOURCE_ORIGIN='CAT') B &#xD;
+      ON  A.DB_NAME=B.DB_NAME&#xD;
+      AND A.SCHEMA_NAME=B.SCHEMA_NAME&#xD;
+      AND A.GRANTEE=B.GRANTEE&#xD;
+      AND A.TABLE_NAME=B.TABLE_NAME) C&#xD;
+WHERE COALESCE(FILE_DELETE_PERMISSION,' ')+COALESCE(FILE_UPDATE_PERMISSION,' ')+COALESCE(FILE_INSERT_PERMISSION,' ') != &#xD;
+      COALESCE(CATALOG_DELETE_PERMISSION,' ')+COALESCE(CATALOG_UPDATE_PERMISSION,' ')+COALESCE(CATALOG_INSERT_PERMISSION,' ')&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_1ukT0DikEeaJGbsP6B4HOA" isBeginAction="false" name="FileDelete" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+    <link id="_2wC-8DikEeaJGbsP6B4HOA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_W4eygHTTEeacg47JPaAhmQ"/>
+    <parameter id="_477AoDikEeaJGbsP6B4HOA" name="DEL_DIR" type="String" value="%x{$SOURCE_FILE/../tech:path()}x%/file_to_treat"/>
+    <parameter id="_6STkwDikEeaJGbsP6B4HOA" name="DEL_INCLUDES" type="String" value="*.*"/>
+  </actionCode>
+  <actionCode id="_7nDYcDkYEeaJGbsP6B4HOA" generationCondition="" enable="true" isBeginAction="false" name="SendMail with mailing list" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SendMailActionCodeI">
+    <parameter id="_7nDYcjkYEeaJGbsP6B4HOA" description="SMTP Host name" name="MAIL_HOSTNAME" type="String" value="%x{$MAILING_LIST/../outgoingServer[1]/tech:hostName()}x%"/>
+    <parameter id="_7nDYczkYEeaJGbsP6B4HOA" description="Mail sender" name="MAIL_FROM" type="String" value="${../EMAIL_SENDER}$"/>
+    <parameter id="_7nDYdDkYEeaJGbsP6B4HOA" name="MAIL_TO" type="String" value="%x{$MAILING_LIST/tech:addressList()}x%"/>
+    <parameter id="_7nDYdTkYEeaJGbsP6B4HOA" name="MAIL_SUBJECT" type="String" value="Differences in ORACLE Grant"/>
+    <parameter id="_7nDYdjkYEeaJGbsP6B4HOA" name="MAIL_PORT" type="String" value="%x{$MAILING_LIST/../outgoingServer[1]/tech:port()}x%"/>
+    <parameter id="_7nDYdzkYEeaJGbsP6B4HOA" name="MAIL_USER" type="String" value="%x{$MAILING_LIST/../outgoingServer[1]/tech:user()}x%"/>
+    <parameter id="_7nDYeDkYEeaJGbsP6B4HOA" name="MAIL_PASSWORD" type="String" value="%x{$MAILING_LIST/../outgoingServer[1]/tech:password()}x%"/>
+    <parameter id="_7nDYeTkYEeaJGbsP6B4HOA" name="MAIL_SSL_PROTOCOL" type="String" value="%x{$MAILING_LIST/../outgoingServer[1]/tech:sslProtocol()}x%"/>
+    <parameter id="_7nDYejkYEeaJGbsP6B4HOA" name="MAIL_USE_SSL" type="String" value="%x{$MAILING_LIST/../outgoingServer[1]/tech:useSsl()}x%"/>
+    <parameter id="_7nDYezkYEeaJGbsP6B4HOA" name="MAIL_HTML_MODE" type="String" value="true"/>
+    <parameter id="_gKauEDkhEeaJGbsP6B4HOA" name="MAIL_ATTACH" type="String" value="${~/file_list}$"/>
+    <code>We found some differences between the list of GRANT in Oracle and in the ${../fileName}$ file.&#xD;
+Please check the joined file to see the differences.</code>
+  </actionCode>
+  <actionCode id="_7nDYfTkYEeaJGbsP6B4HOA" generationCondition="exists($TARGET_MESSAGE)" enable="true" isBeginAction="false" name="SendMail with message" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SendMailActionCodeI">
+    <parameter id="_7nDYfzkYEeaJGbsP6B4HOA" description="SMTP Host name" name="MAIL_HOSTNAME" type="String" value="%x{$TARGET_MESSAGE/tech:hostName()}x%"/>
+    <parameter id="_7nDYgDkYEeaJGbsP6B4HOA" description="Mail sender" name="MAIL_FROM" type="String" value="%x{$TARGET_MESSAGE/tech:sender()}x%"/>
+    <parameter id="_7nDYgTkYEeaJGbsP6B4HOA" name="MAIL_TO" type="String" value="%x{$TARGET_MESSAGE/tech:To()}x%"/>
+    <parameter id="_7nDYgzkYEeaJGbsP6B4HOA" name="MAIL_PORT" type="String" value="%x{$TARGET_MESSAGE/tech:port()}x%"/>
+    <parameter id="_7nDYhDkYEeaJGbsP6B4HOA" name="MAIL_USER" type="String" value="%x{$TARGET_MESSAGE/tech:user()}x%"/>
+    <parameter id="_7nDYhTkYEeaJGbsP6B4HOA" name="MAIL_PASSWORD" type="String" value="%x{$TARGET_MESSAGE/tech:password()}x%"/>
+    <parameter id="_7nDYhjkYEeaJGbsP6B4HOA" name="MAIL_SSL_PROTOCOL" type="String" value="%x{$TARGET_MESSAGE/tech:sslProtocol()}x%"/>
+    <parameter id="_7nDYhzkYEeaJGbsP6B4HOA" name="MAIL_USE_SSL" type="String" value="%x{$TARGET_MESSAGE/tech:useSsl()}x%"/>
+    <parameter id="_7nDYiDkYEeaJGbsP6B4HOA" name="MAIL_HTML_MODE" type="String" value="true"/>
+    <parameter id="_dbVRoDkhEeaJGbsP6B4HOA" name="MAIL_SUBJECT" type="String" value="Differences in ORACLE Grant"/>
+    <parameter id="_fTtvkDkhEeaJGbsP6B4HOA" name="MAIL_ATTACH" type="String" value="${~/file_list}$"/>
+    <code>We found some differences between the list of GRANT in Oracle and in the ${../fileName}$ file.&#xD;
+Please check the joined file to see the differences.</code>
+  </actionCode>
+  <actionCode id="_W4eygHTTEeacg47JPaAhmQ" generationCondition="md:paramValue($this,'initResultFile')='true'" isBeginAction="false" name="FileDelete result*.csv" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+    <link id="_W4eygXTTEeacg47JPaAhmQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_ZEXiwC7sEeaEudnvkSFAVQ"/>
+    <parameter id="_W4eygnTTEeacg47JPaAhmQ" name="DEL_DIR" type="String" value="%x{$SOURCE_FILE/../tech:path()}x%"/>
+    <parameter id="_W4eyg3TTEeacg47JPaAhmQ" name="DEL_INCLUDES" type="String" value="Result_*.csv"/>
+  </actionCode>
+  <actionCode id="_52FIYHTUEeacg47JPaAhmQ" isBeginAction="false" name="Scripting ResultList" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <link id="_7m3yQTkYEeaJGbsP6B4HOA" generationCondition="exists($MAILING_LIST)" executionCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_7nDYcDkYEeaJGbsP6B4HOA"/>
+    <link id="_7m3yQjkYEeaJGbsP6B4HOA" generationCondition="exists($TARGET_MESSAGE)" executionCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_7nDYfTkYEeaJGbsP6B4HOA"/>
+    <parameter id="_52YDUHTUEeacg47JPaAhmQ" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+    <code>var current_value = __ctx__.getVariableValue(&quot;~/file_list&quot;) ;&#xD;
+if (current_value==&quot;&quot;)&#xD;
+{&#xD;
+  current_value = &quot;%x{replace($SOURCE_FILE/../tech:path(),'\\','/')}x%&quot; + &quot;/&quot; + &quot;:{FILE_NAME}:&quot;;&#xD;
+  __ctx__.publishVariable(&quot;~/file_list&quot;, current_value); &#xD;
+ }&#xD;
+else&#xD;
+{&#xD;
+  current_value = current_value +  &quot;;&quot; + &quot;%x{replace($SOURCE_FILE/../tech:path(),'\\','/')}x%&quot; + &quot;/&quot; + &quot;:{FILE_NAME}:&quot;;&#xD;
+   __ctx__.publishVariable(&quot;~/file_list&quot;, current_value);&#xD;
+}&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_svi6gHTVEeacg47JPaAhmQ" isBeginAction="false" name="FileWait" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileWaitActionCodeI">
+    <bindLink id="_vU-EoHTVEeacg47JPaAhmQ" bindType="DirectBind" targetId="_52FIYHTUEeacg47JPaAhmQ"/>
+    <parameter id="_zCHr0HTVEeacg47JPaAhmQ" name="WAIT_FILE_DIR" type="String" value="%x{$SOURCE_FILE/../tech:path()}x%"/>
+    <parameter id="_0ojeIHTVEeacg47JPaAhmQ" name="WAIT_FILE_INCLUDES" type="String" value="Result_*.csv"/>
+    <parameter id="_NgBNUHTeEeacg47JPaAhmQ" name="WAIT_FILE_NB_FILES" type="String" value="-1"/>
+  </actionCode>
+  <actionCode id="_Uk1H0H_qEeaj4KlE2YQIaQ" isBeginAction="false" name="SqlOperation" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <bindLink id="_8rX6YDbiEeaJGbsP6B4HOA" description="%b(rhino){&#xD;&#xA;((':{Schema_name}:' == '%x{$TARGET_SCHEMA/tech:schemaName()}x%')&#xD;&#xA;&amp;&amp;&#xD;&#xA; (&quot;:{Instance_name}:&quot; == &quot;%x{md:paramValue($this,'DBInstanceName')}x%&quot;)&#xD;&#xA;)&#xD;&#xA;}b(rhino)%" bindType="DirectBind" executionCondition="%b(rhino){&#xD;&#xA;var  schemaName=&quot;:{Schema_name}:&quot;;&#xD;&#xA;var  targetSchemaName=&quot;%x{$TARGET_SCHEMA/tech:schemaName()}x%&quot;;&#xD;&#xA;var  instanceName=&quot;:{Instance_name}:&quot;;&#xD;&#xA;var  DBInstanceName=&quot;%x{md:paramValue($this,'DBInstanceName')}x%&quot;;&#xD;&#xA;var  grantContent=&quot;:{Grant_content}:&quot;;&#xD;&#xA;var  granteeSchemaName=&quot;%x{md:paramValue($this,'GranteeSchemaName')}x%&quot;;&#xD;&#xA;__ctx__.retValue=((schemaName.indexOf(targetSchemaName) != 1) &amp;&amp; (instanceName.indexOf(DBInstanceName) != 1)  &amp;&amp; (grantContent.indexOf(granteeSchemaName) != 1)) ;&#xD;&#xA;}b(rhino)%" executionType="KO" targetId="_7_HRUDbiEeaJGbsP6B4HOA"/>
+    <parameter id="_Uk1H03_qEeaj4KlE2YQIaQ" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+    <parameter id="_Uk1H1H_qEeaj4KlE2YQIaQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$SOURCE_FILE}%"/>
+    <code>SELECT *&#xD;
+FROM %x{$SOURCE_FILE/tech:name()}x%&#xD;
+%x{$SOURCE_FILE/tech:xmlMetadata()}x%</code>
+  </actionCode>
+  <actionCode id="_BcQu0IGHEean7JATlUQCiw" isBeginAction="false" name="SELECT FROM DBA_TAB_PRIVS" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <bindLink id="_BcQu0YGHEean7JATlUQCiw" bindType="DirectBind" targetId="_MdtvgDeYEeaJGbsP6B4HOA"/>
+    <parameter id="_BcQu0oGHEean7JATlUQCiw" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+    <parameter id="_BcQu04GHEean7JATlUQCiw" name="SQL_CONNECTION" type="String" value="%targetConnection{$TARGET_SCHEMA}%"/>
+    <code>SELECT '${../DBInstanceName}$' AS DB_NAME,OWNER AS SCHEMA_NAME,TABLE_NAME,&#xD;
+       CASE WHEN SUM(CASE WHEN PRIVILEGE='DELETE' THEN 1 ELSE 0 END)!=0 THEN 'Yes' ELSE 'No' END AS DELETE_COL,&#xD;
+       CASE WHEN SUM(CASE WHEN PRIVILEGE='UPDATE' THEN 1 ELSE 0 END)!=0 THEN 'Yes' ELSE 'No' END AS UPDATE_COL,&#xD;
+       CASE WHEN SUM(CASE WHEN PRIVILEGE='INSERT' THEN 1 ELSE 0 END)!=0 THEN 'Yes' ELSE 'No' END AS INSERT_COL,&#xD;
+       GRANTEE&#xD;
+FROM DBA_TAB_PRIVS&#xD;
+WHERE PRIVILEGE IN ('UPDATE','DELETE','INSERT')&#xD;
+AND OWNER ='%x{$TARGET_SCHEMA/tech:schemaName()}x%'&#xD;
+AND GRANTEE = '${../GranteeSchemaName}$'&#xD;
+GROUP BY OWNER,TABLE_NAME,GRANTEE&#xD;
+</code>
+  </actionCode>
+  <xslVariable id="_Jx9pUC7kEeaEudnvkSFAVQ" description="How to use it ?&#xD;&#xA;----------------&#xD;&#xA;1-Drag &amp; Drop this template at the top (main) level of a process&#xD;&#xA;2-Drag &amp; Drop a RDBMS schema in this template&#xD;&#xA;3-Link the end of the process to this template with a &quot;Unsuccessful Link&quot;&#xD;&#xA;4-Define the properties of the template&#xD;&#xA;&#xD;&#xA;What will be done ?&#xD;&#xA;---------------------&#xD;&#xA;The template will try to CREATE the STB_ERROR_LOG table in the schema &#xD;&#xA;The template will INSERT error properties in the STB_ERROR_LOG table , one record per error&#xD;&#xA;At the end, an error is generated to keep the process in error&#xD;&#xA;&#xD;&#xA;What are your options ?&#xD;&#xA;-------------------------&#xD;&#xA;You can add a process reference/code, different to the process name. It will work even if there is no value&#xD;&#xA;You can choose to drop the STB_ERROR_LOG table at the begin of the template&#xD;&#xA;You can choose to insert also the TOLERATED errors in the table&#xD;&#xA;&#xD;&#xA;mdj:getMetaDataRef($this/metaDataLink[1])" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='schema'][1]" name="TARGET_SCHEMA" type="xpath"/>
+  <xslVariable id="_xy6u4C7mEeaEudnvkSFAVQ" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='directory'][1]" name="TARGET_FOLDER" type="xpath"/>
+  <xslVariable id="_3NzkcDkREeaJGbsP6B4HOA" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='mailingList'][1]" name="MAILING_LIST" type="xpath"/>
+  <xslVariable id="_3N-jkDkREeaJGbsP6B4HOA" description="How to use it ?&#xD;&#xA;----------------&#xD;&#xA;1-Drag &amp; Drop this template at the top (main) level of a process&#xD;&#xA;2-Drag &amp; Drop a RDBMS schema in this template&#xD;&#xA;3-Link the end of the process to this template with a &quot;Unsuccessful Link&quot;&#xD;&#xA;4-Define the properties of the template&#xD;&#xA;&#xD;&#xA;What will be done ?&#xD;&#xA;---------------------&#xD;&#xA;The template will try to CREATE the STB_ERROR_LOG table in the schema &#xD;&#xA;The template will INSERT error properties in the STB_ERROR_LOG table , one record per error&#xD;&#xA;At the end, an error is generated to keep the process in error&#xD;&#xA;&#xD;&#xA;What are your options ?&#xD;&#xA;-------------------------&#xD;&#xA;You can add a process reference/code, different to the process name. It will work even if there is no value&#xD;&#xA;You can choose to drop the STB_ERROR_LOG table at the begin of the template&#xD;&#xA;You can choose to insert also the TOLERATED errors in the table&#xD;&#xA;&#xD;&#xA;mdj:getMetaDataRef($this/metaDataLink[1])" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='message'][1]" name="TARGET_MESSAGE" type="xpath"/>
+  <xslVariable id="_YW2dYH_pEeaj4KlE2YQIaQ" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='file'][1]" name="SOURCE_FILE" type="xpath"/>
+</proc:process>

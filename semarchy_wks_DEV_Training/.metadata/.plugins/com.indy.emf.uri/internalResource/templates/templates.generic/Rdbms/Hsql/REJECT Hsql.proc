@@ -1,0 +1,786 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:UUID="java.util.UUID" xmlns:common="http://exslt.org/common" xmlns:mdj="java:com.indy.xsl.global.Functions" xmlns:proc="http://www.example.org/proc" xmlns:saxon="http://saxon.sf.net/" description="This template is used to check data quality on HSQL databases by verifying if the processed rows met the defined constraints.&#xD;&#xA;&#xD;&#xA;The constraints (Primary Keys, Foreign Keys, Not Null, custom constraints, ...) are defined in Metadata.&#xD;&#xA;Each of them can be disable manually in Mapping with a right click on it, if needed.&#xD;&#xA;&#xD;&#xA;When an incorrect row is detected by the template, it is traced in the reject table.&#xD;&#xA;&#xD;&#xA;Then, depending on the 'Delete Rejects On Checked Table' parameter, the rows will be kept in the data flow or not.&#xD;&#xA;&#xD;&#xA;Note:&#xD;&#xA;Please note that integration data is not populated with expressions executed on &quot;Target&quot; Execution Location.&#xD;&#xA;If the Mapping involves such expressions, the Reject detection cannot be performed on the corresponding constraints.&#xD;&#xA;&#xD;&#xA;About static mode:&#xD;&#xA;This template support being used outside of a Mapping, to check the constraint directly on a table.&#xD;&#xA;But we suggest using the &quot;Reject Rdbms Static Control&quot; instead, as it contains additional useful options. &#xD;&#xA;It allows to perform rejects detection on defined table and to remove the incorrect rows if required.&#xD;&#xA;&#xD;&#xA;Refer to the description of each Parameter for more information.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;01/12/2021&#x9;New option 'createIndexOnCheckedTable'&#xD;&#xA;25/05/2020&#x9;Add support for default storage clauses defined in the Metadata&#xD;&#xA;04/10/2018&#x9;Corrected joins for insertion of PK and AK rejects&#xD;&#xA;26/06/2018&#x9;Reorganize the parameters display order&#xD;&#xA;06/06/2018&#x9;Initialize template history.&#xD;&#xA;" id="_c_RtwWWDEeiky9dcb0jCSA" isBeginAction="true" nbCycles="-1" toleratedError="false">
+  <parameter description="If true, the reject table is dropped and re-created before processing." id="_c_RtwmWDEeiky9dcb0jCSA" name="dropRejectTable" type="Boolean" value="false"/>
+  <parameter description="Set to true to delete the rejects detected during previous executions." id="_c_Rtx2WDEeiky9dcb0jCSA" name="deletePreviousRejects" type="Boolean" value="true"/>
+  <parameter description="If true, the operations on the reject and checked tables will be executed through a transaction in NOCOMMIT mode.&#xD;&#xA;If the process is executed successfully, a commit will be performed at the end, otherwise, a rollback will be performed.&#xD;&#xA;&#xD;&#xA;If false, the actions will use the AUTOCOMMIT connections." id="_c_RtxWWDEeiky9dcb0jCSA" name="transactionalModeOnRejectTable" type="Boolean" value="false"/>
+  <parameter description="This option allows to specify how to manage rejected data.&#xD;&#xA;&#xD;&#xA;Depending if this template is used in a Mapping, or in static mode (see global documentation of this template), the behavior will be slightly different.&#xD;&#xA;&#xD;&#xA;In a Mapping:&#xD;&#xA;In a Mapping, set this option to true to remove rejected data from the integration flow.&#xD;&#xA;Rejected rows will be traced in the reject table, and they will NOT be inserted in the target table.&#xD;&#xA;&#xD;&#xA;If this option is set to false, rows will be traced in the reject table, but not removed from the integration flow.&#xD;&#xA;So they will be inserted in the target table.&#xD;&#xA;&#xD;&#xA;In static mode:&#xD;&#xA;If used in static mode, the template will perform all the constraints checks, and trace the rejects in the reject table.&#xD;&#xA;Then, if this option is set to true, incorrect rows will be deleted from the target table.&#xD;&#xA;If it is set to false, the rows are traced but kept in the table.&#xD;&#xA;&#xD;&#xA;*Important note*&#xD;&#xA;If the constraint's &quot;Severity level&quot; is set as &quot;Warning&quot; in the Metadata, this option will not apply.&#xD;&#xA;Constraints set as &quot;Warning&quot; are traced in the rejected table but always kept in the flow.&#xD;&#xA;&#xD;&#xA;" id="_c_Rtw2WDEeiky9dcb0jCSA" name="deleteRejectsOnCheckedTable" type="Boolean" value="true"/>
+  <parameter description="If true, an index is created on the reject table for each primary and unique keys." id="_c_RtxGWDEeiky9dcb0jCSA" name="createIndexOnRejectTable" type="Boolean" value="false"/>
+  <parameter description="Name of the transaction when Transactional Mode is set to true." id="_c_RtxmWDEeiky9dcb0jCSA" name="transactionName" type="String" value="T1"/>
+  <parameter description="If true, indices are created on the checked table when necessary to improve performance." id="c84aa54b-8ebe-4acc-a14f-f3ade851b965" name="createIndexOnCheckedTable" type="Boolean" value="true"/>
+  <actionCode id="_c_RtyGWDEeiky9dcb0jCSA" generationCondition="'${dropRejectTable}$'='true'" isBeginAction="false" name="drop of reject table" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_c_RtyWWDEeiky9dcb0jCSA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_c_RtzmWDEeiky9dcb0jCSA"/>
+    <parameter id="_c_RtymWDEeiky9dcb0jCSA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_c_Rty2WDEeiky9dcb0jCSA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_c_RtzGWDEeiky9dcb0jCSA" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_c_RtzWWDEeiky9dcb0jCSA" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>drop table %x{md:physicalPath($REF,'rejectName')}x%</code>
+  </actionCode>
+  <actionCode id="_c_RtzmWDEeiky9dcb0jCSA" generationCondition="" isBeginAction="false" name="creation of reject table" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_c_Rtz2WDEeiky9dcb0jCSA" executionType="OK" generationType="OK" mandatory="1" targetId="_c_Rt1GWDEeiky9dcb0jCSA"/>
+    <parameter id="_c_Rt0GWDEeiky9dcb0jCSA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_c_Rt0WWDEeiky9dcb0jCSA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_c_Rt0mWDEeiky9dcb0jCSA" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_c_Rt02WDEeiky9dcb0jCSA" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>create table %x{md:physicalPath($REF,'rejectName')}x%
+(
+	SESSION_ID			%x{$REF/ref:target()/tech:varcharDdl(35)}x% %x{$REF/tech:nullWord()}x%,
+	REJECT_MODE			%x{$REF/ref:target()/tech:varcharDdl(1)}x% %x{$REF/tech:nullWord()}x%,
+	REJECT_MESSAGE		%x{$REF/ref:target()/tech:varcharDDL(255)}x% %x{$REF/tech:nullWord()}x%, 
+	REJECT_CODE			%x{$REF/ref:target()/tech:varcharDDL(255)}x% %x{$REF/tech:nullWord()}x%,
+	REJECTED_BY			%x{$REF/ref:target()/tech:varcharDDL(255)}x% %x{$REF/tech:nullWord()}x%,
+	RULE_NAME			%x{$REF/ref:target()/tech:varcharDDL(255)}x% %x{$REF/tech:nullWord()}x%,
+	RULE_TYPE			%x{$REF/ref:target()/tech:varcharDDL(2)}x% %x{$REF/tech:nullWord()}x%,
+	RULE_SEVERITY		%x{$REF/ref:target()/tech:varcharDDL(10)}x% %x{$REF/tech:nullWord()}x%,
+	REJECT_DATE			%x{$REF/ref:target()/tech:dateDDL()}x% %x{$REF/tech:nullWord()}x%,
+	%x{md:patternList($REF/ref:targetColumns(),'[colName]\t\t[targetWritableType] [nullWord]', ',\n\t')}x%
+)
+%x{$REF/ref:target()/ref:schema()/tech:defaultTempTableStorageClause()}x%
+</code>
+  </actionCode>
+  <actionCode id="_c_Rt1GWDEeiky9dcb0jCSA" generationCondition="'${deletePreviousRejects}$'='true'" isBeginAction="false" name="deletion of previous rejects" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_c_Rt1WWDEeiky9dcb0jCSA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_ngySwGWFEeiky9dcb0jCSA"/>
+    <parameter id="_c_Rt1mWDEeiky9dcb0jCSA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_c_Rt12WDEeiky9dcb0jCSA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_c_Rt2GWDEeiky9dcb0jCSA" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_c_Rt2WWDEeiky9dcb0jCSA" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>delete from	%x{md:physicalPath($REF,'rejectName')}x%
+where	(REJECT_MODE = 'S'	and '%x{$REF/tech:rejectMode()}x%' = 'S')
+	or	(REJECT_MODE = '%x{$REF/tech:rejectMode()}x%'	
+			and REJECTED_BY = '%x{$REF/tech:rejectedBy()}x%')</code>
+  </actionCode>
+  <actionCode id="_c_Rt2mWDEeiky9dcb0jCSA" generationCondition="not('${rejectsPK}$'='false') or not($REF/tech:rejectMode()='S')" isBeginAction="false" name="insertion of rejects for PK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$REF/ref:pk()" repetitionVariableName="CONSTRAINT_REF" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_c_Rt22WDEeiky9dcb0jCSA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="8d79fd9b-3121-4456-936b-2adb716a5e53"/>
+    <parameter id="_c_Rt3GWDEeiky9dcb0jCSA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_c_Rt3WWDEeiky9dcb0jCSA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_c_Rt3mWDEeiky9dcb0jCSA" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_c_Rt32WDEeiky9dcb0jCSA" name="SQL_ACTION_TYPE_STAT" type="String" value="ERROR"/>
+    <parameter id="_c_Rt4GWDEeiky9dcb0jCSA" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>insert into %x{md:physicalPath($REF,'rejectName')}x%&#xD;
+(&#xD;
+	SESSION_ID,&#xD;
+	REJECT_MODE,&#xD;
+	REJECT_MESSAGE,&#xD;
+	REJECT_CODE,&#xD;
+	REJECTED_BY,&#xD;
+	RULE_NAME,&#xD;
+	RULE_TYPE,&#xD;
+	RULE_SEVERITY,&#xD;
+	REJECT_DATE,&#xD;
+	%x{md:patternList($REF/ref:columns()[tech:isMapped() and not(tech:onTrg())],'[name]', ',\n\t')}x%&#xD;
+)&#xD;
+select&#xD;
+	'${/CORE_SESSION_ID}$',	&#xD;
+	'%x{$REF/tech:rejectMode()}x%', &#xD;
+	'%x{$CONSTRAINT_REF/tech:rejectMessage()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:rejectCode()}x%',&#xD;
+	'%x{$REF/tech:rejectedBy()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:name()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:constraintCode()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:severity()}x%',&#xD;
+	%x{$REF/ref:target()/tech:dateFunction()}x%,&#xD;
+	%x{md:patternList($REF/ref:columns()[tech:isMapped() and not(tech:onTrg())],'[name]', ',\n\t')}x%&#xD;
+from	&#xD;
+		(select %x{md:patternList($CONSTRAINT_REF/ref:columns(),'F.[colName]', ',\n\t\t\t\t')}x%&#xD;
+		from	(select %x{md:patternList($CONSTRAINT_REF/ref:columns(),'E.[colName]', ',\n\t\t\t\t')}x%, count(*) NB__DUPLICATE__COUNT&#xD;
+				from 	%x{md:physicalPath($REF,'checkedName')}x% %x{$REF/ref:target()/tech:tableAliasWord()}x% E&#xD;
+				group by %x{md:patternList($CONSTRAINT_REF/ref:columns(),'E.[colName]', ',\n\t\t\t\t')}x%&#xD;
+				) F&#xD;
+				where F.NB__DUPLICATE__COUNT > 1 &#xD;
+		) D&#xD;
+		inner join %x{md:physicalPath($REF,'checkedName')}x% %x{$REF/ref:target()/tech:tableAliasWord()}x% C &#xD;
+		on (%x{md:patternList($CONSTRAINT_REF/ref:columns(),'C.[colName]=D.[colName]', ' AND \n\t\t\t\t')}x%)</code>
+  </actionCode>
+  <actionCode id="_c_Rt4WWDEeiky9dcb0jCSA" generationCondition="not('${rejectsAK}$'='false') or not($REF/tech:rejectMode()='S')" isBeginAction="false" name="insertion of rejects for AK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$REF/ref:ak()" repetitionVariableName="CONSTRAINT_REF" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_c_Rt4mWDEeiky9dcb0jCSA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_c_Rt6GWDEeiky9dcb0jCSA"/>
+    <parameter id="_c_Rt42WDEeiky9dcb0jCSA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_c_Rt5GWDEeiky9dcb0jCSA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_c_Rt5WWDEeiky9dcb0jCSA" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_c_Rt5mWDEeiky9dcb0jCSA" name="SQL_ACTION_TYPE_STAT" type="String" value="ERROR"/>
+    <parameter id="_c_Rt52WDEeiky9dcb0jCSA" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>insert into %x{md:physicalPath($REF,'rejectName')}x%&#xD;
+(&#xD;
+	SESSION_ID,&#xD;
+	REJECT_MODE,&#xD;
+	REJECT_MESSAGE,&#xD;
+	REJECT_CODE,&#xD;
+	REJECTED_BY,&#xD;
+	RULE_NAME,&#xD;
+	RULE_TYPE,&#xD;
+	RULE_SEVERITY,&#xD;
+	REJECT_DATE,&#xD;
+	%x{md:patternList($REF/ref:columns()[tech:isMapped() and not(tech:onTrg())],'[name]', ',\n\t')}x%&#xD;
+)&#xD;
+select&#xD;
+	'${/CORE_SESSION_ID}$',	&#xD;
+	'%x{$REF/tech:rejectMode()}x%', &#xD;
+	'%x{$CONSTRAINT_REF/tech:rejectMessage()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:rejectCode()}x%',&#xD;
+	'%x{$REF/tech:rejectedBy()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:name()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:constraintCode()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:severity()}x%',&#xD;
+	%x{$REF/ref:target()/tech:dateFunction()}x%,&#xD;
+	%x{md:patternList($REF/ref:columns()[tech:isMapped() and not(tech:onTrg())],'[name]', ',\n\t')}x%&#xD;
+from	(select %x{md:patternList($CONSTRAINT_REF/ref:columns(),'F.[colName]', ',\n\t\t\t\t')}x%&#xD;
+		from (%x{md:patternList($CONSTRAINT_REF/ref:columns(),'E.[colName]', ',\n\t\t\t\t')}x%, count(*) NB__DUPLICATE__COUNT&#xD;
+				from 	%x{md:physicalPath($REF,'checkedName')}x% %x{$REF/ref:target()/tech:tableAliasWord()}x% E&#xD;
+				group by %x{md:patternList($CONSTRAINT_REF/ref:columns(),'E.[colName]', ',\n\t\t\t\t')}x%&#xD;
+			) F&#xD;
+			where F.NB__DUPLICATE__COUNT > 1&#xD;
+		) D &#xD;
+		inner join %x{md:physicalPath($REF,'checkedName')}x% %x{$REF/ref:target()/tech:tableAliasWord()}x% C&#xD;
+		on (%x{md:patternList($CONSTRAINT_REF/ref:columns(),'C.[colName]=D.[colName]', ' AND \n\t\t\t\t')}x%)</code>
+  </actionCode>
+  <actionCode id="_c_Rt6GWDEeiky9dcb0jCSA" generationCondition="not('${rejectsFK}$'='false') or not($REF/tech:rejectMode()='S')" isBeginAction="false" name="insertion of rejects for FK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$REF/ref:fk()" repetitionVariableName="CONSTRAINT_REF" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_c_Rt6WWDEeiky9dcb0jCSA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_c_Rt72WDEeiky9dcb0jCSA"/>
+    <parameter id="_c_Rt6mWDEeiky9dcb0jCSA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_c_Rt62WDEeiky9dcb0jCSA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_c_Rt7GWDEeiky9dcb0jCSA" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_c_Rt7WWDEeiky9dcb0jCSA" name="SQL_ACTION_TYPE_STAT" type="String" value="ERROR"/>
+    <parameter id="_c_Rt7mWDEeiky9dcb0jCSA" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>insert into %x{md:physicalPath($REF,'rejectName')}x%&#xD;
+(&#xD;
+	SESSION_ID,&#xD;
+	REJECT_MODE,&#xD;
+	REJECT_MESSAGE,&#xD;
+	REJECT_CODE,&#xD;
+	REJECTED_BY,&#xD;
+	RULE_NAME,&#xD;
+	RULE_TYPE,&#xD;
+	RULE_SEVERITY,&#xD;
+	REJECT_DATE,&#xD;
+	%x{md:patternList($REF/ref:columns()[tech:isMapped() and not(tech:onTrg())],'[columnName]', ',\n\t')}x%&#xD;
+)&#xD;
+select&#xD;
+	'${/CORE_SESSION_ID}$',	&#xD;
+	'%x{$REF/tech:rejectMode()}x%', &#xD;
+	'%x{$CONSTRAINT_REF/tech:rejectMessage()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:rejectCode()}x%',&#xD;
+	'%x{$REF/tech:rejectedBy()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:name()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:constraintCode()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:severity()}x%',&#xD;
+	%x{$REF/ref:target()/tech:dateFunction()}x%,&#xD;
+	%x{md:patternList($REF/ref:columns()[tech:isMapped() and not(tech:onTrg())],'FK_TAB.[columnName]', ',\n\t')}x%&#xD;
+from	%x{md:physicalPath($REF,'checkedName')}x% %x{$REF/ref:target()/tech:tableAliasWord()}x% FK_TAB &#xD;
+where 	not exists &#xD;
+		( 	select 	'X'&#xD;
+			from 	%x{md:physicalPath($CONSTRAINT_REF/ref:pkTable())}x% %x{$REF/ref:target()/tech:tableAliasWord()}x% PK_TAB&#xD;
+			where	%x{md:patternList($CONSTRAINT_REF/ref:joins(),'PK_TAB.[pkColumnName]=FK_TAB.[columnName]', '\n\t\t\t\tAnd\t')}x%&#xD;
+		)&#xD;
+	And %x{md:patternList($CONSTRAINT_REF/ref:joins(),'FK_TAB.[columnName] IS NOT NULL', '\n\tAnd ')}x%&#xD;
+%x{$REF/tech:filterPart()}x%</code>
+  </actionCode>
+  <actionCode id="_c_Rt72WDEeiky9dcb0jCSA" generationCondition="not('${rejectsCK}$'='false') or not($REF/tech:rejectMode()='S')" isBeginAction="false" name="insertion of rejects for CK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$REF/ref:ck()" repetitionVariableName="CONSTRAINT_REF" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_c_Rt8GWDEeiky9dcb0jCSA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_c_Rt9mWDEeiky9dcb0jCSA"/>
+    <parameter id="_c_Rt8WWDEeiky9dcb0jCSA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_c_Rt8mWDEeiky9dcb0jCSA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_c_Rt82WDEeiky9dcb0jCSA" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_c_Rt9GWDEeiky9dcb0jCSA" name="SQL_ACTION_TYPE_STAT" type="String" value="ERROR"/>
+    <parameter id="_c_Rt9WWDEeiky9dcb0jCSA" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>
+insert into %x{md:physicalPath($REF,'rejectName')}x%
+(
+	SESSION_ID,
+	REJECT_MODE,
+	REJECT_MESSAGE,
+	REJECT_CODE,
+	REJECTED_BY,
+	RULE_NAME,
+	RULE_TYPE,
+	RULE_SEVERITY,
+	REJECT_DATE,
+	%x{md:patternList($REF/ref:columns()[tech:isMapped() and not(tech:onTrg())],'[colName]', ',\n\t')}x%
+)
+select
+	'${/CORE_SESSION_ID}$',	
+	'%x{$REF/tech:rejectMode()}x%', 
+	'%x{$CONSTRAINT_REF/tech:rejectMessage()}x%',
+	'%x{$CONSTRAINT_REF/tech:rejectCode()}x%',
+	'%x{$REF/tech:rejectedBy()}x%',
+	'%x{$CONSTRAINT_REF/tech:name()}x%',
+	'%x{$CONSTRAINT_REF/tech:constraintCode()}x%',
+	'%x{$CONSTRAINT_REF/tech:severity()}x%',
+	%x{$REF/ref:target()/tech:dateFunction()}x%,
+	%x{md:patternList($REF/ref:columns()[tech:isMapped() and not(tech:onTrg())],'[colName]', ',\n\t')}x%
+from	%x{md:physicalPath($REF,'checkedName')}x% %x{$REF/ref:target()/tech:tableAliasWord()}x% %x{$REF/ref:target()/tech:alias()}x%
+where	not 	(
+		%x{$CONSTRAINT_REF/tech:expression()}x%
+		)
+%x{$REF/tech:filterPart()}x%</code>
+  </actionCode>
+  <actionCode id="_c_Rt9mWDEeiky9dcb0jCSA" generationCondition="not('${rejectsNotNull}$'='false') or not($REF/tech:rejectMode()='S')" isBeginAction="false" name="insertion of rejects for Not Null" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$REF/ref:nn()[($REF/tech:rejectMode()='S') or not(ref:target()/@id=$REF/ref:columns()[tech:onTrg()]/ref:target()/@id)]" repetitionVariableName="CONSTRAINT_REF" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_c_Rt92WDEeiky9dcb0jCSA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_n8hpAGWEEeiky9dcb0jCSA"/>
+    <parameter id="_c_Rt-GWDEeiky9dcb0jCSA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_c_Rt-WWDEeiky9dcb0jCSA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_c_Rt-mWDEeiky9dcb0jCSA" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_c_Rt-2WDEeiky9dcb0jCSA" name="SQL_ACTION_TYPE_STAT" type="String" value="ERROR"/>
+    <parameter id="_c_Rt_GWDEeiky9dcb0jCSA" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>insert into %x{md:physicalPath($REF,'rejectName')}x%
+(
+	SESSION_ID,
+	REJECT_MODE,
+	REJECT_MESSAGE,
+	REJECT_CODE,
+	REJECTED_BY,
+	RULE_NAME,
+	RULE_TYPE,
+	RULE_SEVERITY,
+	REJECT_DATE,
+	%x{md:patternList($REF/ref:columns()[tech:isMapped() and not(tech:onTrg())],'[colName]', ',\n\t')}x%
+)
+select
+	'${/CORE_SESSION_ID}$',	
+	'%x{$REF/tech:rejectMode()}x%', 
+	'%x{$CONSTRAINT_REF/tech:rejectMessage()}x%',
+	'%x{$CONSTRAINT_REF/tech:rejectCode()}x%',
+	'%x{$REF/tech:rejectedBy()}x%',
+	'%x{$CONSTRAINT_REF/tech:name()}x%',
+	'NN',
+	'%x{$CONSTRAINT_REF/tech:severity()}x%',
+	%x{$REF/ref:target()/tech:dateFunction()}x%,
+	%x{md:patternList($REF/ref:columns()[tech:isMapped() and not(tech:onTrg())],'CTRL.[colName]', ',\n\t')}x%
+from	%x{md:physicalPath($REF,'checkedName')}x% %x{$REF/ref:target()/tech:tableAliasWord()}x% CTRL
+where	CTRL.%x{$CONSTRAINT_REF/tech:name()}x% is null
+%x{$REF/tech:filterPart()}x%</code>
+  </actionCode>
+  <actionCode id="_c_Rt_WWDEeiky9dcb0jCSA" generationCondition="'${deleteRejectsOnCheckedTable}$'='true'" isBeginAction="false" name="deletion of rejects from checked table" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <parameter id="_c_Rt_mWDEeiky9dcb0jCSA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_c_Rt_2WDEeiky9dcb0jCSA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_c_RuAGWDEeiky9dcb0jCSA" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_c_RuAWWDEeiky9dcb0jCSA" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>delete from %x{md:physicalPath($REF,'checkedName')}x%  
+where 	exists (select 'X' 
+		from %x{md:physicalPath($REF,'rejectName')}x% %x{$REF/ref:target()/tech:tableAliasWord()}x% REJ
+		where
+		%x{md:patternList($REF/ref:columns()[if ($REF/tech:rejectMode()='S') then tech:isPK() else tech:isUK()],'(([checkedName].[name] = REJ.[name]) or ([checkedName].[name] is null and REJ.[name] is null))', '\n\t\t\t\tAnd\t')}x%
+		and REJECT_MODE = '%x{$REF/tech:rejectMode()}x%'
+		and	 REJECTED_BY = '%x{$REF/tech:rejectedBy()}x%'
+		and RULE_SEVERITY != 'WARNING'
+		)
+</code>
+  </actionCode>
+  <actionCode id="_c_RuAmWDEeiky9dcb0jCSA" generationCondition="'${createIndexOnRejectTable}$'='true'" isBeginAction="false" name="creation of index on reject table" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_c_RuA2WDEeiky9dcb0jCSA" generationCondition="$REF/ref:target()/tech:productCode()!='IBM_DB2_400'" executionCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_c_Rt_WWDEeiky9dcb0jCSA"/>
+    <link id="_c_RuBGWDEeiky9dcb0jCSA" generationCondition="$REF/ref:target()/tech:productCode()='IBM_DB2_400'" executionCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_c_RuCWWDEeiky9dcb0jCSA"/>
+    <parameter id="_c_RuBWWDEeiky9dcb0jCSA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_c_RuBmWDEeiky9dcb0jCSA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_c_RuB2WDEeiky9dcb0jCSA" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_c_RuCGWDEeiky9dcb0jCSA" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>%x{$REF/mdj:pattern('create index idx1_[rejectName]')}x%
+on		%x{md:physicalPath($REF,'rejectName')}x% (%x{md:patternList($REF/ref:columns()[tech:isUk()],'[name]', ', ')}x%)</code>
+  </actionCode>
+  <actionCode id="_c_RuCWWDEeiky9dcb0jCSA" generationCondition="'${deleteRejectsOnCheckedTable}$'='true'" isBeginAction="false" name="deletion of rejects from checked table alias" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <parameter id="_c_RuCmWDEeiky9dcb0jCSA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_c_RuC2WDEeiky9dcb0jCSA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_c_RuDGWDEeiky9dcb0jCSA" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_c_RuDWWDEeiky9dcb0jCSA" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>delete from %x{md:physicalPath($REF,'checkedName')}x%  CHK
+where 	exists (select 'X' 
+		from %x{md:physicalPath($REF,'rejectName')}x% %x{$REF/ref:target()/tech:tableAliasWord()}x% REJ
+		where
+		%x{md:patternList($REF/ref:columns()[if ($REF/tech:rejectMode()='S') then tech:isPK() else tech:isUK()],'((CHK.[name] = REJ.[name]) or (CHK.[name] is null and REJ.[name] is null))', '\n\t\t\t\tAnd\t')}x%
+		and REJECT_MODE = '%x{$REF/tech:rejectMode()}x%'
+		and	 REJECTED_BY = '%x{$REF/tech:rejectedBy()}x%'
+		)
+</code>
+  </actionCode>
+  <actionCode id="_n8hpAGWEEeiky9dcb0jCSA" isBeginAction="false" name="get FATAL errors count" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+    <link id="_rDUa0GWEEeiky9dcb0jCSA" executionCondition="${FatalErrorsCount}$ == 0" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_c_RuAmWDEeiky9dcb0jCSA"/>
+    <link id="_YTXtYGWFEeiky9dcb0jCSA" executionCondition="${FatalErrorsCount}$ > 0" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_XYDUoGWFEeiky9dcb0jCSA"/>
+    <parameter id="_7Lf_UGWEEeiky9dcb0jCSA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;../FatalErrorsCount&quot; type=&quot;Integer&quot; failsIfNoRecord=&quot;false&quot; defaultValue=&quot;0&quot; >&#xD;
+select count(*) from %x{md:physicalPath($REF,'rejectName')}x%&#xD;
+where	RULE_SEVERITY ='FATAL'&#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters> &#xD;
+</code>
+  </actionCode>
+  <actionCode id="_XYDUoGWFEeiky9dcb0jCSA" generationCondition="" isBeginAction="false" name="Raise Error" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <parameter id="_XYD7sGWFEeiky9dcb0jCSA" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+    <parameter id="_XYD7sWWFEeiky9dcb0jCSA" name="SCRIPTING_CONNECTION" type="String" value="%x{md:physicalPath($REF,'rejectName')}x%"/>
+    <code>throw(&quot;Fatal rejects detected (${../FatalErrorsCount}$)&quot;);</code>
+  </actionCode>
+  <actionCode id="_ngySwGWFEeiky9dcb0jCSA" generationCondition="not('${rejectsPK}$'='false') or not($REF/tech:rejectMode()='S')" isBeginAction="false" name="creation of index for PK" nbCycles="-1" repetitionQuery="$REF/ref:pk()" repetitionVariableName="CONSTRAINT_REF" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_ngySwWWFEeiky9dcb0jCSA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="e9f205dd-c014-4e0b-9eb7-1619c597dcd7"/>
+    <parameter id="_ngySwmWFEeiky9dcb0jCSA" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_ngySw2WFEeiky9dcb0jCSA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_ngySxGWFEeiky9dcb0jCSA" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_ngySxWWFEeiky9dcb0jCSA" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>create index IX_%x{$REF/tech:rejectName()}x%_%x{$CONSTRAINT_REF/tech:name()}x%
+on %x{md:physicalPath($REF,'rejectName')}x% (%x{md:patternList($CONSTRAINT_REF/ref:columns(),'[colName]', ',')}x%)</code>
+  </actionCode>
+  <actionCode id="e9f205dd-c014-4e0b-9eb7-1619c597dcd7" generationCondition="(not('${rejectsPK}$'='false') or not($REF/tech:rejectMode()='S'))&#xD;&#xA;and md:paramValue($this, 'createIndexOnCheckedTable') = 'true'" isBeginAction="false" name="creation of index for PK on checked table" nbCycles="-1" repetitionQuery="$REF/ref:pk()" repetitionVariableName="CONSTRAINT_REF" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="0aeeb202-009d-42f3-8154-8ef2fa24faf9" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_c_Rt2mWDEeiky9dcb0jCSA"/>
+    <parameter id="c4b4ecd4-6734-4bbb-82bf-80c1fed396c4" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="fe3ab198-5ac1-43d0-af72-19e048359a7e" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="98e6d7ed-7048-4a1a-93ff-30fa8b861cf4" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="d37be574-cfcd-4002-9a50-891fc00a58ba" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>create index IX_R_%x{$REF/tech:checkedName()}x%_%x{$CONSTRAINT_REF/tech:name()}x%
+on %x{md:physicalPath($REF,'checkedName')}x% (%x{md:patternList($CONSTRAINT_REF/ref:columns(),'[colName]', ',')}x%)</code>
+  </actionCode>
+  <actionCode id="8d79fd9b-3121-4456-936b-2adb716a5e53" generationCondition="(not('${rejectsAK}$'='false') or not($REF/tech:rejectMode()='S'))&#xD;&#xA;and md:paramValue($this, 'createIndexOnCheckedTable') = 'true'" isBeginAction="false" name="creation of index for AK on checked table" nbCycles="-1" repetitionQuery="$REF/ref:ak()" repetitionVariableName="CONSTRAINT_REF" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="7e66a2b5-a82f-4990-a148-344ba7346d6c" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_c_Rt4WWDEeiky9dcb0jCSA"/>
+    <parameter id="b44b38a9-3386-419d-b3c9-db3567619ff0" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="0e45b776-d481-4c87-9e99-f69d83cb278f" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="a7340a72-8fac-4fa1-b7c1-63110274cad6" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="33702398-0a68-4635-aa31-894a32407eb2" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>create index IX_R_%x{$REF/tech:checkedName()}x%_%x{$CONSTRAINT_REF/tech:name()}x%
+on %x{md:physicalPath($REF,'checkedName')}x% (%x{md:patternList($CONSTRAINT_REF/ref:columns(),'[colName]', ',')}x%)</code>
+  </actionCode>
+  <templateType>C-TP.RDBMS</templateType>
+  <xslVariable id="_c_RuDmWDEeiky9dcb0jCSA" code="($REF/ref:pk() | $REF/ref:ak() | $REF/ref:ck() | $REF/ref:fk() | $REF/ref:nn())[tech:rejectCode()!='']" name="hasRejectCode" type="xpath"/>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.2/notation#/?fileId=_c_RtwWWDEeiky9dcb0jCSA?">
+  <notation:Diagram xmi:id="_N8J0kCe4Ed6e15sv-0_ilw" type="Proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_N-U-1ye4Ed6e15sv-0_ilw" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_N-Vl4Ce4Ed6e15sv-0_ilw" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_N-U-2Ce4Ed6e15sv-0_ilw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_c_RtwmWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=dropRejectTable?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_N-U-2Se4Ed6e15sv-0_ilw" x="612" y="120"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Q5baUMyFEd6ttcM8xLFVqw" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_Q5baU8yFEd6ttcM8xLFVqw" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_Q5baUcyFEd6ttcM8xLFVqw"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_c_Rtw2WDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=deleteRejectsOnCheckedTable?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Q5baUsyFEd6ttcM8xLFVqw" x="612" y="96"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_QGFbAJlbEd-AK6PD8WFWyQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_QGHQMJlbEd-AK6PD8WFWyQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_QGFbAZlbEd-AK6PD8WFWyQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_c_RtxGWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=createIndexOnRejectTable?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_QGFbAplbEd-AK6PD8WFWyQ" x="612" y="48"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_s8NmsN3tEeCf4__lX5YcAw" type="2007">
+      <children xmi:type="notation:Node" xmi:id="_s8fTgN3tEeCf4__lX5YcAw" type="5007"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_s8Nmsd3tEeCf4__lX5YcAw" fontName="Segoe UI"/>
+      <element xmi:type="proc:XslVariable" href="resource.proc#_c_RuDmWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_s8Nmst3tEeCf4__lX5YcAw" x="924" y="12"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_xnlxEOhUEeGCDfZuhYd9mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_xnlxEehUEeGCDfZuhYd9mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_xnlxEuhUEeGCDfZuhYd9mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_c_RtxWWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=transactionalModeOnRejectTable?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_xnlxE-hUEeGCDfZuhYd9mg" x="612" y="180"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_xnlxFOhUEeGCDfZuhYd9mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_xnlxFehUEeGCDfZuhYd9mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_xnlxFuhUEeGCDfZuhYd9mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_c_RtxmWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=transactionName?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_xnlxF-hUEeGCDfZuhYd9mg" x="612" y="144"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_a3HNIN7nEeWIW-v5VxGFUQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_a3HNI97nEeWIW-v5VxGFUQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_a3HNId7nEeWIW-v5VxGFUQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_c_Rtx2WDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=deletePreviousRejects?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_a3HNIt7nEeWIW-v5VxGFUQ" x="612" y="72"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_N-J_sCe4Ed6e15sv-0_ilw" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_N-J_sye4Ed6e15sv-0_ilw" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_N-KmwCe4Ed6e15sv-0_ilw" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_N-KmwSe4Ed6e15sv-0_ilw" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_N-Kmwie4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_N-Kmwye4Ed6e15sv-0_ilw"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_N-KmxCe4Ed6e15sv-0_ilw" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_N-KmxSe4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_N-Kmxie4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_N-Kmxye4Ed6e15sv-0_ilw"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_N-J_sSe4Ed6e15sv-0_ilw" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_c_RtyGWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=drop%20of%20reject%20table?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_N-J_sie4Ed6e15sv-0_ilw" x="300" y="-228" width="251"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_N-KmyCe4Ed6e15sv-0_ilw" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_N-LN0Ce4Ed6e15sv-0_ilw" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_N-LN0Se4Ed6e15sv-0_ilw" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_N-LN0ie4Ed6e15sv-0_ilw" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_N-LN0ye4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_N-LN1Ce4Ed6e15sv-0_ilw"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_N-L04Ce4Ed6e15sv-0_ilw" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_N-L04Se4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_N-L04ie4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_N-L04ye4Ed6e15sv-0_ilw"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_N-KmySe4Ed6e15sv-0_ilw" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_c_RtzmWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=creation%20of%20reject%20table?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_N-Kmyie4Ed6e15sv-0_ilw" x="300" y="-120" width="251"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_N-L05Ce4Ed6e15sv-0_ilw" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_N-Mb8Ce4Ed6e15sv-0_ilw" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_N-Mb8Se4Ed6e15sv-0_ilw" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_N-Mb8ie4Ed6e15sv-0_ilw" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_N-Mb8ye4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_N-Mb9Ce4Ed6e15sv-0_ilw"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_N-Mb9Se4Ed6e15sv-0_ilw" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_N-Mb9ie4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_N-Mb9ye4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_N-Mb-Ce4Ed6e15sv-0_ilw"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_N-L05Se4Ed6e15sv-0_ilw" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_c_Rt1GWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=deletion%20of%20previous%20rejects?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_N-L05ie4Ed6e15sv-0_ilw" x="300" y="-24" width="251"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_N-NDACe4Ed6e15sv-0_ilw" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_N-NDAye4Ed6e15sv-0_ilw" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_N-NqECe4Ed6e15sv-0_ilw" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_N-NqESe4Ed6e15sv-0_ilw" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_N-NqEie4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_N-NqEye4Ed6e15sv-0_ilw"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_N-NqFCe4Ed6e15sv-0_ilw" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_N-NqFSe4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_N-NqFie4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_N-NqFye4Ed6e15sv-0_ilw"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_N-NDASe4Ed6e15sv-0_ilw" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_c_Rt2mWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=insertion%20of%20rejects%20for%20PK?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_N-NDAie4Ed6e15sv-0_ilw" x="300" y="300" width="251"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_N-ORICe4Ed6e15sv-0_ilw" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_N-ORIye4Ed6e15sv-0_ilw" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_N-ORJCe4Ed6e15sv-0_ilw" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_N-ORJSe4Ed6e15sv-0_ilw" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_N-ORJie4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_N-ORJye4Ed6e15sv-0_ilw"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_N-O4MCe4Ed6e15sv-0_ilw" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_N-O4MSe4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_N-O4Mie4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_N-O4Mye4Ed6e15sv-0_ilw"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_N-ORISe4Ed6e15sv-0_ilw" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_c_Rt4WWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=insertion%20of%20rejects%20for%20AK?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_N-ORIie4Ed6e15sv-0_ilw" x="300" y="516" width="251"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_N-O4NCe4Ed6e15sv-0_ilw" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_N-PfQCe4Ed6e15sv-0_ilw" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_N-PfQSe4Ed6e15sv-0_ilw" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_N-PfQie4Ed6e15sv-0_ilw" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_N-PfQye4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_N-PfRCe4Ed6e15sv-0_ilw"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_N-QGUCe4Ed6e15sv-0_ilw" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_N-QGUSe4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_N-QGUie4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_N-QGUye4Ed6e15sv-0_ilw"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_N-O4NSe4Ed6e15sv-0_ilw" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_c_Rt6GWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=insertion%20of%20rejects%20for%20FK?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_N-O4Nie4Ed6e15sv-0_ilw" x="300" y="636" width="251"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_N-QtYCe4Ed6e15sv-0_ilw" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_N-QtYye4Ed6e15sv-0_ilw" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_N-QtZCe4Ed6e15sv-0_ilw" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_N-QtZSe4Ed6e15sv-0_ilw" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_N-QtZie4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_N-QtZye4Ed6e15sv-0_ilw"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_N-RUcCe4Ed6e15sv-0_ilw" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_N-RUcSe4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_N-RUcie4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_N-RUcye4Ed6e15sv-0_ilw"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_N-QtYSe4Ed6e15sv-0_ilw" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_c_Rt72WDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=insertion%20of%20rejects%20for%20CK?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_N-QtYie4Ed6e15sv-0_ilw" x="300" y="744" width="251"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_ov4QsJlaEd-AK6PD8WFWyQ" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_ov4QsZlaEd-AK6PD8WFWyQ" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_ov4QsplaEd-AK6PD8WFWyQ" type="7001">
+        <children xmi:type="notation:Node" xmi:id="_ov4QtplaEd-AK6PD8WFWyQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_c_RuBWWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=SQL_CONNECTION?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_ov4Qt5laEd-AK6PD8WFWyQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_ov4QuJlaEd-AK6PD8WFWyQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_c_RuBmWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=SQL_ACTION_TYPE?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_ov4QuZlaEd-AK6PD8WFWyQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_ov4QuplaEd-AK6PD8WFWyQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_c_RuB2WDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=SQL_TRANSACTION_TYPE?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_ov4Qu5laEd-AK6PD8WFWyQ"/>
+        </children>
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_ov4Qs5laEd-AK6PD8WFWyQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_ov4QtJlaEd-AK6PD8WFWyQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_ov4QtZlaEd-AK6PD8WFWyQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_ov4QvJlaEd-AK6PD8WFWyQ" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_ov4QvZlaEd-AK6PD8WFWyQ"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_ov4QvplaEd-AK6PD8WFWyQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_ov4Qv5laEd-AK6PD8WFWyQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_ov4QwJlaEd-AK6PD8WFWyQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_c_RuAmWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=creation%20of%20index%20on%20reject%20table?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ov4QwZlaEd-AK6PD8WFWyQ" x="192" y="1080" width="251"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_N-SikCe4Ed6e15sv-0_ilw" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_N-TJoCe4Ed6e15sv-0_ilw" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_N-TwsCe4Ed6e15sv-0_ilw" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_N-TwsSe4Ed6e15sv-0_ilw" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_N-Twsie4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_N-Twsye4Ed6e15sv-0_ilw"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_N-TwtCe4Ed6e15sv-0_ilw" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_N-TwtSe4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_N-Twtie4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_N-Twtye4Ed6e15sv-0_ilw"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_N-SikSe4Ed6e15sv-0_ilw" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_c_Rt_WWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=deletion%20of%20rejects%20from%20checked%20table?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_N-Sikie4Ed6e15sv-0_ilw" x="24" y="1188" width="251"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_cmPcgE3qEeOHZ_KGzJVArA" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_cmQqoE3qEeOHZ_KGzJVArA" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_cmRRsE3qEeOHZ_KGzJVArA" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_cmRRsU3qEeOHZ_KGzJVArA" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_cmRRsk3qEeOHZ_KGzJVArA"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_cmRRs03qEeOHZ_KGzJVArA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_cmR4wE3qEeOHZ_KGzJVArA" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_cmR4wU3qEeOHZ_KGzJVArA"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_cmR4wk3qEeOHZ_KGzJVArA"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_cmR4w03qEeOHZ_KGzJVArA"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_cmPcgU3qEeOHZ_KGzJVArA" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_c_RuCWWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=deletion%20of%20rejects%20from%20checked%20table%20alias?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_cmPcgk3qEeOHZ_KGzJVArA" x="336" y="1188" width="251"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_N-RUdCe4Ed6e15sv-0_ilw" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_N-R7gCe4Ed6e15sv-0_ilw" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_N-R7gSe4Ed6e15sv-0_ilw" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_N-R7gie4Ed6e15sv-0_ilw" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_N-R7gye4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_N-R7hCe4Ed6e15sv-0_ilw"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_N-R7hSe4Ed6e15sv-0_ilw" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_N-R7hie4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_N-R7hye4Ed6e15sv-0_ilw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_N-R7iCe4Ed6e15sv-0_ilw"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_N-RUdSe4Ed6e15sv-0_ilw" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_c_Rt9mWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=insertion%20of%20rejects%20for%20Not%20Null?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_N-RUdie4Ed6e15sv-0_ilw" x="300" y="852" width="251"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_n_DYkGWEEeiky9dcb0jCSA" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_n_I4IGWEEeiky9dcb0jCSA" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_n_NJkGWEEeiky9dcb0jCSA" type="7001">
+        <children xmi:type="notation:Node" xmi:id="_7LoiMGWEEeiky9dcb0jCSA" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_7Lf_UGWEEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=SQL_CONNECTION?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_7LoiMWWEEeiky9dcb0jCSA"/>
+        </children>
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_n_NJkWWEEeiky9dcb0jCSA"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_n_NJkmWEEeiky9dcb0jCSA"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_n_NJk2WEEeiky9dcb0jCSA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_n_Qz8GWEEeiky9dcb0jCSA" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_n_Qz8WWEEeiky9dcb0jCSA"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_n_Qz8mWEEeiky9dcb0jCSA"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_n_Qz82WEEeiky9dcb0jCSA"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_n_D_oGWEEeiky9dcb0jCSA" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_n8hpAGWEEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=get%20FATAL%20errors%20count?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_n_D_oWWEEeiky9dcb0jCSA" x="288" y="960"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_XYLQcGWFEeiky9dcb0jCSA" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_XYL3gGWFEeiky9dcb0jCSA" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_XYL3gWWFEeiky9dcb0jCSA" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_XYL3gmWFEeiky9dcb0jCSA" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_XYL3g2WFEeiky9dcb0jCSA"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_XYL3hGWFEeiky9dcb0jCSA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_XYL3hWWFEeiky9dcb0jCSA" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_XYL3hmWFEeiky9dcb0jCSA"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_XYL3h2WFEeiky9dcb0jCSA"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_XYL3iGWFEeiky9dcb0jCSA"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_XYLQcWWFEeiky9dcb0jCSA" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_XYDUoGWFEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=Raise%20Error?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_XYLQcmWFEeiky9dcb0jCSA" x="492" y="1080"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_ng5AcGWFEeiky9dcb0jCSA" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_ng5ngGWFEeiky9dcb0jCSA" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_ng5ngWWFEeiky9dcb0jCSA" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_ng5ngmWFEeiky9dcb0jCSA" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_ng5ng2WFEeiky9dcb0jCSA"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_ng5nhGWFEeiky9dcb0jCSA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_ng5nhWWFEeiky9dcb0jCSA" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_ng5nhmWFEeiky9dcb0jCSA"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_ng5nh2WFEeiky9dcb0jCSA"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_ng5niGWFEeiky9dcb0jCSA"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_ng5AcWWFEeiky9dcb0jCSA" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_ngySwGWFEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=creation%20of%20index%20for%20PK?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ng5AcmWFEeiky9dcb0jCSA" x="336" y="72"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_BfYukFK5EeyhW93N4QP-5w" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_BfZVoFK5EeyhW93N4QP-5w" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_BfYukVK5EeyhW93N4QP-5w" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#c84aa54b-8ebe-4acc-a14f-f3ade851b965?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=createIndexOnCheckedTable?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_BfYuklK5EeyhW93N4QP-5w" x="612" y="12"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Fm3hUFK5EeyhW93N4QP-5w" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_Fm4IYFK5EeyhW93N4QP-5w" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_Fm4vcFK5EeyhW93N4QP-5w" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_Fm4vcVK5EeyhW93N4QP-5w" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_Fm4vclK5EeyhW93N4QP-5w"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_Fm4vc1K5EeyhW93N4QP-5w"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_Fm59kFK5EeyhW93N4QP-5w" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_Fm59kVK5EeyhW93N4QP-5w"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_Fm59klK5EeyhW93N4QP-5w"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_Fm59k1K5EeyhW93N4QP-5w"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_Fm3hUVK5EeyhW93N4QP-5w" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#e9f205dd-c014-4e0b-9eb7-1619c597dcd7?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=creation%20of%20index%20for%20PK%20on%20checked%20table?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Fm3hUlK5EeyhW93N4QP-5w" x="276" y="192"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_ojIP4FK5EeyhW93N4QP-5w" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_ojI28FK5EeyhW93N4QP-5w" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_ojI28VK5EeyhW93N4QP-5w" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_ojI28lK5EeyhW93N4QP-5w" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_ojI281K5EeyhW93N4QP-5w"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_ojI29FK5EeyhW93N4QP-5w"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_ojI29VK5EeyhW93N4QP-5w" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_ojI29lK5EeyhW93N4QP-5w"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_ojI291K5EeyhW93N4QP-5w"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_ojI2-FK5EeyhW93N4QP-5w"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_ojIP4VK5EeyhW93N4QP-5w" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#8d79fd9b-3121-4456-936b-2adb716a5e53?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=creation%20of%20index%20for%20AK%20on%20checked%20table?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ojIP4lK5EeyhW93N4QP-5w" x="288" y="408"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_N8J0kSe4Ed6e15sv-0_ilw"/>
+    <element xmi:type="proc:ActionProcess" href="resource.proc#_c_RtwWWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=REJECT%20Hsql?"/>
+    <edges xmi:type="notation:Edge" xmi:id="_N_8IYCe4Ed6e15sv-0_ilw" type="4001" source="_N-J_sCe4Ed6e15sv-0_ilw" target="_N-KmyCe4Ed6e15sv-0_ilw">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_N_8IYSe4Ed6e15sv-0_ilw"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_N_8IYie4Ed6e15sv-0_ilw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_c_RtyWWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_N_8IYye4Ed6e15sv-0_ilw" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_OBWdoie4Ed6e15sv-0_ilw" id="(0.49800796812749004,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_OBWdoye4Ed6e15sv-0_ilw" id="(0.49800796812749004,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_N__ywCe4Ed6e15sv-0_ilw" type="4001" source="_N-KmyCe4Ed6e15sv-0_ilw" target="_N-L05Ce4Ed6e15sv-0_ilw">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_N__ywSe4Ed6e15sv-0_ilw"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_N__ywie4Ed6e15sv-0_ilw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_c_Rtz2WDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_OAAZ0Ce4Ed6e15sv-0_ilw" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_OBUBYCe4Ed6e15sv-0_ilw" id="(0.49800796812749004,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_OBUBYSe4Ed6e15sv-0_ilw" id="(0.49800796812749004,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_OAEEMCe4Ed6e15sv-0_ilw" type="4001" source="_N-L05Ce4Ed6e15sv-0_ilw" target="_ng5AcGWFEeiky9dcb0jCSA">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_OAEEMSe4Ed6e15sv-0_ilw"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_OAEEMie4Ed6e15sv-0_ilw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_c_Rt1WWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_OAEEMye4Ed6e15sv-0_ilw" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_OBXrwCe4Ed6e15sv-0_ilw" id="(0.49800796812749004,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_OBXrwSe4Ed6e15sv-0_ilw" id="(0.49740932642487046,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_OAIVoCe4Ed6e15sv-0_ilw" type="4001" source="_N-NDACe4Ed6e15sv-0_ilw" target="_ojIP4FK5EeyhW93N4QP-5w">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_OAIVoSe4Ed6e15sv-0_ilw"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_OAIVoie4Ed6e15sv-0_ilw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_c_Rt22WDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_OAIVoye4Ed6e15sv-0_ilw" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_OBV2kCe4Ed6e15sv-0_ilw" id="(0.49800796812749004,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_OBV2kSe4Ed6e15sv-0_ilw" id="(0.5,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_OAOcQCe4Ed6e15sv-0_ilw" type="4001" source="_N-ORICe4Ed6e15sv-0_ilw" target="_N-O4NCe4Ed6e15sv-0_ilw">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_OAOcQSe4Ed6e15sv-0_ilw"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_OAOcQie4Ed6e15sv-0_ilw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_c_Rt4mWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_OAOcQye4Ed6e15sv-0_ilw" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_OBVPgSe4Ed6e15sv-0_ilw" id="(0.49800796812749004,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_OBVPgie4Ed6e15sv-0_ilw" id="(0.49800796812749004,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_OATUwCe4Ed6e15sv-0_ilw" type="4001" source="_N-O4NCe4Ed6e15sv-0_ilw" target="_N-QtYCe4Ed6e15sv-0_ilw">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_OATUwSe4Ed6e15sv-0_ilw"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_OATUwie4Ed6e15sv-0_ilw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_c_Rt6WWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_OATUwye4Ed6e15sv-0_ilw" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_OBXEsCe4Ed6e15sv-0_ilw" id="(0.49800796812749004,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_OBXEsSe4Ed6e15sv-0_ilw" id="(0.49800796812749004,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_OAZbYCe4Ed6e15sv-0_ilw" type="4001" source="_N-QtYCe4Ed6e15sv-0_ilw" target="_N-RUdCe4Ed6e15sv-0_ilw">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_OAZbYSe4Ed6e15sv-0_ilw"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_OAZbYie4Ed6e15sv-0_ilw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_c_Rt8GWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_OAZbYye4Ed6e15sv-0_ilw" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_OBUocCe4Ed6e15sv-0_ilw" id="(0.49800796812749004,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_OBUocSe4Ed6e15sv-0_ilw" id="(0.49800796812749004,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_OAgJECe4Ed6e15sv-0_ilw" type="4001" source="_N-RUdCe4Ed6e15sv-0_ilw" target="_n_DYkGWEEeiky9dcb0jCSA">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_OAgJESe4Ed6e15sv-0_ilw"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_OAgJEie4Ed6e15sv-0_ilw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_c_Rt92WDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_OAgJEye4Ed6e15sv-0_ilw" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_OBV2kie4Ed6e15sv-0_ilw" id="(0.49800796812749004,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_OBV2kye4Ed6e15sv-0_ilw" id="(0.49818181818181817,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_Ggh2AJlbEd-AK6PD8WFWyQ" type="4001" source="_ov4QsJlaEd-AK6PD8WFWyQ" target="_N-SikCe4Ed6e15sv-0_ilw">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_Ggh2AZlbEd-AK6PD8WFWyQ"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_Ggh2AplbEd-AK6PD8WFWyQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_c_RuA2WDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Ggh2A5lbEd-AK6PD8WFWyQ" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_GgojsJlbEd-AK6PD8WFWyQ" id="(0.33067729083665337,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_G_uTcJlbEd-AK6PD8WFWyQ" id="(0.952191235059761,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_fbDGcE3qEeOHZ_KGzJVArA" type="4001" source="_ov4QsJlaEd-AK6PD8WFWyQ" target="_cmPcgE3qEeOHZ_KGzJVArA">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_fbDGcU3qEeOHZ_KGzJVArA"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_fbDGck3qEeOHZ_KGzJVArA" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_c_RuBGWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_fbDGc03qEeOHZ_KGzJVArA" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_fbHX4E3qEeOHZ_KGzJVArA" id="(0.6653386454183267,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_fbH-8E3qEeOHZ_KGzJVArA" id="(0.04780876494023904,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_rDW3EGWEEeiky9dcb0jCSA" type="4001" source="_n_DYkGWEEeiky9dcb0jCSA" target="_ov4QsJlaEd-AK6PD8WFWyQ">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_rDW3EWWEEeiky9dcb0jCSA"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_rDW3EmWEEeiky9dcb0jCSA" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_rDUa0GWEEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_rDW3E2WEEeiky9dcb0jCSA" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_rDXeIGWEEeiky9dcb0jCSA" id="(0.06545454545454546,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_rDXeIWWEEeiky9dcb0jCSA" id="(0.49800796812749004,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_YTY7gGWFEeiky9dcb0jCSA" type="4001" source="_n_DYkGWEEeiky9dcb0jCSA" target="_XYLQcGWFEeiky9dcb0jCSA">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_YTY7gWWFEeiky9dcb0jCSA"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_YTY7gmWFEeiky9dcb0jCSA" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_YTXtYGWFEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_YTY7g2WFEeiky9dcb0jCSA" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_YTZikGWFEeiky9dcb0jCSA" id="(0.9309090909090909,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_YTZikWWFEeiky9dcb0jCSA" id="(0.49523809523809526,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_ng9R4GWFEeiky9dcb0jCSA" type="4001" source="_ng5AcGWFEeiky9dcb0jCSA" target="_Fm3hUFK5EeyhW93N4QP-5w">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_ng9R4WWFEeiky9dcb0jCSA"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_ng9R4mWFEeiky9dcb0jCSA" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_ngySwWWFEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_ng9R42WFEeiky9dcb0jCSA" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_IUeyUGWGEeiky9dcb0jCSA" id="(0.49740932642487046,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_oDXbYGWFEeiky9dcb0jCSA" id="(0.5,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_FnAEMFK5EeyhW93N4QP-5w" type="4001" source="_Fm3hUFK5EeyhW93N4QP-5w" target="_N-NDACe4Ed6e15sv-0_ilw">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_FnAEMVK5EeyhW93N4QP-5w"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_FnAEMlK5EeyhW93N4QP-5w" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#0aeeb202-009d-42f3-8154-8ef2fa24faf9?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_FnAEM1K5EeyhW93N4QP-5w" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_YL_XMFNaEey7YL2UgBC5bQ" id="(0.5,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_YL_XMVNaEey7YL2UgBC5bQ" id="(0.49800796812749004,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_ojO9kFK5EeyhW93N4QP-5w" type="4001" source="_ojIP4FK5EeyhW93N4QP-5w" target="_N-ORICe4Ed6e15sv-0_ilw">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_ojO9kVK5EeyhW93N4QP-5w"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_ojO9klK5EeyhW93N4QP-5w" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#7e66a2b5-a82f-4990-a148-344ba7346d6c?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_ojO9k1K5EeyhW93N4QP-5w" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_YL_XMlNaEey7YL2UgBC5bQ" id="(0.5,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_pPN50FK5EeyhW93N4QP-5w" id="(0.49800796812749004,0.0)"/>
+    </edges>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_I2b5ENb4EeGE75Be8Hmivg" type="Proc" measurementUnit="Pixel">
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_I2b5Edb4EeGE75Be8Hmivg"/>
+    <element xmi:type="proc:SubActionProcess" href="resource.proc#_HWESgNb4EeGE75Be8Hmivg?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=Type+Pk+s%37C3%37A9v%37C3%37A9rit%37C3%37A9?"/>
+  </notation:Diagram>
+</xmi:XMI>
+]]></diagram>
+</proc:process>

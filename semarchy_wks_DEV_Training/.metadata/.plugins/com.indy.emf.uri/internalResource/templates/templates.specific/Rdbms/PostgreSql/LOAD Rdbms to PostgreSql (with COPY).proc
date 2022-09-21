@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" description="This template is used to load data from any Database into PostgreSQL using a COPY statement.&#xD;&#xA;Source data is first exported to a file, which is then loaded into PostgreSQL with COPY.&#xD;&#xA;&#xD;&#xA;Refer to the description of each Parameter for more information.&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;13/11/2020&#x9;Bug fix: bad file name when work table name contains object delimiter characters&#xD;&#xA;16/06/2020&#x9;New Parameters 'Unlock Cdc Table' and 'Lock Cdc Table'&#xD;&#xA;16/06/2020&#x9;New Parameter 'Cdc Subscriber'&#xD;&#xA;21/08/2018&#x9;Reorganize the parameters display order&#xD;&#xA;15/02/2017&#x9;Fix missing xslTargetFtp on clean step&#xD;&#xA;15/02/2017&#x9;Initialize template history" id="_7lU40Z5IEd6bQIkgWyxFQQ" isBeginAction="false" name="LOAD Rdbms to PostGre SQL (with COPY)" nbCycles="-1" toleratedError="false">
+  <parameter description="If true, the exported file containing source data is sent to the target server through FTP.&#xD;&#xA;For this, a FTP folder Metadata Link must be added on the target table's Metadata.&#xD;&#xA;The link must be named 'TARGET_FTP'.&#xD;&#xA;&#xD;&#xA;This is useful if the Runtime is not located on the same machine as the target PostgreSQL server.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" id="_-S_LUpWcEd-WsbbwTwQ1vg" metaInf="" name="enableFileTransport" type="Boolean" value="true"/>
+  <parameter description="If true, the temporary objects created during the load are removed at the end of the process." id="_-S_LUZWcEd-WsbbwTwQ1vg" name="cleanTemporaryObjects" type="Boolean" value="true"/>
+  <parameter description="If true, a DISTINCT statement will be added on the query extracting data into the temporary file.&#xD;&#xA;This is used to avoid having duplicates in the load table." id="_Qb2JlOukEeG7fte7iUkMug" name="useDistinct" type="Boolean" value="false"/>
+  <parameter description="If true, the operations on the load table will be executed in a dedicated transaction.&#xD;&#xA;This is useful for instance if one of a the source tables has been loaded in a previous and uncommitted Mapping.&#xD;&#xA;In this case, it is necessary to populate the load table within the same transaction so that the data loaded as part of this previous Mapping are visible.&#xD;&#xA;&#xD;&#xA;If false, each statement on the load table uses an Autocommit transaction." id="_eIQUqeiCEeGCDfZuhYd9mg" label="Transactional Mode On Work Tables" name="useTransactionOnWorkTables" type="Boolean" value="false"/>
+  <parameter description="Defines the encoding to use for the exported temporary file." id="_-S_LTZWcEd-WsbbwTwQ1vg" name="fileEncoding" type="String" value="UTF8"/>
+  <parameter description="ASCII field separator used to separate the fields in the exported file." id="_-S_LS5WcEd-WsbbwTwQ1vg" name="fieldSeparator" type="String" value="~"/>
+  <parameter description="ASCII character used to delimit strings in the exported file." id="_-S_LTJWcEd-WsbbwTwQ1vg" name="stringDelimiter" type="String" value=""/>
+  <parameter description="ASCII decimal symbol used for numbers in the exported file." id="_-S_LT5WcEd-WsbbwTwQ1vg" name="numericSeparator" type="String" value=""/>
+  <parameter description="Format used for date columns in the exported file." id="_-S_LSpWcEd-WsbbwTwQ1vg" name="dateFormat" type="String" value="yyyy-MM-dd"/>
+  <parameter description="Name of the transaction when Transaction Mode is set to true." id="_eIQUqOiCEeGCDfZuhYd9mg" name="transactionName" type="String" value="T1"/>
+  <parameter description="This parameter defines the JDBC Fetch size (number of lines) used when querying the source database.&#xD;&#xA;Larger values provide better performance but consume more memory in the Runtime as the data is stored in the Memory before being written in the temporary file." id="_-S_LTpWcEd-WsbbwTwQ1vg" name="fetchSize" type="String" value="30000"/>
+  <parameter description="Absolute path to the folder where the temporary file is located on the PostgreSQL server.&#xD;&#xA;&#xD;&#xA;You have to specify this only if the folder defined on the FTP server is not physically the same on the machine.&#xD;&#xA;If there is a chroot, for instance.&#xD;&#xA;Otherwise you can leave this empty, the template will use the path defined on the FTP server.&#xD;&#xA;&#xD;&#xA;This applies only if 'Enable File Transport' is set to true." id="_-S_LUJWcEd-WsbbwTwQ1vg" name="pathOnServer" type="String"/>
+  <parameter description="Directory in which the temporary file generated during the load is stored.&#xD;&#xA;Note that the Runtime must have access to it." id="_-S_LSZWcEd-WsbbwTwQ1vg" name="workFolder" type="String" value="${/CORE_TEMPORARY_FOLDER}$"/>
+  <parameter description="When a source table is used as CDC an unlock is performed on it after processing. It marks the changed data as consumed.&#xD;&#xA;If set to false, the Unlock must be performed as part of an upcoming Mapping." id="_d2THoLIsEeqqT5qF-1pubg" name="unlockCdcTable" type="Boolean" value="true"/>
+  <parameter description="CDC Subscriber to use when CDC has been enabled on a source table." id="_d2waoLIsEeqqT5qF-1pubg" name="cdcSubscriber" type="String"/>
+  <parameter description="When a source table is used as CDC a lock is performed on it. It makes the changed data available in the Mapping.&#xD;&#xA;If set to false, the Lock must have been performed as part of a previous Mapping." id="_d2waobIsEeqqT5qF-1pubg" name="lockCdcTable" type="Boolean" value="true"/>
+  <subProcess id="_7lU4155IEd6bQIkgWyxFQQ" name="Load">
+    <link id="_7lU42J5IEd6bQIkgWyxFQQ" executionType="OK" generationType="OK" mandatory="1" targetId="_7lU47p5IEd6bQIkgWyxFQQ?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=Clean?"/>
+    <parameter id="_YAihxWHdEeCzVZziNbSfyw" name="realPathOnServer" type="String" value="%x{ &#xD;&#xA;if (not(exists($xslTargetFtp) and md:paramValue($this,'enableFileTransport')='true'))&#xD;&#xA;&#x9;then md:paramValue($this,'workFolder')&#xD;&#xA; &#x9;else md:ifEmpty(md:paramValue($this,'pathOnServer'),$xslTargetFtp/tech:systemPath())&#xD;&#xA;}x%"/>
+    <actionCode id="_7lU46J5IEd6bQIkgWyxFQQ" generationCondition="" isBeginAction="false" name="Load into target" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_7lU46Z5IEd6bQIkgWyxFQQ" executionType="OK" generationType="OK" mandatory="1"/>
+      <parameter id="_7lU46p5IEd6bQIkgWyxFQQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_7lU4655IEd6bQIkgWyxFQQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_7lU47Z5IEd6bQIkgWyxFQQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_mzJoMOiCEeGCDfZuhYd9mg" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <code>COPY %x{md:physicalPath($REF,'workName')}x%
+FROM '${../realPathOnServer}$/data_%x{$REF/tech:workName('','','false')}x%.dat' 
+WITH
+DELIMITER '%x{md:paramValue($this,'fieldSeparator')}x%'
+CSV</code>
+    </actionCode>
+    <actionCode id="_gPeeaAugEeGY683Q7iR8Eg" isBeginAction="false" name="FileExists" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileWaitActionCodeI">
+      <link id="_gPeeaQugEeGY683Q7iR8Eg" executionCondition="${FileExists/NB_FILES}$==0" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_gPeebwugEeGY683Q7iR8Eg"/>
+      <link id="_h0f7YAugEeGY683Q7iR8Eg" executionCondition="${FileExists/NB_FILES}$==1" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_7lU46J5IEd6bQIkgWyxFQQ"/>
+      <parameter id="_gPeeawugEeGY683Q7iR8Eg" name="WAIT_FILE" type="String" value="%x{md:paramValue($this,'workFolder')}x%/data_%x{$REF/tech:workName('','','false')}x%.dat"/>
+      <parameter id="_gPeebAugEeGY683Q7iR8Eg" name="WAIT_FILE_NB_FILES" type="String" value="1"/>
+      <parameter id="_gPeebQugEeGY683Q7iR8Eg" name="WAIT_FILE_POLLINT" type="String" value="0"/>
+      <parameter id="_gPeebgugEeGY683Q7iR8Eg" name="WAIT_FILE_TIMEOUT" type="String" value="0"/>
+    </actionCode>
+    <actionCode id="_gPeebwugEeGY683Q7iR8Eg" isBeginAction="false" name="NoFile" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI"/>
+    <actionProcessRef id="_TW9WcJToEd-tv7v5yj0V3Q" isBeginAction="false" name="Unload" nbCycles="-1" toleratedError="false" targetName="resource.proc#_kxpI3ZThEd-tv7v5yj0V3Q?fileId=_kxpI0pThEd-tv7v5yj0V3Q$type=proc$name=Unload?">
+      <link id="_UGy38JToEd-tv7v5yj0V3Q" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_gPeeaAugEeGY683Q7iR8Eg"/>
+    </actionProcessRef>
+    <templateType>L-TP.RDBMS.LOADING</templateType>
+    <xslVariable id="_i1JT0GHdEeCzVZziNbSfyw" code="$REF/ref:target()/mdj:xpath('$TARGET_FTP')" name="xslTargetFtp" type="xpath"/>
+  </subProcess>
+  <subProcess id="_7lU47p5IEd6bQIkgWyxFQQ" name="Clean">
+    <actionProcessRef id="_Xm6IsJToEd-tv7v5yj0V3Q" isBeginAction="false" name="Clean" nbCycles="-1" toleratedError="false" targetName="resource.proc#_kxpJFJThEd-tv7v5yj0V3Q?fileId=_kxpI0pThEd-tv7v5yj0V3Q$type=proc$name=Clean?"/>
+    <templateType>L-TP.RDBMS.CLEANING</templateType>
+    <xslVariable id="_JpmsIPN0EeamFOsXkV_lPA" code="$REF/ref:target()/mdj:xpath('$TARGET_FTP')" name="xslTargetFtp" type="xpath"/>
+  </subProcess>
+  <templateType>L-TP.RDBMS</templateType>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.2/notation#/?fileId=_7lU40Z5IEd6bQIkgWyxFQQ?">
+  <notation:Diagram xmi:id="_ZOuKIJ5KEd6bQIkgWyxFQQ" type="Proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_ZRjbsJ5KEd6bQIkgWyxFQQ" type="2004">
+      <children xmi:type="notation:Node" xmi:id="_ZRjbtJ5KEd6bQIkgWyxFQQ" type="5004"/>
+      <children xmi:type="notation:Node" xmi:id="_ZRjbtZ5KEd6bQIkgWyxFQQ" type="7005">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_ZRjbtp5KEd6bQIkgWyxFQQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_ZRjbt55KEd6bQIkgWyxFQQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_ZRjbuJ5KEd6bQIkgWyxFQQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_ZRjbuZ5KEd6bQIkgWyxFQQ" type="7006">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_ZRjbup5KEd6bQIkgWyxFQQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_ZRjbu55KEd6bQIkgWyxFQQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_ZRjbvJ5KEd6bQIkgWyxFQQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_ZRjbsZ5KEd6bQIkgWyxFQQ"/>
+      <styles xmi:type="notation:HintedDiagramLinkStyle" xmi:id="_ZRjbsp5KEd6bQIkgWyxFQQ" diagramLink="_Z6YWQJ5KEd6bQIkgWyxFQQ"/>
+      <element xmi:type="proc:SubActionProcess" href="resource.proc#_7lU4155IEd6bQIkgWyxFQQ?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=Load?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ZRjbs55KEd6bQIkgWyxFQQ" x="24" y="60"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_ZRjbvZ5KEd6bQIkgWyxFQQ" type="2004">
+      <children xmi:type="notation:Node" xmi:id="_ZRjbwZ5KEd6bQIkgWyxFQQ" type="5004"/>
+      <children xmi:type="notation:Node" xmi:id="_ZRjbwp5KEd6bQIkgWyxFQQ" type="7005">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_ZRjbw55KEd6bQIkgWyxFQQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_ZRjbxJ5KEd6bQIkgWyxFQQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_ZRjbxZ5KEd6bQIkgWyxFQQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_ZRjbxp5KEd6bQIkgWyxFQQ" type="7006">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_ZRjbx55KEd6bQIkgWyxFQQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_ZRjbyJ5KEd6bQIkgWyxFQQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_ZRjbyZ5KEd6bQIkgWyxFQQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_ZRjbvp5KEd6bQIkgWyxFQQ"/>
+      <styles xmi:type="notation:HintedDiagramLinkStyle" xmi:id="_ZRjbv55KEd6bQIkgWyxFQQ" diagramLink="_ACmDcJ5LEd6bQIkgWyxFQQ"/>
+      <element xmi:type="proc:SubActionProcess" href="resource.proc#_7lU47p5IEd6bQIkgWyxFQQ?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=Clean?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ZRjbwJ5KEd6bQIkgWyxFQQ" x="24" y="168"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_-S_LIZWcEd-WsbbwTwQ1vg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_-S_LIpWcEd-WsbbwTwQ1vg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_-S_LI5WcEd-WsbbwTwQ1vg"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_-S_LSZWcEd-WsbbwTwQ1vg?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=workFolder?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-S_LJJWcEd-WsbbwTwQ1vg" x="120" y="432"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_-S_LJZWcEd-WsbbwTwQ1vg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_-S_LJpWcEd-WsbbwTwQ1vg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_-S_LJ5WcEd-WsbbwTwQ1vg"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_-S_LSpWcEd-WsbbwTwQ1vg?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=dateFormat?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-S_LKJWcEd-WsbbwTwQ1vg" x="120" y="84"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_-S_LKZWcEd-WsbbwTwQ1vg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_-S_LKpWcEd-WsbbwTwQ1vg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_-S_LK5WcEd-WsbbwTwQ1vg"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_-S_LS5WcEd-WsbbwTwQ1vg?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=fieldSeparator?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-S_LLJWcEd-WsbbwTwQ1vg" x="120" y="168"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_-S_LLZWcEd-WsbbwTwQ1vg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_-S_LLpWcEd-WsbbwTwQ1vg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_-S_LL5WcEd-WsbbwTwQ1vg"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_-S_LTJWcEd-WsbbwTwQ1vg?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=stringDelimiter?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-S_LMJWcEd-WsbbwTwQ1vg" x="120" y="300"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_-S_LMZWcEd-WsbbwTwQ1vg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_-S_LMpWcEd-WsbbwTwQ1vg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_-S_LM5WcEd-WsbbwTwQ1vg"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_-S_LTZWcEd-WsbbwTwQ1vg?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=fileEncoding?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-S_LNJWcEd-WsbbwTwQ1vg" x="120" y="192"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_-S_LNZWcEd-WsbbwTwQ1vg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_-S_LNpWcEd-WsbbwTwQ1vg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_-S_LN5WcEd-WsbbwTwQ1vg"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_-S_LTpWcEd-WsbbwTwQ1vg?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=fetchSize?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-S_LOJWcEd-WsbbwTwQ1vg" x="120" y="144"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_-S_LOZWcEd-WsbbwTwQ1vg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_-S_LOpWcEd-WsbbwTwQ1vg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_-S_LO5WcEd-WsbbwTwQ1vg"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_-S_LT5WcEd-WsbbwTwQ1vg?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=numericSeparator?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-S_LPJWcEd-WsbbwTwQ1vg" x="120" y="240"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_-S_LPZWcEd-WsbbwTwQ1vg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_-S_LPpWcEd-WsbbwTwQ1vg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_-S_LP5WcEd-WsbbwTwQ1vg"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_-S_LUJWcEd-WsbbwTwQ1vg?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=pathOnServer?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-S_LQJWcEd-WsbbwTwQ1vg" x="120" y="276"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_-S_LQZWcEd-WsbbwTwQ1vg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_-S_LQpWcEd-WsbbwTwQ1vg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_-S_LQ5WcEd-WsbbwTwQ1vg"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_-S_LUZWcEd-WsbbwTwQ1vg?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=cleanTemporaryObjects?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-S_LRJWcEd-WsbbwTwQ1vg" x="120" y="60"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_-S_LRZWcEd-WsbbwTwQ1vg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_-S_LRpWcEd-WsbbwTwQ1vg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_-S_LR5WcEd-WsbbwTwQ1vg"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_-S_LUpWcEd-WsbbwTwQ1vg?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=enableFileTransport?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-S_LSJWcEd-WsbbwTwQ1vg" x="120" y="108"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_eIQUoOiCEeGCDfZuhYd9mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_eIQUoeiCEeGCDfZuhYd9mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_eIQUouiCEeGCDfZuhYd9mg"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_eIQUqOiCEeGCDfZuhYd9mg?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=transactionName?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_eIQUo-iCEeGCDfZuhYd9mg" x="120" y="324"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_eIQUpOiCEeGCDfZuhYd9mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_eIQUpeiCEeGCDfZuhYd9mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_eIQUpuiCEeGCDfZuhYd9mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_eIQUqeiCEeGCDfZuhYd9mg?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=useTransactionOnWorkTables?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_eIQUp-iCEeGCDfZuhYd9mg" x="120" y="408"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Qb2JkOukEeG7fte7iUkMug" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_Qb2JkeukEeG7fte7iUkMug" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_Qb2JkuukEeG7fte7iUkMug" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_Qb2JlOukEeG7fte7iUkMug?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=useDistinct?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Qb2Jk-ukEeG7fte7iUkMug" x="120" y="384"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_d2yP0LIsEeqqT5qF-1pubg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_d2yP07IsEeqqT5qF-1pubg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_d2yP0bIsEeqqT5qF-1pubg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_d2THoLIsEeqqT5qF-1pubg?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=unlockCdcTable?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_d2yP0rIsEeqqT5qF-1pubg" x="120" y="360"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_d2yP1LIsEeqqT5qF-1pubg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_d2yP17IsEeqqT5qF-1pubg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_d2yP1bIsEeqqT5qF-1pubg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_d2waoLIsEeqqT5qF-1pubg?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=cdcSubscriber?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_d2yP1rIsEeqqT5qF-1pubg" x="120" y="24"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_d2y24LIsEeqqT5qF-1pubg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_d2y247IsEeqqT5qF-1pubg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_d2y24bIsEeqqT5qF-1pubg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_d2waobIsEeqqT5qF-1pubg?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=lockCdcTable?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_d2y24rIsEeqqT5qF-1pubg" x="120" y="216"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_ZOuKIZ5KEd6bQIkgWyxFQQ"/>
+    <element xmi:type="proc:ActionProcess" href="resource.proc#_7lU40Z5IEd6bQIkgWyxFQQ?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=LOAD%20Rdbms%20to%20PostGre%20SQL%20(with%20COPY)?"/>
+    <edges xmi:type="notation:Edge" xmi:id="_GykNkPN0EeamFOsXkV_lPA" type="4001" source="_ZRjbsJ5KEd6bQIkgWyxFQQ" target="_ZRjbvZ5KEd6bQIkgWyxFQQ">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_GykNkfN0EeamFOsXkV_lPA"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_GykNkvN0EeamFOsXkV_lPA" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_7lU42J5IEd6bQIkgWyxFQQ?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_GykNk_N0EeamFOsXkV_lPA" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_HIh2gPN0EeamFOsXkV_lPA" id="(0.5,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_HIh2gfN0EeamFOsXkV_lPA" id="(0.5,0.0)"/>
+    </edges>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_Z6YWQJ5KEd6bQIkgWyxFQQ" type="Proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_gBohGJ5NEd6bQIkgWyxFQQ" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_gBohG55NEd6bQIkgWyxFQQ" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_gBohHJ5NEd6bQIkgWyxFQQ" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_gBohHZ5NEd6bQIkgWyxFQQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_gBohHp5NEd6bQIkgWyxFQQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_gBohH55NEd6bQIkgWyxFQQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_gBohIJ5NEd6bQIkgWyxFQQ" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_gBohIZ5NEd6bQIkgWyxFQQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_gBohIp5NEd6bQIkgWyxFQQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_gBohI55NEd6bQIkgWyxFQQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_gBohGZ5NEd6bQIkgWyxFQQ"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_7lU46J5IEd6bQIkgWyxFQQ?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=Load%20into%20target?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_gBohGp5NEd6bQIkgWyxFQQ" x="24" y="264"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_TXHHcJToEd-tv7v5yj0V3Q" type="2003">
+      <children xmi:type="notation:Node" xmi:id="_TXHHc5ToEd-tv7v5yj0V3Q" type="5003"/>
+      <children xmi:type="notation:Node" xmi:id="_TXHHdJToEd-tv7v5yj0V3Q" type="7003">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_TXHHdZToEd-tv7v5yj0V3Q" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_TXHHdpToEd-tv7v5yj0V3Q"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_TXHHd5ToEd-tv7v5yj0V3Q"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_TXHHeJToEd-tv7v5yj0V3Q" type="7004">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_TXHHeZToEd-tv7v5yj0V3Q" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_TXHHepToEd-tv7v5yj0V3Q"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_TXHHe5ToEd-tv7v5yj0V3Q"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_TXHHcZToEd-tv7v5yj0V3Q"/>
+      <element xmi:type="proc:ActionProcessRef" href="resource.proc#_TW9WcJToEd-tv7v5yj0V3Q?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=Unload?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_TXHHcpToEd-tv7v5yj0V3Q" x="132" y="60"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_YAihwWHdEeCzVZziNbSfyw" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_YAihwmHdEeCzVZziNbSfyw" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_YAihw2HdEeCzVZziNbSfyw"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_YAihxWHdEeCzVZziNbSfyw?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=realPathOnServer?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_YAihxGHdEeCzVZziNbSfyw" x="312" y="24" width="135"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_i1JT0WHdEeCzVZziNbSfyw" type="2007">
+      <children xmi:type="notation:Node" xmi:id="_i1JT1GHdEeCzVZziNbSfyw" type="5007"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_i1JT0mHdEeCzVZziNbSfyw"/>
+      <element xmi:type="proc:XslVariable" href="resource.proc#_i1JT0GHdEeCzVZziNbSfyw?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_i1JT02HdEeCzVZziNbSfyw" x="456" y="24"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_gPeeUAugEeGY683Q7iR8Eg" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_gPeeUQugEeGY683Q7iR8Eg" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_gPeeUgugEeGY683Q7iR8Eg" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_gPeeUwugEeGY683Q7iR8Eg" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_gPeeVAugEeGY683Q7iR8Eg"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_gPeeVQugEeGY683Q7iR8Eg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_gPeeVgugEeGY683Q7iR8Eg" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_gPeeVwugEeGY683Q7iR8Eg" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_gPeeWAugEeGY683Q7iR8Eg"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_gPeeWQugEeGY683Q7iR8Eg"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_gPeeWgugEeGY683Q7iR8Eg" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_gPeeaAugEeGY683Q7iR8Eg?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=FileExists?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_gPeeWwugEeGY683Q7iR8Eg" x="132" y="168"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_gPeeXAugEeGY683Q7iR8Eg" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_gPeeXQugEeGY683Q7iR8Eg" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_gPeeXgugEeGY683Q7iR8Eg" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_gPeeXwugEeGY683Q7iR8Eg" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_gPeeYAugEeGY683Q7iR8Eg"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_gPeeYQugEeGY683Q7iR8Eg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_gPeeYgugEeGY683Q7iR8Eg" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_gPeeYwugEeGY683Q7iR8Eg" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_gPeeZAugEeGY683Q7iR8Eg"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_gPeeZQugEeGY683Q7iR8Eg"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_gPeeZgugEeGY683Q7iR8Eg" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_gPeebwugEeGY683Q7iR8Eg?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=NoFile?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_gPeeZwugEeGY683Q7iR8Eg" x="216" y="264"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_Z6YWQZ5KEd6bQIkgWyxFQQ"/>
+    <element xmi:type="proc:SubActionProcess" href="resource.proc#_7lU4155IEd6bQIkgWyxFQQ?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=Load?"/>
+    <edges xmi:type="notation:Edge" xmi:id="_UGy38ZToEd-tv7v5yj0V3Q" type="4001" source="_TXHHcJToEd-tv7v5yj0V3Q" target="_gPeeUAugEeGY683Q7iR8Eg">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_UGy38pToEd-tv7v5yj0V3Q"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_UGy385ToEd-tv7v5yj0V3Q"/>
+      <element xmi:type="proc:Link" href="resource.proc#_UGy38JToEd-tv7v5yj0V3Q?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_UGy39JToEd-tv7v5yj0V3Q" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_jXbtwwugEeGY683Q7iR8Eg" id="(0.49411764705882355,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_hI6AsAugEeGY683Q7iR8Eg" id="(0.4946236559139785,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_gPxZSAugEeGY683Q7iR8Eg" type="4001" source="_gPeeUAugEeGY683Q7iR8Eg" target="_gPeeXAugEeGY683Q7iR8Eg">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_gPxZSQugEeGY683Q7iR8Eg"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_gPxZSgugEeGY683Q7iR8Eg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_gPeeaQugEeGY683Q7iR8Eg?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_gPxZSwugEeGY683Q7iR8Eg" points="[0, 0, -66, -60]$[66, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_jXbtwAugEeGY683Q7iR8Eg" id="(0.6666666666666666,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_jXbtwQugEeGY683Q7iR8Eg" id="(0.5,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_h0pFUAugEeGY683Q7iR8Eg" type="4001" source="_gPeeUAugEeGY683Q7iR8Eg" target="_gBohGJ5NEd6bQIkgWyxFQQ">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_h0pFUQugEeGY683Q7iR8Eg"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_h0pFUgugEeGY683Q7iR8Eg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_h0f7YAugEeGY683Q7iR8Eg?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_h0pFUwugEeGY683Q7iR8Eg" points="[0, 0, 67, -60]$[-67, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_h0y2UAugEeGY683Q7iR8Eg" id="(0.3333333333333333,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_jXbtwgugEeGY683Q7iR8Eg" id="(0.49606299212598426,0.0)"/>
+    </edges>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_ACmDcJ5LEd6bQIkgWyxFQQ" type="Proc" measurementUnit="Pixel">
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_ACmDcZ5LEd6bQIkgWyxFQQ"/>
+    <element xmi:type="proc:SubActionProcess" href="resource.proc#_7lU47p5IEd6bQIkgWyxFQQ?fileId=_7lU40Z5IEd6bQIkgWyxFQQ$type=proc$name=Clean?"/>
+  </notation:Diagram>
+</xmi:XMI>
+]]></diagram>
+</proc:process>

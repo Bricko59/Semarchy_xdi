@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_-Y_UYdhWEeiHBZdKZ0VXqw">
+  <actionCode id="_-Y_UYthWEeiHBZdKZ0VXqw" isBeginAction="false" name="FileDelete" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+    <metaDataLink id="2ceeec46-9a29-4b99-846b-57ef51d9ced0" name="Files_Out" target="resource.md#_yUtrWTuOEeufR_jwQ73gkQ?fileId=_yUtrUDuOEeufR_jwQ73gkQ$type=md$name=Files_Out?"/>
+    <parameter id="_-Y_UZdhWEeiHBZdKZ0VXqw" name="DEL_INCLUDES" type="String" value="**/*.xml"/>
+    <parameter id="_-Y_UZthWEeiHBZdKZ0VXqw" name="DEL_DIR" type="String" value="%x{$Files_Out/tech:path()}x%/Xml"/>
+    <parameter id="_-Y_UZ9hWEeiHBZdKZ0VXqw" name="DEL_INCLUDE_EMPTY_DIRS" type="Boolean" value="false"/>
+  </actionCode>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.3/notation#/?fileId=_-Y_UYdhWEeiHBZdKZ0VXqw?" xmi:id="_6BDgUNeREeiHBZdKZ0VXqw" type="Proc" measurementUnit="Pixel">
+  <children xmi:type="notation:Node" xmi:id="_7P3c0NeREeiHBZdKZ0VXqw" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_7P4D4NeREeiHBZdKZ0VXqw" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_7P4D4deREeiHBZdKZ0VXqw" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_7P4D4teREeiHBZdKZ0VXqw"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_7P4D49eREeiHBZdKZ0VXqw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_7P4D5NeREeiHBZdKZ0VXqw"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_7P4D5deREeiHBZdKZ0VXqw" type="7002">
+      <children xmi:type="notation:Node" xmi:id="_0G6VIKEmEey6HJjlkOrxiQ" type="3002">
+        <element xmi:type="proc:MetaDataLink" href="resource.proc#2ceeec46-9a29-4b99-846b-57ef51d9ced0?fileId=_-Y_UYdhWEeiHBZdKZ0VXqw$type=proc?"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_0G6VIaEmEey6HJjlkOrxiQ"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_7P4D5teREeiHBZdKZ0VXqw"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_7P4D59eREeiHBZdKZ0VXqw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_7P4D6NeREeiHBZdKZ0VXqw"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_7P3c0deREeiHBZdKZ0VXqw" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_-Y_UYthWEeiHBZdKZ0VXqw?fileId=_-Y_UYdhWEeiHBZdKZ0VXqw$type=proc$name=FileDelete?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_7P3c0teREeiHBZdKZ0VXqw" x="162" y="30"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_6BDgUdeREeiHBZdKZ0VXqw"/>
+  <element xmi:type="proc:ActionProcess" href="resource.proc#_-Y_UYdhWEeiHBZdKZ0VXqw?fileId=_-Y_UYdhWEeiHBZdKZ0VXqw$type=proc$name=Delete%20xml%20files%20in%20sub%20folders?"/>
+</notation:Diagram>
+]]></diagram>
+</proc:process>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ref:mapRef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:ref="http://www.indy.com/v2/ref" id="_8ea4WTTDEe2K1spis4bODw">
+  <dataModel>_tyMWcNj0EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map$name=Mapping%20without%20Wait%20files?</dataModel>
+  <containerRef xsi:type="ref:RDatastore" id="_8efJwDTDEe2K1spis4bODw" countShownFields="5" hierarchical="true">
+    <dataModel>_w6v-oNj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_8efw0DTDEe2K1spis4bODw" size="56" type="String" mandatory="true" position="12">
+      <dataModel>_w60QEtj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map$name=lastname?</dataModel>
+      <usage>_8fqOcDTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8fNigDTDEe2K1spis4bODw" size="57" type="String" mandatory="true" position="15">
+      <dataModel>_w60QE9j7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map$name=firstname?</dataModel>
+      <usage>_8fpnYjTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8fOJkDTDEe2K1spis4bODw" mandatory="true" position="6">
+      <dataModel>_w60QFNj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map$name=file_name?</dataModel>
+      <usage>_8fqOcTTDEe2K1spis4bODw</usage>
+      <usage>_8fqOcjTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8fOJkTTDEe2K1spis4bODw" size="12" type="Numeric" mandatory="true" position="9">
+      <dataModel>_w60QEdj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map$name=id?</dataModel>
+      <usage>_8fpnYzTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8fOJkjTDEe2K1spis4bODw" mandatory="true" position="3">
+      <dataModel>_w60QENj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map$name=file_with_joker?</dataModel>
+    </fieldRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_8fXTgDTDEe2K1spis4bODw" countShownFields="7" hierarchical="false">
+    <dataModel>_xSlP0Nj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_8fX6kDTDEe2K1spis4bODw" precision="0" size="32" type="INTEGER" mandatory="true" position="3">
+      <dataModel>_xSl24dj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map$name=ID_RECORD?</dataModel>
+      <expressionRef id="_8fpnYTTDEe2K1spis4bODw">
+        <dataModel>_yFi90dj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8fnLIDTDEe2K1spis4bODw" precision="0" size="32" type="INTEGER" position="6">
+      <dataModel>_xSmd8Nj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map$name=FILE_ID?</dataModel>
+      <expressionRef id="_8fpnYzTDEe2K1spis4bODw" internalExpression="${file_with_joker.id}$">
+        <dataModel>_yFi909j7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map?</dataModel>
+        <sourceRef>_8fOJkTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8fnyMDTDEe2K1spis4bODw" size="100" type="VARCHAR" position="9">
+      <dataModel>_xSmd8dj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map$name=LAST_NAME?</dataModel>
+      <expressionRef id="_8fqOcDTDEe2K1spis4bODw" internalExpression="${file_with_joker.lastname}$">
+        <dataModel>_yFi91Nj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map?</dataModel>
+        <sourceRef>_8efw0DTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8fnyMTTDEe2K1spis4bODw" size="100" type="VARCHAR" position="12">
+      <dataModel>_xSmd8tj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map$name=FIRST_NAME?</dataModel>
+      <expressionRef id="_8fpnYjTDEe2K1spis4bODw" internalExpression="${file_with_joker.firstname}$">
+        <dataModel>_yFi90tj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map?</dataModel>
+        <sourceRef>_8fNigDTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8fnyMjTDEe2K1spis4bODw" size="100" type="VARCHAR" position="15">
+      <dataModel>_xSmd89j7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map$name=FILE_NAME?</dataModel>
+      <expressionRef id="_8fqOcjTDEe2K1spis4bODw" internalExpression="${file_with_joker.file_name}$">
+        <dataModel>_yFi91tj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map?</dataModel>
+        <sourceRef>_8fOJkDTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8fnyMzTDEe2K1spis4bODw" size="8" type="CHARACTER" position="18">
+      <dataModel>_xSmd9Nj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map$name=FILE_DATE?</dataModel>
+      <expressionRef id="_8fqOcTTDEe2K1spis4bODw" internalExpression="SUBSTR(${file_with_joker.file_name}$,6,8)">
+        <dataModel>_yFi91dj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map?</dataModel>
+        <sourceRef>_8fOJkDTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8fnyNDTDEe2K1spis4bODw" size="26" type="TIMESTAMP" position="21">
+      <dataModel>_xSmd9dj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map$name=UPDATE_DATE?</dataModel>
+      <expressionRef id="_8fqOczTDEe2K1spis4bODw" internalExpression="current_timestamp">
+        <dataModel>_yFi919j7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <constraintRef id="_8fvuADTDEe2K1spis4bODw" type="pk">
+      <dataModel>_xSmd9tj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map$name=SYS_PK_11221?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <targetSetRef id="_8fsDoTTDEe2K1spis4bODw" sourceSet="_8fsDoDTDEe2K1spis4bODw">
+    <container>_8fXTgDTDEe2K1spis4bODw</container>
+  </targetSetRef>
+  <sourceSetRef id="_8fsDoDTDEe2K1spis4bODw" targetSet="_8fsDoTTDEe2K1spis4bODw">
+    <dataSet xsi:type="map:DataSet">#_w603INj7EeiHBZdKZ0VXqw</dataSet>
+  </sourceSetRef>
+  <templateRef id="_8fqOeTTDEe2K1spis4bODw" description="Integration : DATA_FILE3" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=HYPERSONIC_SQL;trgPath=server:Datamart/schema:LOAD_FILES/datastore:DATA_FILE3;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=FILE">
+    <dataModel>_yFi95dj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map$name=I_DATA_FILE3?</dataModel>
+    <problem id="_8fwVEDTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <targetRef>_xSlP0Nj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_8fq1hjTDEe2K1spis4bODw" description="Load : file_with_joker" nodeCode="com.stambia.flow.step" templateCriteria="type=L-TP;trgProduct=HYPERSONIC_SQL;trgPath=server:Datamart/schema:LOAD_FILES/datastore:DATA_FILE3;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProduct=FILE;srcPath=server:null/directory:Multiple_Files_Folder/file:file_with_joker;srcWorkspaceCapability=false;srcMapCapability=true;srcFilterCapability=true;srcJoinCapability=false">
+    <dataModel>_yFt88Nj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map$name=L1_DATA_FILE3?</dataModel>
+    <problem id="_8fwVETTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <load>_8fqOdjTDEe2K1spis4bODw</load>
+    <targetRef>_xSlP0Nj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map?</targetRef>
+  </templateRef>
+  <loadSet id="_8fqOdjTDEe2K1spis4bODw">
+    <container>_w6v-oNj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map?</container>
+  </loadSet>
+  <loadSet id="_8fqOeDTDEe2K1spis4bODw">
+    <container>_xSlP0Nj7EeiHBZdKZ0VXqw?fileId=_tyMWcNj0EeiHBZdKZ0VXqw$type=map?</container>
+  </loadSet>
+</ref:mapRef>

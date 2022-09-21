@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ref:mapRef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:ref="http://www.indy.com/v2/ref" id="__8lxEzXDEe2goMzdputf-Q">
+  <dataModel>_nRS-kPbrEeihWtdVUY4U1Q?fileId=_nRS-kPbrEeihWtdVUY4U1Q$type=map$name=Load%20DIM_PMT3?</dataModel>
+  <containerRef xsi:type="ref:RDatastore" id="__8mYETXDEe2goMzdputf-Q" countShownFields="4" hierarchical="false">
+    <dataModel>_oBfFYPbrEeihWtdVUY4U1Q?fileId=_nRS-kPbrEeihWtdVUY4U1Q$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="__8mYEjXDEe2goMzdputf-Q" size="64" type="VARCHAR" mandatory="true" position="6">
+      <dataModel>_oCB38PbrEeihWtdVUY4U1Q?fileId=_nRS-kPbrEeihWtdVUY4U1Q$type=map$name=PMT_NAME?</dataModel>
+      <usage>__8oNQTXDEe2goMzdputf-Q</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="__8mYEzXDEe2goMzdputf-Q" size="64" type="VARCHAR" position="9">
+      <dataModel>_oCB38fbrEeihWtdVUY4U1Q?fileId=_nRS-kPbrEeihWtdVUY4U1Q$type=map$name=PMT_DESCRIPTION?</dataModel>
+      <usage>__8oNQjXDEe2goMzdputf-Q</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="__8mYFDXDEe2goMzdputf-Q" size="8" type="VARCHAR" mandatory="true" position="3">
+      <dataModel>_oCBQ4fbrEeihWtdVUY4U1Q?fileId=_nRS-kPbrEeihWtdVUY4U1Q$type=map$name=PMT_CODE?</dataModel>
+      <usage>__8oNQzXDEe2goMzdputf-Q</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="__8m_IDXDEe2goMzdputf-Q" precision="0" size="10" type="NUMERIC" position="12">
+      <dataModel>_oCB38vbrEeihWtdVUY4U1Q?fileId=_nRS-kPbrEeihWtdVUY4U1Q$type=map$name=PMT_ACTIVE?</dataModel>
+      <usage>__8mYEDXDEe2goMzdputf-Q</usage>
+    </fieldRef>
+    <constraintRef id="__8m_ITXDEe2goMzdputf-Q" type="pk">
+      <dataModel>_vdJNkPcKEeihDLFmfbLxVA?fileId=_nRS-kPbrEeihWtdVUY4U1Q$type=map$name=PK_T_PMT3?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="__8m_IjXDEe2goMzdputf-Q" countShownFields="3" hierarchical="false">
+    <dataModel>_osRHwPbrEeihWtdVUY4U1Q?fileId=_nRS-kPbrEeihWtdVUY4U1Q$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="__8m_IzXDEe2goMzdputf-Q" size="8" type="VARCHAR" mandatory="true" position="3">
+      <dataModel>_osRu0fbrEeihWtdVUY4U1Q?fileId=_nRS-kPbrEeihWtdVUY4U1Q$type=map$name=PMT_CODE?</dataModel>
+      <expressionRef id="__8oNQzXDEe2goMzdputf-Q" internalExpression="${T_PMT3.PMT_CODE}$">
+        <dataModel>_pRO2AfbrEeihWtdVUY4U1Q?fileId=_nRS-kPbrEeihWtdVUY4U1Q$type=map?</dataModel>
+        <sourceRef>__8mYFDXDEe2goMzdputf-Q</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="__8m_JDXDEe2goMzdputf-Q" size="35" type="VARCHAR" position="6">
+      <dataModel>_osSV4PbrEeihWtdVUY4U1Q?fileId=_nRS-kPbrEeihWtdVUY4U1Q$type=map$name=PMT_NAME?</dataModel>
+      <expressionRef id="__8oNQTXDEe2goMzdputf-Q" internalExpression="${T_PMT3.PMT_NAME}$">
+        <dataModel>_pROO8PbrEeihWtdVUY4U1Q?fileId=_nRS-kPbrEeihWtdVUY4U1Q$type=map?</dataModel>
+        <sourceRef>__8mYEjXDEe2goMzdputf-Q</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="__8m_JTXDEe2goMzdputf-Q" size="35" type="VARCHAR" position="9">
+      <dataModel>_osSV4fbrEeihWtdVUY4U1Q?fileId=_nRS-kPbrEeihWtdVUY4U1Q$type=map$name=PMT_DESCRIPTION?</dataModel>
+      <expressionRef id="__8oNQjXDEe2goMzdputf-Q" internalExpression="${T_PMT3.PMT_DESCRIPTION}$">
+        <dataModel>_pRO2APbrEeihWtdVUY4U1Q?fileId=_nRS-kPbrEeihWtdVUY4U1Q$type=map?</dataModel>
+        <sourceRef>__8mYEzXDEe2goMzdputf-Q</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <constraintRef id="__8nmMDXDEe2goMzdputf-Q" type="pk">
+      <dataModel>_w8oDUPcKEeihDLFmfbLxVA?fileId=_nRS-kPbrEeihWtdVUY4U1Q$type=map$name=PK_DIM_PMT3?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <clauseRef id="__8mYEDXDEe2goMzdputf-Q" internalExpression="%e(rhino){ if   ('${~/genereFilter}$' == 'true')  &#xA;                {__ctx__.retValue = 'T_PMT3.PMT_DESCRIPTION IS NOT NULL  ' ; }&#xA;           else {__ctx__.retValue = '1=1 ' ;} }e(rhino)% &#xA;AND ${T_PMT3.PMT_ACTIVE}$ = 1" status="WARNING">
+    <dataModel>_plkuUPbrEeihWtdVUY4U1Q?fileId=_nRS-kPbrEeihWtdVUY4U1Q$type=map?</dataModel>
+    <problem id="__8uT4DXDEe2goMzdputf-Q" code="WARNING_FIELDS_NOT_FOUND" message="#{__ctx__.retValue}#"/>
+    <problem id="__8uT4TXDEe2goMzdputf-Q" code="INFO_USING_SESSION_VARIABLE" message=""/>
+    <sourceRef>__8m_IDXDEe2goMzdputf-Q</sourceRef>
+  </clauseRef>
+  <targetSetRef id="__8qpgTXDEe2goMzdputf-Q" sourceSet="__8qpgDXDEe2goMzdputf-Q">
+    <container>__8m_IjXDEe2goMzdputf-Q</container>
+  </targetSetRef>
+  <sourceSetRef id="__8qpgDXDEe2goMzdputf-Q" targetSet="__8qpgTXDEe2goMzdputf-Q">
+    <dataSet xsi:type="map:DataSet">#_AfLt4PbtEeihWtdVUY4U1Q</dataSet>
+  </sourceSetRef>
+  <templateRef id="__8oNSTXDEe2goMzdputf-Q" description="Load : T_PMT3" nodeCode="com.stambia.flow.step" templateCriteria="type=L-TP;trgProduct=HYPERSONIC_SQL;trgPath=server:HSQL_Datamart/schema:DWH/datastore:DIM_PMT3;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProduct=HYPERSONIC_SQL;srcPath=server:HSQL_Hotel/schema:PMT/datastore:T_PMT3;srcWorkspaceCapability=true;srcMapCapability=true;srcFilterCapability=true;srcJoinCapability=true">
+    <dataModel>_AfMU8PbtEeihWtdVUY4U1Q?fileId=_nRS-kPbrEeihWtdVUY4U1Q$type=map$name=L1_DIM_PMT3?</dataModel>
+    <problem id="__8uT4zXDEe2goMzdputf-Q" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <load>__8oNRjXDEe2goMzdputf-Q</load>
+    <targetRef>_osRHwPbrEeihWtdVUY4U1Q?fileId=_nRS-kPbrEeihWtdVUY4U1Q$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="__8qCdDXDEe2goMzdputf-Q" description="Integration : DIM_PMT3" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=HYPERSONIC_SQL;trgPath=server:HSQL_Datamart/schema:DWH/datastore:DIM_PMT3;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=HYPERSONIC_SQL">
+    <dataModel>_AfNjEPbtEeihWtdVUY4U1Q?fileId=_nRS-kPbrEeihWtdVUY4U1Q$type=map$name=I_DIM_PMT3?</dataModel>
+    <problem id="__8uT4jXDEe2goMzdputf-Q" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <targetRef>_osRHwPbrEeihWtdVUY4U1Q?fileId=_nRS-kPbrEeihWtdVUY4U1Q$type=map?</targetRef>
+  </templateRef>
+  <loadSet id="__8oNSDXDEe2goMzdputf-Q">
+    <container>_osRHwPbrEeihWtdVUY4U1Q?fileId=_nRS-kPbrEeihWtdVUY4U1Q$type=map?</container>
+  </loadSet>
+  <loadSet id="__8oNRjXDEe2goMzdputf-Q">
+    <container>_oBfFYPbrEeihWtdVUY4U1Q?fileId=_nRS-kPbrEeihWtdVUY4U1Q$type=map?</container>
+  </loadSet>
+</ref:mapRef>

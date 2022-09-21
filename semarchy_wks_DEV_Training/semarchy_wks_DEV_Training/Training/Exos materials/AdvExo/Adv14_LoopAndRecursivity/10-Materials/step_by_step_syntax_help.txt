@@ -1,0 +1,137 @@
+*** Step 3 ***
+**************
+
+	Create a process named "Generate Recipe"
+
+Name, type and value of the parameters
+--------------------------------------------
+    Name				Type		Value
+    ------------------- ----------  ---------
+    TXT_WRITE_APPEND	Boolean		false
+    currentLabelRecipe	String		Recipe
+    currentLevel		Integer		1
+    currentRecipeId		Integer		4
+    currentRecipeStep	Integer		0
+	
+*** Step 4 ***
+**************
+
+Expression Editor of the SQLFileExport named "SQLFileExport Recipe header"
+--------------------------------------------------------------------------
+SELECT SPACE(CAST(%e(rhino){ ${../currentLevel}$ - 1}e(rhino)% AS INTEGER)*5)+'%e(rhino){ "${~/currentLabelRecipe}$"}e(rhino)% '+NM_RECIPE+CHAR(13)+CHAR(10)+
+       SPACE(CAST(%e(rhino){ ${../currentLevel}$ - 1}e(rhino)% AS INTEGER)*5)+REPEAT('=',LENGTH('%e(rhino){ "${~/currentLabelRecipe}$"}e(rhino)% '+NM_RECIPE))+CHAR(13)+CHAR(10)+
+       SPACE(CAST(%e(rhino){ ${../currentLevel}$ - 1}e(rhino)% AS INTEGER)*5+3)+'Parts number : '+mn_part_recip+'/'+mx_part_recip+
+       ' - Duration (minutes) : '+TM_RECIPE+CHAR(13)+CHAR(10)+
+       SPACE(CAST(%e(rhino){ ${../currentLevel}$ - 1}e(rhino)% AS INTEGER)*5+3)+TX_RECIPE+CHAR(13)+CHAR(10)+
+       SPACE(CAST(%e(rhino){ ${../currentLevel}$ - 1}e(rhino)% AS INTEGER)*5)+'Ingredients'+CHAR(13)+CHAR(10)+
+       SPACE(CAST(%e(rhino){ ${../currentLevel}$ - 1}e(rhino)% AS INTEGER)*5)+'-----------'
+FROM   COOKING.RECIPE
+WHERE  RECIPE.ID_RECIPE=%e(rhino){${../currentRecipeId}$}e(rhino)%
+
+Property value for 
+------------------
+	SQL_EXP_FILENAME	%x{$Recipe_Folder/tech:path()}x%/Cooking Recipe.txt
+	SQL_EXP_FILE_APPEND	%e(rhino){ ${~/TXT_WRITE_APPEND}$}e(rhino)%
+	
+*** Step 5 ***
+**************
+
+Expression Editor of the WriteTxtFile action named "WriteTxtFile Ingredients and steps header"
+-----------------------------------------------------------------------------------------------
+	SELECT TXT_TO_ADD
+	FROM   (
+	SELECT ID_INGREDIENT,SPACE(CAST(%e(rhino){ ${../currentLevel}$ - 1}e(rhino)% AS INTEGER)*5+3)+'- '+NM_INGREDIENT AS TXT_TO_ADD
+	FROM   COOKING.INGREDIENT
+	WHERE  INGREDIENT.ID_RECIPE=%e(rhino){${../currentRecipeId}$}e(rhino)%
+	UNION  ALL
+	SELECT 998,SPACE(CAST(%e(rhino){ ${../currentLevel}$ - 1}e(rhino)% AS INTEGER)*5)+'Steps' FROM (VALUES(0))
+	UNION  ALL
+	SELECT 999,SPACE(CAST(%e(rhino){ ${../currentLevel}$ - 1}e(rhino)% AS INTEGER)*5)+'-----' FROM (VALUES(0))) 
+	ORDER  BY ID_INGREDIENT
+
+Expression Editor of the SQLOperation action named "SqlOperation ingredients and Steps header"
+-----------------------------------------------------------------------------------------------
+:{TXT_TO_ADD}:
+
+Property value for 
+------------------
+	TXT_WRITE_FILENAME		%x{$Recipe_Folder/tech:path()}x%/Cooking Recipe.txt
+	TXT_WRITE_APPEND		after
+	
+*** Step 6 ***
+**************
+
+Expression Editor of the Sql To Parameters action named "Sql To Parameters next currentRecipeStep"
+--------------------------------------------------------------------------------------------------
+	<sqlToParameters>
+	<parameter name="~/currentRecipeStep" type="Integer">
+	SELECT COALESCE(MIN(ID_RECIPE_STEP),0)
+	FROM   COOKING.RECIPE_STEP
+	WHERE  ID_RECIPE_STEP>%e(rhino){${~/currentRecipeStep}$}e(rhino)%
+	AND    ID_RECIPE=%e(rhino){${~/currentRecipeId}$}e(rhino)% 
+	</parameter>
+	</sqlToParameters> 
+
+Execution condition between the Sql To Parameters action named "Sql To Parameters next currentRecipeStep" and the "End" action
+------------------------------------------------------------------------------------------------------------------------------
+	${./currentRecipeStep}$ == 0
+
+*** Step 7 ***
+**************
+
+Expression Editor of the Sql To Parameters action named "Sql To Parameters fk_id_recipe_step"
+---------------------------------------------------------------------------------------------
+	<sqlToParameters>
+	<parameter name="~/fk_id_recipe_step" type="Integer">
+	SELECT COALESCE(FK_ID_RECIPE,0) FK_ID_RECIPE_STEP
+	FROM   COOKING.RECIPE_STEP 
+	WHERE  ID_RECIPE=%e(rhino){${../currentRecipeId}$}e(rhino)%
+	AND    ID_RECIPE_STEP=%e(rhino){${../currentRecipeStep}$}e(rhino)%
+	</parameter>
+	</sqlToParameters> 
+
+Execution condition between the Sql To Parameters action named "Sql To Parameters next currentRecipeStep" and the "Sql To Parameters fk_id_recipe_step" action
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+	${~/currentRecipeStep}$ != 0
+	
+*** Step 8 ***
+**************
+
+Expression Editor of the SQL File Export action named "SQLFileExport Steps"
+-------------------------------------------------------------------------
+	SELECT SPACE(CAST(%e(rhino){ ${../currentLevel}$ - 1}e(rhino)% AS INTEGER)*5+3)+
+ 	      '- Step '+ID_RECIPE_STEP+' : '+COALESCE(TX_RECIPE_STEP,'Sub recipe') AS STEP_TX1
+	FROM   COOKING.RECIPE_STEP 
+	WHERE  ID_RECIPE=%e(rhino){${../currentRecipeId}$}e(rhino)%
+	AND    ID_RECIPE_STEP=%e(rhino){${../currentRecipeStep}$}e(rhino)%
+
+Property value for 
+------------------
+	SQL_EXP_FILENAME		%x{$Recipe_Folder/tech:path()}x%/Cooking Recipe.txt
+	SQL_EXP_FILE_APPEND		true
+	
+*** Step 9 ***
+**************
+
+Property value for ExecuteDelivery Recursive SubRecipe Action
+-------------------------------------------------------------
+	DELIV_NAME			Generate Recipe
+	DELIV_SESSION_NAME	Gen Recipe %e(rhino){ ${~/fk_id_recipe_step}$}e(rhino)%
+	
+Parameters value to create on "ExecuteDelivery Recursive SubRecipe" Action
+------------------------------------------------------------------------
+
+	Name				Type		Value
+	------------------	---------	---------------------------------------------
+	currentRecipeId		Integer		%e(rhino){ ${~/fk_id_recipe_step}$}e(rhino)%
+	currentLevel		Integer		%e(rhino){ ${../currentLevel}$ + 1 }e(rhino)%
+	currentLabelRecipe	String		Sub-Recipe
+	TXT_WRITE_APPEND	Boolean		true
+	
+Execution condition on link between "SQLFileExport Steps" action and "Sql To Parameters next currentRecipeStep" action
+----------------------------------------------------------------------------------------------------------------------
+	${~/fk_id_recipe_step}$ == 0	
+	
+Execution condition on link between "SQLFileExport Steps" action and "ExecuteDelivery Recursive SubRecipe" action
+-----------------------------------------------------------------------------------------------------------------
+	${~/fk_id_recipe_step}$ != 0	

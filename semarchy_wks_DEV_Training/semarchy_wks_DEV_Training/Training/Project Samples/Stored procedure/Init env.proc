@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_hRw2MeBoEemkOsYcvTop0Q">
+  <actionCode id="_lZzpoOBoEemkOsYcvTop0Q" isBeginAction="false" name="Create procedure get_customer" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <metaDataLink id="_4aFZYOOZEemkOsYcvTop0Q" name="STORED_PROC" target="HSQL_Hotel.md#_k9v8gOOZEemkOsYcvTop0Q?fileId=_jZf-wOBoEemkOsYcvTop0Q$type=md$name=STORED_PROC?"/>
+    <parameter id="_lcnGAOBoEemkOsYcvTop0Q" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_3r5dsOOZEemkOsYcvTop0Q" name="SQL_CONNECTION" type="String"/>
+    <code>CREATE PROCEDURE STORED_PROC.get_customer(IN id_cus INT, OUT firstname VARCHAR(50), OUT lastname VARCHAR(50)) &#xD;
+   READS SQL DATA&#xD;
+   BEGIN ATOMIC&#xD;
+     SELECT CUS_FIRST_NAME, CUS_LAST_NAME INTO firstname, lastname FROM HOTEL_MANAGEMENT.T_CUSTOMER WHERE CUS_ID = id_cus;&#xD;
+   END</code>
+  </actionCode>
+  <actionCode id="_nOwCcOQgEemkOsYcvTop0Q" isBeginAction="false" name="Drop procedure get_customer" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_tsRfgOQgEemkOsYcvTop0Q" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_lZzpoOBoEemkOsYcvTop0Q"/>
+    <metaDataLink id="_nOwCceQgEemkOsYcvTop0Q" name="STORED_PROC" target="HSQL_Hotel.md#_k9v8gOOZEemkOsYcvTop0Q?fileId=_jZf-wOBoEemkOsYcvTop0Q$type=md$name=STORED_PROC?"/>
+    <parameter id="_nOwCcuQgEemkOsYcvTop0Q" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_nOwCc-QgEemkOsYcvTop0Q" name="SQL_CONNECTION" type="String"/>
+    <code>DROP PROCEDURE STORED_PROC.get_customer IF EXISTS</code>
+  </actionCode>
+  <actionProcessRef id="_YGhycOOZEemkOsYcvTop0Q" isBeginAction="false" name="TOOL_resetSchema_HSQL" nbCycles="-1" toleratedError="false" targetName="../global/components/Training/TOOL_resetSchema.proc#_mbXZ0SCBEeWkpdwlbgb5vw?fileId=_mbXZ0SCBEeWkpdwlbgb5vw$type=proc$name=TOOL_resetSchema?">
+    <link id="_ZVh8MOOZEemkOsYcvTop0Q" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_nOwCcOQgEemkOsYcvTop0Q"/>
+    <metaDataLink id="_n6DVkOOZEemkOsYcvTop0Q" name="STORED_PROC" target="HSQL_Hotel.md#_k9v8gOOZEemkOsYcvTop0Q?fileId=_jZf-wOBoEemkOsYcvTop0Q$type=md$name=STORED_PROC?"/>
+  </actionProcessRef>
+</proc:process>

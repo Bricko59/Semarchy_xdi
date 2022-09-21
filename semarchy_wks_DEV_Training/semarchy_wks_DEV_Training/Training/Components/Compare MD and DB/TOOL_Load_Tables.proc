@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_I8bKwnOoEeez_eOltEJXTA" description="L'objectif est de charger l'ensemble des tables TMP des sites dans les tables CEA, ces tables cibles étant préalablement vidées.&#xD;&#xA;&#xD;&#xA;Il faut drag &amp; dropper 2 schémas, &#xD;&#xA;- le premier contient les tables sources %_TMP_% et doit être renommé SOURCE_TABLE&#xD;&#xA;- le deuxième contient les tables cibles %_CEA et doit être renommé TARGET_TABLE&#xD;&#xA;&#xD;&#xA;Comme le nombre de sites varie en fonction des environnements (DEV, REC, PROD), le paramètre SITE_LIST permet d'indiquer la liste des codes sites (sur deux positions) séparés par des virgules à prendre en compte en source.&#xD;&#xA;&#xD;&#xA;Il est possible que certaines tables sources aient moins de colonnes (parce qu'il y a une évolution effectuée sur un site , propagée sur la cible, mais pas encore propagée sur tous les sites). Dans ces cas-là, l'INSERT ne prendra en compte que les colonnes présentes en source. Il est nécessaire d'effectuer un contrôle pour vérifier qu'une table source n'ai pas plus de colonnes que la table cible pour éviter de ne pas perdre des informations lors de ce chargement.&#xD;&#xA;&#xD;&#xA;Enfin, les tables sources sont en VARCHAR (pour éviter des rejets lors du chargement des tables %_TMP_%), alors que les tables cibles sont définies avec les bons types de données. Le composant effectue donc des CAST dans le bon type.">
+  <parameter id="_I8bKw3OoEeez_eOltEJXTA" name="SITE_LIST" type="String" value="HI,KF"/>
+  <subProcess id="_I8bKxHOoEeez_eOltEJXTA" isBeginAction="false" name="Treatment of a load" nbCycles="-1" repetitionQuery="$sourceTables/table" repetitionVariableName="CUR_TABLE" toleratedError="false">
+    <actionCode id="_I8bKxXOoEeez_eOltEJXTA" description="" generationCondition="" enable="true" isBeginAction="false" name="INSERT INTO CEA SELECT FROM TMP" nbCycles="-1" repetitionQuery="" repetitionVariableName="" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter id="_I8bKxnOoEeez_eOltEJXTA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_I8bKx3OoEeez_eOltEJXTA" name="SQL_CONNECTION" type="String" value="%targetConnection{$TARGET_TABLE}%"/>
+      <code>INSERT INTO %x{$TARGET_TABLE/tech:physicalPath()}x%  &#xD;
+%x{md:list($SOURCE_TABLE/ref:columns()/tech:name(),',','(',') ')}x%&#xD;
+SELECT %x{md:list($TARGET_TABLE/column[position()&amp;lt;=distinct-values($SOURCE_TABLE/column/last())]/concat(&#xD;
+                   if (not(starts-with(tech:targetCreationType(),'VARCHAR'))) then 'CAST(' else '' ,&#xD;
+                   tech:name(),&#xD;
+                   if (starts-with(tech:targetCreationType(),'INTEGER')) then ' AS INTEGER)' else &#xD;
+                   if (starts-with(tech:targetCreationType(),'TIMESTAMP')) then ' AS TIMESTAMP)' else ''&#xD;
+                   ) &#xD;
+             ,',')}x% &#xD;
+FROM %x{$SOURCE_TABLE/tech:physicalPath()}x%</code>
+    </actionCode>
+    <xslVariable id="_I8bKyHOoEeez_eOltEJXTA" code="$SOURCE_SCHEMA/datastore[@id=$CUR_TABLE/@sourceId]" name="SOURCE_TABLE" type="xpath"/>
+    <xslVariable id="_I8bKyXOoEeez_eOltEJXTA" code="$TARGET_SCHEMA/datastore[@id=$CUR_TABLE/@targetId]" name="TARGET_TABLE" type="xpath"/>
+  </subProcess>
+  <xslVariable id="_I8bKynOoEeez_eOltEJXTA" code="%xsl{&#xD;&#xA;&#x9;&lt;xsl:for-each select=&quot;$TARGET_SCHEMA/datastore[ends-with(./tech:name(),'_CEA')]&quot;>&#xD;&#xA;&#x9;&#x9;&lt;xsl:variable name=&quot;TARGET_TABLE&quot; select=&quot;.&quot;/>&#xD;&#xA;&#x9;&#x9;&lt;xsl:variable name=&quot;curPrefix&quot; select=&quot;replace($TARGET_TABLE/tech:name(),'(.*)_CEA', '$1')&quot;/>&#xD;&#xA;&#x9;&#x9;&lt;xsl:for-each select=&quot;tokenize(md:paramValue($this,'SITE_LIST'),',')&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;curSite&quot; select=&quot;.&quot;/>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:for-each select=&quot;$SOURCE_SCHEMA/datastore[starts-with(tech:name(),$curPrefix) and ends-with(tech:name(),$curSite)]&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;SOURCE_TABLE&quot; select=&quot;.&quot;/>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;table &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sourceId=&quot;{$SOURCE_TABLE/@id}&quot; &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;targetId=&quot;{$TARGET_TABLE/@id}&quot; &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;name=&quot;{$SOURCE_TABLE/tech:name()}-->{$TARGET_TABLE/tech:name()}&quot;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;/>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;/xsl:for-each>&#xD;&#xA;&#x9;&#x9;&lt;/xsl:for-each>&#xD;&#xA;&#x9;&lt;/xsl:for-each>&#xD;&#xA;}xsl%" name="sourceTables" type="xsl"/>
+</proc:process>

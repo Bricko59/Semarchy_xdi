@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_v5BEUf4oEeiObZtfDY_bvQ">
+  <actionCode id="_x1A28P4oEeiObZtfDY_bvQ" isBeginAction="false" name="SqlOperation INSERT INTO cumul_job" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <metaDataLink id="_x5RE0P4oEeiObZtfDY_bvQ" name="job_history" target="PGSQL_SampleDB.md#_yqBlcP3-EeiObZtfDY_bvQ?fileId=_uKllsP3-EeiObZtfDY_bvQ$type=md$name=job_history?"/>
+    <metaDataLink id="_yWyHQP4oEeiObZtfDY_bvQ" name="cumul_job" target="PGSQL_SampleDB.md#_bjJXYf4oEeiObZtfDY_bvQ?fileId=_uKllsP3-EeiObZtfDY_bvQ$type=md$name=cumul_job?"/>
+    <parameter id="_x5ZAoP4oEeiObZtfDY_bvQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_RSUgcP4rEeiObZtfDY_bvQ" name="SQL_ACTION_TYPE_STAT" type="String" value="INSERT"/>
+    <code>INSERT INTO %x{$cumul_job/tech:physicalPath()}x%&#xD;
+WITH   RECURSIVE job_break AS (     &#xD;
+SELECT current_job.matricule_number,current_job.begin_date,current_job.end_date,current_job.job_code, &#xD;
+       next_job.begin_date IS NULL AS is_finished, &#xD;
+       ROW_NUMBER() OVER(PARTITION BY current_job.matricule_number,current_job.job_code ORDER BY current_job.begin_date) AS order_number&#xD;
+FROM   %x{$job_history/tech:physicalPath()}x% current_job &#xD;
+       LEFT OUTER JOIN %x{$job_history/tech:physicalPath()}x% next_job &#xD;
+                    ON current_job.matricule_number=next_job.matricule_number  &#xD;
+                   AND current_job.job_code=next_job.job_code&#xD;
+                   AND CASE WHEN current_job.end_date IS NULL THEN NULL ELSE current_job.end_date + 1 END=next_job.begin_date),&#xD;
+       interval_compute AS (&#xD;
+SELECT matricule_number,job_code,begin_date AS min_begin_date,end_date,is_finished,order_number,1 AS sum_job_period&#xD;
+FROM   job_break&#xD;
+WHERE  order_number=1&#xD;
+UNION  ALL&#xD;
+SELECT rup.matricule_number,rup.job_code,&#xD;
+       CASE WHEN rec.is_finished THEN rup.begin_date ELSE rec.min_begin_date END,&#xD;
+       rup.end_date, &#xD;
+       rup.is_finished,          &#xD;
+       rup.order_number,&#xD;
+       CASE WHEN rec.is_finished THEN 1 ELSE sum_job_period+1 END    &#xD;
+FROM   job_break rup &#xD;
+       INNER JOIN interval_compute rec ON rup.matricule_number=rec.matricule_number &#xD;
+                                      AND rec.job_code=rup.job_code &#xD;
+                                      AND rec.order_number+1=rup.order_number)&#xD;
+SELECT matricule_number,min_begin_date AS begin_date,end_date,job_code,sum_job_period &#xD;
+FROM   interval_compute&#xD;
+WHERE  is_finished&#xD;
+ORDER  BY matricule_number,min_begin_date                             </code>
+  </actionCode>
+  <actionCode id="_UK_ooP4pEeiObZtfDY_bvQ" isBeginAction="false" name="SqlOperation INSERT into job_history" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_auVZ0P4pEeiObZtfDY_bvQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_x1A28P4oEeiObZtfDY_bvQ"/>
+    <metaDataLink id="_UK_oof4pEeiObZtfDY_bvQ" name="job_history" target="PGSQL_SampleDB.md#_yqBlcP3-EeiObZtfDY_bvQ?fileId=_uKllsP3-EeiObZtfDY_bvQ$type=md$name=job_history?"/>
+    <parameter id="_ULAPsP4pEeiObZtfDY_bvQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <code>INSERT INTO      %x{$job_history/tech:physicalPath()}x%&#xD;
+VALUES           ('00001',CAST('2001-01-01' AS DATE),CAST('2001-12-31' AS DATE),'job01'), &#xD;
+                 ('00001',CAST('2002-01-01' AS DATE),CAST('2002-10-31' AS DATE),'job01'), &#xD;
+                 ('00001',CAST('2002-11-01' AS DATE),CAST('2002-11-30' AS DATE),'job01'), &#xD;
+                 ('00001',CAST('2002-12-01' AS DATE),CAST('2003-01-19' AS DATE),'job01'),  &#xD;
+                 ('00001',CAST('2003-01-20' AS DATE),CAST(NULL AS DATE)        ,'job01'), &#xD;
+                 ('00002',CAST('2002-01-01' AS DATE),CAST('2002-12-31' AS DATE),'job02'), &#xD;
+                 ('00002',CAST('2003-01-01' AS DATE),CAST('2003-12-31' AS DATE),'job03'), &#xD;
+                 ('00002',CAST('2004-01-01' AS DATE),CAST('2004-10-31' AS DATE),'job03'), &#xD;
+                 ('00002',CAST('2004-11-01' AS DATE),CAST('2004-11-30' AS DATE),'job03'), &#xD;
+                 ('00002',CAST('2004-12-01' AS DATE),CAST('2004-12-31' AS DATE),'job02');</code>
+  </actionCode>
+  <actionProcessRef id="_SZ3CMP4pEeiObZtfDY_bvQ" isBeginAction="false" name="TOOL_resetSchema" nbCycles="-1" toleratedError="false" targetName="../../../global/components/Training/TOOL_resetSchema.proc#_mbXZ0SCBEeWkpdwlbgb5vw?fileId=_mbXZ0SCBEeWkpdwlbgb5vw$type=proc$name=TOOL_resetSchema?">
+    <link id="_aY3gIP4pEeiObZtfDY_bvQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_UK_ooP4pEeiObZtfDY_bvQ"/>
+    <metaDataLink id="_H01SUP4rEeiObZtfDY_bvQ" name="postgres_job_history" target="PGSQL_SampleDB.md#_uKlltf3-EeiObZtfDY_bvQ?fileId=_uKllsP3-EeiObZtfDY_bvQ$type=md$name=postgres.job_history?"/>
+  </actionProcessRef>
+</proc:process>

@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" description="Semarchy xDM Cancel Load Process&#xA;@Author: Semarchy&#xA;Copyright (c) 2012-2018 Semarchy&#xA;&#xA;About this process&#xA;--------------------&#xA;This process is used for automating Semarchy xDM load management.&#xA;It cancels a given external load identified by its Load ID, and optionally deletes the data attached to this load from the SD tables.&#xA;&#xA;Tip: To get started with Semarchy xDM load management, see the &quot;Semarchy xDM Integrator Getting Started Guide&quot;&#xA;&#xA;Parameters&#xA;------------&#xA;- Cleanup Data: Check this option if you want the process to automatically delete the data attached to this load from the SD tables.&#xA;- User Name: Name of the user who has initialized the external load through the Get LoadID process.&#xA;- Sem Repo Schema: Name of the Schema hosting the repository. &#xA;- MDM Schema: Name of the Schema hosting the data location.&#xA;&#xA;Note that both the repository and data location schemas should be located in the data server linked through a SOURCE metadata link.&#xA;&#xA;Using this template&#xA;---------------------&#xA;- Add this process as a referenced process and set the parameters accordingly.&#xA;- From the Project Explorer, drag and drop the data server metadata containing the repository and data location on this referenced process in the process editor. This creates a metadata link to the data server.&#xA;- Click and rename the metadata link to &quot;SOURCE&quot;.&#xA;&#xA;Notes&#xA;------&#xA;- This process uses a metadata link through the &quot;SOURCE&quot; alias. This metadata link points to the metadata file corresponding to the data server containing the repository and data location.&#xA;- This process retrieves the current LoadID from the SEM_LOAD_ID variable. This variable must be added to the main process from the &quot;Global Variable&quot; metadata file.&#xA;&#xA;Change Log&#xA;-------------&#xA;- 2.2.0: MTA_CANCEL_LOAD function is renamed INTEGRATION_LOAD.CANCEL_LOAD&#xA;- 3.0.0: Use the ${}$ syntax in the template codes to support variable parameters for the GetLoadId, Submit, Cancel processes.&#xA;- 4.4.0: Renamed the template and reviewed the documentation" id="_PnwksjVOEeGwKOVseAnYrA">
+  <parameter description="Name of the user who has initialized the external load through the Get LoadID process." id="_PnwktDVOEeGwKOVseAnYrA" name="UserName" type="String"/>
+  <parameter description="Name of the Schema hosting the repository. " id="_PnwktTVOEeGwKOVseAnYrA" name="SemRepoSchema" type="String" value="SEMARCHY_DEMO_REPOSITORY"/>
+  <parameter description="Check this option if you want the process to automatically delete the data attached to this load from the SD tables." id="_JCufgDVQEeGwKOVseAnYrA" name="CleanupData" type="Boolean" value="false"/>
+  <parameter description="Name of the Schema hosting the data location for cleanup." id="_YM8m8DVQEeGwKOVseAnYrA" name="MDMSchema" type="String" value="SEMARCHY_DEMO_MDM"/>
+  <actionCode description="Calls the cancel load API and updates the ETL_PROCESSES table" id="_PnwktjVOEeGwKOVseAnYrA" isBeginAction="false" name="CancelLoad (Oracle)" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_I10kkDVTEeGwKOVseAnYrA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_09s1gDVQEeGwKOVseAnYrA"/>
+    <parameter description="Sql Action type (DDL_DML or SELECT, INSERT, UPDATE, DELETE)" id="_PnwktzVOEeGwKOVseAnYrA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter description="SQL Connection" id="_PnwkuDVOEeGwKOVseAnYrA" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+    <code>DECLARE&#xD;
+  P_LOAD_ID NUMBER;&#xD;
+  P_USERNAME VARCHAR2(200);&#xD;
+BEGIN&#xD;
+  P_LOAD_ID := %{SEM_LOAD_ID}%;&#xD;
+  P_USERNAME := '${../UserName}$';&#xD;
+&#xD;
+  ${../SemRepoSchema}$.INTEGRATION_LOAD.CANCEL_LOAD(&#xD;
+    P_LOAD_ID => P_LOAD_ID,&#xD;
+    P_USERNAME => P_USERNAME&#xD;
+  );&#xD;
+  &#xD;
+&#xD;
+  update ETL_PROCESSES&#xD;
+  set &#xD;
+  	SEM_STATUS = 'CANCELED',&#xD;
+  	SEM_SUBMIT_OR_CANCEL_DATE = current_timestamp&#xD;
+  where SESSION_ID = '${/CORE_SESSION_ID}$'&#xD;
+  ;&#xD;
+  &#xD;
+END;</code>
+  </actionCode>
+  <actionCode id="_PnwkuTVOEeGwKOVseAnYrA" isBeginAction="false" name="Start" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_PnwkujVOEeGwKOVseAnYrA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_PnwkuzVOEeGwKOVseAnYrA"/>
+  </actionCode>
+  <actionCode description="Step that simply declares the fact that this process is using the SEM_LOAD_ID variable" id="_PnwkuzVOEeGwKOVseAnYrA" isBeginAction="false" name="declare SEM_LOAD_ID" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.VariableManagerActionCodeI">
+    <link id="_PnwkvDVOEeGwKOVseAnYrA" generationCondition="$TargetTechno='ORACLE'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_PnwktjVOEeGwKOVseAnYrA"/>
+    <link id="_c9ym8JuwEeip3roJS2BlsQ" generationCondition="$TargetTechno='POSTGRESSQL'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_boJCoJuwEeip3roJS2BlsQ"/>
+    <link id="_CBTQwGWiEemHuprG477biA" generationCondition="$TargetTechno='MICROSOFT_SQL_SERVER'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_-yl5EGWhEemHuprG477biA"/>
+    <metaDataLink id="_PnwkvTVOEeGwKOVseAnYrA" name="SEM_LOAD_ID" target="resource.md#_2gwCADLyEeG7UplBQjBrRQ?fileId=_1RYE0DLyEeG7UplBQjBrRQ$type=md$name=SEM_LOAD_ID?" visibility="parent"/>
+  </actionCode>
+  <actionCode description="Dynamically cleansup data for the current load id if ClenupData parameter is set to true" id="_09s1gDVQEeGwKOVseAnYrA" generationCondition="'${CleanupData}$'='true'" isBeginAction="false" name="DoCleanupSDTables (Oracle)" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <parameter description="Sql Action type (DDL_DML or SELECT, INSERT, UPDATE, DELETE)" id="_09vRwDVQEeGwKOVseAnYrA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter description="SQL Connection" id="_09vRwTVQEeGwKOVseAnYrA" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+    <code>declare&#xD;
+  cursor sd_tables_cursor is &#xD;
+    select &#xD;
+    	   'delete from ${../MDMSchema}$.' &#xD;
+    	|| table_name &#xD;
+    	|| ' where B_LOADID = ' || %{SEM_LOAD_ID}%&#xD;
+    	delete_sql&#xD;
+    from ALL_TABLES&#xD;
+    where (TABLE_NAME like 'SD%' or TABLE_NAME like 'SA%')&#xD;
+    and OWNER = '${../MDMSchema)$'&#xD;
+    ;&#xD;
+&#xD;
+  del_stmt sd_tables_cursor%rowtype;&#xD;
+begin&#xD;
+&#xD;
+  for del_stmt in sd_tables_cursor loop&#xD;
+    execute immediate del_stmt.delete_sql;&#xD;
+  end loop;&#xD;
+end;&#xD;
+</code>
+  </actionCode>
+  <actionCode description="Calls the cancel load API and updates the ETL_PROCESSES table" id="_boJCoJuwEeip3roJS2BlsQ" isBeginAction="false" name="CancelLoad (Postgresql)" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_5rUiYJuwEeip3roJS2BlsQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_0MQRoJuwEeip3roJS2BlsQ"/>
+    <parameter description="Sql Action type (DDL_DML or SELECT, INSERT, UPDATE, DELETE)" id="_boJCopuwEeip3roJS2BlsQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter description="SQL Connection" id="_boJCo5uwEeip3roJS2BlsQ" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+    <code>do $$ begin&#xD;
+    perform ${../SemRepoSchema}$.cancel_load(%{SEM_LOAD_ID}%, '${../UserName}$');      &#xD;
+end $$;</code>
+  </actionCode>
+  <actionCode description="Dynamically cleansup data for the current load id if ClenupData parameter is set to true" id="_0MQRoJuwEeip3roJS2BlsQ" generationCondition="'${CleanupData}$'='true'" isBeginAction="false" name="DoCleanupSDTables (Postgresql)" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <parameter description="Sql Action type (DDL_DML or SELECT, INSERT, UPDATE, DELETE)" id="_0MQRoZuwEeip3roJS2BlsQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter description="SQL Connection" id="_0MQRopuwEeip3roJS2BlsQ" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+    <code>do $$ declare&#xD;
+    tabname record;&#xD;
+    sch_name varchar := '${../MDMSchema}$';&#xD;
+    load_id integer := %{SEM_LOAD_ID}%;&#xD;
+begin&#xD;
+    for tabname in (&#xD;
+        select tablename, schemaname&#xD;
+        from pg_tables &#xD;
+        where schemaname = sch_name&#xD;
+        and tableowner = sch_name&#xD;
+        and (tablename like 'sd%' or tablename like 'sa%')&#xD;
+    )&#xD;
+loop&#xD;
+    execute 'delete from ' || quote_ident(tabname.schemaname) || '.' || quote_ident(tabname.tablename) || ' where b_loadid = ' || load_id;&#xD;
+end loop;&#xD;
+end $$ ;</code>
+  </actionCode>
+  <actionCode description="Calls the cancel load API and updates the ETL_PROCESSES table" id="_-yl5EGWhEemHuprG477biA" isBeginAction="false" name="CancelLoad (MS SQL Server)" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_mug_IGYcEemHuprG477biA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_TCFQwGYcEemHuprG477biA"/>
+    <parameter description="Sql Action type (DDL_DML or SELECT, INSERT, UPDATE, DELETE)" id="_-yl5EmWhEemHuprG477biA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter description="SQL Connection" id="_-yl5E2WhEemHuprG477biA" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+    <code>DECLARE&#xD;
+  @P_LOAD_ID numeric(18,0),&#xD;
+  @P_USERNAME VARCHAR(200);&#xD;
+BEGIN&#xD;
+  SET @P_LOAD_ID = %{SEM_LOAD_ID}%;&#xD;
+  SET @P_USERNAME = '${../UserName}$' ;&#xD;
+&#xD;
+  EXEC ${../SemRepoSchema}$.CANCEL_LOAD&#xD;
+    @P_LOAD_ID = @P_LOAD_ID,&#xD;
+    @P_USERNAME = @P_USERNAME&#xD;
+  ;&#xD;
+  &#xD;
+&#xD;
+  update ETL_PROCESSES&#xD;
+  set &#xD;
+  	SEM_STATUS = 'CANCELED',&#xD;
+  	SEM_SUBMIT_OR_CANCEL_DATE = current_timestamp&#xD;
+  where SESSION_ID = '${/CORE_SESSION_ID}$'&#xD;
+  ;&#xD;
+  &#xD;
+END;</code>
+  </actionCode>
+  <actionCode description="Dynamically cleansup data for the current load id if ClenupData parameter is set to true" id="_RCxE0GWiEemHuprG477biA" generationCondition="'${CleanupData}$'='true'" enable="true" isBeginAction="false" name="DoCleanupSDTables (MS SQL Server)" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <parameter description="Sql Action type (DDL_DML or SELECT, INSERT, UPDATE, DELETE)" id="_RCxE0WWiEemHuprG477biA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter description="SQL Connection" id="_RCxE0mWiEemHuprG477biA" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+    <code>&#xD;
+ declare  sd_tables_cursor cursor for &#xD;
+    select &#xD;
+    	   'delete from ${../MDMSchema}$.' &#xD;
+    	+ table_name &#xD;
+    	+ ' where B_LOADID = %{SEM_LOAD_ID}%'&#xD;
+    	delete_sql&#xD;
+    from ${~/MDMInfoSchema}$.TABLES&#xD;
+    where (TABLE_NAME like 'SD%' or TABLE_NAME like 'SA%')&#xD;
+    ;&#xD;
+&#xD;
+  declare @del_stmt nvarchar(256);&#xD;
+begin&#xD;
+	&#xD;
+  open sd_tables_cursor &#xD;
+  fetch next from sd_tables_cursor into @del_stmt&#xD;
+  while @@fetch_status = 0&#xD;
+  begin&#xD;
+  	exec sp_executesql @del_stmt&#xD;
+  	fetch next from sd_tables_cursor into @del_stmt&#xD;
+  end&#xD;
+  close sd_tables_cursor&#xD;
+  deallocate sd_tables_cursor&#xD;
+end;&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_TCFQwGYcEemHuprG477biA" generationCondition="'${CleanupData}$'='true'" isBeginAction="false" name="Scripting" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <link id="_nNCHIGYcEemHuprG477biA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_RCxE0GWiEemHuprG477biA"/>
+    <parameter id="_TCGe4GYcEemHuprG477biA" name="SCRIPTING_LANGUAGE" type="String" value="groovy"/>
+    <code>__ctx__.publishVariable('~/MDMInfoSchema', '${../MDMSchema}$'.replace('dbo', 'information_schema'))</code>
+  </actionCode>
+  <xslVariable id="_ix-zIJuwEeip3roJS2BlsQ" code="%x{$SOURCE/tech:productCode()}x%" name="TargetTechno" type="xsl"/>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.2/notation#/?fileId=_PnwksjVOEeGwKOVseAnYrA?" xmi:id="_VbqnwDMDEeG7UplBQjBrRQ" type="Proc" name="SubmitLoad.proc_diagram" measurementUnit="Pixel">
+  <children xmi:type="notation:Node" xmi:id="_foC8MDMDEeG7UplBQjBrRQ" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_foC8MzMDEeG7UplBQjBrRQ" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_foDjQDMDEeG7UplBQjBrRQ" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_foDjQTMDEeG7UplBQjBrRQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_foDjQjMDEeG7UplBQjBrRQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_foDjQzMDEeG7UplBQjBrRQ"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_foDjRDMDEeG7UplBQjBrRQ" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_foDjRTMDEeG7UplBQjBrRQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_foDjRjMDEeG7UplBQjBrRQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_foDjRzMDEeG7UplBQjBrRQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_foC8MTMDEeG7UplBQjBrRQ"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_PnwktjVOEeGwKOVseAnYrA?fileId=_PnwksjVOEeGwKOVseAnYrA$type=proc$name=CancelLoad%20(Oracle)?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_foC8MjMDEeG7UplBQjBrRQ" x="24" y="288"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_phcDMDMDEeG7UplBQjBrRQ" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_phcqQDMDEeG7UplBQjBrRQ" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_phcqQTMDEeG7UplBQjBrRQ" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_phcqQjMDEeG7UplBQjBrRQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_phcqQzMDEeG7UplBQjBrRQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_phcqRDMDEeG7UplBQjBrRQ"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_phdRUDMDEeG7UplBQjBrRQ" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_phdRUTMDEeG7UplBQjBrRQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_phdRUjMDEeG7UplBQjBrRQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_phdRUzMDEeG7UplBQjBrRQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_phcDMTMDEeG7UplBQjBrRQ"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_PnwkuTVOEeGwKOVseAnYrA?fileId=_PnwksjVOEeGwKOVseAnYrA$type=proc$name=Start?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_phcDMjMDEeG7UplBQjBrRQ" x="220" y="20"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_eXH4IDMJEeG7UplBQjBrRQ" type="2005">
+    <children xmi:type="notation:Node" xmi:id="_eXIfMDMJEeG7UplBQjBrRQ" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_eXH4ITMJEeG7UplBQjBrRQ"/>
+    <element xmi:type="proc:Parameter" href="resource.proc#_PnwktDVOEeGwKOVseAnYrA?fileId=_PnwksjVOEeGwKOVseAnYrA$type=proc$name=UserName?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_eXH4IjMJEeG7UplBQjBrRQ" x="425" y="97"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_wvy4kDMJEeG7UplBQjBrRQ" type="2005">
+    <children xmi:type="notation:Node" xmi:id="_wvzfoDMJEeG7UplBQjBrRQ" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_wvy4kTMJEeG7UplBQjBrRQ"/>
+    <element xmi:type="proc:Parameter" href="resource.proc#_PnwktTVOEeGwKOVseAnYrA?fileId=_PnwksjVOEeGwKOVseAnYrA$type=proc$name=SemRepoSchema?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_wvy4kjMJEeG7UplBQjBrRQ" x="425" y="181"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_naRUQDUlEeGLZPpFKzDUhw" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_naR7UDUlEeGLZPpFKzDUhw" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_naR7UTUlEeGLZPpFKzDUhw" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_naR7UjUlEeGLZPpFKzDUhw"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_naR7UzUlEeGLZPpFKzDUhw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_naR7VDUlEeGLZPpFKzDUhw"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_naR7VTUlEeGLZPpFKzDUhw" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_naR7VjUlEeGLZPpFKzDUhw"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_naR7VzUlEeGLZPpFKzDUhw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_naR7WDUlEeGLZPpFKzDUhw"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_naRUQTUlEeGLZPpFKzDUhw"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_PnwkuzVOEeGwKOVseAnYrA?fileId=_PnwksjVOEeGwKOVseAnYrA$type=proc$name=declare%20SEM_LOAD_ID?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_naRUQjUlEeGLZPpFKzDUhw" x="175" y="170"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_JCzYADVQEeGwKOVseAnYrA" type="2005">
+    <children xmi:type="notation:Node" xmi:id="_JC0mIDVQEeGwKOVseAnYrA" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_JCzYATVQEeGwKOVseAnYrA"/>
+    <element xmi:type="proc:Parameter" href="resource.proc#_JCufgDVQEeGwKOVseAnYrA?fileId=_PnwksjVOEeGwKOVseAnYrA$type=proc$name=CleanupData?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_JCzYAjVQEeGwKOVseAnYrA" x="425" y="133"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_YM_DMDVQEeGwKOVseAnYrA" type="2005">
+    <children xmi:type="notation:Node" xmi:id="_YM_qQDVQEeGwKOVseAnYrA" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_YM_DMTVQEeGwKOVseAnYrA"/>
+    <element xmi:type="proc:Parameter" href="resource.proc#_YM8m8DVQEeGwKOVseAnYrA?fileId=_PnwksjVOEeGwKOVseAnYrA$type=proc$name=MDMSchema?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_YM_DMjVQEeGwKOVseAnYrA" x="425" y="157"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_09zjMDVQEeGwKOVseAnYrA" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_090xUDVQEeGwKOVseAnYrA" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_091_cDVQEeGwKOVseAnYrA" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_091_cTVQEeGwKOVseAnYrA"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_091_cjVQEeGwKOVseAnYrA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_091_czVQEeGwKOVseAnYrA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_092mgDVQEeGwKOVseAnYrA" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_092mgTVQEeGwKOVseAnYrA"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_092mgjVQEeGwKOVseAnYrA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_092mgzVQEeGwKOVseAnYrA"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_09zjMTVQEeGwKOVseAnYrA"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_09s1gDVQEeGwKOVseAnYrA?fileId=_PnwksjVOEeGwKOVseAnYrA$type=proc$name=DoCleanupSDTables%20(Oracle)?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_09zjMjVQEeGwKOVseAnYrA" x="24" y="432"/>
+  </children>
+  <children xmi:type="notation:Shape" xmi:id="_gd3pMDMVEeK6Wf5jdAfqTw" type="Note" fontName="Segoe UI" description="Note: Read the process description &#xD;&#xA;for detailed description and &#xD;&#xA;usage information." fillColor="13369343" transparency="0" lineColor="6737151" lineWidth="1">
+    <children xmi:type="notation:BasicDecorationNode" xmi:id="_geCoUDMVEeK6Wf5jdAfqTw" type="DiagramName">
+      <element xsi:nil="true"/>
+    </children>
+    <children xmi:type="notation:BasicDecorationNode" xmi:id="_geCoUTMVEeK6Wf5jdAfqTw" type="Description">
+      <element xsi:nil="true"/>
+    </children>
+    <styles xmi:type="notation:TextStyle" xmi:id="_gd3pMTMVEeK6Wf5jdAfqTw"/>
+    <styles xmi:type="notation:LineTypeStyle" xmi:id="_gd3pMjMVEeK6Wf5jdAfqTw"/>
+    <element xsi:nil="true"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_gd3pMzMVEeK6Wf5jdAfqTw" x="425" y="25"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_boNUEJuwEeip3roJS2BlsQ" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_boNUE5uwEeip3roJS2BlsQ" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_boNUFJuwEeip3roJS2BlsQ" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_boNUFZuwEeip3roJS2BlsQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_boNUFpuwEeip3roJS2BlsQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_boNUF5uwEeip3roJS2BlsQ"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_boNUGJuwEeip3roJS2BlsQ" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_boNUGZuwEeip3roJS2BlsQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_boNUGpuwEeip3roJS2BlsQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_boNUG5uwEeip3roJS2BlsQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_boNUEZuwEeip3roJS2BlsQ" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_boJCoJuwEeip3roJS2BlsQ?fileId=_PnwksjVOEeGwKOVseAnYrA$type=proc$name=CancelLoad%20(Postgresql)?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_boNUEpuwEeip3roJS2BlsQ" x="385" y="290"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_ix-zIZuwEeip3roJS2BlsQ" type="2007">
+    <children xmi:type="notation:Node" xmi:id="_ix_aMJuwEeip3roJS2BlsQ" type="5007"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_ix-zIpuwEeip3roJS2BlsQ" fontName="Segoe UI"/>
+    <element xmi:type="proc:XslVariable" href="resource.proc#_ix-zIJuwEeip3roJS2BlsQ?fileId=_PnwksjVOEeGwKOVseAnYrA$type=proc?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ix-zI5uwEeip3roJS2BlsQ" x="580" y="100"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_0MQ4sJuwEeip3roJS2BlsQ" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_0MQ4s5uwEeip3roJS2BlsQ" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_0MQ4tJuwEeip3roJS2BlsQ" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_0MQ4tZuwEeip3roJS2BlsQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_0MQ4tpuwEeip3roJS2BlsQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_0MQ4t5uwEeip3roJS2BlsQ"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_0MRfwJuwEeip3roJS2BlsQ" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_0MRfwZuwEeip3roJS2BlsQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_0MRfwpuwEeip3roJS2BlsQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_0MRfw5uwEeip3roJS2BlsQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_0MQ4sZuwEeip3roJS2BlsQ" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_0MQRoJuwEeip3roJS2BlsQ?fileId=_PnwksjVOEeGwKOVseAnYrA$type=proc$name=DoCleanupSDTables%20(Postgresql)?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_0MQ4spuwEeip3roJS2BlsQ" x="390" y="440"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_-yr_sGWhEemHuprG477biA" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_-ysmwGWhEemHuprG477biA" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_-ysmwWWhEemHuprG477biA" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_-ysmwmWhEemHuprG477biA"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_-ysmw2WhEemHuprG477biA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_-ysmxGWhEemHuprG477biA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_-ysmxWWhEemHuprG477biA" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_-ysmxmWhEemHuprG477biA"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_-ysmx2WhEemHuprG477biA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_-ysmyGWhEemHuprG477biA"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_-yr_sWWhEemHuprG477biA" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_-yl5EGWhEemHuprG477biA?fileId=_PnwksjVOEeGwKOVseAnYrA$type=proc$name=CancelLoad%20(MS%20SQL%20Server)?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-yr_smWhEemHuprG477biA" x="765" y="290"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_RCxE02WiEemHuprG477biA" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_RCxr4GWiEemHuprG477biA" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_RCxr4WWiEemHuprG477biA" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_RCxr4mWiEemHuprG477biA"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_RCxr42WiEemHuprG477biA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_RCxr5GWiEemHuprG477biA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_RCxr5WWiEemHuprG477biA" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_RCxr5mWiEemHuprG477biA"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_RCxr52WiEemHuprG477biA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_RCxr6GWiEemHuprG477biA"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_RCxE1GWiEemHuprG477biA" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_RCxE0GWiEemHuprG477biA?fileId=_PnwksjVOEeGwKOVseAnYrA$type=proc$name=DoCleanupSDTables%20(MS%20SQL%20Server)?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_RCxE1WWiEemHuprG477biA" x="780" y="540"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_TCGe4WYcEemHuprG477biA" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_TCHF8GYcEemHuprG477biA" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_TCHtAGYcEemHuprG477biA" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_TCHtAWYcEemHuprG477biA"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_TCHtAmYcEemHuprG477biA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_TCHtA2YcEemHuprG477biA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_TCHtBGYcEemHuprG477biA" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_TCHtBWYcEemHuprG477biA"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_TCHtBmYcEemHuprG477biA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_TCHtB2YcEemHuprG477biA"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_TCGe4mYcEemHuprG477biA" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_TCFQwGYcEemHuprG477biA?fileId=_PnwksjVOEeGwKOVseAnYrA$type=proc$name=Scripting?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_TCGe42YcEemHuprG477biA" x="785" y="414"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_VbqnwTMDEeG7UplBQjBrRQ"/>
+  <element xmi:type="proc:ActionProcess" href="resource.proc#_PnwksjVOEeGwKOVseAnYrA?fileId=_PnwksjVOEeGwKOVseAnYrA$type=proc$name=Cancel%20Load?"/>
+  <edges xmi:type="notation:Edge" xmi:id="_fI_-cDUhEeGLZPpFKzDUhw" type="4001" source="_phcDMDMDEeG7UplBQjBrRQ" target="_naRUQDUlEeGLZPpFKzDUhw">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_fI_-cTUhEeGLZPpFKzDUhw"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_fI_-cjUhEeGLZPpFKzDUhw"/>
+    <element xmi:type="proc:Link" href="resource.proc#_PnwkujVOEeGwKOVseAnYrA?fileId=_PnwksjVOEeGwKOVseAnYrA$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_fI_-czUhEeGLZPpFKzDUhw" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_hoj6sDMVEeK6Wf5jdAfqTw" id="(0.4918032786885246,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_hoj6sTMVEeK6Wf5jdAfqTw" id="(0.5,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_pBnskDUlEeGLZPpFKzDUhw" type="4001" source="_naRUQDUlEeGLZPpFKzDUhw" target="_foC8MDMDEeG7UplBQjBrRQ">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_pBnskTUlEeGLZPpFKzDUhw"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_pBnskjUlEeGLZPpFKzDUhw"/>
+    <element xmi:type="proc:Link" href="resource.proc#_PnwkvDVOEeGwKOVseAnYrA?fileId=_PnwksjVOEeGwKOVseAnYrA$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_pBnskzUlEeGLZPpFKzDUhw" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_pBqv4DUlEeGLZPpFKzDUhw" id="(0.5,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_pBqv4TUlEeGLZPpFKzDUhw" id="(0.497907949790795,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_I16rMDVTEeGwKOVseAnYrA" type="4001" source="_foC8MDMDEeG7UplBQjBrRQ" target="_09zjMDVQEeGwKOVseAnYrA">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_I16rMTVTEeGwKOVseAnYrA"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_I16rMjVTEeGwKOVseAnYrA"/>
+    <element xmi:type="proc:Link" href="resource.proc#_I10kkDVTEeGwKOVseAnYrA?fileId=_PnwksjVOEeGwKOVseAnYrA$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_I16rMzVTEeGwKOVseAnYrA" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_hojToDMVEeK6Wf5jdAfqTw" id="(0.497907949790795,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_hojToTMVEeK6Wf5jdAfqTw" id="(0.497907949790795,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_c9zOAJuwEeip3roJS2BlsQ" type="4001" source="_naRUQDUlEeGLZPpFKzDUhw" target="_boNUEJuwEeip3roJS2BlsQ">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_c9zOAZuwEeip3roJS2BlsQ"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_c9zOApuwEeip3roJS2BlsQ" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="resource.proc#_c9ym8JuwEeip3roJS2BlsQ?fileId=_PnwksjVOEeGwKOVseAnYrA$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_c9zOA5uwEeip3roJS2BlsQ" points="[55, 20, -239, -78]$[139, 96, -155, -2]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_c9z1EJuwEeip3roJS2BlsQ" id="(0.4523809523809524,1.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_5rVJcJuwEeip3roJS2BlsQ" type="4001" source="_boNUEJuwEeip3roJS2BlsQ" target="_0MQ4sJuwEeip3roJS2BlsQ">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_5rVJcZuwEeip3roJS2BlsQ"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_5rVJcpuwEeip3roJS2BlsQ" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="resource.proc#_5rUiYJuwEeip3roJS2BlsQ?fileId=_PnwksjVOEeGwKOVseAnYrA$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_5rVJc5uwEeip3roJS2BlsQ" points="[-6, 20, -19, -92]$[-122, 103, -135, -9]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_5rVwgJuwEeip3roJS2BlsQ" id="(0.43333333333333335,1.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_CBUe4GWiEemHuprG477biA" type="4001" source="_naRUQDUlEeGLZPpFKzDUhw" target="_-yr_sGWhEemHuprG477biA">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_CBUe4WWiEemHuprG477biA"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_CBUe4mWiEemHuprG477biA" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="resource.proc#_CBTQwGWiEemHuprG477biA?fileId=_PnwksjVOEeGwKOVseAnYrA$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_CBUe42WiEemHuprG477biA" points="[118, 15, -537, -83]$[574, 60, -81, -38]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_CBVF8GWiEemHuprG477biA" id="(0.4166666666666667,1.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_mujbYGYcEemHuprG477biA" type="4001" source="_-yr_sGWhEemHuprG477biA" target="_TCGe4WYcEemHuprG477biA">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_mujbYWYcEemHuprG477biA"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_mujbYmYcEemHuprG477biA" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="resource.proc#_mug_IGYcEemHuprG477biA?fileId=_PnwksjVOEeGwKOVseAnYrA$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_mujbY2YcEemHuprG477biA" points="[-3, 20, -8, -58]$[-119, 87, -124, 9]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_mukpgGYcEemHuprG477biA" id="(0.44074074074074077,1.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_nNCuMGYcEemHuprG477biA" type="4001" source="_TCGe4WYcEemHuprG477biA" target="_RCxE02WiEemHuprG477biA">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_nNCuMWYcEemHuprG477biA"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_nNCuMmYcEemHuprG477biA" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="resource.proc#_nNCHIGYcEemHuprG477biA?fileId=_PnwksjVOEeGwKOVseAnYrA$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_nNCuM2YcEemHuprG477biA" points="[4, 20, 0, -51]$[-2, 66, -6, -5]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_nNDVQGYcEemHuprG477biA" id="(0.42105263157894735,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_nNDVQWYcEemHuprG477biA" id="(0.3592592592592593,0.06578947368421052)"/>
+  </edges>
+</notation:Diagram>
+]]></diagram>
+</proc:process>

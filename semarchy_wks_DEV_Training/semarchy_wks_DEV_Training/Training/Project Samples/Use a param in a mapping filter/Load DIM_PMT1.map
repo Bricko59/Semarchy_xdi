@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map:map xmlns:map="http://www.indy.com/v2/map" id="_-mS-APcKEeihDLFmfbLxVA" internalVersion="8" tech="resource.tech#_waYSMH8VEd2__Mzb_dB76A?fileId=_waYSMH8VEd2__Mzb_dB76A$type=tech$name=flow?">
+  <datastore id="_-mS-AfcKEeihDLFmfbLxVA" alias="T_PMT1" dataset="_-mTlIPcKEeihDLFmfbLxVA" ref="resource.md#_uWj1cfcJEeihDLFmfbLxVA?fileId=_N9VnAPbrEeihWtdVUY4U1Q$type=md$name=T_PMT1?">
+    <field id="_-mS-AvcKEeihDLFmfbLxVA" fullAlias="PMT_NAME" name="PMT_NAME" ref="resource.md#_uWsYUPcJEeihDLFmfbLxVA?fileId=_N9VnAPbrEeihWtdVUY4U1Q$type=md$name=PMT_NAME?"/>
+    <field id="_-mTlEPcKEeihDLFmfbLxVA" fullAlias="PMT_DESCRIPTION" name="PMT_DESCRIPTION" ref="resource.md#_uWsYV_cJEeihDLFmfbLxVA?fileId=_N9VnAPbrEeihWtdVUY4U1Q$type=md$name=PMT_DESCRIPTION?"/>
+    <field id="_-mTlEfcKEeihDLFmfbLxVA" fullAlias="PMT_CODE" name="PMT_CODE" ref="resource.md#_uWrxQPcJEeihDLFmfbLxVA?fileId=_N9VnAPbrEeihWtdVUY4U1Q$type=md$name=PMT_CODE?" updateKey="true"/>
+    <field id="_-mTlEvcKEeihDLFmfbLxVA" fullAlias="PMT_ACTIVE" name="PMT_ACTIVE" ref="resource.md#_uWs_YPcJEeihDLFmfbLxVA?fileId=_N9VnAPbrEeihWtdVUY4U1Q$type=md$name=PMT_ACTIVE?"/>
+    <constraint id="_GhfS8PcLEeihDLFmfbLxVA" name="PK_T_PMT1" ref="resource.md#_uWuNgPcJEeihDLFmfbLxVA?fileId=_N9VnAPbrEeihWtdVUY4U1Q$type=md$name=PK_T_PMT1?" reject="true"/>
+  </datastore>
+  <datastore id="_-mTlFPcKEeihDLFmfbLxVA" alias="DIM_PMT1" dataset="_-mTlIfcKEeihDLFmfbLxVA" ref="resource.md#_A9-cgfcKEeihDLFmfbLxVA?fileId=_UhZw8PbrEeihWtdVUY4U1Q$type=md$name=DIM_PMT1?" subExpression="[A]">
+    <field id="_-mTlFfcKEeihDLFmfbLxVA" enable="true" insert="true" name="PMT_NAME" ref="resource.md#_A-jrUPcKEeihDLFmfbLxVA?fileId=_UhZw8PbrEeihWtdVUY4U1Q$type=md$name=PMT_NAME?" update="true">
+      <expression id="_-mTlFvcKEeihDLFmfbLxVA" setDescriptorRef="_-mTlHPcKEeihDLFmfbLxVA">
+        <expression>T_PMT1.PMT_NAME</expression>
+      </expression>
+    </field>
+    <field id="_-mTlF_cKEeihDLFmfbLxVA" enable="true" insert="true" name="PMT_DESCRIPTION" ref="resource.md#_A-jrV_cKEeihDLFmfbLxVA?fileId=_UhZw8PbrEeihWtdVUY4U1Q$type=md$name=PMT_DESCRIPTION?" update="true">
+      <expression id="_-mTlGPcKEeihDLFmfbLxVA" setDescriptorRef="_-mTlHPcKEeihDLFmfbLxVA">
+        <expression>T_PMT1.PMT_DESCRIPTION</expression>
+      </expression>
+    </field>
+    <field id="_-mTlGfcKEeihDLFmfbLxVA" enable="true" insert="true" name="PMT_CODE" ref="resource.md#_A-jEQPcKEeihDLFmfbLxVA?fileId=_UhZw8PbrEeihWtdVUY4U1Q$type=md$name=PMT_CODE?" update="true" updateKey="true">
+      <expression id="_-mTlGvcKEeihDLFmfbLxVA" setDescriptorRef="_-mTlHPcKEeihDLFmfbLxVA">
+        <expression>T_PMT1.PMT_CODE</expression>
+      </expression>
+    </field>
+    <constraint id="_JUVOAPcLEeihDLFmfbLxVA" name="PK_DIM_PMT1" ref="resource.md#_A-pK4PcKEeihDLFmfbLxVA?fileId=_UhZw8PbrEeihWtdVUY4U1Q$type=md$name=PK_DIM_PMT1?" reject="true"/>
+    <setDescriptor id="_-mTlHPcKEeihDLFmfbLxVA" label="A"/>
+  </datastore>
+  <filter description="CASE '${~/genereFilter}$'&#xD;&#xA;     WHEN 'true' THEN T_PAYMENT_TYPE.PMT_DESCRIPTION IS NOT NULL &#xD;&#xA;     ELSE 1=1&#xD;&#xA;END&#xD;&#xA;AND T_PAYMENT_TYPE.PMT_ACTIVE = 1" id="_-mTlHfcKEeihDLFmfbLxVA" location="SRC">
+    <expression><![CDATA[CASE '${~/genereFilter}$'
+     WHEN 'true' THEN T_PMT1.PMT_DESCRIPTION IS NOT NULL 
+     ELSE 1=1
+END
+AND T_PMT1.PMT_ACTIVE = 1]]></expression>
+  </filter>
+  <template id="_-mTlHvcKEeihDLFmfbLxVA" name="L1_DIM_PMT1" process="resource.proc#_aafbe681-11ab-4ebc-ab56-de794128c580?fileId=_aafbe681-11ab-4ebc-ab56-de794128c580$type=proc$name=LOAD%20Rdbms%20to%20Rdbms?" sourceId="_-mS-AfcKEeihDLFmfbLxVA" targetId="_-mTlFPcKEeihDLFmfbLxVA"/>
+  <template id="_-mTlH_cKEeihDLFmfbLxVA" name="I_DIM_PMT1" process="resource.proc#_HFOfdjEZEd-WZe6cNi2k2w?fileId=_HFOfdjEZEd-WZe6cNi2k2w$type=proc$name=INTEGRATION%20Hsql?" targetId="_-mTlFPcKEeihDLFmfbLxVA"/>
+  <dataSet id="_-mTlIPcKEeihDLFmfbLxVA">
+    <container>_-mS-AfcKEeihDLFmfbLxVA</container>
+  </dataSet>
+  <dataSet id="_-mTlIfcKEeihDLFmfbLxVA">
+    <container>_-mTlFPcKEeihDLFmfbLxVA</container>
+  </dataSet>
+  <hint>
+    <usedField>#_-mS-AvcKEeihDLFmfbLxVA</usedField>
+    <usedField>#_-mTlEPcKEeihDLFmfbLxVA</usedField>
+    <usedField>#_-mTlEfcKEeihDLFmfbLxVA</usedField>
+    <usedField>#_-mTlEvcKEeihDLFmfbLxVA</usedField>
+  </hint>
+</map:map>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" description="s" id="UUID_TECH_FUNCTION" name="function" ref="resource.md#UUID_MD_SUPER_TYPE?fileId=UUID_MD_SUPER_TYPE$type=md$name=super?">
+  <level icon="icons/full/custom/16x16/UF-Library16x16-1.png" iconBundleName="com.indy.md.ui.edit" xmlName="product" code="com.stambia.function.product" configurable="false" displayName="Product" isFile="advanced" override="false" wizardClass=""/>
+  <level icon="icons/full/custom/16x16/UF-Library16x16-1.png" iconBundleName="com.indy.ui.md.edit" xmlName="udf" xpathDisplayName="if (@prefix='user') then concat(if (@name = '' or not(@name)) then 'Library' else @name, '[prefix is reserved]') else (if (@name = '' or not(@name)) then 'Library' else @name)" code="com.stambia.function.folder" configurable="false" displayName="Library" isFile="true" override="false" wizardBundleName="com.indy.addons" wizardClass="com.indy.addons.udf.UDFCreationWizard">
+    <icons name="first" xpath="if (@prefix='user') then 'icons/full/custom/json.datatype.error.gif' else 'icons/full/custom/16x16/UF-Library16x16-1.png'"/>
+    <attribute xmlName="prefix" code="prefix" configurable="false" displayName="Prefix"/>
+    <attribute iconBundleName="" xmlName="requiredLibs" xpathCondition="" code="requiredLibs" displayName="Required Libraries" toolTip="Specify the libraries prefix necessary for this one to work properly. It must be specified when a UserDefinedFunction from another library is used by an implementation. " type="list" unbounded="true">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.valueprovider.className" value="com.indy.ui.custom.out.common.properties.UDFLibValueProvider"/>
+    </attribute>
+    <parent>com.stambia.function.product</parent>
+  </level>
+  <level icon="icons/full/custom/16x16/UF-Function16x16-1.png" iconBundleName="com.indy.md.ui.edit" xmlName="function" xpathDisplayName="if (@name = '' or not(@name)) then 'Function' else @name" code="com.stambia.function.function" configurable="false" displayName="Function" hasName="true" wizardBundleName="" wizardClass="">
+    <attribute xmlName="description" code="description" configurable="false" displayName="Description" multiLine="true"/>
+    <parent>com.stambia.function.product</parent>
+    <parent>com.stambia.function.folder</parent>
+    <xPathExpression expression="parameter">
+      <code>PARAMETER_REF</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/16x16/UF-Parameter16x16-1.png" iconBundleName="com.indy.md.ui.edit" xmlName="parameter" xpathDisplayName="if (@name = '' or not(@name)) then 'Parameter' else @name" xpathIcon="if (@type='string') then 'platform:plugin/com.indy.md.ui.edit/icons/full/custom/16x16/UF-Parameter-S-16x16-1.png' else if (@type='boolean') then 'platform:plugin/com.indy.md.ui.edit/icons/full/custom/16x16/UF-Parameter-B-16x16-1.png' else if (@type='integer') then 'platform:plugin/com.indy.md.ui.edit/icons/full/custom/16x16/UF-Parameter-I-16x16-1.png' else  'platform:plugin/com.indy.md.ui.edit/icons/full/custom/16x16/UF-Parameter16x16-1.png' " code="com.stambia.function.parameter" configurable="false" displayName="Parameter" hasName="true" orderType="Natural" position="1" reverseCode="">
+    <attribute xmlName="description" xpathCondition="" code="description" configurable="false" displayName="Description" multiLine="true"/>
+    <parent>com.stambia.function.function</parent>
+  </level>
+  <level icon="icons/full/custom/16x16/UF-Implementation16x16-1.png" iconBundleName="com.indy.md.ui.edit" xmlName="implementation" xpathDisplayName="concat(if (@name = '' or not(@name)) then 'Implementation' else @name,' (', string-join(productCode/string(.),', '),')')" xpathIcon="" code="com.stambia.function.implementation" configurable="false" displayName="Implementation" hasName="true" position="2">
+    <attribute xmlName="productCode" xpathCondition="" code="productCode" configurable="false" defaultValue="" displayName="Product(s)" mdXpathAccess="ref:getAvailableProductCodes('com.stambia.rdbms.product')" multiLine="false" nullable="false" type="list" unbounded="true"/>
+    <attribute xmlName="expression" code="expression" configurable="false" displayName="Expression" multiLine="true" nullable="false"/>
+    <attribute xmlName="description" xpathCondition="" code="description" configurable="false" displayName="Description" multiLine="true"/>
+    <parent>com.stambia.function.function</parent>
+    <xPathExpression expression="productCode">
+      <code>IMPLEMENTATION_REF</code>
+    </xPathExpression>
+  </level>
+  <contributedRegistryID>com.indy.ui.custom.out.udf.UDF</contributedRegistryID>
+</tech:tech>

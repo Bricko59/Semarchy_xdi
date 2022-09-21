@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="UUID_DEF_TECH_JSON1" name="json" ref="resource.md#UUID_MD_XML_DEFAULT?fileId=UUID_MD_XML_DEFAULT$type=md$name=Xml?">
+  <level icon="icons/full/custom/json.array.gif" xmlName="array" xpathDisplayName="if (@name!='') then concat(@name,if (1=2 and ends-with(../lower-case(@defType),'array') and @name!='item') then ' (name must be &quot;item&quot;)' else '')&#x9; else '&lt;name must be set>' " xpathIcon="" activeDisplayName="false" code="com.stambia.json.array" displayName="Array" position="0" reverseBundleName="" reverseCode="" wizardClass="">
+    <icons name="first" xpath="if (1=2 and ends-with(../lower-case(@defType),'array') and @name!='item') then 'icons/full/custom/json.datatype.error.gif' else 'icons/full/custom/json.array.gif'"/>
+    <attribute xmlName="regexpSelector" xpathCondition="../name()='object'" code="regexpSelector" displayName="Name Selection Pattern"/>
+    <parent>com.stambia.json.array</parent>
+    <parent>com.stambia.json.object</parent>
+    <parent>com.stambia.json.file</parent>
+    <parent>com.stambia.json.rootArray</parent>
+    <parent>com.stambia.json.rootObject</parent>
+    <parent>com.stambia.json.rootValue</parent>
+    <xPathExpression expression="'element'">
+      <code>XML_FORM</code>
+    </xPathExpression>
+    <xPathExpression expression="'json:array'">
+      <code>XML_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="../name()='array'">
+      <code>INTERNAL_USE_AS_KEY</code>
+    </xPathExpression>
+    <xPathExpression expression="if (../name()='array') then '-1' else if (@regexpSelector!='') then '-1' else '1'">
+      <code>XML_MAX_OCCURS</code>
+    </xPathExpression>
+    <xPathExpression expression="if (../tech:xmlType()!='json:array' and ../tech:xmlType()!='json:object' ) then 'root'  else if (../tech:xmlType()='json:array') then 'e' else if (matches(@name,'^[A-Za-z_]([A-Za-z0-9_\\.]|-)*$')) then @name else concat('_.',mds:encodeHexString(@name,false()),'._')">
+      <code>XML_NAME</code>
+      <xPathVariable expression="'[A-Za-z_]'" name="NameStartChar"/>
+      <xPathVariable expression="concat($NameStartChar,'|-|\\.|[0-9]')" name="NameChar"/>
+      <xPathVariable expression="concat($NameStartChar,'(', $NameChar,')*')" name="Name"/>
+    </xPathExpression>
+    <xPathExpression expression="if (@regexpSelector!='') then concat('regexp:',@regexpSelector) else ''">
+      <code>XML_SELECTOR</code>
+    </xPathExpression>
+    <xPathExpression expression="ancestor-or-self::product[1]/propertyField[tag='basic_element']">
+      <code>INTERNAL_EXTRA_FIELDS</code>
+    </xPathExpression>
+    <xPathExpression expression="concat(md:encloseIfNotEmpty(../tech:fieldPath($separator),'', $separator), @name)">
+      <code>FIELD_PATH</code>
+      <xPathParameter defaultValue="'/'"/>
+      <xPathVariable expression="$p1" name="separator"/>
+    </xPathExpression>
+    <mappingType>SourceMapping</mappingType>
+    <mappingType>TargetMapping</mappingType>
+    <changeTo>com.stambia.json.object</changeTo>
+  </level>
+  <level icon="icons/full/custom/json.object.gif" xmlName="object" xpathDisplayName="if (@name!='') then concat(@name,if (1=2 and ends-with(../lower-case(@defType),'array') and @name!='item') then ' (name must be &quot;item&quot;)' else '')&#x9; else '&lt;name must be set>' " code="com.stambia.json.object" displayName="Object" position="0" wizardClass="">
+    <icons name="first" xpath="if (1=2 and ends-with(../lower-case(@defType),'array') and @name!='item') then 'icons/full/custom/json.datatype.error.gif' else 'icons/full/custom/json.object.gif'"/>
+    <attribute xmlName="regexpSelector" xpathCondition="../name()='object'" code="regexpSelector" displayName="Name Selection Pattern"/>
+    <parent>com.stambia.json.array</parent>
+    <parent>com.stambia.json.object</parent>
+    <parent>com.stambia.json.file</parent>
+    <parent>com.stambia.json.rootArray</parent>
+    <parent>com.stambia.json.rootObject</parent>
+    <parent>com.stambia.json.rootValue</parent>
+    <xPathExpression expression="'element'">
+      <code>XML_FORM</code>
+    </xPathExpression>
+    <xPathExpression expression="'json:object'">
+      <code>XML_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="../name()='array'">
+      <code>INTERNAL_USE_AS_KEY</code>
+    </xPathExpression>
+    <xPathExpression expression="if (../name()='array') then '-1' else if (@regexpSelector!='') then '-1' else '1'">
+      <code>XML_MAX_OCCURS</code>
+    </xPathExpression>
+    <xPathExpression expression="if (../tech:xmlType()!='json:array' and ../tech:xmlType()!='json:object' ) then 'root'  else if (../tech:xmlType()='json:array') then 'e' else if (matches(@name,'^[A-Za-z_]([A-Za-z0-9_\\.]|-)*$')) then @name else concat('_.',mds:encodeHexString(@name,false()),'._')">
+      <code>XML_NAME</code>
+      <xPathVariable expression="'[A-Za-z_]'" name="NameStartChar"/>
+      <xPathVariable expression="concat($NameStartChar,'|-|\\.|[0-9]')" name="NameChar"/>
+      <xPathVariable expression="concat($NameStartChar,'(', $NameChar,')*')" name="Name"/>
+    </xPathExpression>
+    <xPathExpression expression="if (@regexpSelector!='') then concat('regexp:',@regexpSelector) else ''">
+      <code>XML_SELECTOR</code>
+    </xPathExpression>
+    <xPathExpression expression="ancestor-or-self::product[1]/propertyField[tag='basic_element']">
+      <code>INTERNAL_EXTRA_FIELDS</code>
+    </xPathExpression>
+    <xPathExpression expression="concat(md:encloseIfNotEmpty(../tech:fieldPath($separator),'', $separator), @name)">
+      <code>FIELD_PATH</code>
+      <xPathParameter defaultValue="'/'"/>
+      <xPathVariable expression="$p1" name="separator"/>
+    </xPathExpression>
+    <mappingType>SourceMapping</mappingType>
+    <mappingType>TargetMapping</mappingType>
+    <changeTo>com.stambia.json.array</changeTo>
+  </level>
+  <level icon="icons/full/custom/json.string.gif" xmlName="value" xpathDisplayName="if (@name!='') then concat(@name,if (1=2 and ends-with( ../lower-case(@defType),'array') and @name!='item') then ' (name must be &quot;item&quot;)' else if (@type!='') then '' else ' (type must be set)') else '(name must be set)' " xpathIcon="" code="com.stambia.json.value" displayName="Value" hasName="true" position="0" wizardBundleName="" wizardClass="">
+    <icons name="first" xpath="if (1=2 and ends-with(../lower-case(@defType),'array') and @name!='item') then 'icons/full/custom/json.datatype.error.gif' else if (@type='string') then 'icons/full/custom/json.string.gif' else if (@type='boolean') then 'icons/full/custom/json.boolean.gif' else if (@type='number') then 'icons/full/custom/json.number.gif' else if  (@type!='') then '' else 'icons/full/custom/json.datatype.error.gif'"/>
+    <attribute xmlName="type" xpathCondition="" code="type" displayName="Type" mdXpathAccess="tokenize('string number boolean', ' ')" type="list">
+      <mappingInfo>Type</mappingInfo>
+    </attribute>
+    <attribute icon="" xmlName="size" category="" code="size" displayName="Size" type="integer"/>
+    <attribute icon="" xmlName="scale" category="" code="scale" displayName="Scale" type="integer"/>
+    <attribute xmlName="regexpSelector" xpathCondition="../name()='object'" code="regexpSelector" displayName="Name Selection Pattern"/>
+    <parent>com.stambia.json.array</parent>
+    <parent>com.stambia.json.object</parent>
+    <parent>com.stambia.json.file</parent>
+    <parent>com.stambia.json.rootArray</parent>
+    <parent>com.stambia.json.rootObject</parent>
+    <parent>com.stambia.json.rootValue</parent>
+    <xPathExpression expression="'element'">
+      <code>XML_FORM</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@type='number') then 'decimal' else @type">
+      <code>XML_TYPE</code>
+      <code>SUPER_TYPE_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="../name()='array'">
+      <code>INTERNAL_USE_AS_KEY</code>
+    </xPathExpression>
+    <xPathExpression expression="if (../name()='array') then '-1' else if (@regexpSelector!='') then '-1' else '1'">
+      <code>XML_MAX_OCCURS</code>
+    </xPathExpression>
+    <xPathExpression expression="@size">
+      <code>SIZE</code>
+    </xPathExpression>
+    <xPathExpression expression="@scale">
+      <code>DECIMAL</code>
+      <code>SCALE</code>
+      <code>PRECISION</code>
+    </xPathExpression>
+    <xPathExpression expression="if (../tech:xmlType()!='json:array' and ../tech:xmlType()!='json:object' ) then 'root'  else if (../tech:xmlType()='json:array') then 'e' else if (matches(@name,'^[A-Za-z_]([A-Za-z0-9_\\.]|-)*$')) then @name else concat('_.',mds:encodeHexString(@name,false()),'._')">
+      <code>XML_NAME</code>
+      <xPathVariable expression="'[A-Za-z_]'" name="NameStartChar"/>
+      <xPathVariable expression="concat($NameStartChar,'|-|\\.|[0-9]')" name="NameChar"/>
+      <xPathVariable expression="concat($NameStartChar,'(', $NameChar,')*')" name="Name"/>
+    </xPathExpression>
+    <xPathExpression expression="true()">
+      <code>IS_DEFAULT</code>
+    </xPathExpression>
+    <xPathExpression expression=".">
+      <code>DATA_TYPE_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="@type">
+      <code>TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@regexpSelector!='') then concat('regexp:',@regexpSelector) else ''">
+      <code>XML_SELECTOR</code>
+    </xPathExpression>
+    <xPathExpression expression="ancestor-or-self::product[1]/propertyField[tag='basic_element']">
+      <code>INTERNAL_EXTRA_FIELDS</code>
+    </xPathExpression>
+    <xPathExpression expression="concat(md:encloseIfNotEmpty(../tech:fieldPath($separator),'', $separator), @name)">
+      <code>FIELD_PATH</code>
+      <xPathParameter defaultValue="'/'"/>
+      <xPathVariable expression="$p1" name="separator"/>
+    </xPathExpression>
+    <mappingType>SourceMapping</mappingType>
+    <mappingType>TargetMapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/json.array.red.png" xmlName="array" xpathDisplayName="if (@name!='') then @name else '&lt;name must be set>' " xpathIcon="" activeDisplayName="false" code="com.stambia.json.rootArray" connection="true" displayName="JSON Array" position="0" reverseBundleName="" reverseCode="" wizardBundleName="com.indy.addons" wizardClass="com.indy.addons.json.wizard.JSonReverseWizard">
+    <attribute xmlName="reverseURLPath" category="Standard:Reverse" code="reverseURLPath" defaultValue="" displayName="Sample URL"/>
+    <attribute xmlName="reverseFilePath" category="Standard:Reverse" code="reverseFilePath" defaultValue="" displayName="Sample File" type="file">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.fileditor.extensions" value="*.json"/>
+    </attribute>
+    <attribute xmlName="reverseJsonSchemaFilePath" category="Standard:Reverse" code="reverseJsonSchemaFilePath" defaultValue="" displayName="JsonSchema File" type="file">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.fileditor.extensions" value="*.json"/>
+    </attribute>
+    <attribute xmlName="encoding" code="encoding" displayName="Encoding"/>
+    <attribute xmlName="filePath" xpathCondition="1=2" code="filePath" displayName="File Path" externalize="true" type="file">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.fileditor.extensions" value="*.json"/>
+    </attribute>
+    <attribute xmlName="regexpSelector" xpathCondition="../name()='object'" code="regexpSelector" displayName="Name Selection Pattern"/>
+    <parent>com.stambia.json.schema</parent>
+    <xPathExpression expression="'json:array'">
+      <code>XML_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="'element'">
+      <code>XML_FORM</code>
+    </xPathExpression>
+    <xPathExpression expression="true()">
+      <code>INTERNAL_USE_AS_KEY</code>
+    </xPathExpression>
+    <xPathExpression expression="'-1'">
+      <code>XML_MAX_OCCURS</code>
+    </xPathExpression>
+    <xPathExpression expression="'root'">
+      <code>XML_NAME</code>
+      <xPathVariable expression="'[A-Za-z_]'" name="NameStartChar"/>
+      <xPathVariable expression="concat($NameStartChar,'|-|\\.|[0-9]')" name="NameChar"/>
+      <xPathVariable expression="concat($NameStartChar,'(', $NameChar,')*')" name="Name"/>
+    </xPathExpression>
+    <xPathExpression expression="ancestor-or-self::product[1]/propertyField[tag='basic_element' or tag='root_element']">
+      <code>INTERNAL_EXTRA_FIELDS</code>
+    </xPathExpression>
+    <xPathExpression expression="concat(md:encloseIfNotEmpty(../tech:fieldPath($separator),'', $separator), @name)">
+      <code>FIELD_PATH</code>
+      <xPathParameter defaultValue="'/'"/>
+      <xPathVariable expression="$p1" name="separator"/>
+    </xPathExpression>
+    <mappingType>Target</mappingType>
+    <mappingType>Source</mappingType>
+    <mappingType>Mapping</mappingType>
+    <changeTo>com.stambia.json.rootObject</changeTo>
+  </level>
+  <level icon="icons/full/custom/json.object.red.png" xmlName="object" xpathDisplayName="if (@name!='') then @name else '&lt;name must be set>' " code="com.stambia.json.rootObject" connection="true" displayName="JSON Object" position="0" wizardBundleName="com.indy.addons" wizardClass="com.indy.addons.json.wizard.JSonReverseWizard">
+    <attribute xmlName="reverseURLPath" category="Standard:Reverse" code="reverseURLPath" defaultValue="" displayName="Sample URL"/>
+    <attribute xmlName="reverseFilePath" category="Standard:Reverse" code="reverseFilePath" defaultValue="" displayName="Sample File" type="file">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.fileditor.extensions" value="*.json"/>
+    </attribute>
+    <attribute xmlName="reverseJsonSchemaFilePath" category="Standard:Reverse" code="reverseJsonSchemaFilePath" defaultValue="" displayName="JsonSchema File" type="file">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.fileditor.extensions" value="*.json"/>
+    </attribute>
+    <attribute xmlName="encoding" code="encoding" displayName="Encoding"/>
+    <attribute xmlName="filePath" xpathCondition="1=2" code="filePath" displayName="File Path" externalize="true" type="file">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.fileditor.extensions" value="*.json"/>
+    </attribute>
+    <attribute xmlName="regexpSelector" xpathCondition="../name()='object'" code="regexpSelector" displayName="Name Selection Pattern"/>
+    <parent>com.stambia.json.schema</parent>
+    <xPathExpression expression="'json:object'">
+      <code>XML_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="'element'">
+      <code>XML_FORM</code>
+    </xPathExpression>
+    <xPathExpression expression="true()">
+      <code>INTERNAL_USE_AS_KEY</code>
+    </xPathExpression>
+    <xPathExpression expression="'-1'">
+      <code>XML_MAX_OCCURS</code>
+    </xPathExpression>
+    <xPathExpression expression="'root'">
+      <code>XML_NAME</code>
+      <xPathVariable expression="'[A-Za-z_]'" name="NameStartChar"/>
+      <xPathVariable expression="concat($NameStartChar,'|-|\\.|[0-9]')" name="NameChar"/>
+      <xPathVariable expression="concat($NameStartChar,'(', $NameChar,')*')" name="Name"/>
+    </xPathExpression>
+    <xPathExpression expression="ancestor-or-self::product[1]/propertyField[tag='basic_element' or tag='root_element']">
+      <code>INTERNAL_EXTRA_FIELDS</code>
+    </xPathExpression>
+    <xPathExpression expression="concat(md:encloseIfNotEmpty(../tech:fieldPath($separator),'', $separator), @name)">
+      <code>FIELD_PATH</code>
+      <xPathParameter defaultValue="'/'"/>
+      <xPathVariable expression="$p1" name="separator"/>
+    </xPathExpression>
+    <mappingType>Source</mappingType>
+    <mappingType>Target</mappingType>
+    <mappingType>Mapping</mappingType>
+    <changeTo>com.stambia.json.rootArray</changeTo>
+  </level>
+  <level icon="icons/full/custom/json.string.red.png" xmlName="value" xpathDisplayName="if (@name!='') then concat(@name,if (@type!='') then '' else ' (type must be set)') else '(name must be set)' " xpathIcon="" code="com.stambia.json.rootValue" connection="true" displayName="JSON Value" hasName="true" position="0" wizardBundleName="com.indy.addons" wizardClass="com.indy.addons.json.wizard.JSonReverseWizard">
+    <icons name="first" xpath="if (@type='string') then 'icons/full/custom/json.string.red.png' else if (@type='boolean') then 'icons/full/custom/json.boolean.red.png' else if (@type='number') then 'icons/full/custom/json.number.red.png' else 'icons/full/custom/json.datatype.error.gif'"/>
+    <attribute xmlName="type" xpathCondition="" code="type" displayName="Type" mdXpathAccess="tokenize('string number boolean', ' ')" type="list">
+      <mappingInfo>Type</mappingInfo>
+    </attribute>
+    <attribute xmlName="reverseURLPath" category="Standard:Reverse" code="reverseURLPath" defaultValue="" displayName="Sample URL"/>
+    <attribute xmlName="reverseFilePath" category="Standard:Reverse" code="reverseFilePath" defaultValue="" displayName="Sample File">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.fileditor.extensions" value="*.json"/>
+    </attribute>
+    <attribute xmlName="reverseJsonSchemaFilePath" category="Standard:Reverse" code="reverseJsonSchemaFilePath" defaultValue="" displayName="JsonSchema File" type="file">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.fileditor.extensions" value="*.json"/>
+    </attribute>
+    <attribute icon="" xmlName="size" xpathCondition="" category="" code="sizeHelper" displayName="Size" type="integer"/>
+    <attribute icon="" xmlName="scale" category="" code="scaleHelper" displayName="Scale" type="integer"/>
+    <attribute xmlName="encoding" code="encoding" displayName="Encoding"/>
+    <attribute xmlName="filePath" xpathCondition="1=2" code="filePath" displayName="File Path" externalize="true" type="file">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.fileditor.extensions" value="*.json"/>
+    </attribute>
+    <attribute xmlName="regexpSelector" xpathCondition="../name()='object'" code="regexpSelector" displayName="Name Selection Pattern"/>
+    <parent>com.stambia.json.schema</parent>
+    <xPathExpression expression="'element'">
+      <code>XML_FORM</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@type='number') then 'decimal' else @type">
+      <code>XML_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="true()">
+      <code>INTERNAL_USE_AS_KEY</code>
+    </xPathExpression>
+    <xPathExpression expression="'-1'">
+      <code>XML_MAX_OCCURS</code>
+    </xPathExpression>
+    <xPathExpression expression="'root'">
+      <code>XML_NAME</code>
+      <xPathVariable expression="'[A-Za-z_]'" name="NameStartChar"/>
+      <xPathVariable expression="concat($NameStartChar,'|-|\\.|[0-9]')" name="NameChar"/>
+      <xPathVariable expression="concat($NameStartChar,'(', $NameChar,')*')" name="Name"/>
+    </xPathExpression>
+    <xPathExpression expression="@sizeHelper">
+      <code>SIZE</code>
+    </xPathExpression>
+    <xPathExpression expression="@scaleHelper">
+      <code>DECIMAL</code>
+      <code>SCALE</code>
+      <code>PRECISION</code>
+    </xPathExpression>
+    <xPathExpression expression="ancestor-or-self::product[1]/propertyField[tag='basic_element' or tag='root_element']">
+      <code>INTERNAL_EXTRA_FIELDS</code>
+    </xPathExpression>
+    <xPathExpression expression="concat(md:encloseIfNotEmpty(../tech:fieldPath($separator),'', $separator), @name)">
+      <code>FIELD_PATH</code>
+      <xPathParameter defaultValue="'/'"/>
+      <xPathVariable expression="$p1" name="separator"/>
+    </xPathExpression>
+    <mappingType>Source</mappingType>
+    <mappingType>Target</mappingType>
+    <mappingType>Mapping</mappingType>
+    <changeTo>com.stambia.json.rootArray</changeTo>
+    <changeTo>com.stambia.json.rootObject</changeTo>
+  </level>
+  <level code="com.stambia.xml.propertyField" override="true" position="-1">
+    <attribute xmlName="" category="" code="property" displayName="" mdXpathAccess="if (starts-with(../@defType,'com.stambia.json.root')) &#xA;then tokenize('nodeName nodePrefix nodeURI nodeLocalName nodeUUID nodeAbsolutePosition fileName filePath fileParentName fileParentPath fileAbsolutePath fileCanonicalPath fileTotalSpace fileSequenceNumber',' ') &#xA;else tokenize('nodeLocalName nodeLocalPosition nodeName nodeUUID nodeAbsolutePosition nodePath sortKey',' ')"/>
+    <parent>com.stambia.json.array</parent>
+    <parent>com.stambia.json.object</parent>
+    <parent>com.stambia.json.rootArray</parent>
+    <parent>com.stambia.json.rootObject</parent>
+    <parent>com.stambia.json.rootValue</parent>
+    <parent>com.stambia.json.value</parent>
+  </level>
+  <action bundleName="com.indy.addons" className="com.indy.addons.json.actions.ReverseJsonAction" code="reverse" description="" displayName="Reverse" modificatingAction="true" xpathContext="">
+    <executableLevel>#com.stambia.json.rootArray</executableLevel>
+    <executableLevel>#com.stambia.json.rootObject</executableLevel>
+    <executableLevel>#com.stambia.json.rootValue</executableLevel>
+  </action>
+  <xPathExpression expression="ancestor-or-self::*[name()='object' or name()='array' or name()='value'][last()]">
+    <code>INTERNAL_MD_CONTAINER_NODE_DATASTORE</code>
+  </xPathExpression>
+</tech:tech>

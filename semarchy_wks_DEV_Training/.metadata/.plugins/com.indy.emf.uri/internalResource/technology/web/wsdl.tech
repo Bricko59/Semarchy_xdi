@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="UUID_TECH_WSDL1" name="wsdl" ref="resource.tech#UUID_DEF_TECH_JSON1?fileId=UUID_DEF_TECH_JSON1$type=tech$name=json?">
+  <level icon="icons/full/custom/wsdl.service.gif" xmlName="wsdl" code="com.stambia.wsdl.wsdl" displayName="Wsdl" isFile="true" wizardBundleName="com.indy.addons" wizardClass="com.indy.addons.wsdl.wizard.WsdlWizard">
+    <attribute xmlName="url" code="url" defaultValue="" displayName="Url"/>
+    <attribute xmlName="prefixForElement" code="prefixForElement" displayName="Prefix For Element" mdXpathAccess="tokenize('qualified unqualified',' ')" type="list"/>
+    <attribute xmlName="prefixForAttribute" xpathCondition="" code="prefixForAttribute" displayName="Prefix For Attribute" mdXpathAccess="tokenize('qualified unqualified',' ')" type="list"/>
+    <attribute xmlName="targetNamespace" code="targetNamespace" displayName="Target Namespace"/>
+    <attribute xmlName="defaultConnectionTimeout" category="Advanced: Default Invocation Properties" code="defaultConnectionTimeout" default="" displayName="Default Connection Timeout" initialValue="" toolTip="Defines the default connection timeout that should be used when trying to invoke this REST API. Note that It can be overriden on each operation and also in Mappings through Template parameters." type="integer"/>
+    <attribute xmlName="defaultReadTimeout" category="Advanced: Default Invocation Properties" code="defaultReadTimeout" default="" displayName="Default Read Timeout" initialValue="" toolTip="Defines the default read timeout that should be used when invoking this REST API. Note that It can be overriden on each operation and also in Mappings through Template parameters." type="integer"/>
+    <attribute xmlName="xsdReverseVersion" xpathIcon="" code="xsdReverseVersion" displayName="XSD Reverse Version" mdXpathAccess="tokenize('1', ' ')" toolTip="Version 1 includes most notably a fix for the reverse of sequences from complex types that inherit from other types, which were not reversed in the correct order. Note that if you are reversing with version 1 on a Metadata that has already been reversed without a reverse version, sequence children will so be duplicated. (You'll have both the old with incorrect order and new ones. You can then choose the ones to keep and remove the others.)" type="list">
+      <hint key="com.stambia.md.presentation.custom.newMdWizard.attributeInitialisationValue" value="1"/>
+    </attribute>
+    <propertyPage bundleName="com.indy.addons" className="com.indy.addons.wsdl.properties.WsdlPropertiesPage" pageName="Properties"/>
+  </level>
+  <level icon="icons/full/custom/wsdl.serviceheader.gif" xmlName="service" xpathCondition="" activeDisplayName="true" code="com.stambia.wsdl.service" connection="true" displayName="Service" position="0" wizardClass="">
+    <parent>com.stambia.wsdl.wsdl</parent>
+  </level>
+  <level icon="icons/full/custom/wsdl.port.gif" xmlName="port" code="com.stambia.wsdl.port" displayName="Port">
+    <attribute xmlName="address" category="" code="address" displayName="Address" externalize="true"/>
+    <attribute xmlName="protocol" xpathCondition="" code="protocol" displayName="Protocol" mdXpathAccess="tokenize('SOAP HTTP', ' ')" refreshPropertiesCompositeOnValueChange="true" type="list"/>
+    <attribute xmlName="style" xpathCondition="@protocol='SOAP'" category="Standard:Soap" code="style" displayName="Style" mdXpathAccess="tokenize('document rpc', ' ')" type="list"/>
+    <attribute xmlName="transportURI" xpathCondition="@protocol='SOAP'" category="Standard:Soap" code="transportURI" defaultValue="" displayName="Transport URI"/>
+    <attribute xmlName="verb" xpathCondition="@protocol='HTTP'" category="Standard:Http" code="verb" displayName="Verb" mdXpathAccess="tokenize('GET DELETE POST PUT PATCH',' ')" type="list"/>
+    <attribute xmlName="user" category="Deprecated:Authentication" code="user" displayName="User"/>
+    <attribute xmlName="password" category="Deprecated:Authentication" code="password" displayName="Password" type="password"/>
+    <attribute icon="" xmlName="proxyHost" category="Deprecated: Proxy" code="proxyHost" displayName="Host"/>
+    <attribute icon="" xmlName="proxyPort" category="Deprecated: Proxy" code="proxyPort" displayName="Port"/>
+    <attribute xmlName="proxyUser" category="Deprecated: Proxy" code="proxyUser" displayName="User"/>
+    <attribute icon="" iconBundleName="" xmlName="proxyPassword" category="Deprecated: Proxy" code="proxyPassword" displayName="Password" mdDefaultXpath="" toolTip="" type="password"/>
+    <attribute xmlName="keyStore" category="Security:Key Store" code="keyStore" displayName="File"/>
+    <attribute icon="" xmlName="keyStoreType" category="Security:Key Store" code="keyStoreType" defaultValue="" displayName="Type" mdXpathAccess="tokenize('JKS PKCS12',' ')" type="list"/>
+    <attribute xmlName="keyStorePassword" category="Security:Key Store" code="keyStorePassword" displayName="Password" type="password"/>
+    <attribute xmlName="trustStore" category="Security:Trust Store" code="trustStore" displayName="File"/>
+    <attribute icon="" xmlName="trustStoreType" category="Security:Trust Store" code="trustStoreType" defaultValue="" displayName="Type" mdXpathAccess="tokenize('JKS PKCS12',' ')" type="list"/>
+    <attribute xmlName="trustStorePassword" category="Security:Trust Store" code="trustStorePassword" displayName="Password" type="password"/>
+    <attribute xmlName="wsse" category="Security" code="wsse" displayName="WS Security" mdXpathAccess="../../(wsse)" type="reference"/>
+    <attribute xmlName="httpAuthorization" category="Security" code="httpAuthorization" displayName="Http Authorization" mdXpathAccess="../../(oauth | oauth2|basicauth | digestauth | ntlm)" type="reference"/>
+    <attribute xmlName="proxy" category="Proxy:proxy" code="proxy" displayName="HTTP Proxy" mdXpathAccess="internal:getReferencableNodes('com.stambia.proxy')" toolTip="Proxy Metadata used to connect to the server. Select here a proxy node or drag and drop it directly from a Proxy Metadata." type="reference">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.dnd.emfMetaInf" value="http://www.stambia.com/md;MdNode"/>
+    </attribute>
+    <attribute xmlName="httpProxyAuthorization" category="Proxy:proxy" code="httpProxyAuthorization" displayName="Http Proxy Authorization" mdXpathAccess="../../(basicauth | digestauth)" type="reference"/>
+    <parent>com.stambia.wsdl.service</parent>
+  </level>
+  <level icon="icons/full/custom/wsdl.operationbinding.gif" iconBundleName="" xmlName="operation" code="com.stambia.wsdl.operation" displayName="Operation">
+    <attribute xmlName="address" xpathCondition="../@protocol='HTTP'" category="Standard:Http" code="address" displayName="Address"/>
+    <attribute xmlName="actionURI" xpathCondition="../@protocol='SOAP'" category="Standard:Soap" code="actionURI" defaultValue="" displayName="Action URI"/>
+    <attribute xmlName="style" xpathCondition="../@protocol='SOAP'" category="Standard:Soap" code="style" displayName="Style" mdXpathAccess="tokenize('document rpc', ' ')" type="list"/>
+    <attribute xmlName="httpHeaderProperties" xpathCondition="../@protocol='HTTP'" category="Standard:Http Header" code="httpHeaderProperties" displayName="Properties" multiLine="true"/>
+    <attribute xmlName="exchangeFilePath" category="Exchange" code="exchangeFilePath" displayName="Exchange File Path (optional)" toolTip="Optional File path for customizing the temporary exchange file created at invocation. This can be useful when parallelizing multiple invocations at the same time on the same Runtime, to avoid temporary files conflicts using variables such as ${/CORE_SESSION_ID}$ in the file name to be sure it is unique."/>
+    <attribute xmlName="defaultConnectionTimeout" category="Advanced: Default Invocation Properties" code="defaultConnectionTimeout" displayName="Default Connection Timeout" initialValue="" mdDefaultXpath="ancestor-or-self::wsdl/@defaultConnectionTimeout" toolTip="Defines the default connection timeout that should be used when trying to invoke this REST API operation. Note that it defaults to the timeout specified on the root node. Note also that it can be overriden in Mappings through Template parameters." type="integer"/>
+    <attribute xmlName="defaultReadTimeout" category="Advanced: Default Invocation Properties" code="defaultReadTimeout" displayName="Default Read Timeout" initialValue="" mdDefaultXpath="ancestor-or-self::wsdl/@defaultReadTimeout" toolTip="Defines the default read timeout that should be used when invoking this REST API operation. Note that it defaults to the timeout specified on the root node. Note also that it can be overriden in Mappings through Template parameters." type="integer"/>
+    <parent>com.stambia.wsdl.port</parent>
+    <xPathExpression expression="true()">
+      <code>INTERNAL_USE_AS_KEY</code>
+    </xPathExpression>
+    <xPathExpression expression="@httpHeaderProperties">
+      <code>HTTP_HEADER_PROPERTIES</code>
+    </xPathExpression>
+    <xPathExpression description="" expression="@exchangeFilePath">
+      <code>XML_FILE_PATH</code>
+    </xPathExpression>
+    <xPathExpression expression="@defaultReadTimeout">
+      <code>DEFAULT_READ_TIMEOUT</code>
+    </xPathExpression>
+    <xPathExpression expression="@defaultConnectionTimeout">
+      <code>DEFAULT_CONNECTION_TIMEOUT</code>
+    </xPathExpression>
+    <mappingType>Source</mappingType>
+    <mappingType>Target</mappingType>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level code="com.stambia.xml.element" displayName="" override="true">
+    <parent>com.stambia.xml.choice</parent>
+    <parent>com.stambia.xml.sequence</parent>
+    <parent>com.stambia.wsdl.part</parent>
+    <parent>com.stambia.wsdl.headerPart</parent>
+    <parent>com.stambia.xml.all</parent>
+  </level>
+  <level icon="icons/full/custom/wsdl.input.gif" iconBundleName="" xmlName="input" activeDisplayName="true" code="com.stambia.wsdl.input" displayName="Input" hasName="false" unique="true">
+    <parent>com.stambia.wsdl.operation</parent>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/wsdl.output.gif" xmlName="output" activeDisplayName="true" code="com.stambia.wsdl.output" displayName="Output" hasName="false" unique="true">
+    <parent>com.stambia.wsdl.operation</parent>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/wsdl.fault.gif" xmlName="fault" activeDisplayName="false" code="com.stambia.wsdl.fault" displayName="Fault" hasName="false" unique="false">
+    <parent>com.stambia.wsdl.operation</parent>
+    <xPathExpression expression="'fault'">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/wsdl.part.gif" iconBundleName="" xmlName="part" code="com.stambia.wsdl.part" displayName="Part" position="1">
+    <attribute xmlName="bindingType" xpathCondition="" category="" code="bindingType" displayName="Binding Type" mdXpathAccess="if (ancestor-or-self::port[1]/@protocol='SOAP') then tokenize('soap:body,mime:mimeXml,mime:multipartRelated',',') else if (ancestor-or-self::port[1]/@protocol='HTTP') then tokenize(concat('mime:content,http:header',if (../name()='output') then ',http:responseCode,http:responseMessage,error:technicalErrorMessage,error:technicalErrorException' else '',if (../name()='input') then ',http:urlEncoded,http:urlReplacement,http:urlReplacementNotEncoded,http:method' else ''),',') else tokenize('',',')" refreshPropertiesCompositeOnValueChange="true" type="list" unbounded="false"/>
+    <attribute xmlName="encodingStyle" xpathCondition="exists(bindingType[starts-with(.,'soap:')])" category="Standard:Soap" code="encodingStyle" defaultValue="" displayName="Encoding Style" mdXpathAccess="" type="string" unbounded="true"/>
+    <attribute xmlName="namespaceURI" xpathCondition="exists(bindingType[starts-with(.,'soap:')])" category="Standard:Soap" code="namespaceURI" displayName="Namespace URI"/>
+    <attribute xmlName="use" xpathCondition="exists(bindingType[starts-with(.,'soap:')])" category="Standard:Soap" code="use" defaultValue="" displayName="Use" mdXpathAccess="tokenize('litteral,encoded',',')"/>
+    <attribute xmlName="contentType" xpathCondition="exists(bindingType[.='mime:content']) or @bindingType='mime:content'" category="Standard:Mime" code="contentType" displayName="Content-type" editable="true" mdXpathAccess="tokenize('application/x-www-form-urlencoded,text/xml,application/json',',')" type="list"/>
+    <attribute xmlName="originalType" xpathCondition="" category="" code="originalType" displayName="Original Type" editable="true" mdXpathAccess="tokenize('application/x-www-form-urlencoded,text/xml',',')" type="string"/>
+    <attribute xmlName="type" category="" code="type" defaultValue="" displayName="Type" mdXpathAccess="ancestor::product[1]/datatype/@name" type="list">
+      <mappingInfo>Type</mappingInfo>
+    </attribute>
+    <parent>com.stambia.wsdl.fault</parent>
+    <parent>com.stambia.wsdl.input</parent>
+    <parent>com.stambia.wsdl.output</parent>
+    <xPathExpression expression="@type">
+      <code>TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="if (matches(@name,'^[A-Za-z_]([A-Za-z0-9_\\.]|-)*$')) then @name else concat('_.',mds:encodeHexString(@name,false()),'._')">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/wsdl.simpletype.gif" iconBundleName="" xmlName="simpleType" code="com.stambia.wsdl.simpleType" displayName="Simple Type">
+    <attribute xmlName="type" code="type" displayName="Type">
+      <mappingInfo>Type</mappingInfo>
+    </attribute>
+    <attribute xmlName="originalType" xpathCondition="" category="" code="originalType" displayName="Original Type" editable="true" mdXpathAccess="tokenize('application/x-www-form-urlencoded,text/xml',',')" type="string"/>
+    <parent>com.stambia.wsdl.part</parent>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level xmlName="extension" code="com.stambia.wsdl.extension">
+    <attribute xmlName="required" code="required" defaultValue="" displayName="Required" type="boolean"/>
+  </level>
+  <level code="com.stambia.xml.sequence" override="true">
+    <parent>com.stambia.wsdl.part</parent>
+    <parent>com.stambia.xml.choice</parent>
+    <parent>com.stambia.xml.element</parent>
+    <parent>com.stambia.xml.sequence</parent>
+    <parent>com.stambia.xml.all</parent>
+    <parent>com.stambia.wsdl.headerPart</parent>
+  </level>
+  <level code="com.stambia.xml.choice" override="true">
+    <parent>com.stambia.wsdl.part</parent>
+    <parent>com.stambia.xml.choice</parent>
+    <parent>com.stambia.xml.element</parent>
+    <parent>com.stambia.xml.sequence</parent>
+    <parent>com.stambia.xml.all</parent>
+    <parent>com.stambia.wsdl.headerPart</parent>
+  </level>
+  <level code="com.stambia.xml.all" override="true">
+    <parent>com.stambia.wsdl.part</parent>
+    <parent>com.stambia.xml.choice</parent>
+    <parent>com.stambia.xml.element</parent>
+    <parent>com.stambia.xml.sequence</parent>
+    <parent>com.stambia.xml.all</parent>
+    <parent>com.stambia.wsdl.headerPart</parent>
+  </level>
+  <level icon="icons/full/custom/wsdl.header.gif" iconBundleName="" xmlName="headerPart" code="com.stambia.wsdl.headerPart" displayName="Header" position="0">
+    <attribute xmlName="bindingType" xpathCondition="" category="" code="bindingType" displayName="Binding Type" mdXpathAccess="tokenize('soap:body,mime:content,mime:mimeXml,mime:multipartRelated,http:urlEncoded,http:urlReplacment',',')" type="list" unbounded="false"/>
+    <attribute xmlName="encodingStyle" xpathCondition="exists(bindingType[starts-with(.,'soap:')])" category="Standard:Soap" code="encodingStyle" defaultValue="" displayName="Encoding Style" mdXpathAccess="" type="string" unbounded="true"/>
+    <attribute xmlName="namespaceURI" xpathCondition="exists(bindingType[starts-with(.,'soap:')])" category="Standard:Soap" code="namespaceURI" displayName="Namespace URI"/>
+    <attribute xmlName="use" xpathCondition="exists(bindingType[starts-with(.,'soap:')])" category="Standard:Soap" code="use" defaultValue="" displayName="Use" mdXpathAccess="tokenize('litteral,encoded',',')"/>
+    <attribute xmlName="type" xpathCondition="@bindingType='mime:content'" category="Standard:Mime" code="type" displayName="Type" editable="true" mdXpathAccess="tokenize('application/x-www-form-urlencoded,text/xml',',')" type="list"/>
+    <parent>com.stambia.wsdl.input</parent>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/wsdl.wsse.png" xmlName="wsse" xpathDisplayName="" xpathIcon="" code="com.stambia.wsdl.wsse" displayName="WS Security" position="1" wizardBundleName="" wizardClass="">
+    <attribute xmlName="userName" category="Standard:Username" code="userName" displayName="UserName" externalize="true"/>
+    <attribute xmlName="password" category="Standard:Username" code="password" displayName="Password" externalize="true" type="password"/>
+    <attribute xmlName="passwordType" xpathCondition="" category="Standard:Username" code="passwordType" displayName="Password Type" mdXpathAccess="tokenize('PasswordText PasswordDigest',' ')" type="list"/>
+    <attribute xmlName="timeToLive" xpathCondition="" category="Standard" code="timeToLive" displayName="Time To Live"/>
+    <attribute icon="" xmlName="addsANonce" code="addsANonce" defaultValue="true" displayName="Adds a nonce" type="boolean"/>
+    <attribute icon="" xmlName="addsACreated" code="addsACreated" defaultValue="" displayName="Adds a created" type="boolean"/>
+    <attribute xmlName="rawContent" code="rawContent" default="" displayName="Raw Content" multiLine="true" toolTip="This attribute can be used to specify a raw wsse content which will replace the one automatically generated based on other attributes information. This raw content must be a valid xml structure which will be placed as is under the &quot;wsse:Security&quot; node of the request soap envelope&#xD;&#xA; "/>
+    <parent>com.stambia.wsdl.wsdl</parent>
+    <xPathExpression expression="@userName">
+      <code>USERNAME</code>
+    </xPathExpression>
+    <xPathExpression expression="@password">
+      <code>PASSWORD</code>
+    </xPathExpression>
+    <xPathExpression expression="@passwordType">
+      <code>PASSWORD_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="@timeToLive">
+      <code>TIME_TO_LIVE</code>
+    </xPathExpression>
+    <xPathExpression expression="@addsANonce">
+      <code>ADDS_NONCE</code>
+    </xPathExpression>
+    <xPathExpression expression="@addsACreated">
+      <code>ADDS_CREATED</code>
+    </xPathExpression>
+    <xPathExpression expression="@rawContent">
+      <code>RAW_CONTENT</code>
+    </xPathExpression>
+  </level>
+  <level code="com.stambia.xml.namespace" override="true">
+    <parent>com.stambia.wsdl.wsdl</parent>
+    <parent>com.stambia.xml.xsd</parent>
+  </level>
+  <level code="com.stambia.json.rootObject" override="true">
+    <parent>com.stambia.wsdl.part</parent>
+  </level>
+  <level code="com.stambia.json.rootArray" override="true">
+    <parent>com.stambia.wsdl.part</parent>
+  </level>
+  <level code="com.stambia.json.rootValue" override="true">
+    <parent>com.stambia.wsdl.part</parent>
+  </level>
+  <level icon="icons/full/custom/rdbms.ak.png" iconBundleName="" xmlName="basicauth" xpathIcon="" code="com.stambia.wsdl.basicauth" displayName="Basic Authorization" wizardBundleName="com.indy.addons" wizardClass="com.indy.addons.oauth1.wizard.OAuthWizard">
+    <attribute xmlName="userName" category="Standard:Username" code="userName" displayName="UserName" externalize="true"/>
+    <attribute xmlName="password" category="Standard:Username" code="password" displayName="Password" externalize="true" type="password"/>
+    <parent>com.stambia.wsdl.wsdl</parent>
+    <xPathExpression expression="@userName">
+      <code>USERNAME</code>
+    </xPathExpression>
+    <xPathExpression expression="@password">
+      <code>PASSWORD</code>
+    </xPathExpression>
+    <xPathExpression expression="'basic'">
+      <code>INTERNAL_AUTHENTICATION_TYPE</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/rdbms.ak.png" iconBundleName="" xmlName="ntlm" xpathIcon="" code="com.stambia.wsdl.ntlm" displayName="NTLM security" wizardBundleName="com.indy.addons.httprest" wizardClass="com.indy.addons.httprest.wizard.ntlm.NTLMWizard">
+    <attribute xmlName="userName" category="Standard:Username" code="userName" displayName="UserName" externalize="true"/>
+    <attribute xmlName="password" category="Standard:Username" code="password" displayName="Password" externalize="true" type="password"/>
+    <attribute xmlName="domain" category="Standard:Username" code="domain" displayName="Domain"/>
+    <parent>com.stambia.wsdl.wsdl</parent>
+    <xPathExpression expression="@userName">
+      <code>USERNAME</code>
+    </xPathExpression>
+    <xPathExpression expression="@password">
+      <code>PASSWORD</code>
+    </xPathExpression>
+    <xPathExpression expression="@domain">
+      <code>DOMAIN</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/wsdl.oauth.png" xmlName="oauth" code="com.stambia.wsdl.oauth" displayName="OAuth security" wizardBundleName="com.indy.addons" wizardClass="com.indy.addons.oauth1.wizard.OAuthWizard">
+    <attribute xmlName="token" code="token" defaultValue="" displayName="Token" externalize="true"/>
+    <attribute xmlName="tokenSecret" code="tokenSecret" defaultValue="" displayName="Token Secret" externalize="true" type="password"/>
+    <attribute xmlName="consumerKey" code="consumerKey" displayName="Consumer Key"/>
+    <attribute xmlName="consumerSecret" xpathCondition="" code="consumerSecret" displayName="Consumer Secret" type="password"/>
+    <attribute xmlName="signatureMethod" category="Token Generation" code="signatureMethod" displayName="Signature Method" externalize="true"/>
+    <attribute xmlName="requestTokenURL" category="Token Generation:Request Token" code="requestTokenURL" displayName="Request Token URL"/>
+    <attribute xmlName="requestTokenHttpMethod" category="Token Generation:Request Token" code="requestTokenHttpMethod" displayName="Request Token Http Method"/>
+    <attribute iconBundleName="" xmlName="requestTokenParameter" xpathCondition="" category="Token Generation:Request Token" code="requestTokenParameter" displayName="Request Token Parameters" keyValue="true" mdXpathAccess="" unbounded="true"/>
+    <attribute xmlName="authorizationURL" xpathCondition="" category="Token Generation:Authorization" code="authorizationURL" displayName="Service Provider Authorization URL"/>
+    <attribute iconBundleName="" xmlName="authorizationParameter" xpathCondition="" category="Token Generation:Authorization" code="authorizationParameter" displayName="Authorization Parameters" keyValue="true" mdXpathAccess="" unbounded="true"/>
+    <attribute xmlName="accessTokenURL" category="Token Generation:Access Token" code="accessTokenURL" displayName="Access Token URL"/>
+    <attribute xmlName="accessTokenHttpMethod" category="Token Generation:Access Token" code="accessTokenHttpMethod" displayName="Access Token Http Method"/>
+    <attribute xmlName="callbackURL" code="callbackURL" defaultValue="" displayName="Callback URL"/>
+    <parent>com.stambia.wsdl.wsdl</parent>
+    <xPathExpression expression="@token">
+      <code>TOKEN</code>
+    </xPathExpression>
+    <xPathExpression expression="@consumerKey">
+      <code>CONSUMER_KEY</code>
+    </xPathExpression>
+    <xPathExpression expression="@consumerSecret">
+      <code>CONSUMER_SECRET</code>
+    </xPathExpression>
+    <xPathExpression expression="@tokenSecret">
+      <code>TOKEN_SECRET</code>
+    </xPathExpression>
+    <xPathExpression expression="@signatureMethod">
+      <code>SIGNATURE_METHOD</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/wsdl.oauth2.png" xmlName="oauth2" code="com.stambia.wsdl.oauth2" displayName="OAuth2 security" wizardBundleName="com.indy.addons" wizardClass="com.indy.addons.oauth2.wizard.OAuth2Wizard">
+    <attribute icon="" xmlName="flowType" category="Token Generation" code="flowType" default="Authorization Code Grant" displayName="Flow Type" initialValue="" mdXpathAccess="tokenize('Authorization Code Grant|Implicit Grant|Resource Owner Password Credentials Grant|Client Credentials Grant', '\|')" refreshPropertiesCompositeOnValueChange="true" type="list"/>
+    <attribute icon="" xmlName="clientId" xpathCondition="" category="Token Generation:Credential" code="clientId" defaultValue="" displayName="Client ID" externalize="true"/>
+    <attribute xmlName="clientSecret" category="Token Generation:Credential" code="clientSecret" defaultValue="" displayName="Client Secret" externalize="true" type="password"/>
+    <attribute xmlName="username" xpathCondition="@flowType='Resource Owner Password Credentials Grant'" category="Token Generation:Credential" code="username" displayName="Username" mdXpathAccess=""/>
+    <attribute xmlName="password" xpathCondition="@flowType='Resource Owner Password Credentials Grant'" category="Token Generation:Credential" code="password" displayName="Password" mdXpathAccess="" type="password"/>
+    <attribute xmlName="accessToken" xpathCondition="not(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" category="Generated Token:Token" code="accessToken" defaultValue="" displayName="Access Token" externalize="true" multiLine="true"/>
+    <attribute xmlName="refreshToken" xpathCondition="not(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" category="Generated Token:Token" code="refreshToken" displayName="Refresh Token" externalize="true" multiLine="true"/>
+    <attribute xmlName="expiresIn" xpathCondition="not(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" category="Generated Token:Token" code="expiresIn" defaultValue="" displayName="Validity Duration"/>
+    <attribute xmlName="tokenEndpoint" xpathCondition="not(@flowType='Implicit Grant')" category="Token Generation:Generation Properties" code="tokenEndpoint" displayName="Token Endpoint"/>
+    <attribute xmlName="authorizationEndpoint" xpathCondition="not(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" category="Token Generation:Generation Properties" code="authorizationEndpoint" displayName="Authorization Endpoint"/>
+    <attribute xmlName="redirectionEndpoint" xpathCondition="not(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" category="Token Generation:Generation Properties" code="redirectionEndpoint" displayName="Redirection Endpoint"/>
+    <attribute xmlName="connectionTimeout" xpathCondition="not(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" category="Token Generation:Generation Properties" code="connectionTimeout" displayName="Refreshing Timeout"/>
+    <attribute xmlName="numberOfAttempts" xpathCondition="not(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" category="Token Generation:Generation Properties" code="numberOfAttempts" defaultValue="" displayName="Number Of Attempts"/>
+    <attribute icon="" xmlName="scope" xpathCondition="" category="Token Generation:Generation Properties" code="scope" defaultValue="" displayName="Scope" externalize="true" unbounded="true"/>
+    <attribute xmlName="authorizationParameter" xpathCondition="" category="Token Generation:Generation Properties" code="authorizationParameter" displayName="Authorization Parameters" keyValue="true" toolTip="Parameters sent to the authorization Endpoint" unbounded="true"/>
+    <attribute icon="" xmlName="properties" xpathCondition="not(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" category="Generated Token:Token" code="authorizationProperties" displayName="Additionnal Properties" keyValue="true" toolTip="Properties returned by the Authorization Endpoint" unbounded="true"/>
+    <attribute xmlName="tokenEndpointHttpMethod" xpathCondition="(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" category="Token Generation:Generation Properties" code="tokenEndpointHttpMethod" default="POST" displayName="Http Method" mdXpathAccess="tokenize('GET POST', ' ')" toolTip="The http method used to generate a token." type="list"/>
+    <attribute xmlName="useClientId4TokenGeneration" xpathCondition="(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" category="Deprecated: Token Generation" code="useClientId4TokenGeneration" displayName="Send Client Id" toolTip="" type="boolean">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.deprecated.message" value="Deprecated parameter to define if the client_id should be sent alongside token generation, which can be required depending on target server requirements."/>
+    </attribute>
+    <attribute iconBundleName="" xmlName="useClientSecret4TokenGeneration" xpathCondition="(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" category="Deprecated: Token Generation" code="useClientSecret4TokenGeneration" displayName="Send Client Secret" toolTip="" type="boolean">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.deprecated.message" value="Deprecated parameter to define if the client_secret should be sent alongside token generation, which can be required depending on target server requirements."/>
+    </attribute>
+    <attribute xmlName="sendClientCredentialsPolicy" xpathCondition="(@flowType='Resource Owner Password Credentials Grant' or @flowType='Client Credentials Grant')" xpathDisplayName="" category="Token Generation:Generation Properties" code="sendClientCredentialsPolicy" displayName="Send Client Credentials" mdDefaultXpath="if (@useClientId4TokenGeneration='true' and @useClientSecret4TokenGeneration='true') then 'Send Client Id and Client Secret as parameters' else if (@useClientId4TokenGeneration='true') then 'Send Client Id as parameter' else ''" mdXpathAccess="tokenize('Send Client Id as parameter,Send Client Id and Client Secret as parameters,Send Client Id and Client Secret as Basic Auth header', ',')" toolTip="Defines if the client_id and client_secret should be sent when generating the token and how, depending on the target server requirements.&#xA;&#xA;Note that sending them alongside the requests is necessary only for some OAuth2 servers, depending on their requirements.&#xA;&#xA;When this attribute is empty, they are not sent.&#xA;&#xA;&#xA;The following values are available:&#xA;&#xA;- &quot;Send Client Id and Client Secret as Basic Auth header&quot;&#xA;The client id and the client secret are sent alongside the requests as HTTP Basic Auth header.&#xA;&#xA;- &quot;Send Client Id and Client Secret as parameters&quot;&#xA;The client id and the client secret are sent alongside the requests as parameters.&#xA;When using GET HTTP Method, they are sent as URL Parameters.&#xA;When using POST HTTP Method, they are sent in the body of the request.&#xA;&#xA;- &quot;Send Client Id as parameter&quot;&#xA;The client id is sent alongside the requests as parameters.&#xA;When using GET HTTP Method, it is sent as URL Parameters.&#xA;When using POST HTTP Method, it is sent in the body of the request." type="list"/>
+    <parent>com.stambia.wsdl.wsdl</parent>
+    <xPathExpression expression="@accessToken">
+      <code>ACCESS_TOKEN</code>
+    </xPathExpression>
+    <xPathExpression expression="@refreshToken">
+      <code>REFRESH_TOKEN</code>
+    </xPathExpression>
+    <xPathExpression expression="@expiresIn">
+      <code>EXPIRES_IN</code>
+    </xPathExpression>
+    <xPathExpression expression="@clientId">
+      <code>CLIENT_ID</code>
+    </xPathExpression>
+    <xPathExpression expression="@tokenEndpoint">
+      <code>TOKEN_ENDPOINT</code>
+    </xPathExpression>
+    <xPathExpression expression="@clientSecret">
+      <code>CLIENT_SECRET</code>
+    </xPathExpression>
+    <xPathExpression expression="@numberOfAttempts">
+      <code>NUMBER_OF_ATTEMPTS</code>
+    </xPathExpression>
+    <xPathExpression expression="@connectionTimeout">
+      <code>CONNECTION_TIMEOUT</code>
+    </xPathExpression>
+  </level>
+  <level xmlName="jws" code="com.stambia.wsdl.jws" displayName="JSON Web Signature" wizardBundleName="com.indy.addons" wizardClass="com.indy.addons.http.jws.JWSWizard">
+    <attribute xmlName="payload" category="Token Generation" code="payload" displayName="JWS Payload" editable="true" mdXpathAccess="" multiLine="true" toolTip="The claims for which we want a JSON Web Signature"/>
+    <attribute xmlName="serializationMode" xpathCondition="" category="Token Generation" code="serializationMode" default="JWS Compact Serialization" displayName="Serialization Mode" editable="false" mdXpathAccess="tokenize('JWS Compact Serialization;JWS JSON Serialization', ';')" type="list"/>
+    <attribute xmlName="secret" code="secret" displayName="Secret Key" multiLine="true" toolTip="Secret Key used to sign the JSON Web Signature" type="password"/>
+    <attribute xmlName="jwsToken" code="jwsToken" displayName="Token" multiLine="true" reverseUpdateXpathQuery="" toolTip="The JSON WebSignature computed from the other properties."/>
+    <xPathExpression expression="@jwsToken">
+      <code>JWS_TOKEN</code>
+    </xPathExpression>
+  </level>
+  <level xmlName="signature" code="com.stambia.wsdl.jws.signature" displayName="JSON Web Signature">
+    <attribute xmlName="protectedHeader" xpathCondition="" code="protectedHeader" displayName="JWS Protected Header" keyValue="true" toolTip="JWS Protected Headers" unbounded="true"/>
+    <attribute xmlName="unprotectedHeader" xpathCondition="../@serializationMode ='JWS JSON Serialization'" code="unprotectedHeader" displayName="JWS Unprotected Header" keyValue="true" toolTip="JWS Protected Headers." unbounded="true"/>
+  </level>
+  <action bundleName="com.indy.addons.webservice" className="com.indy.addons.webservice.rest.ui.InvokeWSAction" code="reverse_rest_web_service" displayName="Reverse REST Web Service" modificatingAction="true">
+    <executableLevel>#com.stambia.wsdl.operation</executableLevel>
+  </action>
+  <xPathExpression expression="'WSDL'">
+    <code>INTERN_PRODUCT_CODE_GUI</code>
+    <code>PRODUCT_CODE</code>
+    <code>TECH_CODE</code>
+  </xPathExpression>
+  <xPathExpression expression="false()">
+    <code>HAS_WORKSPACE_CAPABILITY_GUI</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::port[1]/@address">
+    <code>WSDL_ADDRESS</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::port[1]/@procotol">
+    <code>WSDL_PROTOCOL</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::operation[1]/@actionURI">
+    <code>SOAP_ACTION_URI</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::port[1]/@verb">
+    <code>HTTP_VERB</code>
+  </xPathExpression>
+  <xPathExpression description="" expression="ref:wsdl()/namespace">
+    <code>NAMESPACE_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::wsdl[1]">
+    <code>WSDL_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="if(exists(ancestor-or-self::port[1]/@proxy/mdj:getRef(.))) then  ancestor-or-self::port[1]/@proxy/mdj:getRef(.)/@host else ancestor-or-self::port[1]/@proxyHost">
+    <code>PROXY_HOST</code>
+  </xPathExpression>
+  <xPathExpression expression="if(exists(ancestor-or-self::port[1]/@proxy/mdj:getRef(.))) then  ancestor-or-self::port[1]/@proxy/mdj:getRef(.)/@port else ancestor-or-self::port[1]/@proxyPort">
+    <code>PROXY_PORT</code>
+  </xPathExpression>
+  <xPathExpression expression="if ($proxyAuth/name()='basicauth') then $proxyAuth/@userName else if(exists(ancestor-or-self::port[1]/@proxy/mdj:getRef(.))) then  ancestor-or-self::port[1]/@proxy/mdj:getRef(.)/@username else ancestor-or-self::port[1]/@proxyUser">
+    <code>PROXY_USER</code>
+    <xPathVariable expression="ref:httpProxyAuthorization()" name="proxyAuth"/>
+  </xPathExpression>
+  <xPathExpression expression="if ($proxyAuth/name()='basicauth') then $proxyAuth/@password else if(exists(ancestor-or-self::port[1]/@proxy/mdj:getRef(.))) then  ancestor-or-self::port[1]/@proxy/mdj:getRef(.)/@password else ancestor-or-self::port[1]/@proxyPassword">
+    <code>PROXY_PASSWORD</code>
+    <xPathVariable expression="ref:httpProxyAuthorization()" name="proxyAuth"/>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::port[1]/@keyStorePassword">
+    <code>KEY_STORE_PASSWORD</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::port[1]/@keyStoreType">
+    <code>KEY_STORE_TYPE</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::port[1]/@keyStore">
+    <code>KEY_STORE</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::port[1]/@trustStorePassword">
+    <code>TRUST_STORE_PASSWORD</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::port[1]/@trustStoreType">
+    <code>TRUST_STORE_TYPE</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::port[1]/@trustStore">
+    <code>TRUST_STORE</code>
+  </xPathExpression>
+  <xPathExpression expression="if ($httpAuthorization) then $httpAuthorization/@userName else ancestor-or-self::port[1]/@user">
+    <code>USER</code>
+    <xPathVariable expression="ref:basic()" name="httpAuthorization"/>
+  </xPathExpression>
+  <xPathExpression expression="if ($httpAuthorization) then $httpAuthorization/@password else ancestor-or-self::port[1]/@password">
+    <code>PASSWORD</code>
+    <xPathVariable expression="ref:basic()" name="httpAuthorization"/>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::port[1]">
+    <code>PORT_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:port()/(if (@wsse!='') then mdj:getRef(@wsse) else None)[name()='wsse']">
+    <code>WSSE_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="if (exists($httpAuthorizationRef)) then $httpAuthorizationRef else ref:port()/(if (@wsse!='') then mdj:getRef(@wsse) else None)[name()='oauth2']">
+    <code>OAUTH2_REF</code>
+    <xPathVariable expression="ref:httpAuthorization()[name()='oauth2']" name="httpAuthorizationRef"/>
+  </xPathExpression>
+  <xPathExpression expression="if (exists($httpAuthorizationRef)) then $httpAuthorizationRef else ref:port()/(if (@wsse!='') then mdj:getRef(@wsse) else None)[name()='oauth']">
+    <code>OAUTH_REF</code>
+    <xPathVariable expression="ref:httpAuthorization()[name()='oauth']" name="httpAuthorizationRef"/>
+  </xPathExpression>
+  <xPathExpression expression="if (exists($httpAuthorizationRef)) then $httpAuthorizationRef else None">
+    <code>BASIC_REF</code>
+    <xPathVariable expression="ref:httpAuthorization()[name()='basicauth']" name="httpAuthorizationRef"/>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::wsdl[1]/@xsdReverseVersion">
+    <code>INTERNAL_XSD_REVERSE_VERSION</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:port()/(if (@httpAuthorization!='') then mdj:getRef(@httpAuthorization) else (&#xD;&#xA;ref:port()/(if (@wsse!='') then mdj:getRef(@wsse) else None)[name()='wsse']))">
+    <code>HTTP_AUTHORIZATION_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:port()/(if (@httpProxyAuthorization!='') then mdj:getRef(@httpProxyAuthorization) else None)">
+    <code>HTTP_PROXY_AUTHORIZATION_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::operation[1]">
+    <code>INTERNAL_MD_CONTAINER_NODE_DATASTORE</code>
+  </xPathExpression>
+  <xPathExpression description="Generate a String representation of a MdNode attributes.&#xD;&#xA;Multivalues are postFixed by their position for the keys.&#xD;&#xA;keyValues have an additional properties for their label propXmlName.position.key=&lt;KeyValue>" expression="mdj:toJavaProperties(.)">
+    <code>TO_JAVA_PROPERTIES</code>
+  </xPathExpression>
+  <xPathExpression expression="if (exists($httpAuthorizationRef)) then $httpAuthorizationRef else None">
+    <code>NTLM_REF</code>
+    <xPathVariable expression="ref:httpAuthorization()[name()='ntlm']" name="httpAuthorizationRef"/>
+  </xPathExpression>
+  <xPathExpression expression="internal:getReferencableNodes('com.stambia.proxy')">
+    <code>INTERNAL_AVAILABLE_PROXY_REF</code>
+  </xPathExpression>
+</tech:tech>

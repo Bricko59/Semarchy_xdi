@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ref:mapRef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:ref="http://www.indy.com/v2/ref" id="_4hgxcTNQEe2HNZiLrCljlg">
+  <dataModel>_4gHDQDNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=LoadFact_billing?</dataModel>
+  <containerRef xsi:type="ref:RDatastore" id="_6Uej4DNQEe2HNZiLrCljlg" countShownFields="5" hierarchical="false">
+    <dataModel>_6UcusDNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_6UgZFjNQEe2HNZiLrCljlg" precision="0" size="8" type="varchar" position="9">
+      <dataModel>_6UgZEDNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=pmt_code?</dataModel>
+      <usage>_J6t48TNREe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_6UhAIDNQEe2HNZiLrCljlg" precision="6" size="29" type="timestamp" position="15">
+      <dataModel>_6UgZEjNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=bil_pmt_date?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_6UhAITNQEe2HNZiLrCljlg" precision="0" size="10" type="integer" mandatory="true" position="6">
+      <dataModel>_6UfyADNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=cus_id?</dataModel>
+      <usage>_J6sq0DNREe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_6UhAIjNQEe2HNZiLrCljlg" precision="0" size="10" type="integer" mandatory="true" position="3">
+      <dataModel>_6Uej4TNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=bil_id?</dataModel>
+      <usage>_J6t48zNREe2HNZiLrCljlg</usage>
+      <usage>_XfhFQDNSEe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_6UhAIzNQEe2HNZiLrCljlg" precision="6" size="29" type="timestamp" mandatory="true" position="12">
+      <dataModel>_6UgZETNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=bil_date?</dataModel>
+      <usage>_T7u1cDNSEe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <constraintRef id="_6UqxIDNQEe2HNZiLrCljlg" type="pk">
+      <dataModel>_6UgZEzNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=pk_t_billing?</dataModel>
+    </constraintRef>
+    <constraintRef id="_6UqxITNQEe2HNZiLrCljlg" type="fk">
+      <dataModel>_6UgZFDNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=fk_billing_customer?</dataModel>
+    </constraintRef>
+    <constraintRef id="_6UqxIjNQEe2HNZiLrCljlg" type="fk">
+      <dataModel>_6UgZFTNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=fk_billing_payment?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_7EcoQDNQEe2HNZiLrCljlg" countShownFields="9" hierarchical="false">
+    <dataModel>_7EcBMDNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_7EfEhDNQEe2HNZiLrCljlg" precision="0" size="10" type="integer" position="9">
+      <dataModel>_7EdPUTNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=cus_id?</dataModel>
+      <expressionRef id="_J6sq0DNREe2HNZiLrCljlg" internalExpression="${t_billing.cus_id}$">
+        <dataModel>_J6Fm0jNREe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</dataModel>
+        <sourceRef>_6UhAITNQEe2HNZiLrCljlg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_7EfEhTNQEe2HNZiLrCljlg" precision="6" size="29" type="timestamp" position="27">
+      <dataModel>_7EedcjNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=update_date?</dataModel>
+      <expressionRef id="_J6sq0TNREe2HNZiLrCljlg" internalExpression="tr::currentTimestamp()">
+        <dataModel>_J6Fm0zNREe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</dataModel>
+        <sourceRef>_7R4x4TNREe2HNZiLrCljlg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_7EfEhjNQEe2HNZiLrCljlg" precision="2" size="10" type="numeric" position="21">
+      <dataModel>_7EedcDNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=bil_amount?</dataModel>
+      <expressionRef id="_J6tR4DNREe2HNZiLrCljlg" internalExpression="sum(${t_billing_lines.lin_amount}$)">
+        <dataModel>_J6Fm1DNREe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</dataModel>
+        <sourceRef>_8zvbqjNQEe2HNZiLrCljlg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_7EfEhzNQEe2HNZiLrCljlg" precision="0" size="10" type="varchar" position="12">
+      <dataModel>_7EdPUjNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=time_key_day?</dataModel>
+      <expressionRef id="_J6t48DNREe2HNZiLrCljlg" internalExpression="${dim_time.time_key_day}$">
+        <dataModel>_J6Fm1TNREe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</dataModel>
+        <sourceRef>__1IJAzNQEe2HNZiLrCljlg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_7EfEiDNQEe2HNZiLrCljlg" precision="0" size="4" type="varchar" position="18">
+      <dataModel>_7Ed2YTNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=pmt_code?</dataModel>
+      <expressionRef id="_J6t48TNREe2HNZiLrCljlg" internalExpression="${t_billing.pmt_code}$">
+        <dataModel>_J6Fm1jNREe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</dataModel>
+        <sourceRef>_6UgZFjNQEe2HNZiLrCljlg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_7EfEiTNQEe2HNZiLrCljlg" precision="0" size="10" type="serial" mandatory="true" position="3">
+      <dataModel>_7EcoQTNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=bil_key_id?</dataModel>
+      <expressionRef id="_J6t48jNREe2HNZiLrCljlg">
+        <dataModel>_J6Fm1zNREe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_7EfEijNQEe2HNZiLrCljlg" precision="0" size="10" type="integer" position="6">
+      <dataModel>_7EdPUDNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=bil_id?</dataModel>
+      <expressionRef id="_J6t48zNREe2HNZiLrCljlg" internalExpression="${t_billing.bil_id}$">
+        <dataModel>_J6Fm0DNREe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</dataModel>
+        <sourceRef>_6UhAIjNQEe2HNZiLrCljlg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_7EfEizNQEe2HNZiLrCljlg" precision="0" size="35" type="varchar" position="15">
+      <dataModel>_7Ed2YDNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=dis_range?</dataModel>
+      <expressionRef id="_J6yKYDNREe2HNZiLrCljlg" internalExpression="${dim_discount.dis_range}$">
+        <dataModel>_J6Fm2DNREe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</dataModel>
+        <sourceRef>_AvVugjNREe2HNZiLrCljlg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_7EgSoDNQEe2HNZiLrCljlg" precision="2" size="10" type="numeric" position="24">
+      <dataModel>_7EedcTNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=bil_qty?</dataModel>
+      <expressionRef id="_J6yKYTNREe2HNZiLrCljlg" internalExpression="sum(${t_billing_lines.lin_qty}$)">
+        <dataModel>_J6Fm2TNREe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</dataModel>
+        <sourceRef>_8zvbozNQEe2HNZiLrCljlg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <constraintRef id="_7Ej9ADNQEe2HNZiLrCljlg" type="fk">
+      <dataModel>_7EedczNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=fk_fact_billing_cus?</dataModel>
+    </constraintRef>
+    <constraintRef id="_7Ej9ATNQEe2HNZiLrCljlg" type="fk">
+      <dataModel>_7EfEgDNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=fk_fact_billing_pmt?</dataModel>
+    </constraintRef>
+    <constraintRef id="_7Ej9AjNQEe2HNZiLrCljlg" type="fk">
+      <dataModel>_7EfEgTNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=fk_fact_billing_time?</dataModel>
+    </constraintRef>
+    <constraintRef id="_7Ej9AzNQEe2HNZiLrCljlg" type="pk">
+      <dataModel>_7EfEgjNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=fact_billing_pkey?</dataModel>
+    </constraintRef>
+    <constraintRef id="_7Ej9BDNQEe2HNZiLrCljlg" type="fk">
+      <dataModel>_7EfEgzNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=fk_fact_billing_dis?</dataModel>
+    </constraintRef>
+    <constraintRef id="_s67ogDNTEe2HNZiLrCljlg" type="ck">
+      <dataModel>_s63-IDNTEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=CK_BIL_AMOUNT_001?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_8zs_YTNQEe2HNZiLrCljlg" countShownFields="8" hierarchical="false">
+    <dataModel>_8zs_YDNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_8zvbozNQEe2HNZiLrCljlg" precision="4" size="19" type="numeric" mandatory="true" position="9">
+      <dataModel>_8zuNgTNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=lin_qty?</dataModel>
+      <usage>_J6yKYTNREe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8zvbpDNQEe2HNZiLrCljlg" precision="0" size="10" type="integer" position="24">
+      <dataModel>_8zu0kzNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=bdr_id?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8zvbpTNQEe2HNZiLrCljlg" precision="0" size="10" type="integer" mandatory="true" position="6">
+      <dataModel>_8zuNgDNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=bil_id?</dataModel>
+      <usage>_XfhFQDNSEe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8zvbpjNQEe2HNZiLrCljlg" precision="0" size="10" type="integer" mandatory="true" position="3">
+      <dataModel>_8ztmcDNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=lin_id?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8zvbpzNQEe2HNZiLrCljlg" precision="4" size="19" type="numeric" position="15">
+      <dataModel>_8zu0kDNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=lin_discount_amount?</dataModel>
+      <usage>_afEmoDNSEe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8zvbqDNQEe2HNZiLrCljlg" precision="0" size="3" type="varchar" mandatory="true" position="21">
+      <dataModel>_8zu0kjNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=lin_type?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8zvbqTNQEe2HNZiLrCljlg" precision="4" size="19" type="numeric" position="12">
+      <dataModel>_8zuNgjNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=lin_discount_rate?</dataModel>
+      <usage>_afEmoDNSEe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_8zvbqjNQEe2HNZiLrCljlg" precision="4" size="19" type="numeric" mandatory="true" position="18">
+      <dataModel>_8zu0kTNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=lin_amount?</dataModel>
+      <usage>_J6tR4DNREe2HNZiLrCljlg</usage>
+      <usage>_afEmoDNSEe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <constraintRef id="_8zye8DNQEe2HNZiLrCljlg" type="fk">
+      <dataModel>_8zvboDNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=fk_billing_lines_bedroom?</dataModel>
+    </constraintRef>
+    <constraintRef id="_8zzGADNQEe2HNZiLrCljlg" type="pk">
+      <dataModel>_8zvboTNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=pk_t_billing_lines?</dataModel>
+    </constraintRef>
+    <constraintRef id="_8zzGATNQEe2HNZiLrCljlg" type="fk">
+      <dataModel>_8zvbojNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=fk_billing_lines_billing?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="__1GT0TNQEe2HNZiLrCljlg" countShownFields="5" hierarchical="false">
+    <dataModel>__1GT0DNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="__1IJAjNQEe2HNZiLrCljlg" precision="0" size="2" type="numeric" position="9">
+      <dataModel>__1G64TNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=time_month?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="__1IJAzNQEe2HNZiLrCljlg" precision="0" size="10" type="varchar" mandatory="true" position="3">
+      <dataModel>__1GT0jNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=time_key_day?</dataModel>
+      <usage>_J6t48DNREe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="__1IJBDNQEe2HNZiLrCljlg" precision="0" size="4" type="numeric" position="15">
+      <dataModel>__1IJADNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=time_year?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="__1IJBTNQEe2HNZiLrCljlg" precision="6" size="29" type="timestamp" position="6">
+      <dataModel>__1G64DNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=time_date?</dataModel>
+      <usage>_T7u1cDNSEe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="__1IJBjNQEe2HNZiLrCljlg" precision="0" size="1" type="numeric" position="12">
+      <dataModel>__1G64jNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=time_quarter?</dataModel>
+    </fieldRef>
+    <constraintRef id="__1LMUDNQEe2HNZiLrCljlg" type="pk">
+      <dataModel>__1IJATNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=pk_dim_time?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_AvT5UTNREe2HNZiLrCljlg" countShownFields="3" hierarchical="false">
+    <dataModel>_AvT5UDNREe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_AvVugjNREe2HNZiLrCljlg" precision="0" size="35" type="varchar" mandatory="true" position="3">
+      <dataModel>_AvUgYDNREe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=dis_range?</dataModel>
+      <usage>_J6yKYDNREe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_AvVugzNREe2HNZiLrCljlg" precision="0" size="3" type="numeric" position="6">
+      <dataModel>_AvUgYTNREe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=dis_min?</dataModel>
+      <usage>_afEmoDNSEe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_AvVuhDNREe2HNZiLrCljlg" precision="0" size="3" type="numeric" position="9">
+      <dataModel>_AvVugDNREe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=dis_max?</dataModel>
+      <usage>_afEmoDNSEe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <constraintRef id="_AvbOEDNREe2HNZiLrCljlg" type="pk">
+      <dataModel>_AvVugTNREe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=pk_dim_discount?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <clauseRef id="_T7u1cDNSEe2HNZiLrCljlg" internalExpression="${t_billing.bil_date}$ = ${dim_time.time_date}$">
+    <dataModel>_T7tnUDNSEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</dataModel>
+    <sourceRef>_6UhAIzNQEe2HNZiLrCljlg</sourceRef>
+    <sourceRef>__1IJBTNQEe2HNZiLrCljlg</sourceRef>
+  </clauseRef>
+  <clauseRef id="_XfhFQDNSEe2HNZiLrCljlg" internalExpression="${t_billing.bil_id}$ = ${t_billing_lines.bil_id}$">
+    <dataModel>_XfgeMDNSEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</dataModel>
+    <sourceRef>_6UhAIjNQEe2HNZiLrCljlg</sourceRef>
+    <sourceRef>_8zvbpTNQEe2HNZiLrCljlg</sourceRef>
+  </clauseRef>
+  <clauseRef id="_afEmoDNSEe2HNZiLrCljlg" internalExpression="round(case&#xD;&#xA;when ${t_billing_lines.lin_discount_amount}$ != 0&#xD;&#xA;then (${t_billing_lines.lin_discount_amount}$ / (${t_billing_lines.lin_amount}$ + ${t_billing_lines.lin_discount_amount}$))*100&#xD;&#xA;else ${t_billing_lines.lin_discount_rate}$&#xD;&#xA;end)&#xD;&#xA;between ${dim_discount.dis_min}$ and ${dim_discount.dis_max}$">
+    <dataModel>_afD_kDNSEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</dataModel>
+    <sourceRef>_8zvbpzNQEe2HNZiLrCljlg</sourceRef>
+    <sourceRef>_8zvbqjNQEe2HNZiLrCljlg</sourceRef>
+    <sourceRef>_8zvbqTNQEe2HNZiLrCljlg</sourceRef>
+    <sourceRef>_AvVugzNREe2HNZiLrCljlg</sourceRef>
+    <sourceRef>_AvVuhDNREe2HNZiLrCljlg</sourceRef>
+  </clauseRef>
+  <targetSetRef id="_ZobnozNUEe2HNZiLrCljlg" sourceSet="_ZobnojNUEe2HNZiLrCljlg">
+    <container>_7EcoQDNQEe2HNZiLrCljlg</container>
+  </targetSetRef>
+  <sourceSetRef id="_ZobnojNUEe2HNZiLrCljlg" targetSet="_ZobnozNUEe2HNZiLrCljlg">
+    <dataSet xsi:type="map:DataSet">#__1JXIDNQEe2HNZiLrCljlg</dataSet>
+  </sourceSetRef>
+  <templateRef id="_J63C4TNREe2HNZiLrCljlg" description="Load : t_billing, t_billing_lines" nodeCode="com.stambia.flow.step" templateCriteria="type=L-TP;trgProduct=POSTGRESSQL;trgPath=server:PG_datamart/schema:datamart.hotel_datamart/datastore:fact_billing;trgTech=RDBMS;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProduct=POSTGRESSQL;srcPath=server:PG_hotel/schema:hotel.hotel_management/datastore:t_billing;srcTech=RDBMS;srcWorkspaceCapability=true;srcMapCapability=true;srcFilterCapability=true;srcJoinCapability=true">
+    <dataModel>_J63C4DNREe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=L1_fact_billing?</dataModel>
+    <load>_6UnGwTNQEe2HNZiLrCljlg</load>
+    <targetRef>_7EcBMDNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_J7VkADNREe2HNZiLrCljlg" description="Integration : fact_billing" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=POSTGRESSQL;trgPath=server:PG_datamart/schema:datamart.hotel_datamart/datastore:fact_billing;trgTech=RDBMS;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcTechList=RDBMS;srcProductList=POSTGRESSQL">
+    <dataModel>_J7U88DNREe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=I_fact_billing?</dataModel>
+    <targetRef>_7EcBMDNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_ZobnoDNUEe2HNZiLrCljlg" description="Check : fact_billing" nodeCode="com.stambia.flow.step" templateCriteria="type=C-TP;trgProduct=POSTGRESSQL;trgPath=server:PG_datamart/schema:datamart.hotel_datamart/datastore:fact_billing;trgTech=RDBMS;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true">
+    <dataModel>_ZoaZgDNUEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map$name=R_fact_billing?</dataModel>
+    <targetRef>_7EcBMDNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</targetRef>
+  </templateRef>
+  <loadSet id="_6UnGwTNQEe2HNZiLrCljlg">
+    <container>_6UcusDNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</container>
+    <container>_8zs_YDNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</container>
+  </loadSet>
+  <loadSet id="_7Eiu4zNQEe2HNZiLrCljlg">
+    <container>_7EcBMDNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</container>
+  </loadSet>
+  <loadSet id="__1J-NzNQEe2HNZiLrCljlg">
+    <container>__1GT0DNQEe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</container>
+  </loadSet>
+  <loadSet id="_AvZY6TNREe2HNZiLrCljlg">
+    <container>_AvT5UDNREe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</container>
+  </loadSet>
+  <udfRef id="_7R4x4TNREe2HNZiLrCljlg">
+    <dataModel>_7R4x4DNREe2HNZiLrCljlg?fileId=_4gHDQDNQEe2HNZiLrCljlg$type=map?</dataModel>
+    <usage>_J6sq0TNREe2HNZiLrCljlg</usage>
+  </udfRef>
+</ref:mapRef>

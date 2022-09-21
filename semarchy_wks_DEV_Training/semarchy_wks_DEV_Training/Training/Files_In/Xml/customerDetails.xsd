@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:com="http://semarchy.com/samples/common" xmlns:mgt="http://semarchy.com/samples/management" targetNamespace="http://semarchy.com/samples/management" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://semarchy.com/samples/common" schemaLocation="basic_types.xsd"/>
+	<xs:complexType name="CustomerDetail">
+		<xs:complexContent>
+			<xs:extension base="mgt:Customer">
+				<xs:sequence>
+					<xs:element name="address" type="com:Address" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="phone" type="com:Phone" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="email" type="com:Email" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="bill" type="com:Bill" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Customer">
+		<xs:attribute name="customerId" type="xs:integer"/>
+		<xs:attribute name="titleCode" type="xs:string"/>
+		<xs:attribute name="title" type="xs:string"/>
+		<xs:attribute name="firstName" type="xs:string"/>
+		<xs:attribute name="lastName" type="xs:string"/>
+		<xs:attribute name="company" type="xs:string"/>
+		<xs:attribute name="birthDate" type="xs:dateTime"/>
+	</xs:complexType>
+	<xs:element name="customerDetails">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="customer" type="mgt:CustomerDetail" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

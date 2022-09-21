@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_dpMKodE1EeiqadpQbccNDg" description="This template is used to load data from XML / JSON files to Informix.&#xD;&#xA;&#xD;&#xA;Refer to the description of each Parameter for more information.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;16/10/2018&#x9;Template creation">
+  <parameter id="_dpMKotE1EeiqadpQbccNDg" description="If true, a DISTINCT statement will be added on the query inserting data in the load table.&#xD;&#xA;This is used to avoid having duplicates." name="useDistinct" type="Boolean" value="false"/>
+  <parameter id="_dpMKo9E1EeiqadpQbccNDg" description="If true, the temporary objects created during the load are removed at the end of the process." name="cleanTemporaryObjects" type="Boolean" value="true"/>
+  <parameter id="_dpMKpNE1EeiqadpQbccNDg" description="If this parameter is set to true, a view based on the loaded data will be created.&#xD;&#xA;This view will be used in integration templates to retrieve loaded data, instead of querying directly the load tables.&#xD;&#xA;It will then be deleted at clean step." name="useView" type="Boolean" value="false"/>
+  <parameter id="_dpMKpdE1EeiqadpQbccNDg" description="If true, the operations on the load tables will be executed through a transaction in NOCOMMIT mode.&#xD;&#xA;If false, the actions will be in AUTOCOMMIT mode." name="useTransactionOnWorkTables" type="Boolean" value="false"/>
+  <parameter id="_dpMKptE1EeiqadpQbccNDg" description="When this option is set to true, empty records are filtered out of the data flow." name="filterEmptyRecords" type="Boolean" value="true"/>
+  <parameter id="_dpMKp9E1EeiqadpQbccNDg" name="successIfNoFile" type="Boolean" value="false"/>
+  <parameter id="_dpMKqNE1EeiqadpQbccNDg" name="emptyElementAsNull" type="Boolean" value="false"/>
+  <parameter id="_dpMKqdE1EeiqadpQbccNDg" name="extractBase64BinaryToFile" type="Boolean" value="false"/>
+  <parameter id="_dpMKqtE1EeiqadpQbccNDg" description="This parameter can be used to specify manually the path of the file to be loaded.&#xD;&#xA;If it is not set it will be retrieved from the source Metadata." name="inFileName" type="String"/>
+  <parameter id="_dpMKq9E1EeiqadpQbccNDg" description="Encoding that should be used to read the source file(s)" name="inFileEncoding" type="String" value=""/>
+  <parameter id="_dpMKrNE1EeiqadpQbccNDg" name="loadTableOptions" type="String" value=""/>
+  <parameter id="_dpMKrdE1EeiqadpQbccNDg" description="Name of the transaction when Transaction Mode is set to true." name="transactionName" type="String" value="T1"/>
+  <parameter id="_dpMKrtE1EeiqadpQbccNDg" description="Number of lines for each batch loading data into the target database" name="sqlBatchSize" type="Integer" value="200"/>
+  <parameter id="_dpMKr9E1EeiqadpQbccNDg" name="base64BinariesExtractDirectory" type="String" value=""/>
+  <parameter id="_dpMKsNE1EeiqadpQbccNDg" name="errorDir" type="String" value=""/>
+  <parameter id="_dpMKsdE1EeiqadpQbccNDg" description="This parameter can be used when the source structure is surrounded with an additional root node in the physical file.&#xD;&#xA;The name of this additional node should then be defined in this parameter for the template to treat the file correctly.&#xD;&#xA;&#xD;&#xA;For instance, if the source structure Metadata is an XML file which looks like this:&#xD;&#xA;&lt;customers>&#xD;&#xA;   &lt;customer name=&quot;GIBBS&quot;>&#xD;&#xA;&lt;customers>&#xD;&#xA;&#xD;&#xA;But the real physical file contains an additional node that surrounds it like this:&#xD;&#xA;&lt;rootNode>&#xD;&#xA;    &lt;customers>&#xD;&#xA;       &lt;customer name=&quot;GIBBS&quot;>&#xD;&#xA;    &lt;customers>&#xD;&#xA;&lt;/rootNode>&#xD;&#xA;&#xD;&#xA;This parameter must then be set to 'rootNode'.&#xD;&#xA;&#xD;&#xA;Note that this works only for XML files." name="superRootName" type="String" value=""/>
+  <parameter id="_dpMKstE1EeiqadpQbccNDg" description="Number threads generating temporary files.&#xD;&#xA;When multiple files are loaded, it is possible to process the various files in different threads for better performance. Each thread will read its own set of files." name="nbWriter" type="Integer" value="1"/>
+  <parameter id="_dpMKs9E1EeiqadpQbccNDg" name="splitPath" type="String" value=""/>
+  <parameter id="_dpMKtNE1EeiqadpQbccNDg" name="splitNbElement" type="Integer" value="1"/>
+  <subProcess id="_dpMKtdE1EeiqadpQbccNDg" isBeginAction="false" name="Load" nbCycles="-1" toleratedError="false">
+    <link id="_dpMKttE1EeiqadpQbccNDg" executionType="OK" generationType="OK" mandatory="1" targetId="_dpMLGdE1EeiqadpQbccNDg?fileId=_dpMKodE1EeiqadpQbccNDg$type=proc$name=Clean?"/>
+    <actionCode id="_dpMKt9E1EeiqadpQbccNDg" enable="true" isBeginAction="false" name="Create Table" nbCycles="-1" repetitionPublishParameters="true" repetitionQuery="$fields//datastore" repetitionVariableName="datastore" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_dpMKuNE1EeiqadpQbccNDg" generationCondition="" executionCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dpMK8tE1EeiqadpQbccNDg"/>
+      <parameter id="_dpMKudE1EeiqadpQbccNDg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_dpMKutE1EeiqadpQbccNDg" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_dpMKu9E1EeiqadpQbccNDg" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <parameter id="_3WUQINE1EeiqadpQbccNDg" name="SQL_MULTI_QUERYS" type="Boolean" value="true"/>
+      <code>DATABASE %x{$REF/ref:target()/ref:schema()/ref:work()/tech:catalogName()}x%;&#xD;
+%xsl{&#xD;
+create table %x{@physicalName}x%&#xD;
+(&#xD;
+	%x{md:patternList(field,'{workName}\t{targetWritableType} {targetNullWord}',',\n\t')}%&#xD;
+)&#xD;
+%x{md:paramValue($this,'loadTableOptions')}x%&#xD;
+}%;&#xD;
+DATABASE %x{$REF/ref:target()/ref:schema()/tech:catalogName()}x%;</code>
+    </actionCode>
+    <actionCode id="_dpMKvNE1EeiqadpQbccNDg" enable="true" isBeginAction="false" name="Drop Table" nbCycles="-1" repetitionPublishParameters="true" repetitionQuery="$fields//datastore" repetitionVariableName="datastore" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_dpMKvdE1EeiqadpQbccNDg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dpMKt9E1EeiqadpQbccNDg"/>
+      <parameter id="_dpMKvtE1EeiqadpQbccNDg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_dpMKv9E1EeiqadpQbccNDg" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_dpMKwNE1EeiqadpQbccNDg" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <parameter id="_0fcwsNE1EeiqadpQbccNDg" name="SQL_MULTI_QUERYS" type="Boolean" value="true"/>
+      <code>DATABASE %x{$REF/ref:target()/ref:schema()/ref:work()/tech:catalogName()}x%;&#xD;
+drop table %x{@physicalName}x%;&#xD;
+DATABASE %x{$REF/ref:target()/ref:schema()/tech:catalogName()}x%;</code>
+    </actionCode>
+    <actionCode id="_dpMKwdE1EeiqadpQbccNDg" enable="true" isBeginAction="false" name="Load Tables" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.XmlToJdbcActionCodeI">
+      <link id="_dpMKwtE1EeiqadpQbccNDg" executionType="OK" generationType="OK_KO" mandatory="0" targetId="_dpMK-NE1EeiqadpQbccNDg"/>
+      <parameter id="_dpMKw9E1EeiqadpQbccNDg" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_dpMKxNE1EeiqadpQbccNDg" name="IN_FILE_NAME" type="String" value="%x{$fileName}%"/>
+      <parameter id="_dpMKxdE1EeiqadpQbccNDg" name="SUPER_ROOT_NAME" type="String" value="%x{md:ifEmpty(md:paramValue($this,'superRootName'),$REF/source/ref:target()/tech:xmlRootName())}x%"/>
+      <parameter id="_dpMKxtE1EeiqadpQbccNDg" name="EMPTY_ELEMENT_AS_NULL" ref="LOAD%20Xml%20to%20Rdbms.proc#_dpMKqNE1EeiqadpQbccNDg" type="Boolean" value=""/>
+      <parameter id="_dpMKx9E1EeiqadpQbccNDg" name="SQL_BATCH_SIZE" type="String" value="%x{md:ifEmpty(md:paramValue($this/..,'sqlBatchSize'),'1')}x%"/>
+      <parameter id="_dpMKyNE1EeiqadpQbccNDg" name="SQL_ACTION_TYPE_STAT" type="String" value="LOAD"/>
+      <parameter id="_dpMKydE1EeiqadpQbccNDg" name="ERROR_DIR" type="String" value="%x{md:paramValue($this/..,'errorDir')}x%"/>
+      <parameter id="_dpMKytE1EeiqadpQbccNDg" name="DATA_TYPE_PROVIDER" type="String" value="%x{$REF/source/ref:target()/tech:dataTypeConverter()}x%"/>
+      <parameter id="_dpMKy9E1EeiqadpQbccNDg" name="USE_JSON_FORMAT" type="String" value="%x{$REF/source/ref:target()/tech:useJsonFormat()}x%"/>
+      <parameter id="_dpMKzNE1EeiqadpQbccNDg" name="BASE_64_BINARIES_EXTRACT_DIRECTORY" type="String" value="%x{if (md:paramValue($this,'extractBase64BinaryToFile')='true') &#xD;&#xA;&#x9;then md:ifEmpty(md:paramValue($this/..,'base64BinariesExtractDirectory'),concat('xmlBase64Binaries/',$REF/ref:target()/@id)) &#xD;&#xA;&#x9;else ''}x%"/>
+      <parameter id="_dpMKzdE1EeiqadpQbccNDg" name="XML_READER_CLASS" type="String" value="%x{$REF/source/ref:target()/tech:xmlReaderClass()}x%"/>
+      <parameter id="_dpMKztE1EeiqadpQbccNDg" name="IN_FILE_ENCODING" type="String" value="%x{md:ifEmpty(md:paramValue($this/..,'inFileEncoding'),$REF/ref:source()/tech:xmlFileEncoding())}x%"/>
+      <parameter id="_dpMKz9E1EeiqadpQbccNDg" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <parameter id="_dpMK0NE1EeiqadpQbccNDg" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_dpMK0dE1EeiqadpQbccNDg" name="FILE_EXPORT_PROPERTIES" type="String" value="${../fileExportProperties}$"/>
+      <parameter id="_dpMK0tE1EeiqadpQbccNDg" name="SPLIT_PATH" type="String" value="%x{md:paramValue($this,'splitPath')}x%"/>
+      <parameter id="_dpMK09E1EeiqadpQbccNDg" name="SPLIT_NB_ELEMENT" type="Integer" value="%x{md:paramValue($this,'splitNbElement')}x%"/>
+      <parameter id="_dpMK1NE1EeiqadpQbccNDg" name="NB_WRITER" type="Integer" value="%x{md:paramValue($this,'nbWriter')}x%"/>
+      <code>%xsl{&#xD;
+&#xD;
+&lt;xsl:variable name=&quot;md&quot;>&#xD;
+&lt;root>&#xD;
+	&lt;xsl:copy-of select=&quot;$REF/source/ref:target()/(@prefixForAttribute | @prefixForElement | @targetNamespace)&quot;/>&#xD;
+	&lt;xsl:copy-of select=&quot;$REF/source/ref:target()/namespace&quot;/>&#xD;
+	&lt;xsl:copy-of select=&quot;$context&quot;/>&#xD;
+	&lt;xsl:for-each select=&quot;$fields/datastore&quot;>&#xD;
+		&lt;insert datastore=&quot;{@fullPath}&quot;>insert into %x{@physicalName}% &#xD;
+		(%x{md:list(field/workName,',')}%) values(%x{md:list(field/concat(':{',@fullPath,'}:'),',')}%)&lt;/insert>&#xD;
+	&lt;/xsl:for-each>&#xD;
+&lt;/root>&#xD;
+&lt;/xsl:variable>&#xD;
+&#xD;
+%xmlToText{$md}%&#xD;
+&#xD;
+}% &#xD;
+%xsl{&lt;xsl:if test=&quot;$useSubQuery&quot; use-when=&quot;system-property('xpath.function.setStagingpoint.supported')='true'&quot;>&#xD;
+&lt;xsl:variable name=&quot;name&quot; select=&quot;$REF/@name&quot;/>&#xD;
+&lt;xsl:for-each select=&quot;$REF/../step/source[@name=$REF/@name]&quot;>&#xD;
+&lt;xsl:variable name=&quot;current&quot; select=&quot;.&quot;/>&#xD;
+&lt;xsl:variable name=&quot;sourceSet&quot; select=&quot;$current/@sourceSet&quot;/>&#xD;
+&#xD;
+%x{md:setStagingPoint(@id,$Query/query[@name=$current/../@name and ($sourceSet=@sourceSet or (not($sourceSet!='') and not(@sourceSet!='') )) ],'query') }x%&#xD;
+&lt;/xsl:for-each>&#xD;
+&lt;/xsl:if>&#xD;
+}xsl%&#xD;
+&#xD;
+</code>
+    </actionCode>
+    <actionCode id="_dpMK1dE1EeiqadpQbccNDg" enable="true" isBeginAction="false" name="Drop_Table2" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_dpMK1tE1EeiqadpQbccNDg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dpMKt9E1EeiqadpQbccNDg"/>
+      <parameter id="_dpMK19E1EeiqadpQbccNDg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_dpMK2NE1EeiqadpQbccNDg" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_0OHwINE1EeiqadpQbccNDg" name="SQL_MULTI_QUERYS" type="Boolean" value="true"/>
+      <code>DATABASE %x{$REF/ref:target()/ref:schema()/ref:work()/tech:catalogName()}x%;&#xD;
+drop table  %x{md:physicalPath($REF,'workName')}x%;&#xD;
+DATABASE %x{$REF/ref:target()/ref:schema()/tech:catalogName()}x%;&#xD;
+</code>
+    </actionCode>
+    <actionCode id="_dpMK39E1EeiqadpQbccNDg" generationCondition="not($useSubQuery)" enable="true" isBeginAction="false" name="Drop_View" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_dpMK4NE1EeiqadpQbccNDg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dpMKvNE1EeiqadpQbccNDg"/>
+      <link id="_dpMK4dE1EeiqadpQbccNDg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dpMK1dE1EeiqadpQbccNDg"/>
+      <parameter id="_dpMK4tE1EeiqadpQbccNDg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_dpMK49E1EeiqadpQbccNDg" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_dpMK5NE1EeiqadpQbccNDg" name="SQL_TRANSACTION_NAME" type="String" value="DROPVIEW"/>
+      <parameter id="_dpMK5dE1EeiqadpQbccNDg" name="SQL_TRANSACTION_TYPE" type="String" value="COMMIT"/>
+      <parameter id="_0zfuENE1EeiqadpQbccNDg" name="SQL_MULTI_QUERYS" type="Boolean" value="true"/>
+      <code>DATABASE %x{$REF/ref:target()/ref:schema()/ref:work()/tech:catalogName()}x%;&#xD;
+drop view %x{$viewName}x%;&#xD;
+DATABASE %x{$REF/ref:target()/ref:schema()/tech:catalogName()}x%;</code>
+    </actionCode>
+    <actionCode id="_dpMK7NE1EeiqadpQbccNDg" description="External joins are not yet supported as we do not have left/right join information here." generationCondition="not($useSubQuery)" enable="true" isBeginAction="false" name="CreateView" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_dpMK7dE1EeiqadpQbccNDg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dpMK-tE1EeiqadpQbccNDg?fileId=_dpMKodE1EeiqadpQbccNDg$type=proc$name=Put%20files%20on%20server?"/>
+      <parameter id="_dpMK7tE1EeiqadpQbccNDg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_dpMK79E1EeiqadpQbccNDg" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_dpMK8NE1EeiqadpQbccNDg" name="SQL_TRANSACTION_NAME" type="String" value="DROPVIEW2"/>
+      <parameter id="_dpMK8dE1EeiqadpQbccNDg" name="SQL_TRANSACTION_TYPE" type="String" value="COMMIT"/>
+      <parameter id="_7T6uINE1EeiqadpQbccNDg" name="SQL_MULTI_QUERYS" type="Boolean" value="true"/>
+      <code>DATABASE %x{$REF/ref:target()/ref:schema()/ref:work()/tech:catalogName()}x%;&#xD;
+create view  %x{$viewName}x%&#xD;
+as&#xD;
+%x{$Query/query[1]}x%;&#xD;
+DATABASE %x{$REF/ref:target()/ref:schema()/tech:catalogName()}x%;</code>
+    </actionCode>
+    <actionCode id="_dpMK8tE1EeiqadpQbccNDg" generationCondition="'${successIfNoFile}$'='true'" isBeginAction="false" name="TestFile" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileWaitActionCodeI">
+      <link id="_dpMK89E1EeiqadpQbccNDg" generationCondition="'${successIfNoFile}$'='true'" executionCondition="${TestFile/NB_FILES}$==1" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dpMKwdE1EeiqadpQbccNDg"/>
+      <link id="_dpMK9NE1EeiqadpQbccNDg" generationCondition="'${successIfNoFile}$'='true'" executionCondition="${TestFile/NB_FILES}$==0" executionType="OK" generationType="OK_KO" mandatory="0" targetId="_dpMK-NE1EeiqadpQbccNDg"/>
+      <link id="_dpMK9dE1EeiqadpQbccNDg" generationCondition="'${successIfNoFile}$'!='true'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dpMKwdE1EeiqadpQbccNDg"/>
+      <parameter id="_dpMK9tE1EeiqadpQbccNDg" name="WAIT_FILE" type="String" value="%x{$fileName}%"/>
+      <parameter id="_dpMK99E1EeiqadpQbccNDg" name="WAIT_FILE_TIMEOUT" type="String" value="0"/>
+    </actionCode>
+    <actionCode id="_dpMK-NE1EeiqadpQbccNDg" isBeginAction="false" name="EmptyAction" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+      <link id="_5uOisNE1EeiqadpQbccNDg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dpMK7NE1EeiqadpQbccNDg"/>
+    </actionCode>
+    <subProcess id="_dpMK-tE1EeiqadpQbccNDg" generationCondition="'${enableFileTransport}$'='true' and exists($xslTargetFtp)" isBeginAction="false" name="Put files on server" nbCycles="-1" repetitionQuery="$fields//datastore" repetitionVariableName="datastore" toleratedError="false">
+      <actionCode id="_dpMK-9E1EeiqadpQbccNDg" isBeginAction="false" name="Create Dir" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.FtpExecActionCodeI">
+        <link id="_dpMK_NE1EeiqadpQbccNDg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dpMLBdE1EeiqadpQbccNDg"/>
+        <parameter id="_dpMK_dE1EeiqadpQbccNDg" name="FTP_HOSTNAME" type="String" value="%x{$xslTargetFtp/tech:host()}x%"/>
+        <parameter id="_dpMK_tE1EeiqadpQbccNDg" name="FTP_USER" type="String" value="%x{$xslTargetFtp/tech:user()}x%"/>
+        <parameter id="_dpMK_9E1EeiqadpQbccNDg" name="FTP_PASSWORD" type="String" value="%x{$xslTargetFtp/tech:password()}x%"/>
+        <parameter id="_dpMLANE1EeiqadpQbccNDg" name="PROXY_HOST" type="String" value="%x{$xslTargetFtp/tech:proxyHost()}x%"/>
+        <parameter id="_dpMLAdE1EeiqadpQbccNDg" name="PROXY_PORT" type="Integer" value="%x{$xslTargetFtp/tech:proxyPort()}x%"/>
+        <parameter id="_dpMLAtE1EeiqadpQbccNDg" name="PROXY_USER" type="String" value="%x{$xslTargetFtp/tech:proxyUser()}x%"/>
+        <parameter id="_dpMLA9E1EeiqadpQbccNDg" name="PROXY_PASSWORD" type="String" value="%x{$xslTargetFtp/tech:proxyPassword()}x%"/>
+        <parameter id="_dpMLBNE1EeiqadpQbccNDg" name="FTP_PORT" type="Integer" value="%x{$xslTargetFtp/tech:port()}x%"/>
+        <code>MKD %x{$xslTargetFtp/tech:path()}x%/data_%x{$datastore/@workName}x%</code>
+      </actionCode>
+      <actionCode id="_dpMLBdE1EeiqadpQbccNDg" generationCondition="" isBeginAction="false" name="Put file on target server" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FtpPutActionCodeI">
+        <parameter id="_dpMLBtE1EeiqadpQbccNDg" name="FTP_HOSTNAME" type="String" value="%x{$xslTargetFtp/tech:host()}x%"/>
+        <parameter id="_dpMLB9E1EeiqadpQbccNDg" name="FTP_USER" type="String" value="%x{$xslTargetFtp/tech:user()}x%"/>
+        <parameter id="_dpMLCNE1EeiqadpQbccNDg" name="FTP_PASSWORD" type="String" value="%x{$xslTargetFtp/tech:password()}x%"/>
+        <parameter id="_dpMLCdE1EeiqadpQbccNDg" name="FTP_REMOTE_PATH" type="String" value="%x{$xslTargetFtp/tech:path()}x%/data_%x{$datastore/@workName}x%"/>
+        <parameter id="_dpMLCtE1EeiqadpQbccNDg" name="FTP_LOCAL_PATH" type="String" value="%x{md:paramValue($this,'workFolder')}x%/data_%x{$datastore/@workName}x%"/>
+        <parameter id="_dpMLC9E1EeiqadpQbccNDg" name="FTP_PORT" type="Integer" value="%x{$xslTargetFtp/tech:port()}x%"/>
+        <parameter id="_dpMLDNE1EeiqadpQbccNDg" name="PROXY_HOST" type="String" value="%x{$xslTargetFtp/tech:proxyHost()}x%"/>
+        <parameter id="_dpMLDdE1EeiqadpQbccNDg" name="PROXY_PORT" type="Integer" value="%x{$xslTargetFtp/tech:proxyPort()}x%"/>
+        <parameter id="_dpMLDtE1EeiqadpQbccNDg" name="PROXY_USER" type="String" value="%x{$xslTargetFtp/tech:proxyUser()}x%"/>
+        <parameter id="_dpMLD9E1EeiqadpQbccNDg" name="PROXY_PASSWORD" type="String" value="%x{$xslTargetFtp/tech:proxyPassword()}x%"/>
+        <parameter id="_dpMLENE1EeiqadpQbccNDg" name="FTP_FILE_MODE" type="String" value="binary"/>
+        <parameter id="_dpMLEdE1EeiqadpQbccNDg" name="FTP_LOCAL_FILENAME" type="String" value="*.dat"/>
+      </actionCode>
+    </subProcess>
+    <templateType>L-TP.RDBMS.LOADING</templateType>
+    <xslVariable id="_dpMLEtE1EeiqadpQbccNDg" code="%xsl{&#xD;&#xA;&lt;xsl:apply-templates select=&quot;if ($useWsdl) then $REF/source/ref:target()/ancestor::wsdl else $REF/source/ref:target()&quot; mode=&quot;analyzeDatastore&quot;>&#xD;&#xA;&lt;xsl:with-param name=&quot;allExtraFields&quot; select=&quot;$REF/source/ref:target()/ref:allExtraFields()&quot; tunnel=&quot;yes&quot;/>&#xD;&#xA;&lt;xsl:with-param name=&quot;extraFields&quot; select=&quot;$REF/ref:extraFields()&quot;  tunnel=&quot;yes&quot;/>&#xD;&#xA;&lt;xsl:with-param name=&quot;filters&quot; select=&quot;$REF/ref:fields()/ref:sources()/@id | $REF/ref:extraFields()/tech:parentId()&quot; tunnel=&quot;yes&quot;/>&#xD;&#xA;&lt;xsl:with-param name=&quot;activeFilters&quot; select=&quot;true()&quot; tunnel=&quot;yes&quot;/>&#xD;&#xA;&lt;xsl:with-param name=&quot;datastorePrefix&quot; select=&quot;$REF/tech:workName()&quot; tunnel=&quot;yes&quot;/>&#xD;&#xA;&lt;xsl:with-param name=&quot;datastoreLogicalPrefix&quot; select=&quot;$REF/ref:target()/@name&quot; tunnel=&quot;yes&quot;/>&#xD;&#xA;&lt;xsl:with-param name=&quot;resetPosition&quot; select=&quot;true()&quot;/>&#xD;&#xA;&lt;/xsl:apply-templates>&#xD;&#xA;}xsl%&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" name="context" order="50" type="xsl"/>
+    <xslVariable id="_dpMLE9E1EeiqadpQbccNDg" code="%xsl{&#xD;&#xA;&lt;xsl:variable name=&quot;targetNullWOrd&quot; select=&quot;$REF/ref:target()/tech:nullWord()&quot;/>&#xD;&#xA;&lt;xsl:for-each select=&quot;$context//datastore&quot;>&#xD;&#xA;&lt;datastore name=&quot;{@logicalName}&quot; fullPath=&quot;{@fullPath}&quot; workName=&quot;{@name}&quot; physicalName=&quot;{md:objectPath($REF/ref:parent(),@name,'workName')}&quot;>&#xD;&#xA;&#x9;&#xD;&#xA;&#x9;&lt;xsl:if test=&quot;position()>1&quot;>&#xD;&#xA;&#x9;&#x9;&lt;field id=&quot;{@id}&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;targetWritableType>%x{$REF/ref:target()/tech:numericDDL(10)}x%&lt;/targetWritableType>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;targetNullWord>%x{$targetNullWOrd}x%&lt;/targetNullWord>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;workName>stb_parentKey&lt;/workName>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;indexName>IX1_%x{@name}x%&lt;/indexName>&#xD;&#xA;&#x9;&#x9;&lt;/field>&#xD;&#xA;&#x9;&lt;/xsl:if>&#xD;&#xA;&#x9;&lt;field id=&quot;{@id}&quot;>&#xD;&#xA;&#x9;&#x9;&lt;targetWritableType>%x{$REF/ref:target()/tech:numericDDL(10)}x%&lt;/targetWritableType>&#xD;&#xA;&#x9;&#x9;&lt;targetNullWord>%x{$targetNullWOrd}x%&lt;/targetNullWord>&#xD;&#xA;&#x9;&#x9;&lt;workName>stb_key&lt;/workName>&#xD;&#xA;&#x9;&#x9;&lt;indexName>IX2_%x{@name}x%&lt;/indexName>&#xD;&#xA;&#x9;&lt;/field>&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;position&quot; select=&quot;position()&quot;/>&#xD;&#xA;&#x9;&lt;xsl:for-each select=&quot;field&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;current&quot; select=&quot;.&quot;/>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;id&quot; select=&quot;@id&quot;/>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;parentId&quot; select=&quot;@parentId&quot;/>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:for-each select=&quot;$REF/ref:fields()[ref:sources()/@id=current()/@id and (not(extrafield) or extrafield/tech:parentId()=$parentId)]&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;field id=&quot;{if (extrafield) then $parentId else ''}{$id}&quot; fullPath=&quot;{$current/@fullPath}&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;targetWritableType>%x{tech:targetWritableType()}x%&lt;/targetWritableType>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;targetNullWord>%x{$targetNullWOrd}x%&lt;/targetNullWord>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;workName>%x{tech:workName()}x%&lt;/workName>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;/field>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;/xsl:for-each>&#xD;&#xA;&#x9;&#x9;&lt;/xsl:for-each>&#xD;&#xA;&lt;/datastore>&#xD;&#xA;&lt;/xsl:for-each>&#xD;&#xA;}xsl%" name="fields" order="100" type="xsl"/>
+    <xslVariable id="_dpMLFNE1EeiqadpQbccNDg" code="if ($REF/ref:target()/tech:productCode()='MICROSOFT_SQL_SERVER') &#xD;&#xA;&#x9;then concat($REF/ref:target()/ref:parent()/ref:work()/tech:schemaName(),'.',$REF/tech:workName())&#xD;&#xA;&#x9;else md:physicalPath($REF,'workName')" name="viewName" type="xpath"/>
+    <xslVariable id="_dpMLFdE1EeiqadpQbccNDg" code="md:ifEmpty(md:paramValue($this,'inFileName'),$REF/ref:source()/tech:xmlInFilePath(),$REF/ref:source()/tech:xmlFilePath(),concat('${/CORE_TEMPORARY_FOLDER}$/',$REF/ref:source()/@id,'.xml'))" name="fileName" type="xpath"/>
+    <xslVariable id="_dpMLFtE1EeiqadpQbccNDg" code="%xsl{&#xD;&#xA;&lt;xsl:variable name=&quot;direction&quot; select=&quot;$REF/ref:target()/ref:product()/tech:leftJoin()&quot;/>&#xD;&#xA;&lt;xsl:variable name=&quot;useBracket&quot; select=&quot;$REF/ref:target()/ref:product()/tech:hasExplicitJoinInBracket()&quot;/>&#xD;&#xA;&#xD;&#xA;&lt;xsl:variable name=&quot;name&quot; select=&quot;$REF/@name&quot;/>&#xD;&#xA;&lt;xsl:variable name=&quot;fields&quot; select=&quot;$REF/ref:fields()&quot;/>&#xD;&#xA;&lt;xsl:variable name=&quot;targetSteps&quot; select=&quot;$REF/ref:targetStep()&quot;/>&#xD;&#xA;&lt;!-- use $REF instead of targetSteps for loop one time into for-each bloc in not sub query mode-->&#xD;&#xA;&lt;xsl:variable name=&quot;targetSteps&quot; select=&quot;if ($useSubQuery) then $targetSteps else $REF&quot;/>&#xD;&#xA;&lt;xsl:for-each select=&quot;$targetSteps&quot;>&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;current&quot; select=&quot;.&quot;/>&#xD;&#xA;&#x9;&lt;xsl:for-each select=&quot;source[not($useSubQuery) or @name=$name]&quot;>&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;sourceSetName&quot; select=&quot;if (not(@sourceSet)) then '' else @sourceSet&quot;/>&#xD;&#xA;&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;useFields&quot; select=&quot;if ($useSubQuery) then $REF/ref:fields($sourceSetName,$current) else $REF/ref:fields()&quot;/>&#xD;&#xA;&#x9;&lt;!-- fix for versions prior to s18.2.0 -->&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;useFields&quot; select=&quot;if (count($useFields)=0 and $sourceSetName!='') then $REF/ref:fields('',$current) else $useFields&quot;/>&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;useFieldsId&quot; select=&quot;$useFields/ref:sources()/@id&quot;/>&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;allDatastore&quot; select=&quot;$context/descendant-or-self::datastore&quot;/>&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;usedDatastore&quot; select=&quot;if ($useSubQuery) then $allDatastore[./*/@id=$useFieldsId] else $allDatastore&quot;/>&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;datastore&quot; select=&quot;if ($useSubQuery) then $allDatastore[@id=$useFieldsId or .//@id=$useFieldsId] else $allDatastore&quot;/>&#xD;&#xA;&#xD;&#xA;&lt;xsl:variable name=&quot;joins&quot;>&#xD;&#xA;&#x9;&lt;xsl:for-each select=&quot;$datastore&quot;>&#xD;&#xA;&#x9;&lt;xsl:sort select=&quot;position()&quot; order=&quot;ascending&quot;/>&#xD;&#xA;&#x9;&#x9;&lt;xsl:if test=&quot;position()>1&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;join id=&quot;{position()}&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;expr>%x{$direction}%&lt;/expr>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;right>%x{concat(md:objectPath($REF/ref:parent(),@name,'workName'),' ',$REF/ref:target()/tech:tableAliasWord(),' ',@name)}%&lt;/right>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;left>%x{concat(md:objectPath($REF/ref:parent(),../@name,'workName'),' ',$REF/ref:target()/tech:tableAliasWord(),' ',../@name)}%&lt;/left>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;on>%x{../@name}%.stb_key=%x{@name}%.stb_parentKey&lt;/on>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;/join>&#xD;&#xA;&#x9;&#x9;&lt;/xsl:if>&#xD;&#xA;&#x9;&lt;/xsl:for-each>&#xD;&#xA;&lt;/xsl:variable>&#xD;&#xA;&#xD;&#xA;&lt;xsl:variable name=&quot;joins&quot;>&#xD;&#xA;&#x9;&lt;xsl:call-template name=&quot;rdbms:join&quot;>&#xD;&#xA;&#x9;&#x9;&lt;xsl:with-param name=&quot;joins&quot; select=&quot;$joins&quot;/>&#xD;&#xA;&#x9;&#x9;&lt;xsl:with-param name=&quot;bracket&quot; select=&quot;$useBracket&quot; tunnel=&quot;yes&quot;/>&#xD;&#xA;&#x9;&lt;/xsl:call-template>&#xD;&#xA;&lt;/xsl:variable>&#xD;&#xA;&lt;xsl:variable name=&quot;from&quot;>&#xD;&#xA;&#x9;&lt;xsl:choose>&#xD;&#xA;&#x9;&lt;xsl:when test=&quot;count($datastore)>1&quot;>&#xD;&#xA;&#x9;&#x9;&lt;xsl:copy-of select=&quot;$joins&quot;/>&#xD;&#xA;&#x9;&#x9;&lt;!--&lt;xsl:apply-templates select=&quot;$joins&quot; mode=&quot;join&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:with-param name=&quot;bracket&quot; select=&quot;$useBracket&quot; tunnel=&quot;yes&quot;/>&#xD;&#xA;&#x9;&#x9;&lt;/xsl:apply-templates>-->&#xD;&#xA;&#x9;&lt;/xsl:when>&#xD;&#xA;&#x9;&lt;xsl:otherwise>&#xD;&#xA;&#x9;%x{concat(md:objectPath($REF/ref:parent(),$datastore/@name,'workName'),' ',$REF/ref:target()/tech:tableAliasWord(),' ',$datastore/@name)}%&#xD;&#xA;&#x9;&lt;/xsl:otherwise>&#xD;&#xA;&#x9;&lt;/xsl:choose>&#xD;&#xA;&lt;/xsl:variable>&#xD;&#xA;&#xD;&#xA;&lt;query name=&quot;{$current/@name}&quot; sourceSet=&quot;{@sourceSet}&quot;>&#xD;&#xA;select %x{if (md:paramValue($this,'useDistinct')='true') then 'DISTINCT ' else ''}x%&#xD;&#xA;%x{md:patternList($useFields,'[workName]', ',\n\t')}x%&#xD;&#xA;from %x{$from}x%&#xD;&#xA;where (1=1)&#xD;&#xA;%x{if (md:paramValue($this,'disableFilterPart')='true') then '' else $REF/tech:filterPart()}%&#xD;&#xA;%x{if(md:paramValue($this,'filterEmptyRecords')='true') then md:list($usedDatastore/concat(@name,'.stb_key is null'), ' and\n\t', 'and not(\n\t', ')') else ''}x%&#xD;&#xA;%x{$REF/tech:joinPart()}%&#xD;&#xA;&#xD;&#xA;&lt;/query>&#xD;&#xA;&lt;/xsl:for-each>&#xD;&#xA;&lt;/xsl:for-each>&#xD;&#xA;&#xD;&#xA;}xsl%" name="Query" order="200" type="xsl"/>
+    <xslVariable id="_dpMLF9E1EeiqadpQbccNDg" code="if (md:paramValue($this,'useView')='true') then false()&#xD;&#xA;else function-available('md:setStagingPoint')" name="useSubQuery" type="xpath"/>
+    <xslVariable id="_dpMLGNE1EeiqadpQbccNDg" code="$REF/ref:target()/mdj:xpath('$TARGET_FTP')" name="xslTargetFtp" type="xpath"/>
+    <xslVariable id="__oL5EF1OEeqNJ5B9m3FkFA" code="if ($REF/source/ref:target()/tech:productCode()='WSDL') then true()&#xD;&#xA;else false()" name="useWsdl" type="xpath"/>
+  </subProcess>
+  <subProcess id="_dpMLGdE1EeiqadpQbccNDg" generationCondition="'${cleanTemporaryObjects}$'='true'" isBeginAction="false" name="Clean" nbCycles="-1" toleratedError="false">
+    <actionCode id="_dpMLGtE1EeiqadpQbccNDg" generationCondition="" enable="true" isBeginAction="false" name="Drop Table" nbCycles="-1" repetitionPublishParameters="true" repetitionQuery="$fields//datastore" repetitionVariableName="datastore" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter id="_dpMLG9E1EeiqadpQbccNDg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_dpMLHNE1EeiqadpQbccNDg" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_dpMLHdE1EeiqadpQbccNDg" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <parameter id="_Gz-4ANE2EeiqadpQbccNDg" name="SQL_MULTI_QUERYS" type="Boolean" value="true"/>
+      <code>DATABASE %x{$REF/ref:target()/ref:schema()/ref:work()/tech:catalogName()}x%;&#xD;
+drop table %x{@physicalName}x%;&#xD;
+DATABASE %x{$REF/ref:target()/ref:schema()/tech:catalogName()}x%;</code>
+    </actionCode>
+    <actionCode id="_dpMLKtE1EeiqadpQbccNDg" generationCondition="$REF/ref:target()/tech:productCode()!='MICROSOFT_SQL_SERVER' and not($useSubQuery)" enable="true" isBeginAction="false" name="Drop_View" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_dpMLK9E1EeiqadpQbccNDg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dpMLGtE1EeiqadpQbccNDg"/>
+      <parameter id="_dpMLLNE1EeiqadpQbccNDg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_dpMLLdE1EeiqadpQbccNDg" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_dpMLLtE1EeiqadpQbccNDg" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <parameter id="_Fl3fENE2EeiqadpQbccNDg" name="SQL_MULTI_QUERYS" type="Boolean" value="true"/>
+      <code>DATABASE %x{$REF/ref:target()/ref:schema()/ref:work()/tech:catalogName()}x%;&#xD;
+drop view %x{$viewName}x%;&#xD;
+DATABASE %x{$REF/ref:target()/ref:schema()/tech:catalogName()}x%;</code>
+    </actionCode>
+    <actionCode id="_dpMLL9E1EeiqadpQbccNDg" generationCondition="'${cleanTemporaryObjects}$'='true'" isBeginAction="false" name="Empty" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+      <link id="_dpMLMdE1EeiqadpQbccNDg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dpMLKtE1EeiqadpQbccNDg"/>
+      <link id="_dpMLMtE1EeiqadpQbccNDg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dpMLNtE1EeiqadpQbccNDg?fileId=_dpMKodE1EeiqadpQbccNDg$type=proc$name=Clean%20Files%20on%20server?"/>
+    </actionCode>
+    <actionCode id="_dpMLM9E1EeiqadpQbccNDg" generationCondition="'${fileExport}$' = 'true'" enable="true" isBeginAction="false" name="FileDelete" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+      <parameter id="_dpMLNNE1EeiqadpQbccNDg" name="DEL_DIR" type="String" value="%x{md:paramValue($this,'workFolder')}x%"/>
+      <parameter id="_dpMLNdE1EeiqadpQbccNDg" name="DEL_INCLUDES" type="String" value="data_%x{$REF/tech:workName()}x%_*/**"/>
+    </actionCode>
+    <subProcess id="_dpMLNtE1EeiqadpQbccNDg" generationCondition="'${enableFileTransport}$'='true' and exists($xslTargetFtp)" isBeginAction="false" name="Clean Files on server" nbCycles="-1" repetitionQuery="$fields//datastore" repetitionVariableName="datastore" toleratedError="false">
+      <link id="_dpMLN9E1EeiqadpQbccNDg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dpMLM9E1EeiqadpQbccNDg"/>
+      <actionCode id="_dpMLONE1EeiqadpQbccNDg" isBeginAction="false" name="FileWait" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileWaitActionCodeI">
+        <bindLink id="_dpMLOdE1EeiqadpQbccNDg" bindType="DirectBind" targetId="_dpMLP9E1EeiqadpQbccNDg"/>
+        <parameter id="_dpMLOtE1EeiqadpQbccNDg" name="WAIT_FILE_DIR" type="String" value="%x{md:paramValue($this,'workFolder')}x%/data_%x{$datastore/@workName}x%"/>
+        <parameter id="_dpMLO9E1EeiqadpQbccNDg" name="WAIT_FILE_INCLUDES" type="String" value="*.dat"/>
+        <parameter id="_dpMLPNE1EeiqadpQbccNDg" name="WAIT_FILE_NB_FILES" type="Integer" value="%x{md:paramValue($this,'nbWriter')}x%"/>
+        <parameter id="_dpMLPdE1EeiqadpQbccNDg" name="WAIT_FILE_TIMEOUT" type="Integer" value="2"/>
+        <parameter id="_dpMLPtE1EeiqadpQbccNDg" name="WAIT_FILE_POLLINT" type="Integer" value="1"/>
+      </actionCode>
+      <actionCode id="_dpMLP9E1EeiqadpQbccNDg" generationCondition="exists($xslTargetFtp) and '${cleanTemporaryObjects}$'='true' and '${enableFileTransport}$'!='false'" enable="true" isBeginAction="false" name="FtpCommand" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.FtpExecActionCodeI">
+        <link id="_dpMLQNE1EeiqadpQbccNDg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dpMLR9E1EeiqadpQbccNDg"/>
+        <parameter id="_dpMLQdE1EeiqadpQbccNDg" name="FTP_HOSTNAME" type="String" value="%x{$xslTargetFtp/tech:host()}x%"/>
+        <parameter id="_dpMLQtE1EeiqadpQbccNDg" name="FTP_USER" type="String" value="%x{$xslTargetFtp/tech:user()}x%"/>
+        <parameter id="_dpMLQ9E1EeiqadpQbccNDg" name="FTP_PORT" type="String" value="%x{$xslTargetFtp/tech:port()}x%"/>
+        <parameter id="_dpMLRNE1EeiqadpQbccNDg" name="FTP_PASSWORD" type="String" value="%x{$xslTargetFtp/tech:password()}x%"/>
+        <parameter id="_dpMLRdE1EeiqadpQbccNDg" name="FTP_FILE_MODE" type="String" value="binary"/>
+        <parameter id="_dpMLRtE1EeiqadpQbccNDg" name="FTP_REMOTE_PATH" type="String" value="%x{$xslTargetFtp/tech:path()}x%"/>
+        <code>CWD %x{$xslTargetFtp/tech:path()}x%/data_%x{$datastore/@workName}x%&#xD;
+DELE :{FILE_NAME}:</code>
+      </actionCode>
+      <actionCode id="_dpMLR9E1EeiqadpQbccNDg" generationCondition="exists($xslTargetFtp) and '${cleanTemporaryObjects}$'='true' and '${enableFileTransport}$'!='false'" enable="true" isBeginAction="false" name="Delete directories" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.FtpExecActionCodeI">
+        <parameter id="_dpMLSNE1EeiqadpQbccNDg" name="FTP_HOSTNAME" type="String" value="%x{$xslTargetFtp/tech:host()}x%"/>
+        <parameter id="_dpMLSdE1EeiqadpQbccNDg" name="FTP_USER" type="String" value="%x{$xslTargetFtp/tech:user()}x%"/>
+        <parameter id="_dpMLStE1EeiqadpQbccNDg" name="FTP_PORT" type="String" value="%x{$xslTargetFtp/tech:port()}x%"/>
+        <parameter id="_dpMLS9E1EeiqadpQbccNDg" name="FTP_PASSWORD" type="String" value="%x{$xslTargetFtp/tech:password()}x%"/>
+        <parameter id="_dpMLTNE1EeiqadpQbccNDg" name="FTP_FILE_MODE" type="String" value="binary"/>
+        <parameter id="_dpMLTdE1EeiqadpQbccNDg" name="FTP_REMOTE_PATH" type="String" value="%x{$xslTargetFtp/tech:path()}x%"/>
+        <code>CWD %x{$xslTargetFtp/tech:path()}x%&#xD;
+RMD data_%x{$datastore/@workName}x%</code>
+      </actionCode>
+    </subProcess>
+    <templateType>L-TP.RDBMS.CLEANING</templateType>
+    <xslVariable id="_dpMLTtE1EeiqadpQbccNDg" code="%xsl{&#xD;&#xA;&lt;xsl:apply-templates select=&quot;if ($useWsdl) then $REF/source/ref:target()/ancestor::wsdl else $REF/source/ref:target()&quot; mode=&quot;analyzeDatastore&quot;>&#xD;&#xA;&lt;xsl:with-param name=&quot;allExtraFields&quot; select=&quot;$REF/source/ref:target()/ref:allExtraFields()&quot; tunnel=&quot;yes&quot;/>&#xD;&#xA;&lt;xsl:with-param name=&quot;extraFields&quot; select=&quot;$REF/ref:extraFields()&quot;  tunnel=&quot;yes&quot;/>&#xD;&#xA;&lt;xsl:with-param name=&quot;filters&quot; select=&quot;$REF/ref:fields()/ref:sources()/@id | $REF/ref:extraFields()/tech:parentId()&quot; tunnel=&quot;yes&quot;/>&#xD;&#xA;&lt;xsl:with-param name=&quot;activeFilters&quot; select=&quot;true()&quot; tunnel=&quot;yes&quot;/>&#xD;&#xA;&lt;xsl:with-param name=&quot;datastorePrefix&quot; select=&quot;$REF/tech:workName()&quot; tunnel=&quot;yes&quot;/>&#xD;&#xA;&lt;xsl:with-param name=&quot;datastoreLogicalPrefix&quot; select=&quot;$REF/ref:target()/@name&quot; tunnel=&quot;yes&quot;/>&#xD;&#xA;&lt;xsl:with-param name=&quot;resetPosition&quot; select=&quot;true()&quot;/>&#xD;&#xA;&lt;/xsl:apply-templates>&#xD;&#xA;}xsl%&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" name="context" order="50" type="xsl"/>
+    <xslVariable id="_dpMLT9E1EeiqadpQbccNDg" code="if ($REF/ref:target()/tech:productCode()='MICROSOFT_SQL_SERVER') &#xD;&#xA;&#x9;then concat($REF/ref:target()/ref:parent()/ref:work()/tech:schemaName(),'.',$REF/tech:workName())&#xD;&#xA;&#x9;else md:physicalPath($REF,'workName')" name="viewName" type="xpath"/>
+    <xslVariable id="_dpMLUNE1EeiqadpQbccNDg" code="%xsl{&#xD;&#xA;&lt;xsl:variable name=&quot;targetNullWOrd&quot; select=&quot;$REF/ref:target()/tech:nullWord()&quot;/>&#xD;&#xA;&lt;xsl:for-each select=&quot;$context//datastore&quot;>&#xD;&#xA;&lt;datastore name=&quot;{@logicalName}&quot; fullPath=&quot;{@fullPath}&quot; workName=&quot;{@name}&quot; physicalName=&quot;{md:objectPath($REF/ref:parent(),@name,'workName')}&quot;>&#xD;&#xA;&#x9;&#xD;&#xA;&#x9;&lt;xsl:if test=&quot;position()>1&quot;>&#xD;&#xA;&#x9;&#x9;&lt;field id=&quot;{@id}&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;targetWritableType>%x{$REF/ref:target()/tech:numericDDL(10)}x%&lt;/targetWritableType>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;targetNullWord>%x{$targetNullWOrd}x%&lt;/targetNullWord>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;workName>stb_parentKey&lt;/workName>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;indexName>IX1_%x{@name}x%&lt;/indexName>&#xD;&#xA;&#x9;&#x9;&lt;/field>&#xD;&#xA;&#x9;&lt;/xsl:if>&#xD;&#xA;&#x9;&lt;field id=&quot;{@id}&quot;>&#xD;&#xA;&#x9;&#x9;&lt;targetWritableType>%x{$REF/ref:target()/tech:numericDDL(10)}x%&lt;/targetWritableType>&#xD;&#xA;&#x9;&#x9;&lt;targetNullWord>%x{$targetNullWOrd}x%&lt;/targetNullWord>&#xD;&#xA;&#x9;&#x9;&lt;workName>stb_key&lt;/workName>&#xD;&#xA;&#x9;&#x9;&lt;indexName>IX2_%x{@name}x%&lt;/indexName>&#xD;&#xA;&#x9;&lt;/field>&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;position&quot; select=&quot;position()&quot;/>&#xD;&#xA;&#x9;&lt;xsl:for-each select=&quot;field&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;current&quot; select=&quot;.&quot;/>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;id&quot; select=&quot;@id&quot;/>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;parentId&quot; select=&quot;@parentId&quot;/>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:for-each select=&quot;$REF/ref:fields()[ref:sources()/@id=current()/@id and (not(extrafield) or extrafield/tech:parentId()=$parentId)]&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;field id=&quot;{if (extrafield) then $parentId else ''}{$id}&quot; fullPath=&quot;{$current/@fullPath}&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;targetWritableType>%x{tech:targetWritableType()}x%&lt;/targetWritableType>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;targetNullWord>%x{$targetNullWOrd}x%&lt;/targetNullWord>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;workName>%x{tech:workName()}x%&lt;/workName>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;/field>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;/xsl:for-each>&#xD;&#xA;&#x9;&#x9;&lt;/xsl:for-each>&#xD;&#xA;&lt;/datastore>&#xD;&#xA;&lt;/xsl:for-each>&#xD;&#xA;}xsl%" name="fields" order="100" type="xsl"/>
+    <xslVariable id="_dpMLUdE1EeiqadpQbccNDg" code="if (md:paramValue($this,'useView')='true') then false()&#xD;&#xA;else function-available('md:setStagingPoint')" name="useSubQuery" type="xpath"/>
+    <xslVariable id="_dpMLUtE1EeiqadpQbccNDg" code="$REF/ref:target()/mdj:xpath('$TARGET_FTP')" name="xslTargetFtp" type="xpath"/>
+    <xslVariable id="_ACw8QF1PEeqNJ5B9m3FkFA" code="if ($REF/source/ref:target()/tech:productCode()='WSDL') then true()&#xD;&#xA;else false()" name="useWsdl" type="xpath"/>
+  </subProcess>
+  <templateType>L-TP.RDBMS</templateType>
+</proc:process>

@@ -1,0 +1,1727 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" description="" id="UUID_TECH_RDBMS" name="rdbms" ref="resource.md#UUID_MD_SUPER_TYPE?fileId=UUID_MD_SUPER_TYPE$type=md$name=super?">
+  <level xmlName="rdbms" code="com.stambia.rdbms" displayName="Rdbms Definition" isFile="advanced"/>
+  <level icon="icons/full/custom/rdbms.field.png" xmlName="superType" xpathCondition="" code="com.stambia.rdbms.superType" displayName="Super Data Type" isFile="false">
+    <parent>com.stambia.rdbms</parent>
+    <xPathExpression expression="concat('java.sql.Types.',@name)">
+      <code>SQL_JAVA_TYPE_CONSTANT</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/cylindres" xmlName="product" code="com.stambia.rdbms.product" displayName="Product" isFile="advanced">
+    <attribute xmlName="code" category="Standard" code="code" displayName="Code"/>
+    <attribute xmlName="dateFunction" category="Sql" code="function.date" displayName="Date Function"/>
+    <attribute xmlName="columnAlias" category="Sql" code="columnalias" defaultValue="" displayName="Column Alias"/>
+    <attribute xmlName="tableAlias" category="Sql" code="tablealias" defaultValue="" displayName="Table Alias"/>
+    <attribute xmlName="nullWord" category="Sql" code="nullWord" displayName="Null DDL Keyword"/>
+    <attribute xmlName="notNullWord" xpathCondition="" category="Sql" code="notNullWord" displayName="Not Null DDL Keyword"/>
+    <attribute iconBundleName="" xmlName="nullSelectKeyword" category="Sql" code="nullSelectKeyword" default="NULL" displayName="Null Select Keyword" overridableOnChildFile="true"/>
+    <attribute xmlName="orderByType" category="Sql" code="orderby" displayName="Order by Type" valueSet="#rdbms.where.type"/>
+    <attribute icon="" xmlName="groupByType" category="Sql" code="groupby" displayName="Group by Type" valueSet="#rdbms.where.type"/>
+    <attribute xmlName="havingType" category="Sql" code="having" displayName="Having Type" valueSet="#rdbms.where.type"/>
+    <attribute xmlName="notNullWord" xpathCondition="" category="Sql" code="notNullWord" displayName="Not Null Word"/>
+    <attribute icon="" xmlName="inner" category="Join" code="join.inner" displayName="Inner Expression" type="string"/>
+    <attribute icon="" xmlName="left" category="Join" code="join.left" displayName="Left outer expression" type="string"/>
+    <attribute icon="" xmlName="right" category="Join" code="join.right" displayName="Right outer expression" type="string"/>
+    <attribute icon="" xmlName="cross" category="Join" code="join.cross" displayName="Cross expression" type="string"/>
+    <attribute icon="" xmlName="full" category="Join" code="join.full" displayName="Full expression" type="string"/>
+    <attribute xmlName="outer" category="Join" code="join.outer" displayName="Outer expression"/>
+    <attribute xmlName="outerplace" category="Join" code="join.outer.place" displayName="Outer expression place" type="reference" valueSet="#rdbms.join.outer.place"/>
+    <attribute xmlName="outerJoinMode" category="Join" code="join.outerjoinmode" displayName="Default Outer Join Mode" type="reference" valueSet="#rdbms.join.mode"/>
+    <attribute xmlName="innerJoinMode" category="Join" code="join.innerjoinmode" displayName="Default Inner Join Mode" type="reference" valueSet="#rdbms.join.mode"/>
+    <attribute iconBundleName="" xmlName="explicitJoinInBracket" xpathCondition="" category="Join" code="explicitJoinInBracket" default="true" defaultValue="" displayName="Explicit Join In Bracket" type="boolean"/>
+    <attribute xmlName="remoteMask" category="Mask" code="remoteMask" displayName="Remote Mask"/>
+    <attribute xmlName="schemaMask" category="Mask" code="schemaMask" displayName="Schema Mask"/>
+    <attribute xmlName="objectDelimiterMask" category="Delimiter" code="objectDelimiterMask" defaultValue="" displayName="Delimiter Mask"/>
+    <attribute xmlName="schemaType" code="schemaType" displayName="Schema Type" editable="true" mdXpathAccess="tokenize('no,schema,catalog,catalog.schema',',')" nullable="false" type="list"/>
+    <attribute xmlName="defaultDelimiterRegexp" category="Delimiter" code="defaultDelimiterRegexp" defaultValue="" displayName="Default Delimiter Regexp"/>
+    <attribute xmlName="schemaDelimiterRegexp" category="Delimiter" code="schemaDelimiterRegexp" defaultValue="" displayName="Schema Delimiter Regexp "/>
+    <attribute xmlName="datastoreDelimiterRegexp" category="Delimiter" code="datastoreDelimiterRegexp" defaultValue="" displayName="Datastore Delimiter Regexp "/>
+    <attribute xmlName="jdbcFetchSize" category="Advanced" code="jdbcFetchSize" displayName="Jdbc Fetch Size"/>
+    <attribute xmlName="maxDatastoreNameSize" category="Advanced" code="maxDatastoreNameSize" displayName="Max Datastore Name Size" type="integer"/>
+    <attribute xmlName="maxColumnNameSize" category="Advanced" code="maxColumnNameSize" displayName="Max Column Name Size" type="integer"/>
+    <attribute xmlName="additionalProperty" xpathCondition="" category="Advanced" code="additionalProperty" displayName="Additional Properties" mdXpathAccess="tokenize('JDBC.BIND.MANAGE_SET_DATE_AS_TIMESTAMP,JDBC.BIND.MANAGE_GET_DATE_AS_TIMESTAMP,JDBC.BIND.FORCE_SET_NULL_METHOD_USAGE,JDBC.BIND.MANAGE_SET_NSTRING_AS_STRING,JDBC.BIND.DISABLE_IMPLICIT_CONVERSION',',')" type="list" unbounded="true"/>
+    <attribute xmlName="datastoreExcludeType" category="Reverse" code="datastoreExcludeType" displayName="Datastore Exclude Type" unbounded="true"/>
+    <attribute icon="" xmlName="dropTableIfExists" category="Sql" code="dropTableIfExists" displayName="Drop Table If Exists Syntax" overridableOnChildFile="true"/>
+    <attribute xmlName="queryReverseMethod" category="Reverse" code="queryReverseMethod" displayName="Query Reverse Method" mdXpathAccess="tokenize('PreparedStatement.getMetadata,ResultSet.getMetaData',',')" type="list"/>
+    <attribute icon="" iconBundleName="" xmlName="dropViewIfExists" category="Sql" code="dropViewIfExists" displayName="Drop View If Exists Syntax" overridableOnChildFile="true"/>
+    <attribute xmlName="reservedWord" category="Advanced" code="reservedWord" displayName="Reserved Word" multiLine="false" type="string" unbounded="true"/>
+    <attribute xmlName="timestampToChar" category="Conversions" code="timestampToChar" displayName="Timestamp to Char"/>
+    <attribute xmlName="databaseMetadataReverseMode" category="Reverse" code="databaseMetadataReverseMode" configurable="false" default="columnLabel" displayName="Database Metadata Reverse Mode" editable="false" mdXpathAccess="tokenize('columnLabel columnPosition', ' ')" toolTip="Use to specify the way informations are extracted from DatabaseMetadata ResultSet during reverse. Information can be accessed by column Label or Position" type="list"/>
+    <attribute xmlName="poolReadAutocommitMode" category="Advanced" code="poolReadAutocommitMode" displayName="Autocommit Method for Select Operations" mdXpathAccess="tokenize('autocommitDelegatedToConnection,autocommitPerformedByRuntime',',')" toolTip="Defines how autocommit is managed when performing select operations: 'autocommitDelegatedToConnection' delegates autocommit management to jdbc connection and 'autocommitPerformedByRuntime' is a mode where the connection will be transactional and committed automatically by the runtime after an action is finished" type="list"/>
+    <attribute xmlName="baseModule" code="baseModule" displayName="BaseModule" unbounded="true"/>
+    <attribute xmlName="templateCapability" code="templateCapability" displayName="Template Capability Support" toolTip="The list of Template meta-inf template-feature-support supported" unbounded="true"/>
+    <parent>com.stambia.rdbms</parent>
+    <xPathExpression expression="(if (@inner!='') then 'EXPLICIT' else if (@outer!='') then 'IMPLICIT' else 'NONE')">
+      <code>JOIN_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression=" (@inner!='') ">
+      <code>HAS_EXPLICIT_OUTER_MODE</code>
+    </xPathExpression>
+    <xPathExpression expression="(@outer!='') ">
+      <code>HAS_IMPLICIT_OUTER_MODE</code>
+    </xPathExpression>
+    <xPathExpression expression="@left">
+      <code>LEFT_JOIN</code>
+    </xPathExpression>
+    <xPathExpression expression="@right">
+      <code>RIGHT_JOIN</code>
+    </xPathExpression>
+    <xPathExpression expression="@inner">
+      <code>INNER_JOIN</code>
+    </xPathExpression>
+    <xPathExpression expression="@full">
+      <code>FULL_JOIN</code>
+    </xPathExpression>
+    <xPathExpression expression="@cross">
+      <code>CROSS_JOIN</code>
+    </xPathExpression>
+    <xPathExpression expression="@outer">
+      <code>OUTER_JOIN</code>
+    </xPathExpression>
+    <xPathExpression expression="@outerplace">
+      <code>OUTER_PLACE</code>
+    </xPathExpression>
+    <xPathExpression expression="@outerJoinMode">
+      <code>DEFAULT_OUTER_JOIN_MODE</code>
+    </xPathExpression>
+    <xPathExpression expression="@innerJoinMode">
+      <code>DEFAULT_INNER_JOIN_MODE</code>
+    </xPathExpression>
+    <xPathExpression expression="@remoteMask">
+      <code>REMOTE_MASK</code>
+    </xPathExpression>
+    <xPathExpression expression="mask[@name='PK_CREATE_MASK'][1]/@value">
+      <code>PK_CREATE_MASK</code>
+    </xPathExpression>
+    <xPathExpression expression="not(@explicitJoinInBracket='false')">
+      <code>HAS_EXPLICIT_JOIN_IN_BRACKET</code>
+    </xPathExpression>
+    <xPathExpression description="Methode used to reverse Queries.&#xD;&#xA;By default returns: ResultSet.getMetaData" expression="if(@queryReverseMethod!='') then @queryReverseMethod else 'ResultSet.getMetaData'">
+      <code>INTERNAL_QUERY_REVERSE_METHOD</code>
+    </xPathExpression>
+    <xPathExpression expression="md:list(reservedWord/concat('(^',.,'$)') ,'|','(',')','')">
+      <code>RESERVED_WORD_REGEXP</code>
+    </xPathExpression>
+    <xPathExpression expression="@groupByType">
+      <code>GROUP_BY_TYPE</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/rdbms.server.png" xmlName="server" xpathCondition="" code="com.stambia.rdbms.server" configurable="true" connection="true" connectionBundleName="com.indy.addons" connectionClass="com.indy.jdbc.editor.JdbcConnectionNew" displayName="Server" isFile="true" removeAction="false" reverse="true" reverseBundleName="com.indy.addons" reverseClass="com.indy.md.rdbms.JdbcReverse" reverseCode="" wizardBundleName="com.indy.addons" wizardClass="com.indy.jdbc.wizard.ServerWizard">
+    <icons name="Server" xpath="'icons/full/custom/rdbms.server.png'"/>
+    <icons name="Tag" xpath="if (boolean(tag) or boolean(userProperties)) then 'icons/full/custom/rdbms.tag.png' else ''"/>
+    <attribute xmlName="physicalName" category="Standard" code="physicalName" displayName="Physical Name" externalize="true" mdXpathAccess=""/>
+    <attribute icon="" iconBundleName="" xmlName="module" category="Standard:Jdbc" code="module" default="" displayName="Module" type="list">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.valueprovider.className" value="com.stambia.md.diagram.custom.properties.ModuleListValueProvider"/>
+    </attribute>
+    <attribute icon="" xmlName="driver" category="Standard:Jdbc" code="driver" defaultValue="" displayName="Driver" externalize="false" mdXpathAccess="ancestor::product[1]/driver/@class" nullable="false" type="list"/>
+    <attribute icon="" xmlName="url" category="Standard:Jdbc" code="url" displayName="Url" externalize="true" mdXpathAccess="distinct-values((ancestor::product[1]/driver[@class=$current/@driver]/@url, ./internal:getURLPattern4Module()))" reverseCode="" type="list"/>
+    <attribute xmlName="user" category="Standard:Jdbc" code="user" displayName="User" externalize="true" reverseCode="" type="string"/>
+    <attribute xmlName="password" category="Standard:Jdbc" code="password" displayName="Password" externalize="true" type="password"/>
+    <attribute xmlName="schemaFilter" category="Advanced" code="schemaFilter" displayName="Reverse Schema filter" reverseCode=""/>
+    <attribute xmlName="retryNb" category="Advanced" code="retryNb" displayName="Retry Number" type="integer"/>
+    <attribute xmlName="retryDelay" xpathCondition="" category="Advanced" code="retryDelay" displayName="Retry Delay"/>
+    <attribute xmlName="additionalProperty" xpathCondition="" category="Advanced" code="additionalProperty" displayName="Additional Properties" mdXpathAccess="tokenize('JDBC.BIND.MANAGE_SET_DATE_AS_TIMESTAMP,JDBC.BIND.MANAGE_GET_DATE_AS_TIMESTAMP,JDBC.BIND.FORCE_SET_NULL_METHOD_USAGE,JDBC.BIND.MANAGE_SET_NSTRING_AS_STRING,JDBC.BIND.DISABLE_IMPLICIT_CONVERSION',',')" type="list" unbounded="true"/>
+    <attribute xmlName="initPoolSize" xpathCondition="" category="Advanced" code="initPoolSize" displayName="Initial Pool Size"/>
+    <attribute xmlName="maxPoolSize" category="Advanced" code="maxPoolSize" displayName="Max Pool Size" externalize="false"/>
+    <attribute xmlName="batchSize" category="Advanced" code="batchSize" displayName="Batch Size" type="integer"/>
+    <attribute xmlName="fetchSize" category="Advanced" code="fetchSize" displayName="Fetch Size" type="integer"/>
+    <attribute xmlName="designerAutoCommit" category="Designer" code="designerAutoCommit" displayName="Auto Commit" type="boolean"/>
+    <attribute icon="" xmlName="REMARKS" xpathCondition="" code="remarks" displayName="Description" multiLine="true" reverseCode="REMARKS"/>
+    <attribute xmlName="databaseMajorVersion" code="databaseMajorVersion" displayName="Database Major Version"/>
+    <attribute xmlName="tag" xpathCondition="" category="Customization" code="tag" displayName="Tags" unbounded="true"/>
+    <attribute xmlName="userProperties" xpathCondition="" category="Customization" code="userProperties" displayName="User Properties" keyValue="true" unbounded="true"/>
+    <parent>com.stambia.rdbms.product</parent>
+    <xPathExpression expression="@retryNb">
+      <code>JDBC.RETRY_NB</code>
+    </xPathExpression>
+    <xPathExpression expression="@retryDelay">
+      <code>JDBC.RETRY_DELAY</code>
+    </xPathExpression>
+    <xPathExpression expression="@maxPoolSize">
+      <code>JDBC.CONNECTION_POOL_MAX_SIZE</code>
+    </xPathExpression>
+    <xPathExpression expression="@initPoolSize">
+      <code>JDBC.CONNECTION_POOL_INIT_SIZE</code>
+    </xPathExpression>
+    <xPathExpression expression="@batchSize">
+      <code>JDBC.BATCH_SIZE</code>
+    </xPathExpression>
+    <xPathExpression expression="md:ifEmpty(@fetchSize,ref:product()/@jdbcFetchSize)">
+      <code>JDBC.FETCH_SIZE</code>
+    </xPathExpression>
+    <xPathExpression expression="property">
+      <code>PROPERTY_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,mdj:xpath(.,'PRODUCT_REF/REMOTE_MASK'))">
+      <code>REMOTE_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="ref:product()/additionalProperty | additionalProperty">
+      <code>ADDITIONAL_PROPERTY_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="concat(@name,'(',@id,')')">
+      <code>CONNECTION_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="schema[$p1=@name][1]">
+      <code>SCHEMA_REF</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+    <xPathExpression expression="'true'">
+      <code>GEN_EXTRACT_CONNECTION</code>
+    </xPathExpression>
+    <xPathExpression expression="initsql/tech:sql()">
+      <code>JDBC.CONNECTION_INIT_SQLS</code>
+    </xPathExpression>
+    <xPathExpression description="" expression="@module">
+      <code>JDBC.MODULE</code>
+    </xPathExpression>
+    <xPathExpression expression="./property">
+      <code>INTERNAL_PROPERTIES_REF</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/rdbms.schema.png" xmlName="schema" xpathCondition="" xpathDisplayName="if (@TABLE_SCHEM!=@name) then concat(@name,' (',@TABLE_SCHEM,')') else @name" code="com.stambia.rdbms.schema" configurable="true" connection="false" displayName="DataSchema" mandatory="false" override="false" position="0" removeAction="true" reverse="true" reverseBundleName="com.indy.addons" reverseClass="com.indy.md.rdbms.JdbcReverse" subMetaDataFileCapability="true" wizardBundleName="com.indy.addons" wizardClass="com.indy.jdbc.wizard.SchemaWizard">
+    <icons name="Schema" xpath="'icons/full/custom/rdbms.schema.png'"/>
+    <icons name="Tag" xpath="if (boolean(tag) or boolean(userProperties)) then 'icons/full/custom/rdbms.tag.png' else ''"/>
+    <attribute xmlName="TABLE_SCHEM" xpathCondition="ancestor::product[1]/contains(@schemaType,'schema')" code="name" defaultValue="" displayName="Schema Name" externalize="true" nullable="false" reverseCode="TABLE_SCHEM"/>
+    <attribute xmlName="TABLE_CAT" xpathCondition="ancestor::product[1]/contains(@schemaType,'catalog')" code="catalog.name" defaultValue="" displayName="Catalog Name" externalize="true" mdXpathAccess="" reverseCode="TABLE_CAT"/>
+    <attribute icon="" xmlName="controlSchema" code="control" defaultValue="" displayName="Reject Schema" mdXpathAccess="../schema" type="reference"/>
+    <attribute icon="" xmlName="workSchema" xpathCondition="" code="work" defaultValue="" displayName="Work Schema" mdXpathAccess="../schema" type="reference"/>
+    <attribute icon="" xmlName="reportSchema" xpathCondition="" code="reportSchema" defaultValue="" displayName="Report Schema" mdXpathAccess="../schema" type="reference"/>
+    <attribute xmlName="dataStoreFilter" code="dataStoreFilter" displayName="Reverse DataStore filter" overridableOnChildFile="true" reverseCode=""/>
+    <attribute icon="" xmlName="loadMask" xpathCondition="" category="Temporary Objects" code="loadMask" defaultValue="L[number]_[targetName]" displayName="Load Mask" reverseCode=""/>
+    <attribute icon="" xmlName="integrationMask" xpathCondition="" category="Temporary Objects" code="integrationMask" defaultValue="I_[targetName]" displayName="Integration Mask" reverseCode=""/>
+    <attribute icon="" xmlName="rejectMask" xpathCondition="" category="Temporary Objects" code="rejectMask" defaultValue="R_[targetName]" displayName="Reject Mask" reverseCode=""/>
+    <attribute icon="" iconBundleName="" xmlName="stagingMask" xpathCondition="" category="Temporary Objects" code="stagingMask" displayName="Staging Mask"/>
+    <attribute xmlName="tag" xpathCondition="" category="Customization" code="tag" displayName="Tags" unbounded="true"/>
+    <attribute icon="" xmlName="REMARKS" xpathCondition="" code="remarks" displayName="Description" multiLine="true" reverseCode="REMARKS"/>
+    <attribute xmlName="truncationSize" category="Temporary Objects" code="truncationSize" defaultValue="" displayName="Object Truncation Size"/>
+    <attribute iconBundleName="" xmlName="disableHierarchy" code="disableHierarchy" displayName="Disable Hierarchy View" overridableOnChildFile="true" type="boolean"/>
+    <attribute xmlName="delimiterOnTemp" category="Temporary Objects" code="delimiterOnTemp" displayName="Delimiter On Temporary Objects" reverseCode="" type="boolean"/>
+    <attribute icon="" xmlName="controlPrefix" category="Deprecated" code="controlPrefix" defaultValue="" displayName="Reject Prefix" reverseCode=""/>
+    <attribute xmlName="userProperties" xpathCondition="" category="Customization" code="userProperties" displayName="User Properties" keyValue="true" unbounded="true"/>
+    <attribute xmlName="defaultTempTableStorageClause" category="Temporary Objects" code="defaultTempTableStorageClause" default="" displayName="Default Table Storage Clause" externalize="true" multiLine="true"/>
+    <attribute xmlName="defaultTempIndexStorageClause" xpathIcon="" category="Temporary Objects" code="defaultTempIndexStorageClause" default="" displayName="Default Index Storage Clause" externalize="true" keyValue="false" multiLine="true" unbounded="false"/>
+    <parent>com.stambia.rdbms.server</parent>
+    <xPathExpression expression="if ($schemaMask!='') then mdj:pattern($schemaMask) &#xD;&#xA;else &#xD;&#xA;&#x9;if ($schemaType='no')&#xD;&#xA;&#x9;&#x9;then ''&#xD;&#xA;&#x9;else&#xD;&#xA;&#x9;&#x9;replace(&#xD;&#xA;&#x9;&#x9;&#x9;replace($schemaType,'catalog',replace($catalogValue,'(\\|\$)','\\$1')),&#xD;&#xA;&#x9;&#x9;'schema', replace($schemaValue,'(\\|\$)','\\$1'))&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;">
+      <code>PHYSICAL_NAME</code>
+      <code>DEFAULT</code>
+      <code>NAME</code>
+      <xPathParameter defaultValue="."/>
+      <xPathVariable expression="@TABLE_CAT" name="catalog"/>
+      <xPathVariable expression="@TABLE_SCHEM" name="schema"/>
+      <xPathVariable expression="$p1/mdj:xpath(.,'ADD_DELIMITER',$catalog)" name="catalogValue"/>
+      <xPathVariable expression="$p1/mdj:xpath(.,'ADD_DELIMITER',$schema)" name="schemaValue"/>
+      <xPathVariable expression="$p1/ref:product()/@schemaMask" name="schemaMask"/>
+      <xPathVariable expression="$p1/tech:schemaType()" name="schemaType"/>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'REJECT_REF/DEFAULT')">
+      <code>REJECT_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'WORK_REF/DEFAULT')">
+      <code>WORK_NAME</code>
+      <code>CDC_NAME</code>
+      <code>HISTO_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="(if (@workSchema!='') then mdj:getRef(@workSchema) else  .)">
+      <code>WORK_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="(if (@controlSchema!='') then mdj:getRef(@controlSchema) else  mdj:xpath(.,'WORK_REF'))">
+      <code>REJECT_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@reportSchema!='') then @reportSchema/mdj:getRef(.) else ref:work()">
+      <code>REPORT_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="ref:report()/tech:name()">
+      <code>REPORT_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="./ancestor::*[mdj:getLevel(.)/@connection='true'][1]">
+      <code>TARGET_CONNECTION_REF</code>
+      <code>SOURCE_CONNECTION_REF</code>
+      <code>CONNECTION_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="@TABLE_CAT">
+      <code>CATALOG_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="@TABLE_SCHEM">
+      <code>SCHEMA_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression=".">
+      <code>TARGET_REF</code>
+    </xPathExpression>
+    <xPathExpression description="Utilise par la classe Source" expression="md:ifEmpty(ancestor-or-self::product[1]/@schemaDelimiterRegexp,ancestor-or-self::product[1]/@defaultDelimiterRegexp,'[^a-zA-Z0-9_.\$]')">
+      <code>OBJECT_DELIMITER_REGEXP</code>
+    </xPathExpression>
+    <xPathExpression expression="if ($p1='') then . else ../schema[$p1=@name][1]">
+      <code>SCHEMA_REF</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'SLOT_TABLE_PATH')">
+      <code>SLOT_TABLE</code>
+    </xPathExpression>
+    <xPathExpression expression="concat(md:physicalName(.,'CDC_NAME'),'.`CDC_SLOT`')">
+      <code>SLOT_TABLE_PATH</code>
+    </xPathExpression>
+    <xPathExpression expression="'STAMBIA'">
+      <code>SLOT</code>
+    </xPathExpression>
+    <xPathExpression expression="@defaultTempTableStorageClause">
+      <code>DEFAULT_TEMP_TABLE_STORAGE_CLAUSE</code>
+    </xPathExpression>
+    <xPathExpression expression="@defaultTempIndexStorageClause">
+      <code>DEFAULT_TEMP_INDEX_STORAGE_CLAUSE</code>
+    </xPathExpression>
+    <mappingType>Staging</mappingType>
+    <propertyPage bundleName="com.indy.addons" className="com.indy.jdbc.properties.SchemaPropertiesPage" pageName="Reverse"/>
+    <propertyPage bundleName="com.indy.addons" className="com.indy.jdbc.properties.SchemaProperties1Page" pageName="Properties"/>
+    <view code="fk.hierarchy" enablementXpath="not(@disableHierarchy='true')" levelCode="com.stambia.rdbms.hierarchy" root="true" xpath="datastore[not(fk)]"/>
+  </level>
+  <level icon="icons/full/custom/rdbms.query.folder.png" xmlName="queryFolder" xpathDisplayName="@name" activeDisplayName="false" code="com.stambia.rdbms.queryFolder" connection="false" connectionClass="" displayName="Query Folder" position="1" reverseBundleName="com.indy.addons" reverseClass="com.indy.md.rdbms.JdbcReverse" reverseCode="" subMetaDataFileCapability="true" wizardClass="">
+    <icons name="QueryFolder" xpath="'icons/full/custom/rdbms.query.folder.png'"/>
+    <icons name="Tag" xpath="if (boolean(tag) or boolean(userProperties)) then 'icons/full/custom/rdbms.tag.png' else ''"/>
+    <attribute xmlName="tag" xpathCondition="" category="Customization" code="tag" displayName="Tags" unbounded="true"/>
+    <attribute xmlName="userProperties" xpathCondition="" category="Customization" code="userProperties" displayName="User Properties" keyValue="true" unbounded="true"/>
+    <parent>com.stambia.rdbms.server</parent>
+    <parent>com.stambia.rdbms.schema</parent>
+    <mappingType>Source</mappingType>
+  </level>
+  <level icon="icons/full/custom/rdbms.query.png" xmlName="query" xpathDisplayName="@name" activeDisplayName="false" code="com.stambia.rdbms.query" connection="false" connectionClass="" displayName="Query" position="1" reverseBundleName="com.indy.addons" reverseClass="com.indy.md.rdbms.JdbcReverse" reverseCode="" wizardClass="">
+    <icons name="Query" xpath="'icons/full/custom/rdbms.query.png'"/>
+    <icons name="Tag" xpath="if (boolean(tag) or boolean(userProperties)) then 'icons/full/custom/rdbms.tag.png' else ''"/>
+    <attribute xmlName="expression" code="expression" displayName="Expression" multiLine="true"/>
+    <attribute xmlName="tag" xpathCondition="" category="Customization" code="tag" displayName="Tags" unbounded="true"/>
+    <attribute xmlName="userProperties" xpathCondition="" category="Customization" code="userProperties" displayName="User Properties" keyValue="true" unbounded="true"/>
+    <parent>com.stambia.rdbms.queryFolder</parent>
+    <xPathExpression expression="concat('(',tech:expression(),')')">
+      <code>DEFAULT</code>
+      <code>PHYSICAL_NAME</code>
+      <code>CHECKED_NAME</code>
+      <code>TARGET_NAME</code>
+      <code>WORK_NAME</code>
+      <code>TABLE_NAME</code>
+      <code>NAME</code>
+      <xPathVariable expression="'DEFAULT'" name="defaultParentKind"/>
+      <xPathVariable expression="NONE" name="defaultParentRef"/>
+      <xPathVariable expression="@query&#x9;" name="query"/>
+    </xPathExpression>
+    <xPathExpression expression="column">
+      <code>TARGET_COLUMNS_REF</code>
+      <code>COLUMNS_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="tech:physicalName()">
+      <code>PHYSICAL_PATH</code>
+      <xPathVariable expression="'DEFAULT'" name="defaultParentKind"/>
+      <xPathVariable expression="NONE" name="defaultParentRef"/>
+      <xPathVariable expression="@query&#x9;" name="query"/>
+    </xPathExpression>
+    <xPathExpression expression="mdj:pattern($query)">
+      <code>EXPRESSION</code>
+      <xPathVariable expression="@expression" name="query"/>
+    </xPathExpression>
+    <xPathExpression expression="../query[$p1=@name][1]">
+      <code>QUERY_REF</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+    <xPathExpression expression="../../ref:schema($p1)">
+      <code>SCHEMA_REF</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+    <mappingType>Source</mappingType>
+    <propertyPage bundleName="com.indy.addons" className="com.indy.jdbc.properties.DataStoreColumnPropertiesPage" pageName="Columns Properties"/>
+  </level>
+  <level icon="icons/full/custom/rdbms.table.png" metaInf="" xmlName="datastore" xpathDisplayName="if (@TABLE_NAME!=@name) then concat(@name,' (',@TABLE_NAME,')') else @name" activeDisplayName="false" code="com.stambia.rdbms.datastore" connection="false" displayName="DataStore" override="false" position="0" reverseBundleName="" reverseClass="" reverseCode="TABLE_NAME" wizardClass="">
+    <icons name="Table" xpath="'icons/full/custom/rdbms.table.png'"/>
+    <icons name="Tag" xpath="if (boolean(tag) or boolean(userProperties)) then 'icons/full/custom/rdbms.tag.png' else ''"/>
+    <attribute xmlName="TABLE_NAME" code="name" defaultValue="" displayName="Physical Name" reverseCode="TABLE_NAME"/>
+    <attribute xmlName="TABLE_TYPE" code="type" displayName="Type" reverseCode="TABLE_TYPE"/>
+    <attribute icon="" xmlName="REMARKS" xpathCondition="" code="remarks" displayName="Description" multiLine="true" reverseCode="REMARKS"/>
+    <attribute xmlName="alias" xpathCondition="" code="alias" displayName="Alias Name"/>
+    <attribute xmlName="histoMask" code="histoMask" displayName="Histo table name"/>
+    <attribute xmlName="tag" xpathCondition="" category="Customization" code="tag" displayName="Tags" unbounded="true"/>
+    <attribute icon="" xmlName="cdcAlternateName" code="cdcAlternateName" displayName="CDC Alternate Name"/>
+    <attribute icon="" xmlName="loadMask" xpathCondition="" category="Temporary Objects" code="loadMask" defaultValue="L[number]_[targetName]" displayName="Load Mask" reverseCode=""/>
+    <attribute icon="" xmlName="integrationMask" xpathCondition="" category="Temporary Objects" code="integrationMask" defaultValue="I_[targetName]" displayName="Integration Mask" reverseCode=""/>
+    <attribute icon="" xmlName="rejectMask" xpathCondition="" category="Temporary Objects" code="rejectMask" defaultValue="R_[targetName]" displayName="Reject Mask" reverseCode=""/>
+    <attribute iconBundleName="" xmlName="technicalColumnsPrefix" xpathCondition="ancestor-or-self::product[1]/@code='SNOWFLAKE'" xpathDisplayName="" xpathIcon="" category="Temporary Objects" code="technicalColumnsPrefix" default="" displayName="Technical Columns Prefix" displayOrder="10" initialValue="" toolTip="Prefix used for technical columns created in reject and work tables."/>
+    <attribute xmlName="userProperties" xpathCondition="" category="Customization" code="userProperties" displayName="User Properties" keyValue="true" unbounded="true"/>
+    <parent>com.stambia.rdbms.schema</parent>
+    <xPathExpression expression="mdj:xpath(.,'ADD_DELIMITER',if ($maxDatastoreNameSize!='' and not($hasMetadataVariable)) then substring($value,0,number($maxDatastoreNameSize)+1) else if($maxDatastoreNameSize!='' and $hasMetadataVariable) then $value3 else $value)">
+      <code>REJECT_NAME</code>
+      <xPathVariable expression="'REJECT_NAME'" name="defaultParentKind"/>
+      <xPathVariable expression="tech:rejectMask()" name="rejectMask"/>
+      <xPathVariable expression="ref:schema()/@controlPrefix" name="controlPrefix"/>
+      <xPathVariable expression="if ($controlPrefix!='') then concat(ancestor::*/@controlPrefix[1],@TABLE_NAME) else if ($rejectMask!='') then mdj:pattern($rejectMask) else @TABLE_NAME" name="value"/>
+      <xPathVariable expression="ref:product()/@maxDatastoreNameSize" name="maxDatastoreNameSize"/>
+      <xPathVariable expression="contains(tech:originalPhysicalName(), '${') and contains(tech:originalPhysicalName(), '}$')" name="hasMetadataVariable"/>
+      <xPathVariable expression="concat('%e(rhino){(&quot;',$value,&#xD;&#xA;'&quot;)','.substring(0,',$maxDatastoreNameSize,')',';}e(rhino)%')" name="value3"/>
+    </xPathExpression>
+    <xPathExpression expression="$p1/mdj:xpath(.,'ADD_DELIMITER',$name) ">
+      <code>DEFAULT</code>
+      <code>PHYSICAL_NAME</code>
+      <code>CHECKED_NAME</code>
+      <code>WORK_NAME</code>
+      <code>TABLE_NAME</code>
+      <code>NAME</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathVariable expression="'DEFAULT'" name="defaultParentKind"/>
+      <xPathVariable expression="mdj:xpath(.,'PARENT_REF')" name="defaultParentRef"/>
+      <xPathVariable expression="md:applyObjectNameMask(@defType,@TABLE_NAME) " name="name2"/>
+      <xPathVariable expression="if ($p2='upper') then upper-case($name2) else if ($p2='lower') then lower-case($name2) else $name2" name="name"/>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'ADD_DELIMITER',@histoMask)">
+      <code>HISTO_NAME</code>
+      <xPathVariable expression="'DEFAULT'" name="defaultParentKind"/>
+      <xPathVariable expression="mdj:xpath(.,'PARENT_REF')" name="defaultParentRef"/>
+    </xPathExpression>
+    <xPathExpression expression="md:physicalName(.)">
+      <code>PHYSICAL_PATH</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'ADD_DELIMITER',concat(md:ifEmpty($p1,'CDC_'),md:ifEmpty(@cdcAlternateName,@TABLE_NAME),$p2))">
+      <code>CDC_TABLE_NAME</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathVariable expression="'CDC_NAME'" name="defaultParentKind"/>
+    </xPathExpression>
+    <xPathExpression expression="md:objectPath(..,tech:cdcTableName($p1,$p2),$p3)">
+      <code>CDC_TABLE_PATH</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathParameter defaultValue="'CDC_NAME'" name="p3"/>
+    </xPathExpression>
+    <xPathExpression expression="tech:cdcTableName(md:ifEmpty($p1,'VCDC_'),$p2)">
+      <code>CDC_DATA_VIEW_NAME</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathVariable expression="'CDC_NAME'" name="defaultParentKind"/>
+    </xPathExpression>
+    <xPathExpression expression="md:objectPath(..,tech:cdcDataViewName($p1,$p2),$p3)">
+      <code>CDC_DATA_VIEW_PATH</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathParameter defaultValue="'CDC_NAME'" name="p3"/>
+    </xPathExpression>
+    <xPathExpression expression="tech:cdcTableName(md:ifEmpty($p1,'VCL_'),$p2)">
+      <code>CDC_VIEW_NAME</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathVariable expression="'CDC_NAME'" name="defaultParentKind"/>
+    </xPathExpression>
+    <xPathExpression expression="md:objectPath(..,tech:cdcViewName($p1,$p2),$p3)">
+      <code>CDC_VIEW_PATH</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathParameter defaultValue="'CDC_NAME'" name="p3"/>
+    </xPathExpression>
+    <xPathExpression expression="md:objectPath(..,tech:cdcDeleteTriggerName($p1,$p2),$p3)">
+      <code>CDC_DELETE_TRIGGER_PATH</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathParameter defaultValue="'CDC_NAME'" name="p3"/>
+    </xPathExpression>
+    <xPathExpression expression="tech:cdcTableName(md:ifEmpty($p1,'TDC_'),$p2)">
+      <code>CDC_DELETE_TRIGGER_NAME</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathVariable expression="'CDC_NAME'" name="defaultParentKind"/>
+    </xPathExpression>
+    <xPathExpression expression="md:objectPath(..,tech:cdcUpdateTriggerName($p1,$p2),$p3)">
+      <code>CDC_UPDATE_TRIGGER_PATH</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathParameter defaultValue="'CDC_NAME'" name="p3"/>
+    </xPathExpression>
+    <xPathExpression expression="tech:cdcTableName(md:ifEmpty($p1,'TUC_'),$p2)">
+      <code>CDC_UPDATE_TRIGGER_NAME</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathVariable expression="'CDC_NAME'" name="defaultParentKind"/>
+    </xPathExpression>
+    <xPathExpression expression="md:objectPath(..,tech:cdcInsertTriggerName($p1,$p2),$p3)">
+      <code>CDC_INSERT_TRIGGER_PATH</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathParameter defaultValue="'CDC_NAME'" name="p3"/>
+    </xPathExpression>
+    <xPathExpression expression="tech:cdcTableName(md:ifEmpty($p1,'TIC_'),$p2)">
+      <code>CDC_INSERT_TRIGGER_NAME</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathVariable expression="'CDC_NAME'" name="defaultParentKind"/>
+    </xPathExpression>
+    <xPathExpression expression="tech:cdcTableName(md:ifEmpty($p1,'TC_'),$p2)">
+      <code>CDC_TRIGGER_NAME</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathVariable expression="'CDC_NAME'" name="defaultParentKind"/>
+    </xPathExpression>
+    <xPathExpression expression="md:objectPath(..,tech:cdcTriggerName($p1,$p2),$p3)">
+      <code>CDC_TRIGGER_PATH</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathParameter defaultValue="'CDC_NAME'" name="p3"/>
+    </xPathExpression>
+    <xPathExpression expression="column">
+      <code>TARGET_COLUMNS_REF</code>
+      <code>COLUMNS_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="./..">
+      <code>PARENT_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'PRODUCT_REF')">
+      <code>ALIAS_SEP</code>
+    </xPathExpression>
+    <xPathExpression expression="fk">
+      <code>FK_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="pk">
+      <code>PK_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="column[mdj:xpath(.,'MANDATORY')]">
+      <code>NN_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="ck">
+      <code>CK_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="md:objectPath(ref:schema()/ref:reject(),tech:rejectName())">
+      <code>REJECT_PATH</code>
+    </xPathExpression>
+    <xPathExpression expression=".">
+      <code>TARGET_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@alias!='') then @alias else mdj:xpath(.,'DEFAULT')">
+      <code>ALIAS</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'SUBSCRIBER_TABLE_PATH')">
+      <code>SUBSCRIBER_TABLE</code>
+    </xPathExpression>
+    <xPathExpression expression="concat(md:physicalName(./..,'CDC_NAME'),'.CDC_SUBSCRIBERS')">
+      <code>SUBSCRIBER_TABLE_PATH</code>
+    </xPathExpression>
+    <xPathExpression expression="'STAMBIA'">
+      <code>SUBSCRIBER</code>
+    </xPathExpression>
+    <xPathExpression expression="concat(@name, ' (',@id,')')">
+      <code>REJECTED_BY</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'CREATE_PK_PART',$current)">
+      <code>CREATE_PK</code>
+      <xPathVariable expression="." name="current"/>
+    </xPathExpression>
+    <xPathExpression expression="'S'">
+      <code>REJECT_MODE</code>
+    </xPathExpression>
+    <xPathExpression expression="./.." isProvider="true">
+      <code>CATALOG</code>
+      <code>SCHEMA</code>
+    </xPathExpression>
+    <xPathExpression expression=" $depth">
+      <code>FK_DEPTH</code>
+      <xPathParameter defaultValue="None" name="p1"/>
+      <xPathVariable expression="if (count($pkTable)>0) then max($pkTable/tech:fkDepth($ancestorTable))+1 else 0" name="depth"/>
+      <xPathVariable expression="$p1 | ." name="ancestorTable"/>
+      <xPathVariable expression="ref:fk()/ref:joins()/ref:pkTable()[not(@id=$ancestorTable/@id)]" name="pkTable"/>
+    </xPathExpression>
+    <xPathExpression description="" expression="tech:ddl('TABLE_CREATION_DDL',$p1,$p2,$p3,$p4,$p5)">
+      <code>CREATION_DDL</code>
+      <xPathParameter defaultValue=".."/>
+      <xPathParameter defaultValue="true()" name="p2"/>
+      <xPathParameter defaultValue="true()" name="p3"/>
+      <xPathParameter defaultValue="false()" name="p4"/>
+      <xPathParameter defaultValue="false()" name="p5"/>
+    </xPathExpression>
+    <xPathExpression expression="index">
+      <code>INDEX_REF</code>
+    </xPathExpression>
+    <xPathExpression description="" expression="tech:ddl('TABLE_DROP_DDL',$p1)">
+      <code>DROP_DDL</code>
+      <xPathParameter defaultValue=".."/>
+    </xPathExpression>
+    <xPathExpression expression="tech:ddl('TABLE_DELETE_DDL',$p1)">
+      <code>DELETE_DDL</code>
+      <xPathParameter defaultValue=".."/>
+    </xPathExpression>
+    <xPathExpression expression="tech:ddl('TABLE_TRUNCATE_DDL',$p1)">
+      <code>TRUNCATE_DDL</code>
+      <xPathParameter defaultValue=".."/>
+    </xPathExpression>
+    <xPathExpression expression="@TABLE_NAME">
+      <code>TARGET_NAME</code>
+    </xPathExpression>
+    <xPathExpression description="Utilise par la classe Source" expression="md:ifEmpty(ancestor-or-self::product[1]/@datastoreDelimiterRegexp,ancestor-or-self::product[1]/@defaultDelimiterRegexp,'[^a-zA-Z0-9_.\$]')">
+      <code>OBJECT_DELIMITER_REGEXP</code>
+    </xPathExpression>
+    <xPathExpression expression="@REMARKS">
+      <code>COMMENT</code>
+    </xPathExpression>
+    <xPathExpression expression="tech:ddl('TABLE_COMMENT_DDL',$p1)">
+      <code>COMMENT_DDL</code>
+      <xPathParameter defaultValue=".."/>
+    </xPathExpression>
+    <xPathExpression expression="@TABLE_NAME">
+      <code>ORIGINAL_PHYSICAL_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="tech:ddl('CDC_DELETE_DML',$p1)">
+      <code>CDC_DELETE_DML</code>
+      <xPathParameter defaultValue=".."/>
+    </xPathExpression>
+    <xPathExpression expression="'table'">
+      <code>IO_META_DATA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="ancestor-or-self::table/@name">
+      <code>IO_META_DATA_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="ancestor-or-self::table/@id">
+      <code>IO_META_DATA_ID</code>
+    </xPathExpression>
+    <xPathExpression expression="concat('${/CORE_JAVA_TEMPORARY_FOLDER}$/',@id,'.table')">
+      <code>IO_META_DATA_RESOURCE</code>
+    </xPathExpression>
+    <xPathExpression expression="ak">
+      <code>AK_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="pk|fk|ak">
+      <code>INTERNAL_UPDATE_KEY_REF_PROVIDER</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'SLOT_TABLE_PATH')">
+      <code>SLOT_TABLE</code>
+    </xPathExpression>
+    <xPathExpression expression="concat(md:physicalName(./..,'CDC_NAME'),'.`CDC_SLOT`')">
+      <code>SLOT_TABLE_PATH</code>
+    </xPathExpression>
+    <xPathExpression expression="'STAMBIA'">
+      <code>SLOT</code>
+    </xPathExpression>
+    <xPathExpression expression="(. | $recursiveTables)">
+      <code>RECURSIVE_LINKED_TABLES</code>
+      <xPathParameter defaultValue="'parent'"/>
+      <xPathParameter defaultValue="None" name="p2"/>
+      <xPathVariable expression="if($p1 = 'child' or $p1 = 'both') then ref:schema()/datastore[ref:fk()/ref:pkTable()/@id = $curTable/@id] else None" name="childTables"/>
+      <xPathVariable expression="if($p1 = 'parent' or $p1 = 'both') then $curTable/ref:fk()/ref:pkTable() else None" name="parentTables"/>
+      <xPathVariable expression="($childTables | $parentTables)[not(@id=$p2)]" name="filteredTables"/>
+      <xPathVariable expression="." name="curTable"/>
+      <xPathVariable expression="$filteredTables/tech:recursiveLinkedTables($p1,$p2|$filteredTables/@id)" name="recursiveTables"/>
+    </xPathExpression>
+    <xPathExpression expression="@technicalColumnsPrefix">
+      <code>TECHNICAL_COLUMNS_PREFIX</code>
+    </xPathExpression>
+    <mappingType>Source</mappingType>
+    <mappingType>Target</mappingType>
+    <propertyPage bundleName="com.indy.addons" className="com.indy.jdbc.properties.DataStoreColumnPropertiesPage" pageName="Columns Properties"/>
+    <view code="fk.hierarchy" enablementXpath="not(../@disableHierarchy='true')" xpath="../datastore[fk/relation/substring-before(@pkref,'?')=$current/column/@id]"/>
+  </level>
+  <level icon="icons/full/custom/rdbms.field.png" xmlName="column" xpathDisplayName="if (@COLUMN_NAME!=@name) then concat(@name,' (',@COLUMN_NAME,')') else @name" activeDisplayName="false" code="com.stambia.rdbms.column" displayName="Column" override="false" position="1" positionReverseCode="ORDINAL_POSITION" reverseCode="COLUMN_NAME">
+    <icons name="Column" xpath="'icons/full/custom/rdbms.field.png'"/>
+    <icons name="Tag" xpath="if (boolean(tag) or boolean(userProperties)) then 'icons/full/custom/rdbms.tag.png' else ''"/>
+    <attribute xmlName="COLUMN_NAME" code="name" displayName="Physical Name" reverseCode="COLUMN_NAME"/>
+    <attribute xmlName="TYPE_NAME" xpathCondition="" code="type" displayName="Type" mdXpathAccess="ancestor::product[1]/datatype/@name" reverseCode="TYPE_NAME" type="list">
+      <mappingInfo>Type</mappingInfo>
+    </attribute>
+    <attribute xmlName="COLUMN_SIZE" code="size" displayName="Size" reverseCode="COLUMN_SIZE" type="integer">
+      <mappingInfo>Size</mappingInfo>
+    </attribute>
+    <attribute xmlName="DECIMAL_DIGITS" code="digits" displayName="Decimal Digits" reverseCode="DECIMAL_DIGITS" type="integer">
+      <mappingInfo>Precision</mappingInfo>
+    </attribute>
+    <attribute icon="" metaInf="&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;1&quot; to=&quot;true&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;0&quot; to=&quot;false&quot;/>" xmlName="NULLABLE" code="nullable" displayName="Is Nullable" reverseCode="NULLABLE" type="boolean">
+      <mappingInfo>Mandatory</mappingInfo>
+    </attribute>
+    <attribute xmlName="scd" code="scd" displayName="Slowly Changing Dimension Mode" mdXpathAccess="ancestor::*[name()='rdbms' or name()='product']/valueSet[@type='SCD'][1]/value/@code" type="list"/>
+    <attribute icon="" xmlName="REMARKS" xpathCondition="" code="remarks" displayName="Description" multiLine="true" reverseCode="REMARKS"/>
+    <attribute xmlName="autoGenerated" code="autoGenerated" displayName="Automatically Generated" reverseCode="IS_GENERATEDCOLUMN" reverseUpdateXpathQuery="if ('{reverse:IS_GENERATEDCOLUMN()}'='true' or '{reverse:IS_GENERATEDCOLUMN()}'='YES') then 'true' else 'false'" type="boolean"/>
+    <attribute xmlName="autoIncrement" code="autoIncrement" displayName="Auto Increment" reverseCode="IS_AUTOINCREMENT" reverseUpdateXpathQuery="if ('{reverse:IS_AUTOINCREMENT()}'='true' or '{reverse:IS_AUTOINCREMENT()}'='YES') then 'true' else 'false'" type="boolean"/>
+    <attribute metaInf="&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;false&quot; to=&quot;true&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;true&quot; to=&quot;false&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;valueMatcher&quot; to=&quot;true&quot;/>" xmlName="disableCDC" xpathCondition="" code="disableCDC" defaultValue="" displayName="Enable CDC" reverseCode="" toolTip="Uncheck this box to avoid capturing changes on this column (the value will still be captured if other columns change)" type="boolean"/>
+    <attribute xmlName="tag" xpathCondition="" category="Customization" code="tag" displayName="Tags" unbounded="true"/>
+    <attribute metaInf="&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;100&quot; to=&quot;Warning&quot;/> &lt;metaInf id=&quot;valueMatcher&quot; from=&quot;200&quot; to=&quot;Reject&quot;/> &lt;metaInf id=&quot;valueMatcher&quot; from=&quot;300&quot; to=&quot;Fatal&quot;/>" xmlName="severity" xpathCondition="" xpathIcon="" category="Standard" code="severity" defaultValue="" displayName="Nullable Severity Level" editable="false" mdXpathAccess="tokenize('Warning Reject Fatal',' ')" refreshPropertiesCompositeOnValueChange="true" type="list"/>
+    <attribute xmlName="userProperties" xpathCondition="" category="Customization" code="userProperties" displayName="User Properties" keyValue="true" unbounded="true"/>
+    <parent>com.stambia.rdbms.datastore</parent>
+    <parent>com.stambia.rdbms.query</parent>
+    <xPathExpression expression="@COLUMN_SIZE">
+      <code>SIZE</code>
+    </xPathExpression>
+    <xPathExpression description="Precision est geree pour informix car renvoi 255 quand nul" expression="(if (@DECIMAL_DIGITS='255'  or not(@DECIMAL_DIGITS!='')) then '0' else @DECIMAL_DIGITS)">
+      <code>DECIMAL</code>
+      <code>PRECISION</code>
+    </xPathExpression>
+    <xPathExpression expression="if (./@id=$p1/@id) then @TYPE_NAME else &#xD;&#xA; md:convertDataType(.,$p1,'name', @TYPE_NAME) ">
+      <code>TYPE</code>
+      <xPathParameter defaultValue="."/>
+    </xPathExpression>
+    <xPathExpression expression="@position">
+      <code>POSITION</code>
+    </xPathExpression>
+    <xPathExpression expression="$p1/tech:addDelimiter(if ($colMaxSize!='' and string-length($adapt)>number($colMaxSize)) then concat(substring($adapt,0,number($colMaxSize)+1-string-length($current/@position)),$current/@position) else $adapt,$p2,'column')">
+      <code>COLUMN_NAME</code>
+      <code>DEFAULT</code>
+      <code>NAME</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="false()" name="p2"/>
+      <xPathParameter name="p3"/>
+      <xPathParameter defaultValue="''" name="p4"/>
+      <xPathVariable expression="$p1/ref:product()/@maxColumnNameSize" name="colMaxSize"/>
+      <xPathVariable expression="if ($p4='upper') then upper-case(@COLUMN_NAME) else if ($p4='lower') then lower-case(@COLUMN_NAME) else @COLUMN_NAME" name="name"/>
+      <xPathVariable expression="." name="current"/>
+      <xPathVariable expression="md:ifEmpty(if (exists($p3/*)) then $p3/*[if (@xpath) then mdj:evaluate($current,@xpath) else false()][1]/mdj:evaluate($current,@name) else $name,$name)" name="adapt"/>
+    </xPathExpression>
+    <xPathExpression expression="concat(mdj:xpath(./..,'DEFAULT'),'.',mdj:xpath(.,'COLUMN_NAME'))">
+      <code>FULL_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="@NULLABLE='1' or @NULLABLE='true'">
+      <code>NULLABLE</code>
+      <code>IS_NULLABLE</code>
+    </xPathExpression>
+    <xPathExpression expression="@NULLABLE=0 or not(@NULLABLE!='')">
+      <code>MANDATORY</code>
+      <code>IS_MANDATORY</code>
+    </xPathExpression>
+    <xPathExpression expression="(1=1)">
+      <code>IS_MAP</code>
+      <code>IS_MAPPED</code>
+    </xPathExpression>
+    <xPathExpression expression="../pk/colref/mdj:getRef(@ref)/@id=@id">
+      <code>IS_PK</code>
+      <code>IS_UK</code>
+      <code>IS_UPDATE_KEY</code>
+    </xPathExpression>
+    <xPathExpression expression="../pk/colref/substring-before(@ref,'?')=@id">
+      <code>INTERNAL_USE_AS_KEY</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(./..,'DEFAULT')">
+      <code>CHECKED_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="if (mdj:xpath(.,'IS_NULLABLE')) &#xD;&#xA;&#x9;then $p1/mdj:xpath(.,'NULL_WORD') &#xD;&#xA;&#x9;else $p1/mdj:xpath(.,'NOT_NULL_WORD')">
+      <code>NULL</code>
+      <xPathParameter defaultValue="."/>
+    </xPathExpression>
+    <xPathExpression expression="@scd='HISTORIZE'">
+      <code>IS_HISTORIZED</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@userMessage!='') then replace(@userMessage,'''','''''') else concat('control of column ',@name)">
+      <code>REJECT_MESSAGE</code>
+    </xPathExpression>
+    <xPathExpression expression=".">
+      <code>TARGET_REF</code>
+    </xPathExpression>
+    <xPathExpression description="anciennement : md:creDT(.)" expression="md:convertDataType(.,$p1)">
+      <code>TARGET_CREATION_TYPE</code>
+      <code>CREATION_DDL</code>
+      <xPathParameter defaultValue="."/>
+    </xPathExpression>
+    <xPathExpression expression="md:convertDataType($source,$target, 'write')">
+      <code>TARGET_WRITABLE_TYPE</code>
+      <code>WRITABLE_DDL</code>
+      <xPathParameter defaultValue="."/>
+      <xPathVariable expression="." name="source"/>
+      <xPathVariable expression="$p1" name="target"/>
+    </xPathExpression>
+    <xPathExpression description="deprecated" expression="if (@scd!='') then mdj:getRef(@scd) else None">
+      <code>SCD_VALUE_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="if ($p1!='') then @scd=$p1 else @scd">
+      <code>SCD_CODE</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+    <xPathExpression expression="@autoGenerated">
+      <code>IS_AUTOGENERATED</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@autoIncrement='true') then 'true' else ref:datatype()/tech:isAutoincrement()">
+      <code>IS_AUTOINCREMENT</code>
+    </xPathExpression>
+    <xPathExpression expression="ref:product()/datatype[upper-case(@name)=$typeName]">
+      <code>DATATYPE_REF</code>
+      <xPathVariable expression="upper-case(@TYPE_NAME)" name="typeName"/>
+    </xPathExpression>
+    <xPathExpression expression="if ($p2) then upper-case($value1) else $value1">
+      <code>TEST</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="false()" name="p2"/>
+      <xPathParameter defaultValue="true()" name="p3"/>
+      <xPathVariable expression="if ($colMaxSize!='') then substring(tech:name(),0,number($colMaxSize)+1) else tech:name()" name="value0"/>
+      <xPathVariable expression="concat($value0,' ',if ($p3) then tech:writableDDL($p1) else tech:creationDDL($p1),' ', tech:null($p1))" name="value1"/>
+      <xPathVariable expression="$p1/ref:product()/@maxColumnNameSize" name="colMaxSize"/>
+    </xPathExpression>
+    <xPathExpression expression="../ak[1]/colref/mdj:getRef(@ref)/@id=@id">
+      <code>IS_AK</code>
+    </xPathExpression>
+    <xPathExpression expression="@REMARKS">
+      <code>COMMENT</code>
+    </xPathExpression>
+    <xPathExpression expression="tech:ddl('COLUMN_COMMENT_DDL',$p1)">
+      <code>COMMENT_DDL</code>
+      <xPathParameter defaultValue=".."/>
+    </xPathExpression>
+    <xPathExpression expression="not(@disableCDC='true')">
+      <code>IS_CDC</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@severity='100') then 'WARNING' else &#xA;if (@severity='200') then 'REJECT' else&#xA;if (@severity='300') then 'FATAL' else 'REJECT'">
+      <code>SEVERITY</code>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/rdbms.fk.png" xmlName="fk" code="com.stambia.rdbms.fk" displayName="Foreign Key" override="false" position="5">
+    <icons name="FK" xpath="'icons/full/custom/rdbms.fk.png'"/>
+    <icons name="Tag" xpath="if (boolean(tag) or boolean(userProperties)) then 'icons/full/custom/rdbms.tag.png' else ''"/>
+    <attribute xmlName="userMessage" category="Standard" code="userMessage" defaultValue="" displayName="User Message"/>
+    <attribute xmlName="rejectCode" category="Standard" code="rejectCode" defaultValue="" displayName="Reject Code"/>
+    <attribute icon="" xmlName="REMARKS" xpathCondition="" code="remarks" displayName="Description" multiLine="true" reverseCode="REMARKS"/>
+    <attribute iconBundleName="" metaInf="&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;50&quot; to=&quot;Info&quot;/>&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;100&quot; to=&quot;Warning&quot;/>&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;200&quot; to=&quot;Reject&quot;/>&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;300&quot; to=&quot;Fatal&quot;/>" xmlName="severity" category="Standard" code="severity" defaultValue="" displayName="Severity Level" editable="false" mdXpathAccess="tokenize('Warning Reject Fatal',' ')" refreshPropertiesCompositeOnValueChange="true" type="list"/>
+    <attribute metaInf="&lt;metaInf id=&quot;comboHelper&quot;>&#xA;&#x9;&lt;combo label=&quot;Schema&quot; variableName=&quot;schema&quot; xpathValues=&quot;../../../* | ../..&quot; xpathInit=&quot;$datastore/..&quot;/>&#xA;&#x9;&lt;combo label=&quot;Datastore&quot; variableName=&quot;datastore&quot; xpathValues=&quot;$schema/*&quot;/>&#xA;&lt;/metaInf>" xmlName="pkDatastore" category="Standard:Referenced Datastore" code="pkDatastore" displayName="Datastore" mdXpathAccess="../../../schema/datastore | ../../datastore" toolTip="Select a Schema and a Datastore, or drag and drop a Datastore of the same Metadata File in the Datastore field" type="reference">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.dnd.emfMetaInf" value="http://www.stambia.com/md;MdNode"/>
+    </attribute>
+    <attribute xmlName="tag" xpathCondition="" category="Customization" code="tag" displayName="Tags" unbounded="true"/>
+    <attribute xmlName="userProperties" xpathCondition="" category="Customization" code="userProperties" displayName="User Properties" keyValue="true" unbounded="true"/>
+    <parent>com.stambia.rdbms.datastore</parent>
+    <xPathExpression expression="md:physicalName((ref:joins()/ref:pkColumns()/..)[1])">
+      <code>PK_TABLE_PATH</code>
+    </xPathExpression>
+    <xPathExpression expression="md:physicalName(./..)">
+      <code>FK_TABLE_PATH</code>
+    </xPathExpression>
+    <xPathExpression expression="relation">
+      <code>JOINS_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@userMessage!='') then replace(@userMessage,'''','''''') else concat('control of ',@name)">
+      <code>REJECT_MESSAGE</code>
+    </xPathExpression>
+    <xPathExpression expression="$p1/tech:addDelimiter($name,false(),'default')">
+      <code>DEFAULT</code>
+      <code>NAME</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathVariable expression="if ($p2='upper') then upper-case($name2) else if ($p2='lower') then lower-case($name2) else $name2" name="name"/>
+      <xPathVariable expression="md:applyObjectNameMask(@defType,@name) " name="name2"/>
+    </xPathExpression>
+    <xPathExpression expression=".">
+      <code>TARGET_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="ref:pkTable()/tech:name($p1,$p2)">
+      <code>PK_TABLE_NAME</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+    </xPathExpression>
+    <xPathExpression expression="ref:fkTable()/tech:name($p1,$p2)">
+      <code>FK_TABLE_NAME</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+    </xPathExpression>
+    <xPathExpression description="" expression="if (exists(ref:joins()/ref:pkTable()[1])) then ref:joins()/ref:pkTable()[1] else mdj:getRef(@pkDatastore)" isProvider="false">
+      <code>PK_TABLE_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="./..">
+      <code>FK_TABLE_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="'FK'">
+      <code>CONSTRAINT_CODE</code>
+    </xPathExpression>
+    <xPathExpression expression="tech:ddl('CONSTRAINT_DISABLE_DDL',$p1,$p2,$p3)">
+      <code>DISABLE_DDL</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathParameter defaultValue="''" name="p3"/>
+    </xPathExpression>
+    <xPathExpression expression="tech:ddl('FK_DROP_DDL',$p1,$p2,$p3)">
+      <code>DROP_DDL</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathParameter defaultValue="''" name="p3"/>
+    </xPathExpression>
+    <xPathExpression expression="tech:ddl('FK_ADD_DDL',$p1,$p2,$p3,$p4)">
+      <code>ADD_DDL</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathParameter defaultValue="''" name="p3"/>
+      <xPathParameter defaultValue="''" name="p4"/>
+    </xPathExpression>
+    <xPathExpression expression="tech:ddl('FK_CREATION_DDL',$p1,$p2,$p3,$p4)">
+      <code>CREATION_DDL</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathParameter defaultValue="''" name="p3"/>
+      <xPathParameter defaultValue="''" name="p4"/>
+    </xPathExpression>
+    <xPathExpression expression="tech:ddl('CONSTRAINT_ENABLE_DDL',$p1,$p2,$p3)">
+      <code>ENABLE_DDL</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathParameter defaultValue="''" name="p3"/>
+    </xPathExpression>
+    <xPathExpression expression="@rejectCode">
+      <code>REJECT_CODE</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@severity='100') then 'WARNING' else &#xA;if (@severity='200') then 'REJECT' else &#xA;if (@severity='300') then 'FATAL' else &#xA;'REJECT'">
+      <code>SEVERITY</code>
+    </xPathExpression>
+    <xPathExpression expression="relation/@fkref/internal:getRef()">
+      <code>INTERNAL_UPDATE_KEY_REF_CONTENT</code>
+    </xPathExpression>
+    <mappingType>Constraint</mappingType>
+    <mappingType>Join</mappingType>
+  </level>
+  <level icon="icons/full/custom/rdbms.field.png" metaInf="" xmlName="relation" xpathDisplayName="if(@relationType='Complex') then @name else concat(ref:getMdNodeById(substring-before(@fkref,'?'))/@name,'=>',ref:getMdNodeById(@pkref)/concat(../@name,'.',@name))" autoDelete="true" code="com.stambia.rdbms.relation" displayName="Columns Relation" hasName="false" override="false" position="1" wizardBundleName="">
+    <attribute xmlName="fkref" xpathCondition="string(@relationType)='' or @relationType='Standard'" code="fk" defaultValue="" displayName="Column" displayOrder="10" mdXpathAccess="../../column" nullable="false" reverseCode="" reverseUpdateXpathQuery="../../column[@COLUMN_NAME='{reverse:FKCOLUMN_NAME()}']" type="reference">
+      <mappingInfo>SrcRef</mappingInfo>
+    </attribute>
+    <attribute metaInf="" xmlName="pkref" xpathCondition="string(@relationType)='' or @relationType='Standard'" category="" code="pk" defaultValue="" displayName="Referenced Column" displayOrder="10" mdXpathAccess="if (../@pkDatastore!='') then ref:getMdNodeById(substring-before(../@pkDatastore,'?'))/column else //column" nullable="false" reverseUpdateXpathQuery="(if ('{reverse:PKSCHEMA_ID()}'='') then ancestor::schema[1] else ancestor::schema[1]/../schema[@id='{reverse:PKSCHEMA_ID()}'])/datastore[@TABLE_NAME='{reverse:PKTABLE_NAME()}']/column[@COLUMN_NAME='{reverse:PKCOLUMN_NAME()}'][1]" type="reference">
+      <mappingInfo>SrcRef</mappingInfo>
+    </attribute>
+    <attribute xmlName="tag" xpathCondition="" category="Customization" code="tag" displayName="Tags" unbounded="true"/>
+    <attribute xmlName="userProperties" xpathCondition="" category="Customization" code="userProperties" displayName="User Properties" keyValue="true" unbounded="true"/>
+    <attribute icon="" xmlName="REMARKS" xpathCondition="" code="remarks" displayName="Description" displayOrder="20" multiLine="true" reverseCode="REMARKS"/>
+    <parent>com.stambia.rdbms.fk</parent>
+    <xPathExpression expression="if(@pkref) then mdj:getRef(@pkref) else None">
+      <code>PK_COLUMN_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="if(@fkref) then mdj:getRef(@fkref) else None">
+      <code>FK_COLUMN_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="ref:fkColumn()/tech:columnName()" isProvider="false">
+      <code>FK_COLUMN_NAME</code>
+      <code>COLUMN_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="ref:pkColumn()/tech:columnName()">
+      <code>PK_COLUMN_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="ref:pkTable()/tech:default()">
+      <code>PK_TABLE_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="ref:fkTable()/tech:default()">
+      <code>FK_TABLE_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="$expressionWithFkAndPkAlias">
+      <code>EXPRESSION</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathVariable expression="if(@relationType='Complex') &#xD;&#xA;then @expression&#xD;&#xA;else concat('PK_TAB.', mdj:xpath(.,'PK_COLUMN_NAME') , ' = FK_TAB.',mdj:xpath(.,'FK_COLUMN_NAME'))" name="expressionWithDefaultAliases"/>
+      <xPathVariable expression="if ($p1='')&#xD;&#xA;then $expressionWithDefaultAliases&#xD;&#xA;else replace($expressionWithDefaultAliases, 'FK_TAB\.', concat($p1,'.'))" name="expressionWithFkAlias"/>
+      <xPathVariable expression="if ($p2='')&#xD;&#xA;then $expressionWithFkAlias&#xD;&#xA;else replace($expressionWithFkAlias, 'PK_TAB\.', concat($p2,'.'))" name="expressionWithFkAndPkAlias"/>
+    </xPathExpression>
+    <xPathExpression expression="ref:pkColumn()/..">
+      <code>PK_TABLE_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="./../..">
+      <code>FK_TABLE_REF</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/rdbms.field.png" xmlName="colref" xpathDisplayName="ref:getMdNodeById(substring-before(@ref,'?'))/@name" activeDisplayName="false" autoDelete="true" code="com.stambia.rdbms.colref" displayName="Column Reference" hasName="false" positionReverseCode="ORDINAL_POSITION" reverseCode="COLUMN_NAME" wizardClass="">
+    <attribute xmlName="ref" code="ref" displayName="Primary Column" mdXpathAccess="../../column" nullable="false" reverseCode="COLUMN_NAME" reverseUpdateXpathQuery="../../column[@COLUMN_NAME='{reverse:COLUMN_NAME()}']" type="reference"/>
+    <parent>com.stambia.rdbms.ak</parent>
+    <parent>com.stambia.rdbms.pk</parent>
+    <parent>com.stambia.rdbms.index</parent>
+    <xPathExpression expression="mdj:getRef(@ref)">
+      <code>COLUMN_REF</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/rdbms.pk.png" xmlName="pk" xpathIcon="" code="com.stambia.rdbms.pk" displayName="Primary Key" override="false" position="2" unique="true">
+    <icons name="PK" xpath="'icons/full/custom/rdbms.pk.png'"/>
+    <icons name="Tag" xpath="if (boolean(tag) or boolean(userProperties)) then 'icons/full/custom/rdbms.tag.png' else ''"/>
+    <attribute icon="" xmlName="REMARKS" xpathCondition="" code="remarks" displayName="Description" multiLine="true" reverseCode="REMARKS"/>
+    <attribute xmlName="userMessage" category="Standard" code="userMessage" defaultValue="" displayName="User Message"/>
+    <attribute xmlName="rejectCode" category="Standard" code="rejectCode" defaultValue="" displayName="Reject Code"/>
+    <attribute metaInf="&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;50&quot; to=&quot;Info&quot;/>&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;100&quot; to=&quot;Warning&quot;/>&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;200&quot; to=&quot;Reject&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;300&quot; to=&quot;Fatal&quot;/>" xmlName="severity" category="Standard" code="severity" defaultValue="" displayName="Severity Level" editable="false" mdXpathAccess="tokenize('Warning Reject Fatal',' ')" refreshPropertiesCompositeOnValueChange="true" type="list"/>
+    <attribute xmlName="tag" xpathCondition="" category="Customization" code="tag" displayName="Tags" unbounded="true"/>
+    <attribute xmlName="userProperties" xpathCondition="" category="Customization" code="userProperties" displayName="User Properties" keyValue="true" unbounded="true"/>
+    <parent>com.stambia.rdbms.datastore</parent>
+    <xPathExpression expression="colref/mdj:xpath(.,'COLUMN_REF')">
+      <code>COLUMNS_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="$p1/tech:addDelimiter($name,false(),'default')">
+      <code>DEFAULT</code>
+      <code>NAME</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathVariable expression="if ($p2='upper') then upper-case($name2) else if ($p2='lower') then lower-case($name2) else $name2" name="name"/>
+      <xPathVariable expression="md:applyObjectNameMask(@defType,@name) " name="name2"/>
+    </xPathExpression>
+    <xPathExpression expression="if (@userMessage!='') then replace(@userMessage,'''','''''') else concat('control of ',@name)">
+      <code>REJECT_MESSAGE</code>
+    </xPathExpression>
+    <xPathExpression expression=".">
+      <code>TARGET_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="'PK'">
+      <code>CONSTRAINT_CODE</code>
+    </xPathExpression>
+    <xPathExpression expression="tech:ddl('CONSTRAINT_DISABLE_DDL',$p1,$p2,$p3)">
+      <code>DISABLE_DDL</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathParameter defaultValue="''" name="p3"/>
+    </xPathExpression>
+    <xPathExpression expression="tech:ddl('PK_DROP_DDL',$p1,$p2,$p3)">
+      <code>DROP_DDL</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathParameter defaultValue="''" name="p3"/>
+    </xPathExpression>
+    <xPathExpression expression="md:applyMask(.,'PK_ADD_DDL',$p1,$p2,$p3,$p4)">
+      <code>ADD_DDL</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathParameter defaultValue="''" name="p3"/>
+      <xPathParameter defaultValue="''" name="p4"/>
+    </xPathExpression>
+    <xPathExpression expression="md:applyMask(.,'PK_CREATION_DDL',$p1,$p2,$p3,$p4)">
+      <code>CREATION_DDL</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathParameter defaultValue="''" name="p3"/>
+      <xPathParameter defaultValue="''" name="p4"/>
+    </xPathExpression>
+    <xPathExpression expression="tech:ddl('CONSTRAINT_ENABLE_DDL',$p1,$p2,$p3)">
+      <code>ENABLE_DDL</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathParameter defaultValue="''" name="p3"/>
+    </xPathExpression>
+    <xPathExpression expression="@rejectCode">
+      <code>REJECT_CODE</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@severity='100') then 'WARNING' else &#xA;if (@severity='200') then 'REJECT' else &#xA;if (@severity='300') then 'FATAL' else &#xA;'REJECT'">
+      <code>SEVERITY</code>
+    </xPathExpression>
+    <xPathExpression expression="colref/@ref/internal:getRef()">
+      <code>INTERNAL_UPDATE_KEY_REF_CONTENT</code>
+    </xPathExpression>
+    <mappingType>Constraint</mappingType>
+  </level>
+  <level icon="icons/full/custom/rdbms.ak.png" xmlName="ak" code="com.stambia.rdbms.ak" displayName="Alternative Key" override="false" position="3" reverseCode="ALTERNATE_KEY_NAME">
+    <icons name="AK" xpath="'icons/full/custom/rdbms.ak.png'"/>
+    <icons name="Tag" xpath="if (boolean(tag) or boolean(userProperties)) then 'icons/full/custom/rdbms.tag.png' else ''"/>
+    <attribute xmlName="userMessage" category="Standard" code="userMessage" defaultValue="" displayName="User Message"/>
+    <attribute xmlName="rejectCode" category="Standard" code="rejectCode" defaultValue="" displayName="Reject Code"/>
+    <attribute metaInf="&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;50&quot; to=&quot;Info&quot;/>&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;100&quot; to=&quot;Warning&quot;/>&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;200&quot; to=&quot;Reject&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;300&quot; to=&quot;Fatal&quot;/>" xmlName="severity" category="Standard" code="severity" defaultValue="" displayName="Severity Level" editable="false" initialValue="" mdXpathAccess="tokenize('Warning Reject Fatal',' ')" refreshPropertiesCompositeOnValueChange="true" type="list"/>
+    <attribute icon="" xmlName="REMARKS" xpathCondition="" code="remarks" displayName="Description" multiLine="true" reverseCode="REMARKS"/>
+    <attribute xmlName="tag" xpathCondition="" category="Customization" code="tag" displayName="Tags" unbounded="true"/>
+    <attribute xmlName="userProperties" xpathCondition="" category="Customization" code="userProperties" displayName="User Properties" keyValue="true" unbounded="true"/>
+    <parent>com.stambia.rdbms.datastore</parent>
+    <xPathExpression expression="colref/mdj:xpath(.,'COLUMN_REF')">
+      <code>COLUMNS_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="$p1/tech:addDelimiter($name,false(),'default')">
+      <code>DEFAULT</code>
+      <code>NAME</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathVariable expression="if ($p2='upper') then upper-case($name2) else if ($p2='lower') then lower-case($name2) else $name2" name="name"/>
+      <xPathVariable expression="md:applyObjectNameMask(@defType,@name) " name="name2"/>
+    </xPathExpression>
+    <xPathExpression expression="if (@userMessage!='') then replace(@userMessage,'''','''''') else concat('control of ',@name)">
+      <code>REJECT_MESSAGE</code>
+    </xPathExpression>
+    <xPathExpression expression=".">
+      <code>TARGET_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="'AK'">
+      <code>CONSTRAINT_CODE</code>
+    </xPathExpression>
+    <xPathExpression expression="@rejectCode">
+      <code>REJECT_CODE</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@severity='100') then 'WARNING' else &#xA;if (@severity='200') then 'REJECT' else &#xA;if (@severity='300') then 'FATAL' else &#xA;'REJECT'">
+      <code>SEVERITY</code>
+    </xPathExpression>
+    <xPathExpression expression="colref/@ref/internal:getRef()">
+      <code>INTERNAL_UPDATE_KEY_REF_CONTENT</code>
+    </xPathExpression>
+    <mappingType>Constraint</mappingType>
+  </level>
+  <level icon="icons/full/custom/rdbms.field.png" xmlName="datatype" code="com.stambia.rdbms.datatype" displayName="DataType" position="1">
+    <attribute xmlName="creationMask" code="creationMask" defaultValue="" displayName="Creation Mask"/>
+    <attribute xmlName="simpleMask" code="simpleMask" defaultValue="" displayName="Simple Mask"/>
+    <attribute xmlName="writingMask" code="writingMask" defaultValue="" displayName="Writing Mask"/>
+    <attribute xmlName="maxsize" code="maxSize" displayName="Max Size"/>
+    <attribute xmlName="superType" code="superType" defaultValue="" displayName="Super Type" editable="true" mdXpathAccess="ancestor::rdbms[1]/superType/@name" multiLine="false" nullable="false" type="list" unbounded="false"/>
+    <attribute xmlName="default" xpathCondition="" code="default" displayName="Is Default Type" editable="true" mdXpathAccess="" nullable="false" type="boolean"/>
+    <attribute xmlName="autoIncrement" code="autoIncrement" displayName="Auto Increment" reverseCode="" reverseUpdateXpathQuery="" type="boolean"/>
+    <parent>com.stambia.rdbms.product</parent>
+    <xPathExpression expression="@maxsize">
+      <code>MAX_SIZE</code>
+    </xPathExpression>
+    <xPathExpression expression="@name">
+      <code>SQL_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="@superType">
+      <code>SUPER_TYPE_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="@creationMask">
+      <code>CREATION_MASK</code>
+    </xPathExpression>
+    <xPathExpression expression="md:ifEmpty(@writingMask,@creationMask)">
+      <code>WRITING_MASK</code>
+    </xPathExpression>
+    <xPathExpression expression="md:ifEmpty(@simpleMask,@creationMask)">
+      <code>SIMPLE_MASK</code>
+    </xPathExpression>
+    <xPathExpression expression="@autoIncrement='true'">
+      <code>IS_AUTOINCREMENT</code>
+    </xPathExpression>
+    <xPathExpression description="" expression="ancestor::rdbms/superType[@name=$type]">
+      <code>SUPER_TYPE_REF</code>
+      <xPathVariable expression="@superType" name="type"/>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/rdbms.ck.png" xmlName="ck" code="com.stambia.rdbms.check" displayName="Condition" override="false" position="6" reverseCode="CONSTRAINT_NAME">
+    <icons name="CK" xpath="'icons/full/custom/rdbms.ck.png'"/>
+    <icons name="Tag" xpath="if (boolean(tag) or boolean(userProperties)) then 'icons/full/custom/rdbms.tag.png' else ''"/>
+    <attribute xmlName="sql" category="Standard" code="sql" displayName="Condition Expression" displayOrder="20" multiLine="true" reverseCode="CHECK_CLAUSE"/>
+    <attribute xmlName="userMessage" category="Standard" code="userMessage" defaultValue="" displayName="User Message"/>
+    <attribute xmlName="rejectCode" category="Standard" code="rejectCode" defaultValue="" displayName="Reject Code"/>
+    <attribute metaInf="&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;50&quot; to=&quot;Info&quot;/>&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;100&quot; to=&quot;Warning&quot;/>&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;200&quot; to=&quot;Reject&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;300&quot; to=&quot;Fatal&quot;/>" xmlName="severity" category="Standard" code="severity" defaultValue="" displayName="Severity Level" editable="false" mdXpathAccess="tokenize('Warning Reject Fatal',' ')" refreshPropertiesCompositeOnValueChange="true" type="list"/>
+    <attribute icon="" xmlName="REMARKS" xpathCondition="" code="remarks" displayName="Description" multiLine="true" reverseCode="REMARKS"/>
+    <attribute xmlName="tag" xpathCondition="" category="Customization" code="tag" displayName="Tags" unbounded="true"/>
+    <attribute xmlName="userProperties" xpathCondition="" category="Customization" code="userProperties" displayName="User Properties" keyValue="true" unbounded="true"/>
+    <parent>com.stambia.rdbms.datastore</parent>
+    <xPathExpression expression="mdj:xpath(./..,'ALIAS')">
+      <code>ALIAS</code>
+    </xPathExpression>
+    <xPathExpression expression="@sql">
+      <code>EXPRESSION</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@userMessage!='') then replace(@userMessage,'''','''''') else concat('control of ',@name)">
+      <code>REJECT_MESSAGE</code>
+    </xPathExpression>
+    <xPathExpression expression="$p1/tech:addDelimiter($name,false(),'default')">
+      <code>DEFAULT</code>
+      <code>NAME</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathVariable expression="if ($p2='upper') then upper-case($name2) else if ($p2='lower') then lower-case($name2) else $name2" name="name"/>
+      <xPathVariable expression="md:applyObjectNameMask(@defType,@name) " name="name2"/>
+    </xPathExpression>
+    <xPathExpression expression=".">
+      <code>TARGET_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="'CK'">
+      <code>CONSTRAINT_CODE</code>
+    </xPathExpression>
+    <xPathExpression expression="@rejectCode">
+      <code>REJECT_CODE</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@severity='100') then 'WARNING' else &#xA;if (@severity='200') then 'REJECT' else &#xA;if (@severity='300') then 'FATAL' else &#xA;'REJECT'">
+      <code>SEVERITY</code>
+    </xPathExpression>
+    <mappingType>Constraint</mappingType>
+  </level>
+  <level icon="icons/full/custom/Variables16x16.png" xmlName="variable" code="com.stambia.rdbms.variable" displayName="Variable" position="2">
+    <attribute xmlName="sql" code="sql" displayName="Refresh Query" multiLine="true"/>
+    <attribute xmlName="type" code="type" displayName="Type" type="list" valueSet="#com.stambia.rdbms.variable.type.valueSet"/>
+    <attribute xmlName="defaultValue" code="defaultValue" displayName="Default Value" reverseCode=""/>
+    <attribute xmlName="nativeXpathExpression" code="nativeXpathExpression" defaultValue="false" displayName="Use native Xpath Expression" type="boolean"/>
+    <xPathExpression expression="if (@nativeXpathExpression='true') then mdj:xpath(@sql) else mdj:pattern(@sql)">
+      <code>QUERY</code>
+    </xPathExpression>
+    <xPathExpression expression="concat('/',@name,'(',@id,')')">
+      <code>DEFAULT</code>
+    </xPathExpression>
+    <xPathExpression expression="@type">
+      <code>TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="@defaultValue">
+      <code>DFLT_VALUE</code>
+      <code>DEFAULT_VALUE</code>
+    </xPathExpression>
+    <xPathExpression expression="concat('${',mdj:xpath(.,'DEFAULT'),'}$')">
+      <code>COLUMN_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="concat('${',mdj:xpath(.,'DEFAULT'),'}$')">
+      <code>CALL</code>
+    </xPathExpression>
+    <mappingType>Variable</mappingType>
+  </level>
+  <level icon="icons/full/custom/rdbms.property.gif" xmlName="property" activeDisplayName="true" code="com.stambia.rdbms.property" displayName="Property" position="1">
+    <attribute xmlName="value" code="value" displayName="Value"/>
+    <parent>com.stambia.rdbms.server</parent>
+    <parent>com.stambia.rdbms.product</parent>
+    <xPathExpression expression="@name">
+      <code>NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="@value">
+      <code>VALUE</code>
+    </xPathExpression>
+  </level>
+  <level xmlName="driver" activeDisplayName="true" code="com.stambia.jdbc.driver" displayName="Driver" position="2">
+    <attribute xmlName="class" code="class" displayName="Class"/>
+    <attribute xmlName="url" code="url" displayName="Url Mask"/>
+    <attribute xmlName="default" xpathCondition="" code="default" displayName="Default" type="boolean"/>
+    <parent>com.stambia.rdbms.product</parent>
+  </level>
+  <level xmlName="mask" code="com.stambia.rdbms.mask" displayName="Mask" position="3">
+    <attribute xmlName="value" xpathCondition="" code="value" defaultValue="" displayName="Value" multiLine="true"/>
+    <parent>com.stambia.rdbms.product</parent>
+    <parent>com.stambia.rdbms</parent>
+  </level>
+  <level xmlName="reverseQuery" code="com.stambia.rdbms.reverse.query" displayName="Reverse Query" position="4" reverseBundleName="com.indy.addons" reverseClass="com.indy.md.rdbms.JdbcReverse">
+    <attribute xmlName="level" code="level" displayName="level" mdXpathAccess="" type="string" unbounded="true"/>
+    <attribute xmlName="query" xpathCondition="" category="" code="query" displayName="Query" multiLine="true"/>
+    <attribute xmlName="overrideStandard" code="overrideStandard" defaultValue="" displayName="Override Standard" type="boolean"/>
+    <attribute xmlName="xpathCondition" code="xpathCondition" displayName="Xpath Condition" multiLine="true"/>
+    <attribute xmlName="selectionQuery" code="selectionQuery" displayName="Selection Query" multiLine="true"/>
+    <attribute icon="" xmlName="overrideStandardSelection" code="overrideStandardSelection" defaultValue="" displayName="Override Standard Selection" type="boolean"/>
+    <attribute xmlName="xpathSelectionCondition" code="xpathSelectionCondition" displayName="Xpath Selection Condition" multiLine="true"/>
+    <parent>com.stambia.rdbms.product</parent>
+  </level>
+  <level xmlName="break" code="com.stambia.rdbms.reverse.break" displayName="Break">
+    <attribute xmlName="level" code="level" displayName="Level"/>
+    <parent>com.stambia.rdbms.reverse.query</parent>
+  </level>
+  <level icon="icons/full/custom/rdbms.index.png" iconBundleName="" xmlName="index" code="com.stambia.rdbms.index" displayName="Index" position="200" positionReverseCode="" reverseBundleName="" reverseClass="" reverseCode="INDEX_NAME">
+    <icons name="Index" xpath="'icons/full/custom/rdbms.index.png'"/>
+    <icons name="Tag" xpath="if (boolean(tag) or boolean(userProperties)) then 'icons/full/custom/rdbms.tag.png' else ''"/>
+    <attribute xmlName="unique" code="unique" displayName="Is Unique" reverseCode="IS_UNIQUE" type="boolean"/>
+    <attribute iconBundleName="" xmlName="type" code="type" displayName="Type" reverseCode="INDEX_TYPE" reverseUpdateXpathQuery=""/>
+    <attribute xmlName="tag" xpathCondition="" category="Customization" code="tag" displayName="Tags" unbounded="true"/>
+    <attribute xmlName="userProperties" xpathCondition="" category="Customization" code="userProperties" displayName="User Properties" keyValue="true" unbounded="true"/>
+    <parent>com.stambia.rdbms.datastore</parent>
+    <xPathExpression expression="$p1/tech:addDelimiter($name,false(),'default')">
+      <code>DEFAULT</code>
+      <code>NAME</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathVariable expression="if ($p2='upper') then upper-case($name2) else if ($p2='lower') then lower-case($name2) else $name2" name="name"/>
+      <xPathVariable expression="md:applyObjectNameMask(@defType,@name) " name="name2"/>
+    </xPathExpression>
+    <xPathExpression expression="@unique='true'">
+      <code>IS_UNIQUE</code>
+    </xPathExpression>
+    <xPathExpression expression="@type">
+      <code>TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="colref/mdj:xpath(.,'COLUMN_REF')">
+      <code>COLUMNS_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="tech:ddl('INDEX_CREATION_DDL',$p1,$p2,$p3,$p4,$p5)">
+      <code>CREATION_DDL</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathParameter defaultValue="''" name="p3"/>
+      <xPathParameter defaultValue="''" name="p4"/>
+      <xPathParameter defaultValue="false()" name="p5"/>
+    </xPathExpression>
+    <xPathExpression expression="tech:ddl('INDEX_DROP_DDL',$p1,$p2,$p3)">
+      <code>DROP_DDL</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathParameter defaultValue="''" name="p3"/>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/obj16/TechValueSet16x16.png" iconBundleName="com.indy.tech.edit" xmlName="valueSet" code="com.stambia.rdbms.valueSet" displayName="ValueSet" position="2">
+    <attribute xmlName="type" code="type" displayName="Type"/>
+    <parent>com.stambia.rdbms</parent>
+    <parent>com.stambia.rdbms.product</parent>
+  </level>
+  <level icon="icons/full/obj16/TechValue16x16.png" iconBundleName="com.indy.tech.edit" xmlName="value" code="com.stambia.rdbms.value" displayName="Value">
+    <attribute xmlName="code" category="" code="code" defaultValue="" displayName="Code"/>
+    <parent>com.stambia.rdbms.valueSet</parent>
+  </level>
+  <level icon="icons/full/custom/rdbms.hierarchical.png" xmlName="hierarchy" code="com.stambia.rdbms.hierarchy" displayName="Hierarchy"/>
+  <level xmlName="function" xpathDisplayName="@name" code="com.stambia.rdbms.function" createAction="false" displayName="Function" hasName="true" wizardBundleName="">
+    <attribute icon="" xmlName="type" xpathCondition="ancestore-or-self::functionsFolder[1]/@type='Standard'" code="categoryType" displayName="Type" mdXpathAccess="tokenize('Numeric StringTimeDate System', ' ')" refreshPropertiesCompositeOnValueChange="true" type="string"/>
+    <parent>com.stambia.rdbms.functionFolder</parent>
+  </level>
+  <level xmlName="parameter" xpathDisplayName="@COLUMN_NAME" xpathIcon="" code="com.stambia.rdbms.function.parameter" displayName="Parameter" hasName="false">
+    <attribute xmlName="COLUMN_NAME" code="name" displayName="Name" reverseCode="COLUMN_NAME"/>
+    <attribute xmlName="TYPE_NAME" xpathCondition="" code="dataType" displayName="DataType" mdXpathAccess="ancestor::product[1]/datatype/@name" reverseCode="TYPE_NAME" type="list"/>
+    <attribute xmlName="LENGTH" code="size" displayName="Size" reverseCode="LENGTH" type="integer">
+      <mappingInfo>Size</mappingInfo>
+    </attribute>
+    <attribute icon="" xmlName="ORDINAL_POSITION" xpathCondition="" code="ordinalPosition" displayName="Position" multiLine="false" nullable="false" reverseCode="ORDINAL_POSITION" type="integer"/>
+    <attribute icon="" xmlName="REMARKS" xpathCondition="" code="remarks" displayName="Description" multiLine="true" reverseCode="REMARKS"/>
+    <attribute iconBundleName="" metaInf="&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;0&quot; to=&quot;Unknown&quot;/>&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;1&quot; to=&quot;In&quot;/>&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;2&quot; to=&quot;InOut&quot;/>&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;3&quot; to=&quot;Out&quot;/>&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;4&quot; to=&quot;Return&quot;/>&lt;metaInf id=&quot;valueMatcher&quot; from=&quot;5&quot; to=&quot;Result&quot;/>" xmlName="COLUMN_TYPE" xpathCondition="" code="columnType" displayName="Parameter Type" mdXpathAccess="tokenize('Unknown In InOut Out Return Result', ' ')" reverseCode="COLUMN_TYPE" type="list"/>
+    <parent>com.stambia.rdbms.function</parent>
+  </level>
+  <level xmlName="functionsFolder" xpathCondition="" xpathDisplayName="concat('Functions  ', @type)" code="com.stambia.rdbms.functionFolder" createAction="false" displayName="Function Folder" hasName="false" reverse="true" reverseBundleName="" reverseClass="">
+    <attribute icon="" xmlName="type" xpathCondition="" code="type" displayName="Type" mdXpathAccess="tokenize('Standard User', ' ')" type="list"/>
+    <parent>com.stambia.rdbms.product</parent>
+    <parent>com.stambia.rdbms.server</parent>
+    <parent>com.stambia.rdbms.schema</parent>
+  </level>
+  <level xmlName="stageFieldHelper" xpathDisplayName="concat('StageFIeld DataType ', @type)" code="com.stambia.rdbms.stageFieldHelper" hasName="false">
+    <attribute xmlName="type" code="type" displayName="Type" mdXpathAccess="ancestor-or-self::product[1]/datatype/@name" type="list"/>
+    <attribute xmlName="precision" xpathCondition="" code="precision" displayName="Precision" type="integer"/>
+    <attribute xmlName="scale" xpathCondition="" code="scale" displayName="Scale" type="integer"/>
+    <parent>com.stambia.rdbms.schema</parent>
+    <xPathExpression expression="@type">
+      <code>INTERNAL_STAGE_FIELD_TYPE</code>
+      <code>INTERNAL_MAPPING_INFO_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="@scale">
+      <code>INTERNAL_MAPPING_INFO_SIZE</code>
+    </xPathExpression>
+    <xPathExpression expression="@precision">
+      <code>INTERNAL_MAPPING_INFO_PRECISION</code>
+    </xPathExpression>
+    <xPathExpression expression="exists(ancestor-or-self::product[1]/datatype[@name=$current/@type])">
+      <code>INTERNAL_STAGE_FIELD_VALID_TYPE</code>
+    </xPathExpression>
+  </level>
+  <level xmlName="reverseScript" code="com.stambia.rdbms.reverse.script" displayName="Reverse Script">
+    <attribute xmlName="script" code="script" defaultValue="" displayName="Script" multiLine="true"/>
+    <attribute xmlName="language" code="language" defaultValue="" displayName="language"/>
+    <attribute xmlName="level" code="level" displayName="Level" unbounded="true"/>
+    <parent>com.stambia.rdbms.product</parent>
+  </level>
+  <level icon="icons/full/custom/com.stambia.generic.level.png" xmlName="initsql" xpathDisplayName="if(@sql!='') then concat('Connection Initialization SQL - (',substring(@sql,1,10),'...)') else 'Connection Initialization SQL'" code="com.stambia.rdbms.server.initsql" displayName="Connection Initialization SQL" filtered="false" hasName="false">
+    <attribute xmlName="sql" category="" code="sql" default="" displayName="SQL Initialization Script" multiLine="true" toolTip="Define here a list a semi-colon separated SQL Queries which will be executed on connection when it is initialized. Note that at the moment those queries are taken into account only on delivery execution, Designer's SQL Explorer does not use them yet."/>
+    <parent>com.stambia.rdbms.server</parent>
+    <xPathExpression expression="@sql">
+      <code>sql</code>
+    </xPathExpression>
+  </level>
+  <valueSet xmlName="" code="rdbms.where.type">
+    <value code="rdbms.join.type.complex" name="COMPLEX"/>
+    <value code="rdbms.join.type.alias" name="ALIAS"/>
+    <value xmlName="" code="rdbms.join.type.number" name="NUMBER"/>
+  </valueSet>
+  <valueSet xmlName="" code="rdbms.join.outer.place">
+    <value code="rdbms.join.from.outer.after" name="Right outer Side: CUST.ORD_ID = ORD.ORD_ID(+)" value="1"/>
+    <value code="rdbms.join.from.inner.operator" name="Operator inner side : CUST.ORD_ID *= ORD.ORD_ID" value="2"/>
+  </valueSet>
+  <valueSet code="rdbms.join.mode">
+    <value code="rdbms.join.mode.explicit" name="EXPLICIT" value="EXPLICIT"/>
+    <value code="rdbms.join.mode.implicit" name="IMPLICIT" value="IMPLICIT"/>
+  </valueSet>
+  <valueSet code="com.stambia.rdbms.variable.type.valueSet">
+    <value code="com.stambia.rdbms.variable.type.String" name="String" value=""/>
+    <value code="com.stambia.rdbms.variable.type.Integer" name="Integer" value=""/>
+    <value code="com.stambia.rdbms.variable.type.Float" name="Float" value=""/>
+    <value code="com.stambia.rdbms.variable.type.Boolean" name="Boolean" value=""/>
+  </valueSet>
+  <valueSet code="com.stambia.rdbms.scd.valueSet">
+    <value icon="" code="com.stambia.rdbms.scd.historize" name="HISTORIZE" value="HISTORIZE"/>
+    <value icon="" code="com.stambia.rdbms.scd.none" name="NONE" value="NONE"/>
+  </valueSet>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditConnection" code="edit_connection" description="Connect To Database" displayName="Edit Connection" modificatingAction="true">
+    <executableLevel>#com.stambia.rdbms.server</executableLevel>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcConnectionNew" code="connect_to_database" description="Connect To Database" displayName="Connect To Database" modificatingAction="false">
+    <executableLevel>#com.stambia.rdbms.server</executableLevel>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditor" code="launch_query_editor" description="" displayName="Launch Query Editor" xpathExpression="">
+    <executableLevel>#com.stambia.rdbms.schema</executableLevel>
+    <executableLevel>#com.stambia.rdbms.datastore</executableLevel>
+    <executableLevel>#com.stambia.rdbms.column</executableLevel>
+    <executableLevel>#com.stambia.rdbms.server</executableLevel>
+    <executableLevel>#com.stambia.rdbms.query</executableLevel>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditor" code="consult_data" description="" displayName="Consult data" xpathExpression="concat('select * from ', md:physicalName(.,'DEFAULT'),if (name()='query') then concat(' ',tech:tableAliasWord() ,' T') else '')">
+    <executableLevel>#com.stambia.rdbms.datastore</executableLevel>
+    <executableLevel>#com.stambia.rdbms.query</executableLevel>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditor" code="consult_data_select_columns" description="" displayName="Consult data (select columns)" xpathExpression="concat('select ', md:list(ref:columns()/concat('&#x9;',tech:name()),',\n','\n','\n'), 'from ', md:physicalName(.,'DEFAULT'),if (name()='query') then concat(' ',tech:tableAliasWord() ,' T') else '')">
+    <executableLevel>#com.stambia.rdbms.datastore</executableLevel>
+    <executableLevel>#com.stambia.rdbms.query</executableLevel>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditor" code="test_refresh_query" description="" displayName="Test Refresh Query" xpathExpression="mdj:xpath(.,'QUERY')">
+    <executableLevel>#com.stambia.rdbms.variable</executableLevel>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditor" code="consult_reject_table" description="" displayName="Consult Reject Table" xpathExpression="concat(&#xD;&#xA;'select *&#xD;&#xA;from ', md:physicalName(.,'REJECT_NAME'))">
+    <executableLevel>#com.stambia.rdbms.datastore</executableLevel>
+    <parameter name="windowPrefixName" value="Rejects "/>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditor" code="analyse_column" description="" displayName="Analyse column" xpathExpression="concat(&#xD;&#xA;'select count(*),',mdj:xpath(.,'DEFAULT'),'&#xD;&#xA;from ', md:physicalName(./..), '&#xD;&#xA;group by ',mdj:xpath(.,'DEFAULT'), '&#xD;&#xA;order by 1 desc')">
+    <executableLevel>#com.stambia.rdbms.column</executableLevel>
+    <parameter name="windowPrefixName" value="Analyse "/>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditor" code="consult_duplicates" description="" displayName="Consult duplicates" xpathExpression="concat(&#xD;&#xA;'select count(*), ', md:patternList(ref:columns(),'[name]', ',') ,'&#xD;&#xA;from ', ../tech:physicalPath(),'&#xD;&#xA;group by ', md:patternList(ref:columns(),'[name]', ','), '&#xD;&#xA;having count(*)>1&#xD;&#xA;order by 1 desc'&#xD;&#xA;)&#xD;&#xA; &#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;">
+    <executableLevel>#com.stambia.rdbms.ak</executableLevel>
+    <executableLevel>#com.stambia.rdbms.pk</executableLevel>
+    <parameter name="windowPrefixName" value="Control "/>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditor" code="consult_mismatching_records" description="" displayName="Consult mismatching records" xpathExpression="concat('select * &#xD;&#xA;from ', ref:fkTable()/tech:physicalPath(),' FK_TAB&#xD;&#xA;where not exists (&#xD;&#xA;&#x9;select 1&#xD;&#xA;&#x9;from ',ref:pkTable()/tech:physicalPath(),' PK_TAB&#xD;&#xA;&#x9;where ', md:patternList(ref:joins(), '[expression]', '\n\tand '),'&#xD;&#xA;&#x9;)&#xD;&#xA;',md:patternList(ref:joins()[not(tech:type()='Complex')],'FK_TAB.[columnName] IS NOT NULL', '\n\tor ', 'and (', ')'),'&#xD;&#xA;',tech:filterPart()&#xD;&#xA;)">
+    <executableLevel>#com.stambia.rdbms.fk</executableLevel>
+    <parameter name="windowPrefixName" value="Mismatch "/>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditor" code="consult_join" description="" displayName="Consult join" xpathContext="" xpathExpression="concat('select * &#xD;&#xA;from ', ref:fkTable()/tech:physicalPath(),' FK_TAB&#xD;&#xA;inner join ',ref:pkTable()/tech:physicalPath(),' PK_TAB&#xD;&#xA;&#x9;on ( ', md:list(ref:joins()/concat('',if(tech:type()='Complex') then tech:expression() else concat('(FK_TAB.',tech:fkColumnName(),'=PK_TAB.',tech:pkColumnName(), ' or (FK_TAB.',tech:fkColumnName(),' is null and PK_TAB.',tech:pkColumnName(), ' is null))')), '\n\tand '),'&#xD;&#xA;&#x9;)&#xD;&#xA;where 1=1&#xD;&#xA;',tech:filterPart()&#xD;&#xA;)">
+    <executableLevel>#com.stambia.rdbms.fk</executableLevel>
+    <parameter name="windowPrefixName" value="Consult "/>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditor" code="open_create_table_script" description="" displayName="Open Create Table Script" xpathExpression="tech:creationDDL()">
+    <executableLevel>#com.stambia.rdbms.datastore</executableLevel>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditor" code="delete_table" description="" displayName="Delete table" xpathExpression="tech:deleteDdl()">
+    <executableLevel>#com.stambia.rdbms.datastore</executableLevel>
+    <parameter name="windowPrefixName" value="Delete"/>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditor" code="truncate_table" description="" displayName="Truncate table" xpathExpression="tech:truncateDdl()">
+    <executableLevel>#com.stambia.rdbms.datastore</executableLevel>
+    <parameter name="windowPrefixName" value="Truncate"/>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditor" code="drop_table" description="" displayName="Drop table" xpathExpression="tech:dropDdl()">
+    <executableLevel>#com.stambia.rdbms.datastore</executableLevel>
+    <parameter name="windowPrefixName" value="Drop"/>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcOneFieldResult" code="count_data_popup" description="" displayName="Count data (popup)" xpathExpression="concat('select count(*) from ', md:physicalName(.,'DEFAULT'))">
+    <executableLevel>#com.stambia.rdbms.datastore</executableLevel>
+    <parameter name="message" value="Number of lines"/>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditor" code="consult_captured_data" description="" displayName="Consult Captured Data" xpathExpression="concat('select * from ', mdj:xpath(.,'CDC_DATA_VIEW_PATH'))">
+    <executableLevel>#com.stambia.rdbms.datastore</executableLevel>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditor" code="consult_historized_data" description="" displayName="Consult Historized Data" xpathExpression="concat('select * from ', md:physicalName(.,'HISTO'))">
+    <executableLevel>#com.stambia.rdbms.datastore</executableLevel>
+    <parameter name="windowPrefixName" value="Ctrl "/>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditor" code="count_all_datastore" description="" displayName="Count All Datastore" xpathExpression="md:list(datastore/concat('select ''',md:physicalName(.,'DEFAULT'),''' ',tech:columnAliasWord(),' TABLE_NAME, count(*) ',tech:columnAliasWord(),' NB_ROWS from ', md:physicalName(.,'DEFAULT')),'\n UNION ALL \n')">
+    <executableLevel>#com.stambia.rdbms.schema</executableLevel>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditor" code="create_all_datastore" description="" displayName="Create All Datastore" xpathExpression="md:list(datastore/tech:creationDDL(),';\n\n','',';\n')">
+    <executableLevel>#com.stambia.rdbms.schema</executableLevel>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditor" code="drop_all_datastore" description="" displayName="Drop All Datastore" xpathExpression="md:list(datastore/tech:dropDDL(),';\n\n','',';\n')">
+    <executableLevel>#com.stambia.rdbms.schema</executableLevel>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcReverseDatastore" code="reverse" description="" displayName="Reverse" modificatingAction="true">
+    <executableLevel>#com.stambia.rdbms.datastore</executableLevel>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcReverseQuery" code="reverse" description="" displayName="Reverse" modificatingAction="true" xpathContext="." xpathExpression="">
+    <executableLevel>#com.stambia.rdbms.query</executableLevel>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcReverseFunctions" code="reverse_functions" description="" displayName="Reverse Functions" modificatingAction="true" xpathContext="." xpathExpression="">
+    <executableLevel>#com.stambia.rdbms.server</executableLevel>
+    <executableLevel>#com.stambia.rdbms.schema</executableLevel>
+  </action>
+  <template code="C-TP.RDBMS" description="" name="Control Template for RDBMS">
+    <settableLevel>#com.stambia.rdbms.datastore</settableLevel>
+    <settableLevel>#com.stambia.rdbms.product</settableLevel>
+    <settableLevel>#com.stambia.rdbms.schema</settableLevel>
+    <settableLevel>#com.stambia.rdbms.server</settableLevel>
+    <executableLevel>#com.stambia.rdbms.datastore</executableLevel>
+  </template>
+  <template code="CDC-TP.RDBMS" description="" name="CDC Template for RDBMS">
+    <settableLevel>#com.stambia.rdbms.datastore</settableLevel>
+    <settableLevel>#com.stambia.rdbms.product</settableLevel>
+    <settableLevel>#com.stambia.rdbms.schema</settableLevel>
+    <settableLevel>#com.stambia.rdbms.server</settableLevel>
+    <executableLevel>#com.stambia.rdbms.datastore</executableLevel>
+  </template>
+  <xPathExpression expression="ancestor-or-self::product[1]/@code">
+    <code>PRODUCT_CODE</code>
+    <code>INTERN_PRODUCT_CODE_GUI</code>
+  </xPathExpression>
+  <xPathExpression expression="mdj:getAncestorOrSelf(.,'*/attribute[@defType=''com.stambia.rdbms.product.code'']')/@value">
+    <code>INTERN_PRODUCT_CODE</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::product[1]/@tableAlias">
+    <code>TABLE_ALIAS_WORD</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::product[1]/@columnAlias">
+    <code>COLUMN_ALIAS_WORD</code>
+  </xPathExpression>
+  <xPathExpression expression="./ancestor-or-self::*[mdj:getLevel(.)/@connection='true'][1]">
+    <code>TARGET_CONNECTION_REF</code>
+    <code>SOURCE_CONNECTION_REF</code>
+    <code>CONNECTION_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::product[1]/@nullWord">
+    <code>NULL_WORD</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:product()/datatype[@superType='VARCHAR'][1]">
+    <code>VARCHAR_TYPE_REF</code>
+    <code>REF_VARCHAR_TYPE</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:product()/datatype[@superType='NUMERIC'][1]">
+    <code>NUMERIC_TYPE_REF</code>
+    <code>REF_NUMERIC_TYPE</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:product()/datatype[@superType='TIMESTAMP'][1]">
+    <code>DATE_TYPE_REF</code>
+    <code>REF_DATE_TYPE</code>
+  </xPathExpression>
+  <xPathExpression expression="mdj:xpath(.,'PRODUCT_REF')/@dateFunction">
+    <code>DATE_FUNCTION</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::*[mdj:getLevel(.)/@connection='true'][1]/concat(@name,'(',@id,')')">
+    <code>CONNECTION_NAME</code>
+  </xPathExpression>
+  <xPathExpression expression="mdj:xpath(ancestor-or-self::schema[1],'WORK_REF')">
+    <code>WORK_SCHEMA_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="if ($p1='') then ancestor-or-self::schema[1]&#xD;&#xA;else ref:server()/schema[@name=$p1][1]&#xD;&#xA;">
+    <code>SCHEMA_REF</code>
+    <code>CONTAINER_REF</code>
+    <xPathParameter defaultValue="''"/>
+  </xPathExpression>
+  <xPathExpression expression="if (ancestor-or-self::product[1]) then ancestor-or-self::product[1] else mdj:getRef(@md:ref)">
+    <code>PRODUCT_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="mdj:xpath(.,'PRODUCT_REF')/@remoteMask" isProvider="false">
+    <code>REMOTE_MASK</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::server[1]/@physicalName">
+    <code>SERVER_NAME</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::server[1]">
+    <code>SERVER_REF</code>
+  </xPathExpression>
+  <xPathExpression description="Utilise par la classe Source" expression="ancestor-or-self::product[1]/@objectDelimiterMask">
+    <code>OBJECT_DELIMITER_MASK</code>
+    <code>INTERNAL_OBJECT_DELIMITER_MASK</code>
+  </xPathExpression>
+  <xPathExpression expression="1=1">
+    <code>HAS_WORKSPACE_CAPABILITY</code>
+    <code>HAS_WORKSPACE_CAPABILITY_GUI</code>
+  </xPathExpression>
+  <xPathExpression description="string() est ajoute a la fin car lorsque des valeurs d'attribut sont mixees a des string (via replace) alors ca plante" expression="if (string($p2)='true') &#xD;&#xA;then upper-case(replace($p1,$regexp,'_'))&#xD;&#xA;else if (contains($mask,'[OBJECT]') and matches($p1,$regexp) ) &#xD;&#xA;&#x9;then mdj:replaceAll($mask,'\[OBJECT\]',$p1) &#xD;&#xA;&#x9;else string($p1)">
+    <code>ADD_DELIMITER</code>
+    <xPathParameter defaultValue="''" name="p1"/>
+    <xPathParameter defaultValue="false()" name="p2"/>
+    <xPathParameter defaultValue="''" name="p3"/>
+    <xPathVariable expression="mdj:xpath(.,'OBJECT_DELIMITER_MASK')" name="mask"/>
+    <xPathVariable expression="md:ifEmpty(if ($p3='column' or $p3='default') then $product/@defaultDelimiterRegexp else if ($p3='datastore')   then $product/@datastoreDelimiterRegexp else if ($p3='schema')   then $product/@schemaDelimiterRegexp else mdj:xpath(.,'OBJECT_DELIMITER_REGEXP'),'[^a-zA-Z0-9_.\$]')" name="regexp0"/>
+    <xPathVariable expression="ancestor-or-self::product[1]" name="product"/>
+    <xPathVariable expression="$product/tech:reservedWordRegexp()" name="reservedWordRegexp"/>
+    <xPathVariable expression="if ($reservedWordRegexp!='') then concat('(',$regexp0,')|',$reservedWordRegexp) else $regexp0" name="regexp"/>
+  </xPathExpression>
+  <xPathExpression expression="if ($mask!='') then substring-before($mask,'[OBJECT]') else None">
+    <code>OBJECT_START_DELIMITER</code>
+    <xPathVariable expression="mdj:xpath(.,'OBJECT_DELIMITER_MASK')" name="mask"/>
+  </xPathExpression>
+  <xPathExpression expression="if ($mask!='') then substring-after($mask,'[OBJECT]') else None">
+    <code>OBJECT_END_DELIMITER</code>
+    <xPathVariable expression="mdj:xpath(.,'OBJECT_DELIMITER_MASK')" name="mask"/>
+  </xPathExpression>
+  <xPathExpression expression=" ref:server()/@driver&#xA;">
+    <code>JDBC_DRIVER</code>
+  </xPathExpression>
+  <xPathExpression expression="mdj:xpath(.,'SERVER_REF')/@url">
+    <code>JDBC_URL</code>
+  </xPathExpression>
+  <xPathExpression expression="mdj:xpath(.,'SERVER_REF')/@user">
+    <code>JDBC_USER</code>
+  </xPathExpression>
+  <xPathExpression expression="mdj:xpath(.,'SERVER_REF')/@password">
+    <code>ENCRYPTED_JDBC_PASSWORD</code>
+  </xPathExpression>
+  <xPathExpression expression="concat('%s(rhino){ __ctx__.decryptPassword(''',mdj:xpath(.,'ENCRYPTED_JDBC_PASSWORD'),''');}s(rhino)%')">
+    <code>JDBC_PASSWORD</code>
+  </xPathExpression>
+  <xPathExpression expression="tech:dataTypeDDL('VARCHAR',$p1)">
+    <code>VARCHAR_DDL</code>
+    <xPathParameter defaultValue="'0'"/>
+  </xPathExpression>
+  <xPathExpression expression="tech:dataTypeDDL2('TIMESTAMP','',$p1)">
+    <code>TIMESTAMP_DDL</code>
+    <code>DATE_DDL</code>
+    <xPathParameter defaultValue="''"/>
+  </xPathExpression>
+  <xPathExpression expression="md:ifEmpty(tech:dataTypeDDL('NUMERIC',$p1,$p2),tech:dataTypeDDL('DECIMAL',$p1,$p2))">
+    <code>NUMERIC_DDL</code>
+    <xPathParameter defaultValue="'0'"/>
+    <xPathParameter defaultValue="'0'" name="p2"/>
+  </xPathExpression>
+  <xPathExpression expression="replace(replace(replace($mask,'\[size\]',$p2),'\[decimal\]',$p3),'\[precision\]',$p3)">
+    <code>DATA_TYPE_DDL</code>
+    <xPathParameter/>
+    <xPathParameter defaultValue="'0'" name="p2"/>
+    <xPathParameter defaultValue="'0'" name="p3"/>
+    <xPathVariable expression="ref:product()/datatype[@superType=$p1 and @default='true'][1]/tech:simpleMask()" name="mask"/>
+  </xPathExpression>
+  <xPathExpression expression="mdj:pattern(replace(replace(replace($mask,'tech:size\(\)',concat('''',$p2,'''')),'tech:decimal\(\)',concat('''',$p3,'''')),'tech:precision\(\)',concat('''',$p3,'''')))">
+    <code>DATA_TYPE_DDL2</code>
+    <xPathParameter/>
+    <xPathParameter defaultValue="'0'" name="p2"/>
+    <xPathParameter defaultValue="''" name="p3"/>
+    <xPathVariable expression="ref:product()/datatype[@superType=$p1 and @default='true'][1]/tech:creationMask()" name="mask"/>
+  </xPathExpression>
+  <xPathExpression description="Applique le masque de nom p1  sur la cible p2 &#xD;&#xA;en fonction des md du context courant" expression="md:applyMask(.,$p1,$p2,$p3,$p4,$p5,$p6,$p7,$p8,$p9,None,None)">
+    <code>DDL</code>
+    <xPathParameter defaultValue="." substitution="false"/>
+    <xPathParameter defaultValue="." name="p2"/>
+    <xPathParameter name="p3"/>
+    <xPathParameter name="p4"/>
+    <xPathParameter name="p5"/>
+    <xPathParameter name="p6"/>
+    <xPathParameter name="p7"/>
+    <xPathParameter name="p8"/>
+    <xPathParameter name="p9"/>
+  </xPathExpression>
+  <xPathExpression expression="ref:product()/datatype[upper-case(@name)=upper-case($p1) or $p1='']">
+    <code>DATA_TYPE_REF</code>
+    <xPathParameter defaultValue="''"/>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::rdbms[1]">
+    <code>RDBMS_DEFINITION_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:product()/datatype[@default='true' and (upper-case(@superType)=upper-case($p1) or $p1='')]">
+    <code>DEFAULT_DATA_TYPE_REF</code>
+    <xPathParameter/>
+  </xPathExpression>
+  <xPathExpression expression="'RDBMS'">
+    <code>TECH_CODE</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::product[1]/@nullWord">
+    <code>NULL_WORD</code>
+    <code>NULL_DDL_KEYWORD</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::product[1]/@notNullWord">
+    <code>NOT_NULL_WORD</code>
+    <code>NOT_NULL_DDL_KEYWORD</code>
+  </xPathExpression>
+  <xPathExpression description="Returns a null keyword to be used in select queries." expression="ancestor-or-self::product[1]/@nullSelectKeyword">
+    <code>NULL_SELECT_KEYWORD</code>
+  </xPathExpression>
+  <xPathExpression expression="'[^a-zA-Z0-9_]'">
+    <code>INTERNAL_OBJECT_DELIMITER_REGEXP</code>
+  </xPathExpression>
+  <xPathExpression expression="if (name()='datastore' and @loadMask!='') then @loadMask else ref:schema()/@loadMask">
+    <code>LOAD_MASK</code>
+  </xPathExpression>
+  <xPathExpression expression="if (name()='datastore' and @integrationMask!='') then @integrationMask else ref:schema()/@integrationMask">
+    <code>INTEGRATION_MASK</code>
+  </xPathExpression>
+  <xPathExpression expression="if (name()='datastore' and @rejectMask!='') then @rejectMask else ref:schema()/@rejectMask">
+    <code>REJECT_MASK</code>
+  </xPathExpression>
+  <xPathExpression description="Utilise par la classe Source" expression="ancestor-or-self::product[1]/@defaultDelimiterRegexp">
+    <code>OBJECT_DELIMITER_REGEXP</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:product()/@schemaType">
+    <code>SCHEMA_TYPE</code>
+  </xPathExpression>
+  <xPathExpression expression="md:ifEmpty($schemaSize,$productSize)">
+    <code>TEMPORARY_OBJECT_TRUNCATION_SIZE</code>
+    <xPathVariable expression="ref:schema()/@truncationSize" name="schemaSize"/>
+    <xPathVariable expression="ref:product()/@maxDatastoreNameSize" name="productSize"/>
+  </xPathExpression>
+  <xPathExpression expression="ref:schema()/@delimiterOnTemp='true'">
+    <code>ADD_DELIMITER_ON_TEMP_OBJECTS</code>
+  </xPathExpression>
+  <xPathExpression expression="replace($mask,'\[table\]',replace(replace($tableName,'\\','\\\\'),'\$','\\\$'))">
+    <code>DROP_TABLE_IF_EXISTS</code>
+    <xPathParameter defaultValue="''"/>
+    <xPathVariable expression="md:ifEmpty(ancestor-or-self::product[1]/@dropTableIfExists,'Drop table')" name="dropTableExpression"/>
+    <xPathVariable expression="$p1" name="tableName"/>
+    <xPathVariable expression="if (matches($dropTableExpression,'\[table\]')) then $dropTableExpression else concat($dropTableExpression,' [table]')" name="mask"/>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@databaseMajorVersion">
+    <code>DATABASE_MAJOR_VERSION</code>
+  </xPathExpression>
+  <xPathExpression description="If this tech support having disjointed DataSet used to map a Container's Set" expression="1=1">
+    <code>IS_DISJOINTED_SRC_DATASET_ERROR</code>
+  </xPathExpression>
+  <xPathExpression expression="replace($mask,'\[view\]',replace(replace($viewName,'\\','\\\\'),'\$','\\\$'))">
+    <code>DROP_VIEW_IF_EXISTS</code>
+    <xPathParameter defaultValue="''"/>
+    <xPathVariable expression="md:ifEmpty(ancestor-or-self::product[1]/@dropViewIfExists,'Drop view')" name="dropViewExpression"/>
+    <xPathVariable expression="$p1" name="viewName"/>
+    <xPathVariable expression="if (matches($dropViewExpression,'\[view\]')) then $dropViewExpression else concat($dropViewExpression,' [view]')" name="mask"/>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::datastore[1]">
+    <code>INTERNAL_MD_CONTAINER_NODE_DATASTORE</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::schema[1]">
+    <code>INTERNAL_MD_CONTAINER_NODE_SCHEMA</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::server[1]">
+    <code>INTERNAL_MD_CONTAINER_NODE_SERVER</code>
+  </xPathExpression>
+  <xPathExpression>
+    <code>INTERNAL_MD_CONTAINER_NODE_PHYSICALSERVER</code>
+  </xPathExpression>
+  <xPathExpression expression="if (string-length($p1)=0) then tag else not(empty(tag[.=$p1]))">
+    <code>TAG</code>
+    <xPathParameter defaultValue="''"/>
+  </xPathExpression>
+  <xPathExpression expression="if (string-length($p1)=0) &#xD;&#xA;&#x9;then userProperties&#xD;&#xA;&#x9;else if (string-length($p2)=0) &#xD;&#xA;&#x9;&#x9;then userProperties[@key=$p1]&#xD;&#xA;&#x9;&#x9;else (userProperties[@key=$p1]=$p2)">
+    <code>USER_PROPERTY</code>
+    <xPathParameter defaultValue="''"/>
+    <xPathParameter defaultValue="''" name="p2"/>
+  </xPathExpression>
+  <xPathExpression expression="userProperties/@key">
+    <code>USER_PROPERTY_KEYS</code>
+  </xPathExpression>
+  <xPathExpression expression="'com.stambia.rdbms.stageFieldHelper'">
+    <code>INTERNAL_STAGE_FIELD_LEVEL</code>
+  </xPathExpression>
+  <xPathExpression expression="if (./name()='product') &#xD;&#xA;then ancestor-or-self::product[1]/driver/concat('libType=driver', '$name=', @name, '$managedDriverClass=', @class,'$managedDriverUrl=',@url,'$managedDriverDefault=',@default,'$eltID=',@id)&#xD;&#xA;else ()">
+    <code>INTERNAL_REQUIRED_LIBRARIES</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor::super[1]/mdj:getRef(., @connectionDefinitionsRef)/*[@name='RDBMS']">
+    <code>GEN_CONNECTION_DEFINITION_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:schema()/@stagingMask">
+    <code>STAGING_MASK</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::product/replace(replace(@timestampToChar, '\$expression', $expression), '\$javaFormat', $sqlFormat)">
+    <code>CONVERT_TIMESTAMP_TO_CHAR</code>
+    <xPathParameter/>
+    <xPathParameter name="p2"/>
+    <xPathVariable expression="replace($p1, '\$', '\\\$')" name="expression"/>
+    <xPathVariable expression="replace($p2, '\$', '\\\$')" name="javaFormat"/>
+    <xPathVariable expression="tech:convertJavaTimestamp($javaFormat)" name="sqlFormat"/>
+  </xPathExpression>
+  <xPathExpression expression="replace(replace(replace(replace(replace(replace(translate(replace(replace($p1, 'MMMM', 'Month'),'MMM', 'Mon'),'ykdwus','YHDWDS'),'HH','HH24'),'EEEE','Day'),'EEE','Dy'),'KK|hh','HH12'),'mm','MI'),'SSS','MS')">
+    <code>CONVERT_JAVA_TIMESTAMP</code>
+    <xPathParameter/>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::product/replace(replace(@timestampToChar, '\$expression', $expression), '\$javaFormat', $sqlFormat)">
+    <code>CONVERT_TIMESTAMP_TO_CHAR</code>
+    <xPathParameter/>
+    <xPathParameter name="p2"/>
+    <xPathVariable expression="replace($p1, '\$', '\\\$')" name="expression"/>
+    <xPathVariable expression="replace($p2, '\$', '\\\$')" name="javaFormat"/>
+    <xPathVariable expression="tech:convertJavaTimestamp($javaFormat)" name="sqlFormat"/>
+  </xPathExpression>
+  <xPathExpression expression="replace(replace(replace(replace(replace(replace(translate(replace(replace($p1, 'MMMM', 'Month'),'MMM', 'Mon'),'ykdwus','YHDWDS'),'HH','HH24'),'EEEE','Day'),'EEE','Dy'),'KK|hh','HH12'),'mm','MI'),'SSS','MS')">
+    <code>CONVERT_JAVA_TIMESTAMP</code>
+    <xPathParameter/>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::product/@databaseMetadataReverseMode">
+    <code>INTERNAL_REVERSE_DBMD_COLUMN_ACCESS_MODE</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::server/@module">
+    <code>INTERNAL_MODULE</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@module">
+    <code>MODULE</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:product()/@poolReadAutocommitMode">
+    <code>JDBC_READ_AUTOCOMMIT_MODE</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::product[1]/driver[@default=true()][1]/@class">
+    <code>INTERNAL_JDBC_DRIVER</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::product[1]/driver[@default=true()][1]/@url">
+    <code>INTERNAL_JDBC_URL_MASK</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::product/baseModule/string()">
+    <code>INTERNAL_BASE_MODULE</code>
+  </xPathExpression>
+  <xPathExpression expression="'module'">
+    <code>INTERNAL_MODULE_ATTRIBUTE_NAME</code>
+  </xPathExpression>
+  <xPathExpression description="Used from templates to specify if they support filter as QUALIFY clause" expression="exists(ancestor-or-self::product/templateCapability[./string()='qualifyFilter'])">
+    <code>INTERNAL_SUPPORT_QUALIFY_FILTER</code>
+  </xPathExpression>
+  <metaDataLinkType createAction="true" name="VariableRefresh">
+    <parameter name="VAR_NAME" value="mdj:xpath(.,'DEFAULT')"/>
+    <parameter name="VAR_TYPE" value="mdj:xpath(.,'TYPE')"/>
+    <parameter name="VAR_REFRESH_SQL" value="mdj:xpath(.,'QUERY')"/>
+    <parameter name="VAR_REFRESH_CONNECTION" value="ref:connection()"/>
+    <parameter name="VAR_DEFAULT_VALUE" value="mdj:xpath(.,'DEFAULT_VALUE')"/>
+    <technology>com.indy.engine.actionCodes.VariableManagerActionCodeI</technology>
+    <level>#com.stambia.rdbms.variable</level>
+  </metaDataLinkType>
+  <metaDataLinkType createAction="false" name="VariableSave">
+    <parameter name="VAR_SAVE_CONNECTION" value="ref:connection()"/>
+    <parameter name="VAR_SAVE_SCHEMA_NAME" value="mdj:xpath(.,'SCHEMA_REF/DEFAULT')"/>
+    <technology>com.indy.engine.actionCodes.VariableManagerActionCodeI</technology>
+    <level>#com.stambia.rdbms.column</level>
+    <level>#com.stambia.rdbms.datastore</level>
+    <level>#com.stambia.rdbms.schema</level>
+    <level>#com.stambia.rdbms.server</level>
+  </metaDataLinkType>
+  <metaDataLinkType createAction="false" name="RdbmsConnection">
+    <parameter name="SQL_CONNECTION" value="ref:connection()"/>
+    <parameter name="SQL_SCHEMA_NAME" value="mdj:xpath(.,'SCHEMA_REF/DEFAULT')"/>
+    <technology>*</technology>
+    <level>#com.stambia.rdbms.column</level>
+    <level>#com.stambia.rdbms.datastore</level>
+    <level>#com.stambia.rdbms.schema</level>
+    <level>#com.stambia.rdbms.server</level>
+    <level>#com.stambia.rdbms.check</level>
+    <level>#com.stambia.rdbms.fk</level>
+    <level>#com.stambia.rdbms.index</level>
+    <level>#com.stambia.rdbms.pk</level>
+    <level>#com.stambia.rdbms.query</level>
+  </metaDataLinkType>
+  <contributedRegistryID>com.indy.ui.custom.out.services.registry.ModuleRequirment[@defType=com.stambia.rdbms.server]</contributedRegistryID>
+</tech:tech>

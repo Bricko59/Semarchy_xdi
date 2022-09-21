@@ -1,0 +1,814 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="_waYSMH8VEd2__Mzb_dB76A" name="flow">
+  <level icon="" iconBundleName="" xmlName="flow" xpathDisplayName="internal:getResourceName()" code="com.stambia.flow" configurable="false" createAction="false" displayName="flow" isFile="false" mdLinkSupported="true" moveAction="false" removeAction="false"/>
+  <level icon="icons/full/custom/step.png" xmlName="step" code="com.stambia.flow.step" configurable="false" createAction="false" displayName="Step" mdLinkSupported="true" moveAction="false" removeAction="false">
+    <attribute xmlName="type" code="type" displayName="Type" mdXpathAccess="tokenize('Integration Staging Load Check', ' ')" refreshPropertiesCompositeOnValueChange="true" type="list"/>
+    <attribute xmlName="procRef" code="procref" displayName="Process" type="reference"/>
+    <attribute xmlName="target" code="target" displayName="Target"/>
+    <attribute xmlName="description" code="desc" displayName="Description"/>
+    <attribute icon="" xmlName="group" code="group" defaultValue="" displayName="Group"/>
+    <attribute xmlName="srcProduct" code="srcProduct" displayName="Source Product"/>
+    <attribute xmlName="trgProduct" code="trgProduct" displayName="Target Product"/>
+    <attribute xmlName="tplCriteria" code="tplCriteria" displayName="Template Criteria"/>
+    <attribute xmlName="number" code="number" defaultValue="" displayName="Number"/>
+    <attribute xmlName="setExpression" code="setExpression" displayName="Set Expression"/>
+    <attribute xmlName="integrationStepName" xpathCondition="not(@type='Integration' or @type='Staging')" code="integrationStepName" displayName="Integration StepName" mdXpathAccess="../step[@type='Integration' or @type='Staging']/@name" multiLine="true" type="list" unbounded="true"/>
+    <attribute xmlName="trgUpdateKeyProviderRef" code="trgUpdateKeyProviderRef" displayName="Target UpdateKeyProvider Ref" toolTip="The mdNode from this step target which provide which Field's MdNode target is part of an updateKey" type="string"/>
+    <parent>com.stambia.flow</parent>
+    <xPathExpression expression="ref:integrationStep()/field/mdj:getMdRef(.,@target)">
+      <code>MAPPED_COLUMNS_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'TARGET_REF/TARGET_COLUMNS_REF')">
+      <code>TARGET_COLUMNS_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="if ($aggregate or mdj:xpath(.,'HAVING_REF',$p1)) &#xD;&#xA;&#x9;then set:difference(mdj:xpath(.,'COLUMNS_REF',$p1)[not(mdj:xpath(.,'ON_TRG'))],$aggregate) &#xD;&#xA;&#x9;else None">
+      <code>GROUP_BY_COLUMNS_REF</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathVariable expression="mdj:xpath(.,'COLUMNS_REF',$p1)[mdj:xpath(.,'IS_AGGREGATE')]" name="aggregate"/>
+    </xPathExpression>
+    <xPathExpression description="p1 : sourceSetName&#xD;&#xA;p2 : integration step to filter fields&#xD;&#xA;&#xD;&#xA;if (p1 and p2) sourceSetName is used on integrationStep not on current step" expression="if (exists($p2)) then $exp1[tech:uniqueName()=$p2/(ref:fields($p1) | ref:filter($p1) | ref:join($p1))/sourceNames] else $exp1">
+      <code>COLUMNS_REF</code>
+      <code>FIELDS_REF</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="None" name="p2"/>
+      <xPathVariable expression="(if (@type='Check') then ref:integrationStep()/field else field)[(exists($p2)) or (@sourceSet=$p1 or not($p1!=''))]" name="exp1"/>
+      <xPathVariable expression="@name" name="stepName"/>
+    </xPathExpression>
+    <xPathExpression expression="$joins[mdj:xpath(.,'MODE')='EXPLICIT' &#xD;&#xA;or (&#xD;&#xA;&#x9;(mdj:xpath(.,'MODE')='DEFAULT' or mdj:xpath(.,'MODE')='') &#xD;&#xA;&#x9;and mdj:xpath(.,'IS_OUTER') and $dftOuterMode='EXPLICIT') &#xD;&#xA;or  (&#xD;&#xA;&#x9;(mdj:xpath(.,'MODE')='DEFAULT' or mdj:xpath(.,'MODE')='') &#xD;&#xA;&#x9;and mdj:xpath(.,'IS_INNER') and $dftInnerMode='EXPLICIT') ]">
+      <code>EXPLICIT_JOIN_REF</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="join" name="p2"/>
+      <xPathVariable expression="ref:join($p1,$p2)" name="joins"/>
+      <xPathVariable expression="mdj:xpath(.,'SOURCE_PRODUCT_REF/DEFAULT_OUTER_JOIN_MODE')" name="dftOuterMode"/>
+      <xPathVariable expression="mdj:xpath(.,'SOURCE_PRODUCT_REF/DEFAULT_INNER_JOIN_MODE')" name="dftInnerMode"/>
+    </xPathExpression>
+    <xPathExpression expression="set:difference(mdj:xpath(.,'JOIN_REF',$p1,$p2),mdj:xpath(.,'EXPLICIT_JOIN_REF',$p1,$p2))">
+      <code>IMPLICIT_JOIN_REF</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="join" name="p2"/>
+    </xPathExpression>
+    <xPathExpression expression="constraint[upper-case(@type)='FK']/mdj:xpath(.,'TARGET_REF')[count(set:intersection(mdj:xpath(.,'JOINS_REF/FK_COLUMN_REF')/@id,$current/@id))=count(mdj:xpath(.,'JOINS_REF/FK_COLUMN_REF'))]">
+      <code>FK_REF</code>
+      <xPathVariable expression="mdj:xpath(.,'MAPPED_COLUMNS_REF')" name="current"/>
+    </xPathExpression>
+    <xPathExpression expression="constraint[upper-case(@type)='PK']/mdj:xpath(.,'TARGET_REF')">
+      <code>PK_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="constraint[upper-case(@type)='NN']/mdj:xpath(.,'TARGET_REF')">
+      <code>NN_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="constraint[upper-case(@type)='CK']/mdj:xpath(.,'TARGET_REF')">
+      <code>CK_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'SOURCE_REF/CONNECTION_REF')">
+      <code>SOURCE_CONNECTION_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'TARGET_REF/CONNECTION_REF')">
+      <code>TARGET_CONNECTION_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="if ($target/name()='schema') then $target else $target/ref:parent()">
+      <code>PARENT_REF</code>
+      <xPathVariable expression="ref:target()" name="target"/>
+    </xPathExpression>
+    <xPathExpression expression="mdj:getMdRef(.,@target)">
+      <code>TARGET_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="if (exists($loadStep)) then $loadStep/ref:target() else&#xD;&#xA;(if (source[1]/@target!='') then source[1]/mdj:getMdRef(.,@target) else mdj:getMdRef(.,@target))">
+      <code>SOURCE_REF</code>
+      <xPathVariable expression="source[1]/ref:loadedStep()" name="loadStep"/>
+    </xPathExpression>
+    <xPathExpression expression="$p3[not(@filteringSource='true')][($p1=@sourceSet or not($p1!=''))  and ('$p2'='' or @name ='$p2')]">
+      <code>FROM_REF</code>
+      <code>FROMS_REF</code>
+      <xPathParameter defaultValue="''" name="p1" substitution="false"/>
+      <xPathParameter defaultValue="" name="p2" substitution="true"/>
+      <xPathParameter defaultValue="source" name="p3"/>
+    </xPathExpression>
+    <xPathExpression expression="$p2[md:ifEmpty(@sourceSet,'')=md:ifEmpty($p1,'') or not($p1!='')]">
+      <code>JOIN_REF</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="join" name="p2"/>
+    </xPathExpression>
+    <xPathExpression expression="$p2[(not($p1!='') or @sourceSet=$p1) and not(mdj:xpath(.,'IS_AGGREGATE')) and not(mdj:xpath(.,'IS_QUALIFY')) and not(tech:location()='TRG')]">
+      <code>FILTER_REF</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="filter" name="p2"/>
+    </xPathExpression>
+    <xPathExpression expression="filter[(not($p1!='') or @sourceSet=$p1) and mdj:xpath(.,'IS_AGGREGATE')]">
+      <code>HAVING_REF</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+    <xPathExpression expression="filter[(not($p1!='') or @sourceSet=$p1) and mdj:xpath(.,'IS_QUALIFY')]">
+      <code>QUALIFY_REF</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+    <xPathExpression expression="md:list(mdj:xpath(.,'IMPLICIT_JOIN_REF',$p1,$p2)[not(tech:isCross())]/tech:implicitExpression(),')\nAND\t(','\nAND\t(',')')">
+      <code>JOIN_PART</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="join" name="p2"/>
+    </xPathExpression>
+    <xPathExpression expression="if ($part!='') then concat(' AND ',$part) else None">
+      <code>FILTER_PART</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="filter" name="p2"/>
+      <xPathVariable expression="mdj:xpath(.,'SOURCE_PRODUCT_REF/OUTER_PLACE')" name="outerPlace"/>
+      <xPathVariable expression="md:list(mdj:xpath(.,'FILTER_REF',$p1,$p2)/tech:expression(),'\nAND\t')" name="value"/>
+      <xPathVariable expression="distinct-values(mdj:xpath(.,'IMPLICIT_JOIN_REF',$p1)/tech:outerAlias())" name="outerAliases"/>
+      <xPathVariable expression="mdj:xpath(.,'SOURCE_PRODUCT_REF/OUTER_JOIN')" name="outerWord"/>
+      <xPathVariable expression="mdj:addFilterOuterWord($value,$outerWord,$outerAliases)" name="outerValue"/>
+      <xPathVariable expression="if ($outerPlace='1') then $outerValue else $value" name="part"/>
+    </xPathExpression>
+    <xPathExpression expression="if (exists($p2)) then rdbms:fromPart(.,$p1,'TEXT',$p2) else rdbms:fromPart(.,$p1)">
+      <code>FROM_PART</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="None" name="p2"/>
+    </xPathExpression>
+    <xPathExpression expression="if ($type='ALIAS') then  md:list(ref:groupByColumns($p1)/tech:workName(), ', ','\ngroup by ') else md:list(ref:groupByColumns($p1)/tech:expression(), ', ','\ngroup by ')">
+      <code>GROUP_BY_PART</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathVariable expression="mdj:xpath(.,'SOURCE_PRODUCT_REF/GROUP_BY_TYPE')" name="type"/>
+    </xPathExpression>
+    <xPathExpression expression="md:list(mdj:xpath(.,'HAVING_REF',$p1)/tech:expression(),'\nAND\t','\nhaving ')">
+      <code>HAVING_PART</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+    <xPathExpression expression="md:list(mdj:xpath(.,'QUALIFY_REF',$p1)/tech:expression(),'\nAND\t','\nqualify ')">
+      <code>QUALIFY_PART</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+    <xPathExpression expression="if ($src) then $src else $trg">
+      <code>BASE_REF</code>
+      <xPathVariable expression="mdj:xpath(.,'TARGET_REF')" name="trg"/>
+      <xPathVariable expression="mdj:xpath(.,'SOURCE_REF')" name="src"/>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'SOURCE_REF/PRODUCT_REF')">
+      <code>SOURCE_PRODUCT_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'TARGET_REF/PRODUCT_REF')">
+      <code>TARGET_PRODUCT_REF</code>
+    </xPathExpression>
+    <xPathExpression description="p1: Prefix to add to the workName&#xD;&#xA;p2: Suffix to add to the workName &#xD;&#xA;p3: If 'true' (default value) a delimiter will be added to the workName depending on product settings and tableName" expression="if ($addDelimiter and $enableDelimiter) then ref:target()/tech:addDelimiter($value2) &#xD;&#xA;else $value2">
+      <code>WORK_NAME</code>
+      <code>DEFAULT</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathParameter defaultValue="'true'" name="p3"/>
+      <xPathVariable expression="SRC_SCHEMA_REF" name="defaultRemoteParentRef"/>
+      <xPathVariable expression="if (@type='Staging') then 'DEFAULT' else 'WORK_NAME'" name="defaultParentKind"/>
+      <xPathVariable expression="replace(ref:target()/tech:loadMask(),'\[sessionTimestampName\]','{tech:sessionTimestampName(\$p1,\$p2)}')" name="loadMask"/>
+      <xPathVariable expression="replace(ref:target()/tech:integrationMask(),'\[sessionTimestampName\]','{tech:sessionTimestampName(\$p1,\$p2)}')" name="integrationMask"/>
+      <xPathVariable expression="if (($hasLoadMask and contains($loadMask,'sessionTimestampName')) or ($hasIntegrationMask and contains($integrationMask,'sessionTimestampName'))  or ($hasStagingMask and contains($stagingMask,'sessionTimestampName'))) then '-1' else ref:target()/tech:temporaryObjectTruncationSize()" name="truncationSize"/>
+      <xPathVariable expression="concat($p1,&#xD;&#xA;if ($hasLoadMask) then mdj:pattern($loadMask) else if ($hasIntegrationMask) then mdj:pattern($integrationMask)  else if ($hasStagingMask) then mdj:pattern($stagingMask) else if (@type='Staging') then mdj:pattern($defaultStagingMask) else @name&#xD;&#xA;,$p2)" name="value"/>
+      <xPathVariable expression="@type='Load' and $loadMask!='' and @number!=''" name="hasLoadMask"/>
+      <xPathVariable expression="@type='Integration' and $integrationMask!=''" name="hasIntegrationMask"/>
+      <xPathVariable expression="ref:target()/tech:addDelimiterOnTempObjects()" name="addDelimiter"/>
+      <xPathVariable expression="if ($truncationSize!='' and number($truncationSize)>0 and not($hasMetadataVariable)) then substring($value,0,number($truncationSize)+1) else (if($truncationSize!='' and number($truncationSize)>0 and $hasMetadataVariable) then $value3 else $value)" name="value2"/>
+      <xPathVariable expression="@type='Staging' and $stagingMask!=''" name="hasStagingMask"/>
+      <xPathVariable expression="replace(ref:target()/tech:stagingMask(),'\[sessionTimestampName\]','{tech:sessionTimestampName(\$p1,\$p2)}')" name="stagingMask"/>
+      <xPathVariable expression="'S[number]_[shortMapID]_[targetName]'" name="defaultStagingMask"/>
+      <xPathVariable expression="(contains(ref:target()/tech:originalPhysicalName(), '${') and contains(ref:target()/tech:originalPhysicalName(), '}$')) or&#xD;&#xA;($hasLoadMask and contains($loadMask, '${') and contains($loadMask, '}$')) or &#xD;&#xA;($hasIntegrationMask and contains($integrationMask, '${') and contains($integrationMask, '}$') or &#xD;&#xA;($hasStagingMask and contains($stagingMask, '${') and contains($stagingMask, '}$') ) )" name="hasMetadataVariable"/>
+      <xPathVariable expression="concat('%e(rhino){(&quot;',$value,&#xD;&#xA;'&quot;)','.substring(0,',$truncationSize,')',';}e(rhino)%')" name="value3"/>
+      <xPathVariable expression="$p3 = 'true'" name="enableDelimiter"/>
+    </xPathExpression>
+    <xPathExpression expression="ref:integrationStep()/mdj:xpath(.,'WORK_NAME')">
+      <code>CHECKED_NAME</code>
+      <xPathVariable expression="'WORK_NAME'" name="defaultParentKind"/>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'TARGET_REF')" isProvider="true">
+      <code>ALIAS</code>
+      <code>REJECT_NAME</code>
+      <code>HISTO_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'TARGET_REF')" isProvider="true">
+      <code>CDC_TABLE_NAME</code>
+      <code>CDC_VIEW_NAME</code>
+      <code>CDC_TRIGGER_NAME</code>
+      <code>CDC_DATA_VIEW_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="exists(source[tech:hasCdc()])">
+      <code>HAS_CDC_SOURCE</code>
+    </xPathExpression>
+    <xPathExpression expression="exists(../step[@type='Check' and @target=$current/@target and substring-after(@name,'_')=$current/substring-after(@name,'_') ])">
+      <code>HAS_INTEGRATION_REJECT</code>
+      <xPathVariable expression="." name="current"/>
+      <xPathVariable expression="if (starts-with(@name,'I_') then substring-after(@name,'I_') else @name" name="name"/>
+    </xPathExpression>
+    <xPathExpression expression="../concat(@name,' (',altId[@origin='mapping']/@value,')')">
+      <code>REJECTED_BY</code>
+    </xPathExpression>
+    <xPathExpression expression="'F'">
+      <code>REJECT_MODE</code>
+    </xPathExpression>
+    <xPathExpression expression="ref:source()/ref:parent()">
+      <code>SOURCE_PARENT_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="constraint[upper-case(@type)='AK']/mdj:xpath(.,'TARGET_REF')">
+      <code>AK_REF</code>
+      <xPathVariable expression="mdj:xpath(.,'MAPPED_COLUMNS_REF')" name="current"/>
+    </xPathExpression>
+    <xPathExpression expression="source/(if (@target!='') then mdj:getMdRef(.,@target) else ref:loadedStep()/ref:container())">
+      <code>SOURCES_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@type='Load') then &#xD;&#xA;concat('select ',if ($p1) then 'DISTINCT ' else '',md:patternList(ref:columns(),'[expression] [columnAliasWord] [workName]', ',\n\t\t\t'),'&#xD;&#xA;from&#x9;',tech:fromPart(),'&#xD;&#xA;where&#x9;(1=1)&#xD;&#xA;',tech:joinPart(),'&#xD;&#xA;',tech:filterPart(),'&#xD;&#xA;',tech:cdcFilterPart(),'&#xD;&#xA;',tech:groupByPart(),'&#xD;&#xA;',tech:havingPart())&#xD;&#xA;else&#xD;&#xA;concat('select ',if ($p1) then 'DISTINCT ' else '',md:patternList(ref:columns()[(tech:isIns() or tech:isUpd()) and not(tech:onTrg())],'[expression] [columnAliasWord] [name]', ',\n\t'),',&#xD;&#xA;&#x9;''I'' AS INCREMENTAL_FLAG&#xD;&#xA;from&#x9;',tech:fromPart(),'&#xD;&#xA;where&#x9;(1=1)&#xD;&#xA;',tech:joinPart(),'&#xD;&#xA;',tech:filterPart(),'&#xD;&#xA;',tech:cdcFilterPart(),'&#xD;&#xA;',tech:groupByPart(),'&#xD;&#xA;',tech:havingPart())">
+      <code>QUERY_OLD</code>
+    </xPathExpression>
+    <xPathExpression expression="if(exists(source/@sourceSet)) then distinct-values(source/@sourceSet) else ''">
+      <code>SOURCE_SETS</code>
+    </xPathExpression>
+    <xPathExpression expression="concat(&#xD;&#xA;'select &#xD;&#xA;',md:patternList(ref:fields($p1),'[expression] [columnAliasWord] [workName]', ',\n\t\t\t'),'&#xD;&#xA;from &#xD;&#xA;',tech:fromPart($p1),'&#xD;&#xA;where 1=1',tech:joinPart($p1),&#xD;&#xA;tech:filterPart($p1),&#xD;&#xA;tech:havingPart($p1),&#xD;&#xA;tech:grouByPart($p1)&#xD;&#xA;)">
+      <code>QUERY</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+    <xPathExpression description="p1: sourceSet name" expression="exists(ref:from($p1)[tech:hasCdc()])">
+      <code>HAS_CDC</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+    <xPathExpression expression="@number">
+      <code>NUMBER</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@type='Staging') then substring-after(@name,'_')&#xD;&#xA;else if (ref:target()/name()='schema') then tech:shortMapID() else ref:target()/md:ifEmpty(tech:originalPhysicalName(),@name)">
+      <code>TARGET_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="(if (@type='Load') then ref:sources()[1] &#xD;&#xA;else if (ref:target()/tech:hasWorkspaceCapability()) &#xD;&#xA;then ref:target() &#xD;&#xA;else ref:sources()[1])/ref:container($p1)">
+      <code>CONTAINER_REF</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+    <xPathExpression expression="if (@type='Check') &#xD;&#xA;then false()&#xD;&#xA;else not(exists(source[ref:connection()/@id=../ref:targetConnection()/@id]))">
+      <code>IS_MULTI_CONNECTION</code>
+    </xPathExpression>
+    <xPathExpression expression="if ($size!='' and number($size)>0) then &#xD;&#xA;&#xD;&#xA;concat('%e(rhino){(&quot;',$prefix,&#xD;&#xA;'&quot;+__ctx__.getVariableValue(&quot;/CORE_SESSION_TIMESTAMP&quot;)+&quot;',&#xD;&#xA;tech:targetName(),$suffix,&#xD;&#xA;'&quot;)','.substring(0,',$size,')',';}e(rhino)%')&#xD;&#xA;else concat($prefix,'${/CORE_SESSION_TIMESTAMP}$',tech:targetName(),$suffix)&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;">
+      <code>SESSION_TIMESTAMP_NAME</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathVariable expression="ref:target()/tech:temporaryObjectTruncationSize()" name="size"/>
+      <xPathVariable expression="md:ifEmpty($p1,if (@type='Load') then concat('L',tech:number(),'_') else if (@type='Staging') then concat('S',tech:number(),'_') else 'I_')&#xD;&#xA;" name="prefix"/>
+      <xPathVariable expression="$p2" name="suffix"/>
+    </xPathExpression>
+    <xPathExpression expression="concat('SELECT count(*) &#xD;&#xA;FROM ',tech:fromPart('',$p1),' &#xD;&#xA;WHERE (1=1) &#xD;&#xA;',if (exists($joinRef)) then tech:joinPart('',$joinRef) else '',' &#xD;&#xA;',if (exists($filterRef)) then tech:filterPart('',$filterRef) else '')">
+      <code>COUNT_QUERY</code>
+      <xPathParameter defaultValue=""/>
+      <xPathVariable expression="$p1[name()='join']" name="joinRef"/>
+      <xPathVariable expression="$p1[name()='filter']" name="filterRef"/>
+    </xPathExpression>
+    <xPathExpression expression="concat('SELECT * &#xD;&#xA;FROM ',tech:fromPart('',$p1),' &#xD;&#xA;WHERE (1=1) &#xD;&#xA;',if (exists($joinRef)) then tech:joinPart('',$joinRef) else '',' &#xD;&#xA;',if (exists($filterRef)) then tech:filterPart('',$filterRef) else '')">
+      <code>SELECT_QUERY</code>
+      <xPathParameter defaultValue=""/>
+      <xPathVariable expression="$p1[name()='join']" name="joinRef"/>
+      <xPathVariable expression="$p1[name()='filter']" name="filterRef"/>
+    </xPathExpression>
+    <xPathExpression description="(see bug 3042)p1 : the node on which we launch the evaluation&#xD;&#xA;oldValue : before the introduction of the @integrationStepName attribute (for retro-compatibility)&#xD;&#xA;newValue : the result when we have the @integrationStepName&#xD;&#xA;allInt : string constructed from p1 to be able to match the valid steps&#xD;&#xA;" expression="if ($newValue !='') then $newValue else $oldValue">
+      <code>INTEGRATION_STEP_REF</code>
+      <xPathParameter defaultValue="."/>
+      <xPathVariable expression="@name" name="stepName"/>
+      <xPathVariable expression="if (@type='Integration') then . else ./../step[@type='Integration' and substring-after(@name,'_')=substring-after($stepName,'_')][1]" name="oldValue"/>
+      <xPathVariable expression="../step[contains(concat('|', $allInt,'|'),concat('|',@name,'|'))]" name="newValue"/>
+      <xPathVariable expression="string-join($p1/integrationStepName,'|')" name="allInt"/>
+    </xPathExpression>
+    <xPathExpression expression="md:reduceUUID(tech:stepId())">
+      <code>SHORT_STEP_ID</code>
+    </xPathExpression>
+    <xPathExpression expression="@id">
+      <code>STEP_ID</code>
+    </xPathExpression>
+    <xPathExpression expression="../step[source[@name=$name]]">
+      <code>TARGET_STEP_REF</code>
+      <code>TARGET_STEPS_REF</code>
+      <xPathVariable expression="@name" name="name"/>
+    </xPathExpression>
+    <xPathExpression expression="../step[tech:stepName()=$sourceStepNames]">
+      <code>SOURCE_STEPS_REF</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathVariable expression="distinct-values(source[$p1='' or $p1=@sourceSet]/tech:stepName())" name="sourceStepNames"/>
+    </xPathExpression>
+    <xPathExpression expression="@name">
+      <code>STEP_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="field/extrafield">
+      <code>EXTRA_FIELDS_REF</code>
+    </xPathExpression>
+    <xPathExpression description="p1: $this (for md:paramValue())&#xD;&#xA;p2: sourceSet name" expression="if(exists(ref:from($p2)[tech:isCdc()])) then&#xD;&#xA;concat(&#xD;&#xA;&#x9;md:encloseIfNotEmpty(md:paramValue($p1,'cdcSubscriber'), ' AND CDC_SUBSCRIBER=''',''''),&#xD;&#xA;&#x9;md:encloseIfNotEmpty(md:paramValue($p1,'cdcMaxTimestamp'), ' AND CDC_TIMESTAMP &amp;lt;= ','')&#xD;&#xA;)&#xD;&#xA;else ''">
+      <code>CDC_FILTER_PART2</code>
+      <xPathParameter defaultValue="NONE"/>
+      <xPathParameter defaultValue="''" name="p2"/>
+    </xPathExpression>
+    <xPathExpression expression="filter[(not($p1!='') or @sourceSet=$p1) and tech:location()='TRG']">
+      <code>TARGET_FILTER_REF</code>
+      <xPathParameter defaultValue="''"/>
+      <xPathParameter defaultValue="filter" name="p2"/>
+    </xPathExpression>
+  </level>
+  <level xmlName="source" activeDisplayName="true" code="com.stambia.flow.source" configurable="false" displayName="Source">
+    <attribute xmlName="target" code="target" displayName="Target"/>
+    <attribute icon="" xmlName="mapRef" code="mapRef" displayName="MapRef" type="reference"/>
+    <attribute xmlName="cdc" code="cdc" displayName="Is CDC enabled" type="boolean"/>
+    <attribute xmlName="sourceSet" xpathCondition="" code="sourceSet" displayName="SourceSet Name"/>
+    <attribute xmlName="loaded" code="loaded" defaultValue="" displayName="Is Loaded" type="boolean"/>
+    <attribute xmlName="tag" category="" code="tag" defaultValue="" displayName="Tag" mdXpathAccess="" unbounded="true"/>
+    <attribute iconBundleName="" xmlName="order" code="order" displayName="Order" type="string"/>
+    <attribute xmlName="number" code="number" defaultValue="" displayName="Number"/>
+    <attribute xmlName="filteringSource" code="filteringSource" displayName="Filtering Source"/>
+    <attribute xmlName="stepName" code="stepName" displayName="Step Name"/>
+    <parent>com.stambia.flow.step</parent>
+    <parent>com.stambia.flow.sourceSet</parent>
+    <xPathExpression expression="if (exists($loadedStep)) then $loadedStep/tech:workName() else&#xD;&#xA;if ($truncationSize!='' and number($truncationSize)>0)&#xD;&#xA;then substring($value,0,number($truncationSize)+1)&#xD;&#xA;else $value">
+      <code>WORK_NAME</code>
+      <xPathVariable expression="../ref:target()/tech:loadMask()" name="loadMask"/>
+      <xPathVariable expression="if ($hasLoadMask and contains($loadMask,'sessionTimestampName')) then '-1' else ../ref:target()/tech:temporaryObjectTruncationSize()" name="truncationSize"/>
+      <xPathVariable expression="if ($hasLoadMask) then mdj:pattern($loadMask) else @name" name="value"/>
+      <xPathVariable expression="not(@target!='') and $loadMask!='' and @number!=''" name="hasLoadMask"/>
+      <xPathVariable expression="ref:loadedStep()" name="loadedStep"/>
+    </xPathExpression>
+    <xPathExpression expression="concat(md:ifEmpty($formatStagingPoint,&#xD;&#xA;if (@target!='' and (not($stepName!='') or starts-with($stepName,'I'))) then &#xD;&#xA;&#x9;if (@cdc='true') then &#xD;&#xA;&#x9;&#x9;md:physicalName(.,'CDC_VIEW_NAME') &#xD;&#xA;&#x9;else $physicalName&#xD;&#xA;&#x9;else md:physicalName(.,'WORK_NAME' ))&#xD;&#xA;,' ', ref:connection()/tech:tableAliasWord(),' ' ,@name)">
+      <code>FROM</code>
+      <xPathVariable expression="md:ifEmpty(md:getStagingPoint(@id),md:getStagingPoint($stepId))" name="stagingPoint"/>
+      <xPathVariable expression="md:ifEmpty(md:getStagingPointType(@id),&#xD;&#xA;if ($stepId!='') then md:getStagingPointType($stepId) else '')" name="stagingPointType"/>
+      <xPathVariable expression="@name" name="name"/>
+      <xPathVariable expression="../../step[@name=md:ifEmpty($stepName,$name)]/@id" name="stepId"/>
+      <xPathVariable expression="if ($stagingPoint!='') &#xD;&#xA;then&#xD;&#xA;&#x9;if($stagingPointType='table') &#xD;&#xA;&#x9;then $stagingPoint&#xD;&#xA;&#x9;else concat('(',$stagingPoint,')') &#xD;&#xA;else $stagingPoint" name="formatStagingPoint"/>
+      <xPathVariable expression="if &#xD;&#xA;(ref:target()/tech:alternatePhysicalNameSupport())&#xD;&#xA;then ref:target()/tech:alternatePhysicalName(($current/../ref:columns()/ref:sources() | $current/../ref:join()/ref:sources() | $current/../ref:filter()/ref:sources())/@id)&#xD;&#xA;else md:physicalName(.,'PHYSICAL_NAME')&#xD;&#xA;" name="physicalName"/>
+      <xPathVariable expression="." name="current"/>
+      <xPathVariable expression="@stepName" name="stepName"/>
+    </xPathExpression>
+    <xPathExpression expression="if (exists($loadedStep)) then $loadedStep/ref:parent() else&#xD;&#xA;(if (@target!='') then mdj:xpath(.,'TARGET_REF/PARENT_REF') else mdj:xpath(./..,'PARENT_REF'))">
+      <code>PARENT_REF</code>
+      <xPathVariable expression="ref:loadedStep()" name="loadedStep"/>
+    </xPathExpression>
+    <xPathExpression expression="mdj:getMdRef(.,@target)">
+      <code>TARGET_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@target!='') then mdj:xpath(.,'TARGET_REF/CONNECTION_REF') else ../../step[@name=$name]/ref:targetConnection()">
+      <code>CONNECTION_REF</code>
+      <xPathVariable expression="@name" name="name"/>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'TARGET_REF/AFTER_FROM')">
+      <code>AFTER_FROM</code>
+    </xPathExpression>
+    <xPathExpression expression="@cdc='true'  and not(ref:target()/tech:tag()[starts-with(.,'CDC_SET')])">
+      <code>IS_CDC</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'TARGET_REF')" isProvider="true">
+      <code>CDC_VIEW_NAME</code>
+      <code>PHYSICAL_NAME</code>
+      <code>CDC_TABLE_NAME</code>
+      <code>PARENT_SEPARATOR</code>
+    </xPathExpression>
+    <xPathExpression expression="@stepName!=''">
+      <code>IS_LOADED</code>
+    </xPathExpression>
+    <xPathExpression expression="@order">
+      <code>ORDER</code>
+    </xPathExpression>
+    <xPathExpression expression="@name">
+      <code>ALIAS</code>
+      <code>NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="@number">
+      <code>NUMBER</code>
+    </xPathExpression>
+    <xPathExpression expression="../tech:targetName()">
+      <code>TARGET_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="concat('%e(rhino){(&quot;L',&#xD;&#xA;tech:number(),&#xD;&#xA;'_&quot;+__ctx__.getVariableValue(&quot;/CORE_SESSION_TIMESTAMP&quot;)+&quot;',&#xD;&#xA;tech:targetName(),&#xD;&#xA;'&quot;)',&#xD;&#xA;if ($size!='' and number($size)>0) then concat('.substring(0,',$size,')') else '',&#xD;&#xA;';}e(rhino)%')">
+      <code>SESSION_TIMESTAMP_NAME</code>
+      <xPathVariable expression="../ref:target()/tech:temporaryObjectTruncationSize()" name="size"/>
+    </xPathExpression>
+    <xPathExpression description="CDC_FILTER_PART is to be considered as deprecated and replaced by CDC_FILTER_PART2&#xD;&#xA;It will make templates more consistent with the CDC_FILTER_PART_2 designed on Steps" expression="if (tech:isCdc()) then &#xD;&#xA;concat(&#xD;&#xA;&#x9;md:encloseIfNotEmpty(md:paramValue($p1,'cdcSubscriber'), ' AND CDC_SUBSCRIBER=''',''''),&#xD;&#xA;&#x9;md:encloseIfNotEmpty(md:paramValue($p1,'cdcMaxTimestamp'), ' AND CDC_TIMESTAMP &amp;lt;= ','')&#xD;&#xA;)&#xD;&#xA;else ''">
+      <code>CDC_FILTER_PART</code>
+      <code>CDC_FILTER_PART2</code>
+      <xPathParameter defaultValue="NONE"/>
+    </xPathExpression>
+    <xPathExpression expression="if (tech:isLoaded()) then ../../step[@name=md:ifEmpty($stepName,$name)]&#xD;&#xA;else None&#xD;&#xA;">
+      <code>LOADED_STEP_REF</code>
+      <xPathVariable expression="@name" name="name"/>
+      <xPathVariable expression="@stepName" name="stepName"/>
+    </xPathExpression>
+    <xPathExpression expression="@stepName">
+      <code>STEP_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="(if (tech:isLoaded()) then ref:loadedStep()/tech:hasCdc() else&#xD;&#xA;@cdc='true')  and not(ref:target()/tech:tag()[starts-with(.,'CDC_SET')])">
+      <code>HAS_CDC</code>
+    </xPathExpression>
+  </level>
+  <level xmlName="field" activeDisplayName="true" code="com.stambia.flow.field" displayName="field">
+    <attribute xmlName="expression" code="expr" displayName="Expression" multiLine="true"/>
+    <attribute xmlName="location" code="location" displayName="Location"/>
+    <attribute xmlName="num" code="num" displayName="Num"/>
+    <attribute xmlName="workName" code="workname" displayName="Work name"/>
+    <attribute xmlName="target" code="target" displayName="Target"/>
+    <attribute xmlName="base" code="base" displayName="Base"/>
+    <attribute xmlName="insert" code="insert" displayName="Insert" type="boolean"/>
+    <attribute xmlName="update" code="update" displayName="Update" type="boolean"/>
+    <attribute xmlName="updateKey" code="updatekey" displayName="Update Key" type="boolean"/>
+    <attribute xmlName="map" code="map" displayName="Is Mapped"/>
+    <attribute xmlName="aggregate" code="aggregate" defaultValue="" displayName="Aggregate" type="boolean"/>
+    <attribute xmlName="tag" category="" code="tag" defaultValue="" displayName="Tag" mdXpathAccess="" unbounded="true"/>
+    <attribute xmlName="source" code="source" displayName="Source" unbounded="true"/>
+    <attribute xmlName="sourceSet" xpathCondition="" code="sourceSet" displayName="SourceSet Name"/>
+    <attribute xmlName="number" code="number" defaultValue="" displayName="Number"/>
+    <attribute xmlName="version" code="version" displayName="Version"/>
+    <attribute xmlName="targets" code="targets" displayName="Targets" unbounded="true"/>
+    <attribute xmlName="sourceNames" code="sourceNames" displayName="Source Names" unbounded="true"/>
+    <attribute xmlName="sourceContainer" code="sourceContainer" displayName="Source Container" unbounded="true"/>
+    <parent>com.stambia.flow.step</parent>
+    <parent>com.stambia.flow.sourceSet</parent>
+    <xPathExpression expression="if (@version='2') then string(mdj:evaluate(.,@expression))&#xD;&#xA;else mdj:xpath(@expression,'COLUMN_NAME')">
+      <code>EXPRESSION</code>
+      <code>MAPPING</code>
+    </xPathExpression>
+    <xPathExpression description="Depracated&#xD;&#xA;see bug 3545&#xD;&#xA;&#xD;&#xA;former expression:  mdj:xpath(@expression,'FULL_NAME')&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;We depracte this because :&#xD;&#xA; - when used on an expression with UDF, a endless loop occurs&#xD;&#xA;- the system cannot work properly because the expression will replace %MDx% during&#xD;&#xA;the xml generation of the map.md to xml file" expression="tech:expression()">
+      <code>FULL_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@target!='') then mdj:getMdRef(.,@target) else mdj:getMdRef(.,targets[1])">
+      <code>TARGET_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:getMdRef(.,@base)">
+      <code>BASE_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'BASE_REF/TYPE')">
+      <code>BASE_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'BASE_REF/NAME')">
+      <code>COLUMN_NAME</code>
+      <code>NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="@workName">
+      <code>WORK_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(./..,'SOURCE_REF')" isProvider="true">
+      <code>COLUMN_ALIAS_WORD</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'TARGET_REF')" isProvider="true">
+      <code>IS_HISTORIZED</code>
+      <code>IS_PK</code>
+      <code>IS_PRIMARY_KEY</code>
+    </xPathExpression>
+    <xPathExpression expression="@insert='true'">
+      <code>IS_INS</code>
+      <code>IS_INSERTED</code>
+    </xPathExpression>
+    <xPathExpression expression="@update='true'">
+      <code>IS_UPD</code>
+      <code>IS_UPDATED</code>
+    </xPathExpression>
+    <xPathExpression expression="@location='TRG'">
+      <code>ON_TRG</code>
+      <code>MAPPED_ON_TARGET</code>
+    </xPathExpression>
+    <xPathExpression expression="@location='WRK'">
+      <code>ON_WRK</code>
+      <code>MAPPED_ON_WORK</code>
+    </xPathExpression>
+    <xPathExpression expression="@location='SRC'">
+      <code>ON_SRC</code>
+      <code>MAPPED_ON_SOURCE</code>
+    </xPathExpression>
+    <xPathExpression expression="if (exists(../@trgUpdateKeyProviderRef))&#xA;then count(mdj:getMdRef(.,../@trgUpdateKeyProviderRef)/ref:columns()[@id=$targetId])=1&#xA;else @updateKey='true'&#xA;&#xA;&#xA;">
+      <code>IS_UK</code>
+      <code>IS_UPDATE_KEY</code>
+      <xPathVariable expression="ref:target()/@id" name="targetId"/>
+    </xPathExpression>
+    <xPathExpression expression="(1=1)">
+      <code>IS_MAP</code>
+      <code>IS_MAPPED</code>
+    </xPathExpression>
+    <xPathExpression expression="1=1">
+      <code>IS_REW</code>
+    </xPathExpression>
+    <xPathExpression expression="md:convertDataType(ref:base(),../ref:target())">
+      <code>TARGET_CREATION_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="md:convertDataType(ref:base(),../ref:target(), 'write')">
+      <code>TARGET_WRITABLE_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'BASE_REF')" isProvider="true">
+      <code>SIZE</code>
+      <code>DECIMAL</code>
+      <code>PRECISION</code>
+    </xPathExpression>
+    <xPathExpression description="INTEGRATION_NAME &amp; LOAD_NAME ne fonctionnent plus est-ce tjs utile ?" expression="../ref:integrationStep()" isProvider="true">
+      <code>CHECKED_NAME</code>
+      <code>INTEGRATION_NAME</code>
+      <code>LOAD_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="@aggregate='true'">
+      <code>IS_AGGREGATE</code>
+    </xPathExpression>
+    <xPathExpression expression="if (string-length($p1)=0) then tag else not(empty(tag[.=$p1]))">
+      <code>TAG</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(./..,'TARGET_REF/NULL_WORD')">
+      <code>TARGET_NULL_WORD</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(./..,'SOURCE_REF/NULL_WORD')">
+      <code>SOURCE_NULL_WORD</code>
+    </xPathExpression>
+    <xPathExpression expression="md:convertDataType(ref:base(),../ref:target(), 'name')">
+      <code>TARGET_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="ref:target()/tech:scdCode($p1)">
+      <code>SCD_CODE</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+    <xPathExpression expression="if (source) then source/mdj:getMdRef(..,.)&#xD;&#xA;else ../ref:sources()">
+      <code>SOURCES_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="@sourceSet">
+      <code>SOURCE_SET</code>
+    </xPathExpression>
+    <xPathExpression expression="@location">
+      <code>LOCATION</code>
+    </xPathExpression>
+    <xPathExpression expression="(if (../@type='Load') then ref:sources()[1] &#xD;&#xA;else if (../ref:target()/tech:hasWorkspaceCapability()) &#xD;&#xA;then ../ref:target() &#xD;&#xA;else ref:sources()[1])/ref:container($p1)">
+      <code>CONTAINER_REF</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+    <xPathExpression expression="if ($refSource) then $refSource else (../source[ref:target()/@id=$p1/ref:sources()/../@id])">
+      <code>FROMS_REF</code>
+      <xPathParameter defaultValue="."/>
+      <xPathVariable expression="$p1/ref:source()" name="refSource"/>
+    </xPathExpression>
+    <xPathExpression expression="concat(../@name,'.',@name)">
+      <code>UNIQUE_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="$current/../source[@name=$current/sourceContainer]">
+      <code>SOURCE_REF</code>
+      <xPathVariable expression="." name="current"/>
+    </xPathExpression>
+    <xPathExpression description="This function returns a reference to the datatype of the field in the target technology" expression="../ref:targetProduct()/ref:dataType()[@id=$targetTypeId]">
+      <code>TARGET_TYPE_REF</code>
+      <xPathVariable expression="md:convertDataType(ref:base(),../ref:target(), 'id')" name="targetTypeId"/>
+    </xPathExpression>
+    <xPathExpression description="This function returns a reference to the datatype of the field in the source technology" expression="../ref:sourceProduct()/ref:dataType()[@id=$sourceTypeId]">
+      <code>SOURCE_TYPE_REF</code>
+      <xPathVariable expression="md:convertDataType(ref:base(),../ref:sources()[1], 'id')" name="sourceTypeId"/>
+    </xPathExpression>
+  </level>
+  <level xmlName="join" activeDisplayName="true" code="com.stambia.flow.join" displayName="Join">
+    <attribute xmlName="expression" code="expr" displayName="Expression"/>
+    <attribute xmlName="left" code="left" displayName="Left"/>
+    <attribute xmlName="right" code="right" displayName="Right"/>
+    <attribute xmlName="rightJoin" code="rightjoin" displayName="Is right join"/>
+    <attribute xmlName="leftJoin" code="leftjoin" displayName="Is Left join"/>
+    <attribute xmlName="crossJoin" code="crossjoin" displayName="Is cross join"/>
+    <attribute xmlName="order" code="order" displayName="Order"/>
+    <attribute xmlName="joinType" code="type" displayName="Type"/>
+    <attribute xmlName="joinMode" code="mode" displayName="Mode"/>
+    <attribute xmlName="source" code="source" displayName="Source" unbounded="true"/>
+    <attribute xmlName="sourceSet" xpathCondition="" code="sourceSet" displayName="SourceSet Name"/>
+    <attribute xmlName="version" code="version" defaultValue="" displayName="Version"/>
+    <attribute xmlName="sourceNames" code="sourceNames" displayName="Source Names" unbounded="true"/>
+    <attribute xmlName="sourceContainer" code="sourceContainer" displayName="Source Container" unbounded="true"/>
+    <attribute xmlName="tag" code="tag" defaultValue="" displayName="Tag" unbounded="true"/>
+    <parent>com.stambia.flow.step</parent>
+    <parent>com.stambia.flow.sourceSet</parent>
+    <xPathExpression expression="if (@version='2') then mdj:evaluate(.,@expression)&#xD;&#xA;else mdj:xpath(@expression,'COLUMN_NAME')">
+      <code>EXPRESSION</code>
+    </xPathExpression>
+    <xPathExpression expression="if (mdj:xpath(.,'IS_LEFT')) then $left else if (mdj:xpath(.,'IS_RIGHT')) then $right else $value">
+      <code>IMPLICIT_EXPRESSION</code>
+      <xPathVariable expression="mdj:xpath(.,'EXPRESSION')" name="value"/>
+      <xPathVariable expression="mdj:xpath(./..,'SOURCE_PRODUCT_REF/OUTER_JOIN')" name="outerWord"/>
+      <xPathVariable expression="string(mdj:xpath(.,'RIGHT_ALIAS'))" name="rightAlias"/>
+      <xPathVariable expression="string(mdj:xpath(.,'LEFT_ALIAS'))" name="leftAlias"/>
+      <xPathVariable expression="mdj:addJoinOuterWord($value,$outerWord,$leftAlias,$rightAlias)" name="left"/>
+      <xPathVariable expression="mdj:addJoinOuterWord($value,$outerWord,$rightAlias,$leftAlias)" name="right"/>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(./..,'FROM_REF',$p1,@left)">
+      <code>LEFT_REF</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'LEFT_REF/FROM')">
+      <code>LEFT</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(./..,'FROM_REF',$p1,@right)">
+      <code>RIGHT_REF</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+    <xPathExpression expression="mdj:xpath(.,'RIGHT_REF/FROM')">
+      <code>RIGHT</code>
+    </xPathExpression>
+    <xPathExpression expression="@joinType='Left_Join'">
+      <code>IS_LEFT</code>
+    </xPathExpression>
+    <xPathExpression expression="@joinType='Cross_Join'">
+      <code>IS_CROSS</code>
+    </xPathExpression>
+    <xPathExpression expression="@joinType='Right_Join'">
+      <code>IS_RIGHT</code>
+    </xPathExpression>
+    <xPathExpression expression="@joinType='Full_Join'">
+      <code>IS_FULL</code>
+    </xPathExpression>
+    <xPathExpression expression="(if (@joinType!='') then substring-before(upper-case(@joinType),'_' ) else 'INNER')">
+      <code>TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression=" (if (@joinMode!='') then  upper-case(@joinMode) else 'DEFAULT')">
+      <code>MODE</code>
+    </xPathExpression>
+    <xPathExpression expression="(mdj:xpath(.,'TYPE')!='INNER')">
+      <code>IS_OUTER</code>
+    </xPathExpression>
+    <xPathExpression expression="(mdj:xpath(.,'TYPE')='INNER')">
+      <code>IS_INNER</code>
+    </xPathExpression>
+    <xPathExpression expression="@left">
+      <code>LEFT_ALIAS</code>
+    </xPathExpression>
+    <xPathExpression expression="@right">
+      <code>RIGHT_ALIAS</code>
+    </xPathExpression>
+    <xPathExpression expression=".[mdj:xpath(.,'IS_LEFT')][1]/mdj:xpath(.,'LEFT_ALIAS') | .[mdj:xpath(.,'IS_RIGHT')][1]/mdj:xpath(.,'RIGHT_ALIAS')">
+      <code>INNER_ALIAS</code>
+    </xPathExpression>
+    <xPathExpression expression=".[mdj:xpath(.,'IS_LEFT')][1]/mdj:xpath(.,'RIGHT_ALIAS') | .[mdj:xpath(.,'IS_RIGHT')][1]/mdj:xpath(.,'LEFT_ALIAS')">
+      <code>OUTER_ALIAS</code>
+    </xPathExpression>
+    <xPathExpression expression="source/mdj:getMdRef(..,.)">
+      <code>SOURCES_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="(if (../@type='Load') then ref:sources()[1] &#xD;&#xA;else if (../ref:target()/tech:hasWorkspaceCapability()) &#xD;&#xA;then ../ref:target() &#xD;&#xA;else ref:sources()[1])/ref:container($p1)">
+      <code>CONTAINER_REF</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+    <xPathExpression expression="../source[ref:target()/@id=$p1/ref:sources()/../@id]">
+      <code>FROMS_REF</code>
+      <xPathParameter defaultValue="."/>
+    </xPathExpression>
+    <xPathExpression expression="../tech:countQuery($current)">
+      <code>COUNT_QUERY</code>
+      <xPathVariable expression="." name="current"/>
+    </xPathExpression>
+    <xPathExpression expression="../tech:selectQuery($current)">
+      <code>SELECT_QUERY</code>
+      <xPathVariable expression="." name="current"/>
+    </xPathExpression>
+    <xPathExpression expression="md:ifEmpty(@order, '0')">
+      <code>ORDER</code>
+    </xPathExpression>
+  </level>
+  <level icon="" xmlName="constraint" activeDisplayName="true" code="com.stambia.flow.constraint" displayName="Constraint">
+    <attribute xmlName="target" category="Standard" code="target" displayName="Target"/>
+    <attribute xmlName="type" category="Standard" code="type" displayName="Type"/>
+    <parent>com.stambia.flow.step</parent>
+    <xPathExpression expression="mdj:xpath(@target)">
+      <code>TARGET_REF</code>
+    </xPathExpression>
+  </level>
+  <level xmlName="filter" activeDisplayName="true" code="com.stambia.flow.filter" displayName="Filter">
+    <attribute xmlName="expression" category="Standard" code="expr" displayName="Expression" multiLine="true" toolTip=""/>
+    <attribute xmlName="aggregate" code="aggregate" defaultValue="" displayName="Aggregate" type="boolean"/>
+    <attribute xmlName="qualify" code="qualify" defaultValue="" displayName="Qualify" type="boolean"/>
+    <attribute xmlName="source" code="source" displayName="Source" unbounded="true"/>
+    <attribute xmlName="sourceSet" xpathCondition="" code="sourceSet" displayName="SourceSet Name"/>
+    <attribute xmlName="version" code="version" defaultValue="" displayName="Version"/>
+    <attribute xmlName="sourceNames" code="sourceNames" displayName="Source Names" unbounded="true"/>
+    <attribute xmlName="sourceContainer" code="sourceContainer" displayName="Source Container" unbounded="true"/>
+    <attribute xmlName="tag" code="tag" defaultValue="" displayName="Tag" unbounded="true"/>
+    <attribute xmlName="operator" xpathCondition="" code="operator" displayName="Operator" mdXpathAccess="tokenize('EXISTS,NOT_EXISTS',',')" type="list"/>
+    <attribute xmlName="location" code="location" displayName="Location" mdXpathAccess="" type="string"/>
+    <parent>com.stambia.flow.sourceSet</parent>
+    <parent>com.stambia.flow.step</parent>
+    <xPathExpression expression="if (@operator!='') then &#xA;&#x9;concat(&#xA;&#x9;&#x9;if (@operator='EXISTS') then 'EXISTS' else &#xA;&#x9;&#x9;&#x9;if (@operator='NOT_EXISTS') then 'NOT EXISTS' else @operator,&#xA;&#x9;&#x9;&#x9;' ( select ''X'' from '&#xA;,$filteringSource/tech:from(),' where ',$expression,')')&#xA;else&#xA;$expression">
+      <code>EXPRESSION</code>
+      <xPathParameter defaultValue="true()"/>
+      <xPathParameter defaultValue="'[name].'" name="p2"/>
+      <xPathParameter defaultValue="'[targetName].'" name="p3"/>
+      <xPathParameter defaultValue="'{md:ifEmpty(tech:workName(), tech:name())}'" name="p4"/>
+      <xPathParameter defaultValue="'[name]'" name="p5"/>
+      <xPathVariable expression="if (@operator!='') then ../source[@filteringSource='true' and @name=$sourceContainer]&#xD;&#xA;else None" name="filteringSource"/>
+      <xPathVariable expression="sourceContainer" name="sourceContainer"/>
+      <xPathVariable expression="if ($p1) then&#xA;concat(' ( ',$expressionVersion,' ) ')&#xA;else $expressionVersion" name="expression"/>
+      <xPathVariable expression="if (@version='2') then mdj:evaluate(.,@expression)&#xA;else if (@version='3') then string(mdj:evaluate(.,@expression, $sourceTableMask, $targetTableMask, $sourceColumnMask, $targetColumnMask))&#xA;else  mdj:xpath(@expression,'COLUMN_NAME')" name="expressionVersion"/>
+      <xPathVariable expression="$p2" name="sourceTableMask"/>
+      <xPathVariable expression="$p3" name="targetTableMask"/>
+      <xPathVariable expression="$p4" name="sourceColumnMask"/>
+      <xPathVariable expression="$p5" name="targetColumnMask"/>
+    </xPathExpression>
+    <xPathExpression expression="@aggregate='true'">
+      <code>IS_AGGREGATE</code>
+    </xPathExpression>
+    <xPathExpression expression="@qualify='true'">
+      <code>IS_QUALIFY</code>
+    </xPathExpression>
+    <xPathExpression expression="source/mdj:getMdRef(..,.)">
+      <code>SOURCES_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="(if (../@type='Load') then ref:sources()[1] &#xD;&#xA;else if (../ref:target()/tech:hasWorkspaceCapability()) &#xD;&#xA;then ../ref:target() &#xD;&#xA;else ref:sources()[1])/ref:container($p1)">
+      <code>CONTAINER_REF</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+    <xPathExpression expression="../source[ref:target()/@id=$p1/ref:sources()/../@id]">
+      <code>FROMS_REF</code>
+      <xPathParameter defaultValue="."/>
+    </xPathExpression>
+    <xPathExpression expression="../tech:countQuery($current)">
+      <code>COUNT_QUERY</code>
+      <xPathVariable expression="." name="current"/>
+    </xPathExpression>
+    <xPathExpression expression="../tech:selectQuery($current)">
+      <code>SELECT_QUERY</code>
+      <xPathVariable expression="." name="current"/>
+    </xPathExpression>
+    <xPathExpression expression="md:ifEmpty(@sourceSet, '')">
+      <code>SOURCE_SET</code>
+    </xPathExpression>
+    <xPathExpression expression="@location">
+      <code>LOCATION</code>
+    </xPathExpression>
+    <xPathExpression expression="if (string-length($p1)=0) then tag else not(empty(tag[.=$p1]))">
+      <code>TAG</code>
+      <xPathParameter defaultValue="''"/>
+    </xPathExpression>
+  </level>
+  <level xmlName="variable" activeDisplayName="true" code="com.stambia.flow.variable" displayName="Variable">
+    <attribute xmlName="target" code="target" displayName="Target" reverseCode=""/>
+    <parent>com.stambia.flow</parent>
+  </level>
+  <level xmlName="altId" code="com.stambia.flow.altId" displayName="Alt Id">
+    <attribute xmlName="value" code="value" displayName="Value"/>
+    <attribute xmlName="origin" code="origin" displayName="Origin"/>
+  </level>
+  <level xmlName="extrafield" code="com.stambia.flow.extrafield" connectionClass="" displayName="extraField" hasName="false">
+    <attribute xmlName="parent" category="" code="parent" displayName="parent"/>
+    <attribute xmlName="child" category="" code="child" displayName="child"/>
+    <parent>com.stambia.flow.step</parent>
+    <parent>com.stambia.flow.source</parent>
+    <parent>com.stambia.flow.field</parent>
+    <xPathExpression expression="mdj:getMdRef(.,@parent)">
+      <code>PARENT_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="mdj:getMdRef(.,@child)">
+      <code>CHILD_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="ref:parent()/@id">
+      <code>PARENT_ID</code>
+    </xPathExpression>
+    <xPathExpression expression="ref:child()/@id">
+      <code>CHILD_ID</code>
+    </xPathExpression>
+  </level>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditor" code="consult_data" description="" displayName="Consult data" xpathContext="(if (exists(source)) then source[1] else ../@target)/string(.)" xpathExpression="../tech:selectQuery($current)">
+    <executableLevel>#com.stambia.flow.join</executableLevel>
+    <executableLevel>#com.stambia.flow.filter</executableLevel>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcOneFieldResult" code="count_data_popup" description="" displayName="Count data (popup)" xpathContext="(if (exists(source)) then source[1] else ../@target)/string(.)" xpathExpression="../tech:countQuery($current)">
+    <executableLevel>#com.stambia.flow.join</executableLevel>
+    <executableLevel>#com.stambia.flow.filter</executableLevel>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditor" code="count_data" description="" displayName="Count data" xpathContext="(if (exists(source)) then source[1] else ../@target)/string(.)" xpathExpression="../tech:countQuery($current)">
+    <executableLevel>#com.stambia.flow.join</executableLevel>
+    <executableLevel>#com.stambia.flow.filter</executableLevel>
+  </action>
+  <template code="C-TP.RDBMS" description="Control Flow" name="Control Template For RDBMS" optionnal="true">
+    <settableLevel>#com.stambia.flow.step</settableLevel>
+    <executableLevel>#com.stambia.flow.step</executableLevel>
+    <next>#I-TP.RDBMS.INTEGRATING</next>
+  </template>
+  <template code="L-TP.RDBMS" description="Load" name="Loading Template For RDBMS">
+    <settableLevel>#com.stambia.flow.step</settableLevel>
+  </template>
+  <template code="I-TP.RDBMS" description="Load" name="Integration Template For RDBMS">
+    <settableLevel>#com.stambia.flow.step</settableLevel>
+    <next>#L-TP.RDBMS.LOADING</next>
+  </template>
+  <template code="L-TP.RDBMS.CLEANING" description="" mode="Parallelize" name="Cleaning" optionnal="false">
+    <executableLevel>#com.stambia.flow.step</executableLevel>
+    <parent>#L-TP.RDBMS</parent>
+  </template>
+  <template code="L-TP.RDBMS.LOADING" mode="Parallelize" name="Loading">
+    <executableLevel>#com.stambia.flow.step</executableLevel>
+    <parent>#L-TP.RDBMS</parent>
+    <next>#I-TP.RDBMS.PREPARING</next>
+    <next>#I-TP.RDBMS.INTEGRATING</next>
+  </template>
+  <template code="I-TP.RDBMS.PREPARING" name="Preparing">
+    <executableLevel>#com.stambia.flow.step</executableLevel>
+    <parent>#I-TP.RDBMS</parent>
+    <next>#C-TP.RDBMS</next>
+    <next>#I-TP.RDBMS.INTEGRATING</next>
+  </template>
+  <template code="I-TP.RDBMS.INTEGRATING" name="Integrating">
+    <executableLevel>#com.stambia.flow.step</executableLevel>
+    <parent>#I-TP.RDBMS</parent>
+    <next>#L-TP.RDBMS.CLEANING</next>
+  </template>
+  <xPathExpression expression="ancestor-or-self::flow/@name">
+    <code>MAPPING_NAME</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::flow/concat(@name,'(',@id,')')">
+    <code>MAPPING_NAME_ID</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::flow/@id">
+    <code>MAPPING_ID</code>
+  </xPathExpression>
+  <xPathExpression expression="'1.7.0.v012'">
+    <code>MAP_VERSION</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:container()" isProvider="true">
+    <code>SCHEMA_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="md:reduceUUID(tech:mappingID())">
+    <code>SHORT_MAP_ID</code>
+  </xPathExpression>
+</tech:tech>

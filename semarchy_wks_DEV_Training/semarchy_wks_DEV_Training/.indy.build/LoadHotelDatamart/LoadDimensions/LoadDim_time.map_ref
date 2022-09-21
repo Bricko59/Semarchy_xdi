@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ref:mapRef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:ref="http://www.indy.com/v2/ref" id="_ik2vUDLAEe2I8opIze4gbg">
+  <dataModel>_WapjoDK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map$name=LoadDim_time?</dataModel>
+  <containerRef xsi:type="ref:RDatastore" id="_inPU8DLAEe2I8opIze4gbg" countShownFields="5" hierarchical="false">
+    <dataModel>_XX-ukDK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_incwUDLAEe2I8opIze4gbg" precision="0" size="10" type="varchar" mandatory="true" position="3">
+      <dataModel>_XYBx4TK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map$name=time_key_day?</dataModel>
+      <expressionRef id="_iuIAEDLAEe2I8opIze4gbg" internalExpression="${gen_date.time_year}$||${gen_date.time_month}$||${gen_date.time_month_day}$">
+        <dataModel>_opT3ADK-Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+        <sourceRef>_iuArUjLAEe2I8opIze4gbg</sourceRef>
+        <sourceRef>_iuAEQjLAEe2I8opIze4gbg</sourceRef>
+        <sourceRef>_it_dMTLAEe2I8opIze4gbg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_ir7AoDLAEe2I8opIze4gbg" precision="6" size="29" type="timestamp" position="6">
+      <dataModel>_XYBx4jK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map$name=time_date?</dataModel>
+      <expressionRef id="_iuE8wTLAEe2I8opIze4gbg" internalExpression="${gen_date.day_date}$">
+        <dataModel>_opT3AjK-Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+        <sourceRef>_it3hYTLAEe2I8opIze4gbg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_ir7AoTLAEe2I8opIze4gbg" precision="0" size="2" type="numeric" position="9">
+      <dataModel>_XYBx4zK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map$name=time_month?</dataModel>
+      <expressionRef id="_iuFj0TLAEe2I8opIze4gbg" internalExpression="CAST(${gen_date.time_month}$ AS INTEGER)">
+        <dataModel>_opT3BTK-Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+        <sourceRef>_iuAEQjLAEe2I8opIze4gbg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_ir7AojLAEe2I8opIze4gbg" precision="0" size="1" type="numeric" position="12">
+      <dataModel>_XYBx5DK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map$name=time_quarter?</dataModel>
+      <expressionRef id="_iuE8wjLAEe2I8opIze4gbg" internalExpression="EXTRACT(QUARTER FROM ${gen_date.day_date}$)">
+        <dataModel>_opT3AzK-Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+        <sourceRef>_it3hYTLAEe2I8opIze4gbg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_ir7nsDLAEe2I8opIze4gbg" precision="0" size="4" type="numeric" position="15">
+      <dataModel>_XYBx5TK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map$name=time_year?</dataModel>
+      <expressionRef id="_iuFj0DLAEe2I8opIze4gbg" internalExpression="CAST(${gen_date.time_year}$ AS INTEGER)">
+        <dataModel>_opT3BDK-Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+        <sourceRef>_iuArUjLAEe2I8opIze4gbg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <constraintRef id="_iyWYwDLAEe2I8opIze4gbg" type="pk">
+      <dataModel>_XYBx5jK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map$name=pk_dim_time?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_isRl8DLAEe2I8opIze4gbg" countShownFields="2" hierarchical="true">
+    <dataModel>_XvFnADK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_isS0EDLAEe2I8opIze4gbg" mandatory="true" position="3">
+      <dataModel>_XvGOEDK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map$name=Time?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_isVQUDLAEe2I8opIze4gbg" size="66" type="String" mandatory="true" position="6">
+      <dataModel>_XvGOETK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map$name=day_date?</dataModel>
+      <usage>_it3hYDLAEe2I8opIze4gbg</usage>
+      <usage>_it_dMDLAEe2I8opIze4gbg</usage>
+      <usage>_iuAEQTLAEe2I8opIze4gbg</usage>
+      <usage>_iuArUTLAEe2I8opIze4gbg</usage>
+    </fieldRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_iskg4DLAEe2I8opIze4gbg" countShownFields="1" hierarchical="false">
+    <dataModel>_QIBdEDK_Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_islH8DLAEe2I8opIze4gbg" precision="6" size="29" type="timestamp" mandatory="true" position="3">
+      <dataModel>_QICrMTK_Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map$name=pln_day?</dataModel>
+      <usage>_it8Z4DLAEe2I8opIze4gbg</usage>
+      <usage>_iuAEQDLAEe2I8opIze4gbg</usage>
+      <usage>_iuArUDLAEe2I8opIze4gbg</usage>
+      <usage>_iuDHkDLAEe2I8opIze4gbg</usage>
+    </fieldRef>
+    <constraintRef id="_iyb4UDLAEe2I8opIze4gbg" type="pk">
+      <dataModel>_QIDSQDK_Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map$name=pk_t_planning?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef id="_it4IcDLAEe2I8opIze4gbg">
+    <dataModel>_dnfk0DK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+    <fieldRef id="_it3hYTLAEe2I8opIze4gbg" status="VALID">
+      <dataModel>_do7vQDK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+      <usage>_iuE8wTLAEe2I8opIze4gbg</usage>
+      <usage>_iuE8wjLAEe2I8opIze4gbg</usage>
+      <expressionRef id="_it3hYDLAEe2I8opIze4gbg" internalExpression="CAST(SUBSTR(${Time.day_date}$, 7,4)||'-'||SUBSTR(${Time.day_date}$, 4,2)||'-'||SUBSTR(${Time.day_date}$, 1,2)||' 00:00:00' AS TIMESTAMP)">
+        <dataModel>_do-LgDK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+        <sourceRef>_isVQUDLAEe2I8opIze4gbg</sourceRef>
+      </expressionRef>
+      <expressionRef id="_it8Z4DLAEe2I8opIze4gbg" internalExpression="${t_planning.pln_day}$">
+        <dataModel>_-eVCgDK-Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+        <sourceRef>_islH8DLAEe2I8opIze4gbg</sourceRef>
+      </expressionRef>
+      <expressionRef id="_sZZOtDLEEe2I8opIze4gbg" internalExpression="${q_gen_date.date_gen}$">
+        <dataModel>_sZZOsDLEEe2I8opIze4gbg?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+        <sourceRef>_x7m6ETLEEe2I8opIze4gbg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_it_dMTLAEe2I8opIze4gbg" status="VALID">
+      <dataModel>_M0rScDK-Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+      <usage>_iuIAEDLAEe2I8opIze4gbg</usage>
+      <expressionRef id="_it_dMDLAEe2I8opIze4gbg" internalExpression="substr(${Time.day_date}$, 1,2)">
+        <dataModel>_M0rScTK-Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+        <sourceRef>_isVQUDLAEe2I8opIze4gbg</sourceRef>
+      </expressionRef>
+      <expressionRef id="_iuAEQDLAEe2I8opIze4gbg" internalExpression="SUBSTR(CAST(${t_planning.pln_day}$ AS VARCHAR),9,2)">
+        <dataModel>_-eVpkDK-Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+        <sourceRef>_islH8DLAEe2I8opIze4gbg</sourceRef>
+      </expressionRef>
+      <expressionRef id="_sZZOtTLEEe2I8opIze4gbg" internalExpression="SUBSTR(CAST(${q_gen_date.date_gen}$ AS VARCHAR),9,2)">
+        <dataModel>_sZZOsTLEEe2I8opIze4gbg?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+        <sourceRef>_x7m6ETLEEe2I8opIze4gbg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_iuAEQjLAEe2I8opIze4gbg" status="VALID">
+      <dataModel>_NDpikDK-Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+      <usage>_iuFj0TLAEe2I8opIze4gbg</usage>
+      <usage>_iuIAEDLAEe2I8opIze4gbg</usage>
+      <expressionRef id="_iuAEQTLAEe2I8opIze4gbg" internalExpression="substr(${Time.day_date}$,4,2)">
+        <dataModel>_NDpikTK-Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+        <sourceRef>_isVQUDLAEe2I8opIze4gbg</sourceRef>
+      </expressionRef>
+      <expressionRef id="_iuArUDLAEe2I8opIze4gbg" internalExpression="SUBSTR(CAST(${t_planning.pln_day}$ AS VARCHAR),6,2)">
+        <dataModel>_-eVpkTK-Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+        <sourceRef>_islH8DLAEe2I8opIze4gbg</sourceRef>
+      </expressionRef>
+      <expressionRef id="_sZZOtjLEEe2I8opIze4gbg" internalExpression="SUBSTR(CAST(${q_gen_date.date_gen}$ AS VARCHAR),6,2)">
+        <dataModel>_sZZOsjLEEe2I8opIze4gbg?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+        <sourceRef>_x7m6ETLEEe2I8opIze4gbg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef id="_iuArUjLAEe2I8opIze4gbg" status="VALID">
+      <dataModel>_NNOVUDK-Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+      <usage>_iuFj0DLAEe2I8opIze4gbg</usage>
+      <usage>_iuIAEDLAEe2I8opIze4gbg</usage>
+      <expressionRef id="_iuArUTLAEe2I8opIze4gbg" internalExpression="substr(${Time.day_date}$,7,4)">
+        <dataModel>_NNO8YDK-Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+        <sourceRef>_isVQUDLAEe2I8opIze4gbg</sourceRef>
+      </expressionRef>
+      <expressionRef id="_iuDHkDLAEe2I8opIze4gbg" internalExpression="SUBSTR(CAST(${t_planning.pln_day}$ AS VARCHAR),1,4)">
+        <dataModel>_-eVpkjK-Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+        <sourceRef>_islH8DLAEe2I8opIze4gbg</sourceRef>
+      </expressionRef>
+      <expressionRef id="_sZZOtzLEEe2I8opIze4gbg" internalExpression="SUBSTR(CAST(${q_gen_date.date_gen}$ AS VARCHAR),1,4)">
+        <dataModel>_sZZOszLEEe2I8opIze4gbg?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+        <sourceRef>_x7m6ETLEEe2I8opIze4gbg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_x7lE4DLEEe2I8opIze4gbg" countShownFields="1" hierarchical="false">
+    <dataModel>_x7hagDLEEe2I8opIze4gbg?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_x7m6ETLEEe2I8opIze4gbg" precision="6" size="35" type="timestamp with time zone" position="1">
+      <dataModel>_x7m6EDLEEe2I8opIze4gbg?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map$name=date_gen?</dataModel>
+      <usage>_sZZOtDLEEe2I8opIze4gbg</usage>
+      <usage>_sZZOtTLEEe2I8opIze4gbg</usage>
+      <usage>_sZZOtjLEEe2I8opIze4gbg</usage>
+      <usage>_sZZOtzLEEe2I8opIze4gbg</usage>
+    </fieldRef>
+  </containerRef>
+  <targetSetRef id="_67lFwTLEEe2I8opIze4gbg" sourceSet="_67lFwDLEEe2I8opIze4gbg">
+    <container>_it4IcDLAEe2I8opIze4gbg</container>
+  </targetSetRef>
+  <targetSetRef id="_67lFwzLEEe2I8opIze4gbg" sourceSet="_67lFwjLEEe2I8opIze4gbg">
+    <container>_inPU8DLAEe2I8opIze4gbg</container>
+  </targetSetRef>
+  <sourceSetRef id="_67lFwDLEEe2I8opIze4gbg" targetSet="_67lFwTLEEe2I8opIze4gbg">
+    <dataSet xsi:type="map:DataSet">#_XvHcMDK9Ee2kvaJkKfquyQ</dataSet>
+    <dataSet xsi:type="map:DataSet">#_QIEgYDK_Ee2kvaJkKfquyQ</dataSet>
+    <dataSet xsi:type="map:DataSet">#_x7ovQDLEEe2I8opIze4gbg</dataSet>
+  </sourceSetRef>
+  <sourceSetRef id="_67lFwjLEEe2I8opIze4gbg" targetSet="_67lFwzLEEe2I8opIze4gbg">
+    <dataSet xsi:type="map:DataSet">#_dnioIDK9Ee2kvaJkKfquyQ</dataSet>
+  </sourceSetRef>
+  <templateRef id="_iuRKADLAEe2I8opIze4gbg" description="Load : Time" nodeCode="com.stambia.flow.step" templateCriteria="type=L-TP;trgProduct=POSTGRESSQL;trgPath=server:PG_datamart/schema:datamart.work_dm;trgTech=RDBMS;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProduct=FILE;srcPath=server:null/directory:Reference_Files_Folder/file:Time;srcTech=FILE;srcWorkspaceCapability=false;srcMapCapability=true;srcFilterCapability=true;srcJoinCapability=false">
+    <dataModel>_dpE5MDK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map$name=L1_gen_date?</dataModel>
+    <load>_iuP74TLAEe2I8opIze4gbg</load>
+    <targetRef>_dnfk0DK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_ivJTwDLAEe2I8opIze4gbg" description="Stage Integration : gen_date" nodeCode="com.stambia.flow.step" templateCriteria="type=IS-TP;trgProduct=POSTGRESSQL;trgPath=server:PG_datamart/schema:datamart.work_dm;trgTech=RDBMS;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcTechList=RDBMS|FILE;srcProductList=POSTGRESSQL|FILE">
+    <dataModel>_dpHVcDK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map$name=I_gen_date?</dataModel>
+    <targetRef>_dnfk0DK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_ivWIEDLAEe2I8opIze4gbg" description="Integration : dim_time" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=POSTGRESSQL;trgPath=server:PG_datamart/schema:datamart.hotel_datamart/datastore:dim_time;trgTech=RDBMS;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcTechList=RDBMS;srcProductList=POSTGRESSQL">
+    <dataModel>_opxxEDK-Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map$name=I_dim_time?</dataModel>
+    <targetRef>_XX-ukDK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_iwCroDLAEe2I8opIze4gbg" description="Load : t_planning" nodeCode="com.stambia.flow.step" templateCriteria="type=L-TP;trgProduct=POSTGRESSQL;trgPath=server:PG_datamart/schema:datamart.work_dm;trgTech=RDBMS;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProduct=POSTGRESSQL;srcPath=server:PG_hotel/schema:hotel.hotel_management/datastore:t_planning;srcTech=RDBMS;srcWorkspaceCapability=true;srcMapCapability=true;srcFilterCapability=true;srcJoinCapability=true">
+    <dataModel>_Z14pgDK_Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map$name=L3_gen_date?</dataModel>
+    <load>_iuP75TLAEe2I8opIze4gbg</load>
+    <targetRef>_dnfk0DK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_1aifETLEEe2I8opIze4gbg" description="Load : q_gen_date" nodeCode="com.stambia.flow.step" templateCriteria="type=L-TP;trgProduct=POSTGRESSQL;trgPath=server:PG_datamart/schema:datamart.work_dm;trgTech=RDBMS;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProduct=POSTGRESSQL;srcPath=server:PG_hotel/queryFolder:qf_hotel/query:q_gen_date;srcTech=RDBMS;srcWorkspaceCapability=true;srcMapCapability=true;srcFilterCapability=true;srcJoinCapability=true">
+    <dataModel>_1aifEDLEEe2I8opIze4gbg?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map$name=L2_gen_date?</dataModel>
+    <load>_x7p9bTLEEe2I8opIze4gbg</load>
+    <targetRef>_dnfk0DK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</targetRef>
+  </templateRef>
+  <loadSet id="_iuP74zLAEe2I8opIze4gbg">
+    <container>_dnfk0DK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</container>
+  </loadSet>
+  <loadSet id="_iuPU0TLAEe2I8opIze4gbg">
+    <container>_XX-ukDK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</container>
+  </loadSet>
+  <loadSet id="_iuP74TLAEe2I8opIze4gbg">
+    <container>_XvFnADK9Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</container>
+  </loadSet>
+  <loadSet id="_iuP75TLAEe2I8opIze4gbg">
+    <container>_QIBdEDK_Ee2kvaJkKfquyQ?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</container>
+  </loadSet>
+  <loadSet id="_x7p9bTLEEe2I8opIze4gbg">
+    <container>_x7hagDLEEe2I8opIze4gbg?fileId=_WapjoDK9Ee2kvaJkKfquyQ$type=map?</container>
+  </loadSet>
+</ref:mapRef>

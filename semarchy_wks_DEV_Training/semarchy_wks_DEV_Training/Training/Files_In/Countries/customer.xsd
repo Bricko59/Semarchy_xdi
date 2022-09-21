@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cus="http://stambia.org/samples/customer" targetNamespace="http://stambia.org/samples/customer" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xs:complexType name="customer">
+		<xs:attribute name="customer_id" type="xs:integer"/>
+		<xs:attribute name="familySituationCode" type="xs:string"/>
+		<xs:attribute name="familySituationLabel" type="xs:string"/>
+		<xs:attribute name="dateOfBirth" type="xs:dateTime"/>
+		<xs:attribute name="creationDate" type="xs:dateTime"/>
+	</xs:complexType>	
+	<xs:complexType name="gender">
+		<xs:sequence>
+			<xs:element name="customer" type="cus:customer" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="genderName" type="xs:string"/>
+		<xs:attribute name="genderCode" type="xs:string"/>
+	</xs:complexType>	
+	<xs:element name="customer">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="gender" type="cus:gender" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

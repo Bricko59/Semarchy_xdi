@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:UUID="java.util.UUID" xmlns:common="http://exslt.org/common" xmlns:mdj="java:com.indy.xsl.global.Functions" xmlns:proc="http://www.example.org/proc" xmlns:saxon="http://saxon.sf.net/" id="_dtYVltawEeiBdf0kDvEMnQ" description="This template is used to check data quality on a Microsoft SQL Server table by verifying if the processed rows met the defined constraints.&#xD;&#xA;&#xD;&#xA;The constraints (Primary Keys, Foreign Keys, Not Null, custom constraints, ...) are defined in Metadata.&#xD;&#xA;Each of them can be disable manually in Mapping with a right click on it, if needed.&#xD;&#xA;&#xD;&#xA;When an incorrect row is detected by the template, it is traced in the reject table.&#xD;&#xA;Then, depending on the 'Delete Rejects On Checked Table' parameter, the rows will be kept in the data flow or not.&#xD;&#xA;&#xD;&#xA;Note:&#xD;&#xA;Please note that integration data is not populated with expressions executed on &quot;Target&quot; Execution Location.&#xD;&#xA;If the Mapping involves such expressions, the Reject detection cannot be performed on the corresponding constraints.&#xD;&#xA;&#xD;&#xA;About static mode:&#xD;&#xA;This template support being used outside of a Mapping, to check the constraint directly on a table.&#xD;&#xA;&#xD;&#xA;Refer to the description of each Parameter for more information.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;23/10/2018&#x9;Template creation&#xD;&#xA;" isBeginAction="true" nbCycles="-1" toleratedError="false">
+  <parameter id="_dtYVl9awEeiBdf0kDvEMnQ" description="If true, the reject table is dropped and re-created before processing." name="dropRejectTable" type="Boolean" value="false"/>
+  <parameter id="_dtYVmNawEeiBdf0kDvEMnQ" description="Set to true to delete the rejects detected during previous executions." name="deletePreviousRejects" type="Boolean" value="true"/>
+  <parameter id="_dtYVmdawEeiBdf0kDvEMnQ" description="If true, the operations on the reject and checked tables will be executed through a transaction in NOCOMMIT mode.&#xD;&#xA;If the process is executed successfully, a commit will be performed at the end, otherwise, a rollback will be performed.&#xD;&#xA;&#xD;&#xA;If false, the actions will use the AUTOCOMMIT connections." name="transactionalModeOnRejectTable" type="Boolean" value="false"/>
+  <parameter id="_dtYVmtawEeiBdf0kDvEMnQ" description="This option allows to specify how to manage rejected data.&#xD;&#xA;&#xD;&#xA;Depending if this template is used in a Mapping, or in static mode (see global documentation of this template), the behavior will be slightly different.&#xD;&#xA;&#xD;&#xA;In a Mapping:&#xD;&#xA;In a Mapping, set this option to true to remove rejected data from the integration flow.&#xD;&#xA;Rejected rows will be traced in the reject table, and they will NOT be inserted in the target table.&#xD;&#xA;&#xD;&#xA;If this option is set to false, rows will be traced in the reject table, but not removed from the integration flow.&#xD;&#xA;So they will be inserted in the target table.&#xD;&#xA;&#xD;&#xA;In static mode:&#xD;&#xA;If used in static mode, the template will perform all the constraints checks, and trace the rejects in the reject table.&#xD;&#xA;Then, if this option is set to true, incorrect rows will be deleted from the target table.&#xD;&#xA;If it is set to false, the rows are traced but kept in the table.&#xD;&#xA;&#xD;&#xA;*Important note*&#xD;&#xA;If the constraint's &quot;Severity level&quot; is set as &quot;Warning&quot; in the Metadata, this option will not apply.&#xD;&#xA;Constraints set as &quot;Warning&quot; are traced in the rejected table but always kept in the flow.&#xD;&#xA;&#xD;&#xA;" name="deleteRejectsOnCheckedTable" type="Boolean" value="true"/>
+  <parameter id="_dtYVm9awEeiBdf0kDvEMnQ" description="If true, an index is created on the reject table for each primary and unique keys." name="createIndexOnRejectTable" type="Boolean" value="false"/>
+  <parameter id="_dtYVnNawEeiBdf0kDvEMnQ" description="Name of the transaction when Transactional Mode is set to true." name="transactionName" type="String" value="T1"/>
+  <actionCode id="_dtYVndawEeiBdf0kDvEMnQ" generationCondition="'${dropRejectTable}$'='true'" isBeginAction="false" name="drop of reject table" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_dtYVntawEeiBdf0kDvEMnQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dtYVo9awEeiBdf0kDvEMnQ"/>
+    <parameter id="_dtYVn9awEeiBdf0kDvEMnQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_dtYVoNawEeiBdf0kDvEMnQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_dtYVodawEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_dtYVotawEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>drop table %x{md:physicalPath($REF,'rejectName')}x%</code>
+  </actionCode>
+  <actionCode id="_dtYVo9awEeiBdf0kDvEMnQ" generationCondition="" isBeginAction="false" name="creation of reject table" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_dtYVpNawEeiBdf0kDvEMnQ" executionType="OK" generationType="OK" mandatory="1" targetId="_dtYVqdawEeiBdf0kDvEMnQ"/>
+    <parameter id="_dtYVpdawEeiBdf0kDvEMnQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_dtYVptawEeiBdf0kDvEMnQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_dtYVp9awEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_dtYVqNawEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>create table %x{md:physicalPath($REF,'rejectName')}x%
+(
+	SESSION_ID			%x{$REF/ref:target()/tech:varcharDdl(35)}x% %x{$REF/tech:nullWord()}x%,
+	REJECT_MODE			%x{$REF/ref:target()/tech:varcharDdl(1)}x% %x{$REF/tech:nullWord()}x%,
+	REJECT_MESSAGE		%x{$REF/ref:target()/tech:varcharDDL(255)}x% %x{$REF/tech:nullWord()}x%, 
+	REJECT_CODE			%x{$REF/ref:target()/tech:varcharDDL(255)}x% %x{$REF/tech:nullWord()}x%,
+	REJECTED_BY			%x{$REF/ref:target()/tech:varcharDDL(255)}x% %x{$REF/tech:nullWord()}x%,
+	RULE_NAME			%x{$REF/ref:target()/tech:varcharDDL(255)}x% %x{$REF/tech:nullWord()}x%,
+	RULE_TYPE			%x{$REF/ref:target()/tech:varcharDDL(2)}x% %x{$REF/tech:nullWord()}x%,
+	RULE_SEVERITY		%x{$REF/ref:target()/tech:varcharDDL(10)}x% %x{$REF/tech:nullWord()}x%,
+	REJECT_DATE			%x{$REF/ref:target()/tech:dateDDL()}x% %x{$REF/tech:nullWord()}x%,
+	%x{md:patternList($REF/ref:targetColumns(),'[colName]\t\t[targetWritableType] [nullWord]', ',\n\t')}x%
+)
+</code>
+  </actionCode>
+  <actionCode id="_dtYVqdawEeiBdf0kDvEMnQ" generationCondition="'${deletePreviousRejects}$'='true'" isBeginAction="false" name="deletion of previous rejects" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_dtYVqtawEeiBdf0kDvEMnQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dtYV49awEeiBdf0kDvEMnQ"/>
+    <parameter id="_dtYVq9awEeiBdf0kDvEMnQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_dtYVrNawEeiBdf0kDvEMnQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_dtYVrdawEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_dtYVrtawEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>delete from	%x{md:physicalPath($REF,'rejectName')}x%
+where	(REJECT_MODE = 'S'	and '%x{$REF/tech:rejectMode()}x%' = 'S')
+	or	(REJECT_MODE = '%x{$REF/tech:rejectMode()}x%'	
+			and REJECTED_BY = '%x{$REF/tech:rejectedBy()}x%')</code>
+  </actionCode>
+  <actionCode id="_dtYVr9awEeiBdf0kDvEMnQ" generationCondition="not('${rejectsPK}$'='false') or not($REF/tech:rejectMode()='S')" isBeginAction="false" name="insertion of rejects for PK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$REF/ref:pk()" repetitionVariableName="CONSTRAINT_REF" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_dtYVsNawEeiBdf0kDvEMnQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dtYVttawEeiBdf0kDvEMnQ"/>
+    <parameter id="_dtYVsdawEeiBdf0kDvEMnQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_dtYVstawEeiBdf0kDvEMnQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_dtYVs9awEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_dtYVtNawEeiBdf0kDvEMnQ" name="SQL_ACTION_TYPE_STAT" type="String" value="ERROR"/>
+    <parameter id="_dtYVtdawEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>insert into %x{md:physicalPath($REF,'rejectName')}x%&#xD;
+(&#xD;
+	SESSION_ID,&#xD;
+	REJECT_MODE,&#xD;
+	REJECT_MESSAGE,&#xD;
+	REJECT_CODE,&#xD;
+	REJECTED_BY,&#xD;
+	RULE_NAME,&#xD;
+	RULE_TYPE,&#xD;
+	RULE_SEVERITY,&#xD;
+	REJECT_DATE,&#xD;
+	%x{md:patternList($REF/ref:columns()[tech:isMapped() and not(tech:onTrg())],'[name]', ',\n\t')}x%&#xD;
+)&#xD;
+select&#xD;
+	'${/CORE_SESSION_ID}$',	&#xD;
+	'%x{$REF/tech:rejectMode()}x%', &#xD;
+	'%x{$CONSTRAINT_REF/tech:rejectMessage()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:rejectCode()}x%',&#xD;
+	'%x{$REF/tech:rejectedBy()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:name()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:constraintCode()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:severity()}x%',&#xD;
+	%x{$REF/ref:target()/tech:dateFunction()}x%,&#xD;
+	%x{md:patternList($REF/ref:columns()[tech:isMapped() and not(tech:onTrg())],'[name]', ',\n\t')}x%&#xD;
+from	%x{md:physicalPath($REF,'checkedName')}x% %x{$REF/ref:target()/tech:tableAliasWord()}x% C &#xD;
+where	exists (select 'X' &#xD;
+				from 	%x{md:physicalPath($REF,'checkedName')}x% %x{$REF/ref:target()/tech:tableAliasWord()}x% E&#xD;
+				where	%x{md:patternList($REF/ref:columns()[if ($REF/tech:rejectMode()='S') then tech:isPK() else tech:isUK()],'C.[COL_NAME]\t= E.[COL_NAME]', '\n\t\t\t\tand\t')}x%&#xD;
+				group by %x{md:patternList($CONSTRAINT_REF/ref:columns(),'E.[colName]', ',\n\t\t\t\t')}x%&#xD;
+				having	count(*) > 1 &#xD;
+		) &#xD;
+%x{$REF/tech:filterPart()}x%</code>
+  </actionCode>
+  <actionCode id="_dtYVttawEeiBdf0kDvEMnQ" generationCondition="not('${rejectsAK}$'='false') or not($REF/tech:rejectMode()='S')" isBeginAction="false" name="insertion of rejects for AK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$REF/ref:ak()" repetitionVariableName="CONSTRAINT_REF" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_dtYVt9awEeiBdf0kDvEMnQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dtYVvdawEeiBdf0kDvEMnQ"/>
+    <parameter id="_dtYVuNawEeiBdf0kDvEMnQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_dtYVudawEeiBdf0kDvEMnQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_dtYVutawEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_dtYVu9awEeiBdf0kDvEMnQ" name="SQL_ACTION_TYPE_STAT" type="String" value="ERROR"/>
+    <parameter id="_dtYVvNawEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>insert into %x{md:physicalPath($REF,'rejectName')}x%&#xD;
+(&#xD;
+	SESSION_ID,&#xD;
+	REJECT_MODE,&#xD;
+	REJECT_MESSAGE,&#xD;
+	REJECT_CODE,&#xD;
+	REJECTED_BY,&#xD;
+	RULE_NAME,&#xD;
+	RULE_TYPE,&#xD;
+	RULE_SEVERITY,&#xD;
+	REJECT_DATE,&#xD;
+	%x{md:patternList($REF/ref:columns()[tech:isMapped() and not(tech:onTrg())],'[name]', ',\n\t')}x%&#xD;
+)&#xD;
+select&#xD;
+	'${/CORE_SESSION_ID}$',	&#xD;
+	'%x{$REF/tech:rejectMode()}x%', &#xD;
+	'%x{$CONSTRAINT_REF/tech:rejectMessage()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:rejectCode()}x%',&#xD;
+	'%x{$REF/tech:rejectedBy()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:name()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:constraintCode()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:severity()}x%',&#xD;
+	%x{$REF/ref:target()/tech:dateFunction()}x%,&#xD;
+	%x{md:patternList($REF/ref:columns()[tech:isMapped() and not(tech:onTrg())],'[name]', ',\n\t')}x%&#xD;
+from	%x{md:physicalPath($REF,'checkedName')}x% %x{$REF/ref:target()/tech:tableAliasWord()}x% C &#xD;
+where	exists (select 'X' &#xD;
+				from 	%x{md:physicalPath($REF,'checkedName')}x% %x{$REF/ref:target()/tech:tableAliasWord()}x% E&#xD;
+				where	%x{md:patternList($CONSTRAINT_REF/ref:columns(),'C.[COL_NAME]\t= E.[COL_NAME]', '\n\t\t\t\tand\t')}x%&#xD;
+				group by %x{md:patternList($CONSTRAINT_REF/ref:columns(),'E.[colName]', ',\n\t\t\t')}x%&#xD;
+				having	count(*) > 1 &#xD;
+		) &#xD;
+%x{$REF/tech:filterPart()}x%</code>
+  </actionCode>
+  <actionCode id="_dtYVvdawEeiBdf0kDvEMnQ" generationCondition="not('${rejectsFK}$'='false') or not($REF/tech:rejectMode()='S')" isBeginAction="false" name="insertion of rejects for FK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$REF/ref:fk()" repetitionVariableName="CONSTRAINT_REF" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_dtYVvtawEeiBdf0kDvEMnQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dtYVxNawEeiBdf0kDvEMnQ"/>
+    <parameter id="_dtYVv9awEeiBdf0kDvEMnQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_dtYVwNawEeiBdf0kDvEMnQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_dtYVwdawEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_dtYVwtawEeiBdf0kDvEMnQ" name="SQL_ACTION_TYPE_STAT" type="String" value="ERROR"/>
+    <parameter id="_dtYVw9awEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>insert into %x{md:physicalPath($REF,'rejectName')}x%&#xD;
+(&#xD;
+	SESSION_ID,&#xD;
+	REJECT_MODE,&#xD;
+	REJECT_MESSAGE,&#xD;
+	REJECT_CODE,&#xD;
+	REJECTED_BY,&#xD;
+	RULE_NAME,&#xD;
+	RULE_TYPE,&#xD;
+	RULE_SEVERITY,&#xD;
+	REJECT_DATE,&#xD;
+	%x{md:patternList($REF/ref:columns()[tech:isMapped() and not(tech:onTrg())],'[columnName]', ',\n\t')}x%&#xD;
+)&#xD;
+select&#xD;
+	'${/CORE_SESSION_ID}$',	&#xD;
+	'%x{$REF/tech:rejectMode()}x%', &#xD;
+	'%x{$CONSTRAINT_REF/tech:rejectMessage()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:rejectCode()}x%',&#xD;
+	'%x{$REF/tech:rejectedBy()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:name()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:constraintCode()}x%',&#xD;
+	'%x{$CONSTRAINT_REF/tech:severity()}x%',&#xD;
+	%x{$REF/ref:target()/tech:dateFunction()}x%,&#xD;
+	%x{md:patternList($REF/ref:columns()[tech:isMapped() and not(tech:onTrg())],'FK_TAB.[columnName]', ',\n\t')}x%&#xD;
+from	%x{md:physicalPath($REF,'checkedName')}x% %x{$REF/ref:target()/tech:tableAliasWord()}x% FK_TAB &#xD;
+where 	not exists &#xD;
+		( 	select 	'X'&#xD;
+			from 	%x{md:physicalPath($CONSTRAINT_REF/ref:pkTable())}x% %x{$REF/ref:target()/tech:tableAliasWord()}x% PK_TAB&#xD;
+			where	%x{md:patternList($CONSTRAINT_REF/ref:joins(),'PK_TAB.[pkColumnName]=FK_TAB.[columnName]', '\n\t\t\t\tAnd\t')}x%&#xD;
+		)&#xD;
+	And %x{md:patternList($CONSTRAINT_REF/ref:joins(),'FK_TAB.[columnName] IS NOT NULL', '\n\tAnd ')}x%&#xD;
+%x{$REF/tech:filterPart()}x%</code>
+  </actionCode>
+  <actionCode id="_dtYVxNawEeiBdf0kDvEMnQ" generationCondition="not('${rejectsCK}$'='false') or not($REF/tech:rejectMode()='S')" isBeginAction="false" name="insertion of rejects for CK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$REF/ref:ck()" repetitionVariableName="CONSTRAINT_REF" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_dtYVxdawEeiBdf0kDvEMnQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dtYVy9awEeiBdf0kDvEMnQ"/>
+    <parameter id="_dtYVxtawEeiBdf0kDvEMnQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_dtYVx9awEeiBdf0kDvEMnQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_dtYVyNawEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_dtYVydawEeiBdf0kDvEMnQ" name="SQL_ACTION_TYPE_STAT" type="String" value="ERROR"/>
+    <parameter id="_dtYVytawEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>
+insert into %x{md:physicalPath($REF,'rejectName')}x%
+(
+	SESSION_ID,
+	REJECT_MODE,
+	REJECT_MESSAGE,
+	REJECT_CODE,
+	REJECTED_BY,
+	RULE_NAME,
+	RULE_TYPE,
+	RULE_SEVERITY,
+	REJECT_DATE,
+	%x{md:patternList($REF/ref:columns()[tech:isMapped() and not(tech:onTrg())],'[colName]', ',\n\t')}x%
+)
+select
+	'${/CORE_SESSION_ID}$',	
+	'%x{$REF/tech:rejectMode()}x%', 
+	'%x{$CONSTRAINT_REF/tech:rejectMessage()}x%',
+	'%x{$CONSTRAINT_REF/tech:rejectCode()}x%',
+	'%x{$REF/tech:rejectedBy()}x%',
+	'%x{$CONSTRAINT_REF/tech:name()}x%',
+	'%x{$CONSTRAINT_REF/tech:constraintCode()}x%',
+	'%x{$CONSTRAINT_REF/tech:severity()}x%',
+	%x{$REF/ref:target()/tech:dateFunction()}x%,
+	%x{md:patternList($REF/ref:columns()[tech:isMapped() and not(tech:onTrg())],'[colName]', ',\n\t')}x%
+from	%x{md:physicalPath($REF,'checkedName')}x% %x{$REF/ref:target()/tech:tableAliasWord()}x% %x{$REF/ref:target()/tech:alias()}x%
+where	not 	(
+		%x{$CONSTRAINT_REF/tech:expression()}x%
+		)
+%x{$REF/tech:filterPart()}x%</code>
+  </actionCode>
+  <actionCode id="_dtYVy9awEeiBdf0kDvEMnQ" generationCondition="not('${rejectsNotNull}$'='false') or not($REF/tech:rejectMode()='S')" isBeginAction="false" name="insertion of rejects for Not Null" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$REF/ref:nn()[($REF/tech:rejectMode()='S') or not(ref:target()/@id=$REF/ref:columns()[tech:onTrg()]/ref:target()/@id)]" repetitionVariableName="CONSTRAINT_REF" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_dtYVzNawEeiBdf0kDvEMnQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dtYV19awEeiBdf0kDvEMnQ"/>
+    <parameter id="_dtYVzdawEeiBdf0kDvEMnQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_dtYVztawEeiBdf0kDvEMnQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_dtYVz9awEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_dtYV0NawEeiBdf0kDvEMnQ" name="SQL_ACTION_TYPE_STAT" type="String" value="ERROR"/>
+    <parameter id="_dtYV0dawEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>insert into %x{md:physicalPath($REF,'rejectName')}x%
+(
+	SESSION_ID,
+	REJECT_MODE,
+	REJECT_MESSAGE,
+	REJECT_CODE,
+	REJECTED_BY,
+	RULE_NAME,
+	RULE_TYPE,
+	RULE_SEVERITY,
+	REJECT_DATE,
+	%x{md:patternList($REF/ref:columns()[tech:isMapped() and not(tech:onTrg())],'[colName]', ',\n\t')}x%
+)
+select
+	'${/CORE_SESSION_ID}$',	
+	'%x{$REF/tech:rejectMode()}x%', 
+	'%x{$CONSTRAINT_REF/tech:rejectMessage()}x%',
+	'%x{$CONSTRAINT_REF/tech:rejectCode()}x%',
+	'%x{$REF/tech:rejectedBy()}x%',
+	'%x{$CONSTRAINT_REF/tech:name()}x%',
+	'NN',
+	'%x{$CONSTRAINT_REF/tech:severity()}x%',
+	%x{$REF/ref:target()/tech:dateFunction()}x%,
+	%x{md:patternList($REF/ref:columns()[tech:isMapped() and not(tech:onTrg())],'CTRL.[colName]', ',\n\t')}x%
+from	%x{md:physicalPath($REF,'checkedName')}x% %x{$REF/ref:target()/tech:tableAliasWord()}x% CTRL
+where	CTRL.%x{$CONSTRAINT_REF/tech:name()}x% is null
+%x{$REF/tech:filterPart()}x%</code>
+  </actionCode>
+  <actionCode id="_dtYV0tawEeiBdf0kDvEMnQ" generationCondition="'${deleteRejectsOnCheckedTable}$'='true'" isBeginAction="false" name="deletion of rejects from checked table" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <parameter id="_dtYV09awEeiBdf0kDvEMnQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_dtYV1NawEeiBdf0kDvEMnQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_dtYV1dawEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_dtYV1tawEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>delete from %x{md:physicalPath($REF,'checkedName')}x%  
+where 	exists (select 'X' 
+		from %x{md:physicalPath($REF,'rejectName')}x% %x{$REF/ref:target()/tech:tableAliasWord()}x% REJ
+		where
+		%x{md:patternList($REF/ref:columns()[if ($REF/tech:rejectMode()='S') then tech:isPK() else tech:isUK()],'(({md:physicalPath(..,''checkedName'')}.[name] = REJ.[name]) or ({md:physicalPath(..,''checkedName'')}.[name] is null and REJ.[name] is null))', '\n\t\t\t\tAnd\t')}x%
+		and REJECT_MODE = '%x{$REF/tech:rejectMode()}x%'
+		and	 REJECTED_BY = '%x{$REF/tech:rejectedBy()}x%'
+		and RULE_SEVERITY != 'WARNING'
+		)
+</code>
+  </actionCode>
+  <actionCode id="_dtYV19awEeiBdf0kDvEMnQ" generationCondition="'${createIndexOnRejectTable}$'='true'" isBeginAction="false" name="creation of index on reject table" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_dtYV2NawEeiBdf0kDvEMnQ" generationCondition="$REF/ref:target()/tech:productCode()!='IBM_DB2_400'" executionCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dtYV0tawEeiBdf0kDvEMnQ"/>
+    <link id="_dtYV2dawEeiBdf0kDvEMnQ" generationCondition="$REF/ref:target()/tech:productCode()='IBM_DB2_400'" executionCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dtYV3tawEeiBdf0kDvEMnQ"/>
+    <parameter id="_dtYV2tawEeiBdf0kDvEMnQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_dtYV29awEeiBdf0kDvEMnQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_dtYV3NawEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_dtYV3dawEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>%x{if (contains($REF/tech:workName('idx1_'),'idx1_')) then concat('create index ',$REF/tech:workName('idx1_')) else mdj:pattern('create index idx1_[rejectName]')}x%
+
+on		%x{md:physicalPath($REF,'rejectName')}x% (%x{md:patternList($REF/ref:columns()[tech:isUk()],'[name]', ', ')}x%)</code>
+  </actionCode>
+  <actionCode id="_dtYV3tawEeiBdf0kDvEMnQ" generationCondition="'${deleteRejectsOnCheckedTable}$'='true'" isBeginAction="false" name="deletion of rejects from checked table alias" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <parameter id="_dtYV39awEeiBdf0kDvEMnQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_dtYV4NawEeiBdf0kDvEMnQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_dtYV4dawEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_dtYV4tawEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>delete from %x{md:physicalPath($REF,'checkedName')}x%  CHK
+where 	exists (select 'X' 
+		from %x{md:physicalPath($REF,'rejectName')}x% %x{$REF/ref:target()/tech:tableAliasWord()}x% REJ
+		where
+		%x{md:patternList($REF/ref:columns()[if ($REF/tech:rejectMode()='S') then tech:isPK() else tech:isUK()],'((CHK.[name] = REJ.[name]) or (CHK.[name] is null and REJ.[name] is null))', '\n\t\t\t\tAnd\t')}x%
+		and REJECT_MODE = '%x{$REF/tech:rejectMode()}x%'
+		and	 REJECTED_BY = '%x{$REF/tech:rejectedBy()}x%'
+		)
+</code>
+  </actionCode>
+  <actionCode id="_dtYV49awEeiBdf0kDvEMnQ" generationCondition="'${createIndexOnRejectTable}$'='true'" isBeginAction="false" name="Drop of index on reject table" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_dtYV5NawEeiBdf0kDvEMnQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_dtYVr9awEeiBdf0kDvEMnQ"/>
+    <parameter id="_dtYV5dawEeiBdf0kDvEMnQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+    <parameter id="_dtYV5tawEeiBdf0kDvEMnQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_dtYV59awEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_dtYV6NawEeiBdf0kDvEMnQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnRejectTable')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <code>%x{if (contains($REF/tech:workName('idx1_'),'idx1_')) then concat('drop index ',$REF/tech:workName('idx1_')) else mdj:pattern('drop index idx1_[rejectName]')}x%&#xD;
+on		%x{md:physicalPath($REF,'rejectName')}x%</code>
+  </actionCode>
+  <templateType>C-TP.RDBMS</templateType>
+  <xslVariable id="_dtYV6dawEeiBdf0kDvEMnQ" code="($REF/ref:pk() | $REF/ref:ak() | $REF/ref:ck() | $REF/ref:fk() | $REF/ref:nn())[tech:rejectCode()!='']" name="hasRejectCode" type="xpath"/>
+</proc:process>

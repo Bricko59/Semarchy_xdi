@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map:map xmlns:map="http://www.indy.com/v2/map" id="_68tjsFerEem34vJR1a7WCA" internalVersion="8" tech="resource.tech#_waYSMH8VEd2__Mzb_dB76A?fileId=_waYSMH8VEd2__Mzb_dB76A$type=tech$name=flow?">
+  <datastore id="_7-kpUFerEem34vJR1a7WCA" alias="warehouse_delivery_order" dataset="_wNVO4Fe2Eem34vJR1a7WCA" ref="resource.md#_PwK2cFeqEem34vJR1a7WCA?fileId=_PpMrwFeqEem34vJR1a7WCA$type=md$name=warehouse_delivery_order?">
+    <field id="_7-tMMlerEem34vJR1a7WCA" fullAlias="delivery_order_number" name="delivery_order_number" parent="_7-tMMVerEem34vJR1a7WCA" ref="resource.md#_VwokEFeqEem34vJR1a7WCA?fileId=_PpMrwFeqEem34vJR1a7WCA$type=md$name=delivery_order_number?"/>
+    <field id="_7-tMM1erEem34vJR1a7WCA" fullAlias="delivery_timestamp" name="delivery_timestamp" parent="_7-tMMVerEem34vJR1a7WCA" ref="resource.md#_VwokFFeqEem34vJR1a7WCA?fileId=_PpMrwFeqEem34vJR1a7WCA$type=md$name=delivery_timestamp?"/>
+    <field id="_7-tMMVerEem34vJR1a7WCA" expand="true" name="warehouse_delivery_order" ref="resource.md#_PwK2cFeqEem34vJR1a7WCA?fileId=_PpMrwFeqEem34vJR1a7WCA$type=md$name=warehouse_delivery_order?" updateKey="true"/>
+    <field id="_7-tMNFerEem34vJR1a7WCA" fullAlias="warehouse_cod" name="warehouse_cod" parent="_7-tMMVerEem34vJR1a7WCA" ref="resource.md#_VwokGVeqEem34vJR1a7WCA?fileId=_PpMrwFeqEem34vJR1a7WCA$type=md$name=warehouse_cod?"/>
+  </datastore>
+  <datastore id="_8s-AYFerEem34vJR1a7WCA" alias="warehouse_activity" dataset="_29v1oFkdEemPFZ5tyi-nXQ" ref="resource.md#_hzFewFepEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_activity?" subExpression="[A]">
+    <field id="_8s-ncVerEem34vJR1a7WCA" enable="true" fullAlias="timeslot" insert="true" name="timeslot" ref="resource.md#_hzQd4FepEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=timeslot?" update="true" updateKey="true">
+      <expression id="_9tMuUFerEem34vJR1a7WCA" location="WRK" setDescriptorRef="_9tH10FerEem34vJR1a7WCA">
+        <expression>stage.defined_timeslot</expression>
+      </expression>
+    </field>
+    <field id="_8s_OgFerEem34vJR1a7WCA" enable="true" fullAlias="warehouse_cod" insert="true" name="warehouse_cod" ref="resource.md#_hzUvUFepEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_cod?" update="true" updateKey="true">
+      <expression id="_9tNVYFerEem34vJR1a7WCA" setDescriptorRef="_9tH10FerEem34vJR1a7WCA">
+        <expression>stage.warehouse_cod</expression>
+      </expression>
+    </field>
+    <field id="_8s_OgVerEem34vJR1a7WCA" enable="true" fullAlias="quantity" insert="true" name="quantity" ref="resource.md#_hzZAwFepEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=quantity?" update="true">
+      <expression id="_9tNVYVerEem34vJR1a7WCA" aggregate="true" location="WRK" setDescriptorRef="_9tH10FerEem34vJR1a7WCA">
+        <expression>COUNT(warehouse_delivery_order.delivery_order_number)</expression>
+      </expression>
+    </field>
+    <field id="_PvubIFkWEemPFZ5tyi-nXQ" name="is_lower_threshold_qty" ref="resource.md#_O9AkwVkWEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=is_lower_threshold_qty?">
+      <expression id="_PvubIVkWEemPFZ5tyi-nXQ" setDescriptorRef="_9tH10FerEem34vJR1a7WCA"/>
+    </field>
+    <field id="_PvvCMFkWEemPFZ5tyi-nXQ" name="is_previous_lower_threshold_qty" ref="resource.md#_O9DBAVkWEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=is_previous_lower_threshold_qty?">
+      <expression id="_PvvCMVkWEemPFZ5tyi-nXQ" setDescriptorRef="_9tH10FerEem34vJR1a7WCA"/>
+    </field>
+    <field id="_I9nHIFljEemPFZ5tyi-nXQ" name="cumulative_period_quantity" ref="resource.md#_If7soVljEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=cumulative_period_quantity?">
+      <expression id="_I9nHIVljEemPFZ5tyi-nXQ" setDescriptorRef="_9tH10FerEem34vJR1a7WCA"/>
+    </field>
+    <constraint id="_8s_OglerEem34vJR1a7WCA" name="pk_warehouse_activity" ref="resource.md#_hzd5QFepEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=pk_warehouse_activity?" reject="true"/>
+    <setDescriptor id="_9tH10FerEem34vJR1a7WCA" label="A"/>
+  </datastore>
+  <datastore id="_3O4_YFexEem34vJR1a7WCA" alias="warehouse" dataset="_OuReIFe2Eem34vJR1a7WCA" ref="resource.md#_mE1HIFexEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse?">
+    <field id="_3PSoAFexEem34vJR1a7WCA" fullAlias="warehouse_cod" name="warehouse_cod" ref="resource.md#_mFEXsFexEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_cod?" updateKey="true"/>
+    <field id="_HOw8oFfXEemPFZ5tyi-nXQ" name="warehouse_id" ref="resource.md#_G-bakFfXEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_id?" updateKey="true"/>
+    <field id="_HOw8oVfXEemPFZ5tyi-nXQ" name="warehouse_alert_hour_interval" ref="resource.md#_G-iIQVfXEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_alert_hour_interval?"/>
+    <field id="_HOxjsVfXEemPFZ5tyi-nXQ" name="warehouse_alert_threshold_qty" ref="resource.md#_G-qrIVfXEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_alert_threshold_qty?"/>
+    <field id="_HOxjsFfXEemPFZ5tyi-nXQ" name="warehouse_alert_mail_address" ref="resource.md#_G-lyoVfXEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_alert_mail_address?"/>
+    <field id="_c2pEAFfXEemPFZ5tyi-nXQ" name="warehouse_alert_cod" ref="resource.md#_cAzBIVfXEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_alert_cod?"/>
+    <constraint id="_3PTPEFexEem34vJR1a7WCA" name="pk_warehouse" ref="resource.md#_mFMTgFexEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=pk_warehouse?" reject="true"/>
+  </datastore>
+  <datastore id="_tXoNEFe2Eem34vJR1a7WCA" alias="q_gen_hour" dataset="_OuReIFe2Eem34vJR1a7WCA" ref="resource.md#_0uzrcFe1Eem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=q_gen_hour?">
+    <field id="_tXpbMFe2Eem34vJR1a7WCA" fullAlias="defined_timeslot" name="defined_timeslot" ref="resource.md#_7ubwAFe1Eem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=defined_timeslot?"/>
+  </datastore>
+  <datastore id="_29NqIFkdEemPFZ5tyi-nXQ" alias="warehouse_2" dataset="_29v1oFkdEemPFZ5tyi-nXQ" ref="resource.md#_mE1HIFexEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse?">
+    <field id="_29rkMFkdEemPFZ5tyi-nXQ" name="warehouse_id" ref="resource.md#_G-bakFfXEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_id?" updateKey="true"/>
+    <field id="_29rkNFkdEemPFZ5tyi-nXQ" fullAlias="warehouse_alert_threshold_qty" name="warehouse_alert_threshold_qty" ref="resource.md#_G-qrIVfXEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_alert_threshold_qty?"/>
+    <field id="_29rkM1kdEemPFZ5tyi-nXQ" name="warehouse_alert_mail_address" ref="resource.md#_G-lyoVfXEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_alert_mail_address?"/>
+    <field id="_29rkMlkdEemPFZ5tyi-nXQ" name="warehouse_alert_hour_interval" ref="resource.md#_G-iIQVfXEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_alert_hour_interval?"/>
+    <field id="_29rkMVkdEemPFZ5tyi-nXQ" fullAlias="warehouse_cod" name="warehouse_cod" ref="resource.md#_mFEXsFexEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_cod?"/>
+    <field id="_29rkNVkdEemPFZ5tyi-nXQ" name="warehouse_alert_cod" ref="resource.md#_cAzBIVfXEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_alert_cod?"/>
+    <constraint id="_29rkNlkdEemPFZ5tyi-nXQ" name="pk_warehouse" ref="resource.md#_mFMTgFexEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=pk_warehouse?" reject="true"/>
+  </datastore>
+  <datastore id="_boXjcFkeEemPFZ5tyi-nXQ" alias="warehouse_activity_2" dataset="_boe4MFkeEemPFZ5tyi-nXQ" ref="resource.md#_hzFewFepEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_activity?" subExpression="[A]">
+    <field id="_boZYoVkeEemPFZ5tyi-nXQ" name="quantity" ref="resource.md#_hzZAwFepEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=quantity?">
+      <expression id="_hQGA8FkeEemPFZ5tyi-nXQ" setDescriptorRef="_hQC9oFkeEemPFZ5tyi-nXQ">
+        <expression></expression>
+      </expression>
+    </field>
+    <field id="_boYxkFkeEemPFZ5tyi-nXQ" enable="true" fullAlias="timeslot" insert="true" name="timeslot" ref="resource.md#_hzQd4FepEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=timeslot?" update="true" updateKey="true">
+      <expression id="_hQGoAFkeEemPFZ5tyi-nXQ" setDescriptorRef="_hQC9oFkeEemPFZ5tyi-nXQ">
+        <expression>to_timestamp('${~/current_timestamp}$', 'YYYY/MM/DD HH24:MI:SS')</expression>
+      </expression>
+    </field>
+    <field id="_boZYoFkeEemPFZ5tyi-nXQ" enable="true" fullAlias="warehouse_cod" insert="true" name="warehouse_cod" ref="resource.md#_hzUvUFepEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_cod?" update="true" updateKey="true">
+      <expression id="_hQHPEFkeEemPFZ5tyi-nXQ" setDescriptorRef="_hQC9oFkeEemPFZ5tyi-nXQ">
+        <expression>warehouse_activity.warehouse_cod</expression>
+      </expression>
+    </field>
+    <field id="_boZ_sFkeEemPFZ5tyi-nXQ" enable="true" fullAlias="is_lower_threshold_qty" insert="true" name="is_lower_threshold_qty" ref="resource.md#_O9AkwVkWEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=is_lower_threshold_qty?" update="true">
+      <expression id="_hQH2IFkeEemPFZ5tyi-nXQ" aggregate="true" setDescriptorRef="_hQC9oFkeEemPFZ5tyi-nXQ">
+        <expression><![CDATA[sum(warehouse_activity.quantity)<max(warehouse_2.warehouse_alert_threshold_qty)]]></expression>
+      </expression>
+    </field>
+    <field id="_boZ_sVkeEemPFZ5tyi-nXQ" name="is_previous_lower_threshold_qty" ref="resource.md#_O9DBAVkWEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=is_previous_lower_threshold_qty?">
+      <expression id="_hQH2IVkeEemPFZ5tyi-nXQ" setDescriptorRef="_hQC9oFkeEemPFZ5tyi-nXQ">
+        <expression></expression>
+      </expression>
+    </field>
+    <field id="_I_IKEFljEemPFZ5tyi-nXQ" enable="true" insert="true" name="cumulative_period_quantity" ref="resource.md#_If7soVljEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=cumulative_period_quantity?" update="true">
+      <expression id="_I_IKEVljEemPFZ5tyi-nXQ" aggregate="true" setDescriptorRef="_hQC9oFkeEemPFZ5tyi-nXQ">
+        <expression>sum(warehouse_activity.quantity)</expression>
+      </expression>
+    </field>
+    <constraint id="_boZ_slkeEemPFZ5tyi-nXQ" name="pk_warehouse_activity" ref="resource.md#_hzd5QFepEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=pk_warehouse_activity?" reject="true"/>
+    <setDescriptor id="_hQC9oFkeEemPFZ5tyi-nXQ" label="A"/>
+  </datastore>
+  <datastore id="_3lOIgFkhEemPFZ5tyi-nXQ" alias="warehouse_activity_3" dataset="_3lgcYFkhEemPFZ5tyi-nXQ" ref="resource.md#_hzFewFepEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_activity?" subExpression="[A]">
+    <field id="_3leAIVkhEemPFZ5tyi-nXQ" fullAlias="quantity" name="quantity" ref="resource.md#_hzZAwFepEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=quantity?">
+      <expression id="_4df0UFkhEemPFZ5tyi-nXQ" setDescriptorRef="_4demMFkhEemPFZ5tyi-nXQ">
+        <expression></expression>
+      </expression>
+    </field>
+    <field id="_3ldZEVkhEemPFZ5tyi-nXQ" enable="true" fullAlias="timeslot" insert="true" name="timeslot" ref="resource.md#_hzQd4FepEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=timeslot?" update="true" updateKey="true">
+      <expression id="_4dgbYFkhEemPFZ5tyi-nXQ" setDescriptorRef="_4demMFkhEemPFZ5tyi-nXQ">
+        <expression>warehouse_activity_2.timeslot</expression>
+      </expression>
+    </field>
+    <field id="_3leAIFkhEemPFZ5tyi-nXQ" enable="true" fullAlias="warehouse_cod" insert="true" name="warehouse_cod" ref="resource.md#_hzUvUFepEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_cod?" update="true" updateKey="true">
+      <expression id="_4dgbYVkhEemPFZ5tyi-nXQ" setDescriptorRef="_4demMFkhEemPFZ5tyi-nXQ">
+        <expression>warehouse_activity_2.warehouse_cod</expression>
+      </expression>
+    </field>
+    <field id="_3leAIlkhEemPFZ5tyi-nXQ" fullAlias="is_lower_threshold_qty" name="is_lower_threshold_qty" ref="resource.md#_O9AkwVkWEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=is_lower_threshold_qty?">
+      <expression id="_4dhCcFkhEemPFZ5tyi-nXQ" setDescriptorRef="_4demMFkhEemPFZ5tyi-nXQ">
+        <expression></expression>
+      </expression>
+    </field>
+    <field id="_3leAI1khEemPFZ5tyi-nXQ" enable="true" fullAlias="is_previous_lower_threshold_qty" insert="true" name="is_previous_lower_threshold_qty" ref="resource.md#_O9DBAVkWEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=is_previous_lower_threshold_qty?" update="true">
+      <expression id="_4dhpgFkhEemPFZ5tyi-nXQ" setDescriptorRef="_4demMFkhEemPFZ5tyi-nXQ">
+        <expression>LAG(warehouse_activity_2.is_lower_threshold_qty,1,false) OVER (partition by warehouse_activity_2.warehouse_cod order by warehouse_activity_2.timeslot)</expression>
+      </expression>
+    </field>
+    <field id="_I_f9gFljEemPFZ5tyi-nXQ" fullAlias="cumulative_period_quantity" name="cumulative_period_quantity" ref="resource.md#_If7soVljEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=cumulative_period_quantity?">
+      <expression id="_I_f9gVljEemPFZ5tyi-nXQ" setDescriptorRef="_4demMFkhEemPFZ5tyi-nXQ"/>
+    </field>
+    <constraint id="_3leAJFkhEemPFZ5tyi-nXQ" name="pk_warehouse_activity" ref="resource.md#_hzd5QFepEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=pk_warehouse_activity?" reject="true"/>
+    <setDescriptor id="_4demMFkhEemPFZ5tyi-nXQ" label="A"/>
+  </datastore>
+  <datastore id="_B54GAFlgEemPFZ5tyi-nXQ" alias="warehouse_3" dataset="_3lgcYFkhEemPFZ5tyi-nXQ" ref="resource.md#_mE1HIFexEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse?">
+    <field id="_B5-zsVlgEemPFZ5tyi-nXQ" name="warehouse_id" ref="resource.md#_G-bakFfXEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_id?" updateKey="true"/>
+    <field id="_B5-zsllgEemPFZ5tyi-nXQ" fullAlias="warehouse_cod" name="warehouse_cod" ref="resource.md#_mFEXsFexEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_cod?"/>
+    <field id="_B5-ztllgEemPFZ5tyi-nXQ" fullAlias="warehouse_alert_cod" name="warehouse_alert_cod" ref="resource.md#_cAzBIVfXEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_alert_cod?"/>
+    <field id="_B5-ztVlgEemPFZ5tyi-nXQ" fullAlias="warehouse_alert_threshold_qty" name="warehouse_alert_threshold_qty" ref="resource.md#_G-qrIVfXEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_alert_threshold_qty?"/>
+    <field id="_B5-zs1lgEemPFZ5tyi-nXQ" fullAlias="warehouse_alert_hour_interval" name="warehouse_alert_hour_interval" ref="resource.md#_G-iIQVfXEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_alert_hour_interval?"/>
+    <field id="_B5-ztFlgEemPFZ5tyi-nXQ" fullAlias="warehouse_alert_mail_address" name="warehouse_alert_mail_address" ref="resource.md#_G-lyoVfXEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_alert_mail_address?"/>
+    <constraint id="_B5-zt1lgEemPFZ5tyi-nXQ" name="pk_warehouse" ref="resource.md#_mFMTgFexEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=pk_warehouse?" reject="true"/>
+  </datastore>
+  <datastore id="_GhYcoFlgEemPFZ5tyi-nXQ" alias="alert" dataset="_GhejQFlgEemPFZ5tyi-nXQ" ref="resource.md#_igXl8FkyEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=alert?" subExpression="[A]">
+    <field id="_GhZqwllgEemPFZ5tyi-nXQ" enable="true" insert="true" name="hour_quantity" ref="resource.md#_hH0lMVlfEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=hour_quantity?" update="true">
+      <expression id="_hyRa8FlgEemPFZ5tyi-nXQ" setDescriptorRef="_hyQz4FlgEemPFZ5tyi-nXQ">
+        <expression>warehouse_activity_3.quantity</expression>
+      </expression>
+    </field>
+    <field id="_GhZDsVlgEemPFZ5tyi-nXQ" enable="true" insert="true" name="warehouse_cod" ref="resource.md#_igkaQFkyEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_cod?" update="true" updateKey="true">
+      <expression id="_hyRa8VlgEemPFZ5tyi-nXQ" setDescriptorRef="_hyQz4FlgEemPFZ5tyi-nXQ">
+        <expression>warehouse_activity_3.warehouse_cod</expression>
+      </expression>
+    </field>
+    <field id="_GhZDtFlgEemPFZ5tyi-nXQ" enable="true" insert="true" name="warehouse_alert_cod" ref="resource.md#_iguLQVkyEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_alert_cod?" update="true">
+      <expression id="_hyRa8llgEemPFZ5tyi-nXQ" setDescriptorRef="_hyQz4FlgEemPFZ5tyi-nXQ">
+        <expression>warehouse_3.warehouse_alert_cod</expression>
+      </expression>
+    </field>
+    <field id="_GhZqwVlgEemPFZ5tyi-nXQ" enable="true" insert="true" name="warehouse_alert_mail_address" ref="resource.md#_ihY5oVkyEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_alert_mail_address?" update="true">
+      <expression id="_hyRa81lgEemPFZ5tyi-nXQ" setDescriptorRef="_hyQz4FlgEemPFZ5tyi-nXQ">
+        <expression>warehouse_3.warehouse_alert_mail_address</expression>
+      </expression>
+    </field>
+    <field id="_GhZqwFlgEemPFZ5tyi-nXQ" enable="true" insert="true" name="sent_alert_flag" ref="resource.md#_igwAcVkyEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=sent_alert_flag?" update="true">
+      <expression id="_hySCAFlgEemPFZ5tyi-nXQ" setDescriptorRef="_hyQz4FlgEemPFZ5tyi-nXQ">
+        <expression>false</expression>
+      </expression>
+    </field>
+    <field id="_GhZDsllgEemPFZ5tyi-nXQ" enable="true" insert="true" name="timestamp_alert" ref="resource.md#_igorsVkyEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=timestamp_alert?" update="true" updateKey="true">
+      <expression id="_hySCAVlgEemPFZ5tyi-nXQ" setDescriptorRef="_hyQz4FlgEemPFZ5tyi-nXQ">
+        <expression>warehouse_activity_3.timeslot</expression>
+      </expression>
+    </field>
+    <field id="_GhZDs1lgEemPFZ5tyi-nXQ" enable="true" insert="true" name="timestamp_begin_period" ref="resource.md#_igrvAVkyEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=timestamp_begin_period?" update="true">
+      <expression id="_hySCAllgEemPFZ5tyi-nXQ" setDescriptorRef="_hyQz4FlgEemPFZ5tyi-nXQ">
+        <expression>warehouse_activity_3.timeslot - (interval '1 hour')*warehouse_3.warehouse_alert_hour_interval</expression>
+      </expression>
+    </field>
+    <field id="_GhZqw1lgEemPFZ5tyi-nXQ" enable="true" insert="true" name="warehouse_alert_threshold_qty" ref="resource.md#_hH2aYVlfEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=warehouse_alert_threshold_qty?" update="true">
+      <expression id="_hySCA1lgEemPFZ5tyi-nXQ" setDescriptorRef="_hyQz4FlgEemPFZ5tyi-nXQ">
+        <expression>warehouse_3.warehouse_alert_threshold_qty</expression>
+      </expression>
+    </field>
+    <field id="_cP_WwFljEemPFZ5tyi-nXQ" enable="true" insert="true" name="cumulative_period_quantity" ref="resource.md#_bw8DQVljEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=cumulative_period_quantity?" update="true">
+      <expression id="_cP_WwVljEemPFZ5tyi-nXQ" setDescriptorRef="_hyQz4FlgEemPFZ5tyi-nXQ">
+        <expression>warehouse_activity_3.cumulative_period_quantity</expression>
+      </expression>
+    </field>
+    <constraint id="_GhZqxFlgEemPFZ5tyi-nXQ" name="pk_alert" ref="resource.md#_ihb88FkyEemPFZ5tyi-nXQ?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=pk_alert?" reject="true"/>
+    <setDescriptor id="_hyQz4FlgEemPFZ5tyi-nXQ" label="A"/>
+  </datastore>
+  <join id="_w_TeYFe2Eem34vJR1a7WCA" location="SRC" joinType="Cross_Join" left="_tXoNEFe2Eem34vJR1a7WCA" order="10" right="_3O4_YFexEem34vJR1a7WCA">
+    <expression>q_gen_hour.defined_timeslot = warehouse.warehouse_cod</expression>
+  </join>
+  <join id="_4o0NcFe2Eem34vJR1a7WCA" location="WRK" joinType="Left_Join" left="_0OjooFe2Eem34vJR1a7WCA" order="30" right="_7-kpUFerEem34vJR1a7WCA">
+    <expression><![CDATA[stage.warehouse_cod = warehouse_delivery_order.warehouse_cod
+and stage.defined_timeslot = date_trunc('hour',warehouse_delivery_order.delivery_timestamp + interval '1 hour')]]></expression>
+  </join>
+  <join id="_Xoo-gFkeEemPFZ5tyi-nXQ" location="SRC" left="_8s-AYFerEem34vJR1a7WCA" order="50" right="_29NqIFkdEemPFZ5tyi-nXQ">
+    <expression>warehouse_activity.warehouse_cod = warehouse_2.warehouse_cod</expression>
+  </join>
+  <join id="_DbaxQFlgEemPFZ5tyi-nXQ" location="SRC" left="_B54GAFlgEemPFZ5tyi-nXQ" order="70" right="_3lOIgFkhEemPFZ5tyi-nXQ">
+    <expression>warehouse_3.warehouse_cod = warehouse_activity_3.warehouse_cod</expression>
+  </join>
+  <filter id="_U92UEFfdEemPFZ5tyi-nXQ" location="SRC">
+    <expression><![CDATA[q_gen_hour.defined_timeslot > to_timestamp('${~/previous_timestamp}$', 'YYYY/MM/DD HH24:MI:SS') AND q_gen_hour.defined_timeslot <= to_timestamp('${~/current_timestamp}$', 'YYYY/MM/DD HH24:MI:SS')]]></expression>
+  </filter>
+  <filter id="_EHZ3sFkXEemPFZ5tyi-nXQ" location="SRC">
+    <expression><![CDATA[warehouse_activity.timeslot between to_timestamp('${~/current_timestamp}$', 'YYYY/MM/DD HH24:MI:SS') - (interval '1 hour'*(warehouse_alert_hour_interval-1)) 
+                                and to_timestamp('${~/current_timestamp}$', 'YYYY/MM/DD HH24:MI:SS')
+ ]]></expression>
+  </filter>
+  <filter id="_FWkYgFkiEemPFZ5tyi-nXQ" location="SRC">
+    <expression><![CDATA[warehouse_activity_2.timeslot between to_timestamp('${~/current_timestamp}$', 'YYYY/MM/DD HH24:MI:SS') - (interval '1 hour') 
+                                and to_timestamp('${~/current_timestamp}$', 'YYYY/MM/DD HH24:MI:SS')]]></expression>
+  </filter>
+  <filter id="_OvIhMFlgEemPFZ5tyi-nXQ" location="SRC">
+    <expression><![CDATA[warehouse_activity_3.is_lower_threshold_qty 
+and not(warehouse_activity_3.is_previous_lower_threshold_qty)
+and warehouse_activity_3.timeslot = to_timestamp('${~/current_timestamp}$', 'YYYY/MM/DD HH24:MI:SS')]]></expression>
+  </filter>
+  <template id="_9tQYsFerEem34vJR1a7WCA" name="I_warehouse_activity" process="resource.proc#_dQ2dRp4SEd6bQIkgWyxFQQ?fileId=_dQ2dRp4SEd6bQIkgWyxFQQ$type=proc$name=INTEGRATION%20PostgreSql?" targetId="_8s-AYFerEem34vJR1a7WCA"/>
+  <template id="_c6AkEFe2Eem34vJR1a7WCA" name="L1_warehouse_activity" process="resource.proc#_8fa24535-b67f-4d00-aca7-ac642ec8ff0f?fileId=_8fa24535-b67f-4d00-aca7-ac642ec8ff0f$type=proc$name=LOAD%20File%20to%20PostGre%20SQL%20(with%20Copy)?" sourceId="_7-kpUFerEem34vJR1a7WCA" targetId="_8s-AYFerEem34vJR1a7WCA"/>
+  <template id="_1jHAwFe2Eem34vJR1a7WCA" name="I_stage" process="resource.proc#_v8JEkTNEEeSH5LKy1U4ptg?fileId=_v8JEkTNEEeSH5LKy1U4ptg$type=proc$name=STAGING%20Rdbms%20As%20SubQuery?" targetId="_0OjooFe2Eem34vJR1a7WCA"/>
+  <template id="_hQV4kFkeEemPFZ5tyi-nXQ" name="I_warehouse_activity_2" process="resource.proc#_dQ2dRp4SEd6bQIkgWyxFQQ?fileId=_dQ2dRp4SEd6bQIkgWyxFQQ$type=proc$name=INTEGRATION%20PostgreSql?" targetId="_boXjcFkeEemPFZ5tyi-nXQ"/>
+  <template id="_4dsBkFkhEemPFZ5tyi-nXQ" name="I_warehouse_activity_3" process="resource.proc#_dQ2dRp4SEd6bQIkgWyxFQQ?fileId=_dQ2dRp4SEd6bQIkgWyxFQQ$type=proc$name=INTEGRATION%20PostgreSql?" targetId="_3lOIgFkhEemPFZ5tyi-nXQ"/>
+  <template id="_hyW6gFlgEemPFZ5tyi-nXQ" name="I_alert" process="resource.proc#_dQ2dRp4SEd6bQIkgWyxFQQ?fileId=_dQ2dRp4SEd6bQIkgWyxFQQ$type=proc$name=INTEGRATION%20PostgreSql?" targetId="_GhYcoFlgEemPFZ5tyi-nXQ"/>
+  <query id="_0OjooFe2Eem34vJR1a7WCA" alias="stage" dataset="_wNVO4Fe2Eem34vJR1a7WCA" stagingArea="resource.md#_gFiX0FepEem34vJR1a7WCA?fileId=_MIugkFeoEem34vJR1a7WCA$type=md$name=postgres.alert_flow?" subExpression="[A]">
+    <field id="_1jCIQFe2Eem34vJR1a7WCA" name="warehouse_cod">
+      <expression id="_1jCvUVe2Eem34vJR1a7WCA" location="WRK" setDescriptorRef="_1jCvUFe2Eem34vJR1a7WCA">
+        <expression>warehouse.warehouse_cod</expression>
+      </expression>
+    </field>
+    <field id="_2C4tAFe2Eem34vJR1a7WCA" name="defined_timeslot">
+      <expression id="_2C5UEFe2Eem34vJR1a7WCA" location="WRK" setDescriptorRef="_1jCvUFe2Eem34vJR1a7WCA">
+        <expression>q_gen_hour.defined_timeslot</expression>
+      </expression>
+    </field>
+    <setDescriptor id="_1jCvUFe2Eem34vJR1a7WCA" label="A"/>
+  </query>
+  <dataSet id="_OuReIFe2Eem34vJR1a7WCA">
+    <container>_3O4_YFexEem34vJR1a7WCA</container>
+    <container>_tXoNEFe2Eem34vJR1a7WCA</container>
+  </dataSet>
+  <dataSet id="_wNVO4Fe2Eem34vJR1a7WCA">
+    <container>_7-kpUFerEem34vJR1a7WCA</container>
+    <container>_0OjooFe2Eem34vJR1a7WCA</container>
+  </dataSet>
+  <dataSet id="_29v1oFkdEemPFZ5tyi-nXQ">
+    <container>_29NqIFkdEemPFZ5tyi-nXQ</container>
+    <container>_8s-AYFerEem34vJR1a7WCA</container>
+  </dataSet>
+  <dataSet id="_boe4MFkeEemPFZ5tyi-nXQ">
+    <container>_boXjcFkeEemPFZ5tyi-nXQ</container>
+  </dataSet>
+  <dataSet id="_3lgcYFkhEemPFZ5tyi-nXQ">
+    <container>_3lOIgFkhEemPFZ5tyi-nXQ</container>
+    <container>_B54GAFlgEemPFZ5tyi-nXQ</container>
+  </dataSet>
+  <dataSet id="_GhejQFlgEemPFZ5tyi-nXQ">
+    <container>_GhYcoFlgEemPFZ5tyi-nXQ</container>
+  </dataSet>
+  <hint>
+    <usedField>#_7-tMMlerEem34vJR1a7WCA</usedField>
+    <usedField>#_7-tMM1erEem34vJR1a7WCA</usedField>
+    <usedField>#_7-tMNFerEem34vJR1a7WCA</usedField>
+    <usedField>#_8s-ncVerEem34vJR1a7WCA</usedField>
+    <usedField>#_8s_OgFerEem34vJR1a7WCA</usedField>
+    <usedField>#_8s_OgVerEem34vJR1a7WCA</usedField>
+    <usedField>#_3PSoAFexEem34vJR1a7WCA</usedField>
+    <usedField>#_tXpbMFe2Eem34vJR1a7WCA</usedField>
+    <usedField>#_29rkNFkdEemPFZ5tyi-nXQ</usedField>
+    <usedField>#_29rkMVkdEemPFZ5tyi-nXQ</usedField>
+    <usedField>#_boYxkFkeEemPFZ5tyi-nXQ</usedField>
+    <usedField>#_boZYoFkeEemPFZ5tyi-nXQ</usedField>
+    <usedField>#_boZ_sFkeEemPFZ5tyi-nXQ</usedField>
+    <usedField>#_3leAIVkhEemPFZ5tyi-nXQ</usedField>
+    <usedField>#_3ldZEVkhEemPFZ5tyi-nXQ</usedField>
+    <usedField>#_3leAIFkhEemPFZ5tyi-nXQ</usedField>
+    <usedField>#_3leAIlkhEemPFZ5tyi-nXQ</usedField>
+    <usedField>#_3leAI1khEemPFZ5tyi-nXQ</usedField>
+    <usedField>#_I_f9gFljEemPFZ5tyi-nXQ</usedField>
+    <usedField>#_B5-zsllgEemPFZ5tyi-nXQ</usedField>
+    <usedField>#_B5-ztllgEemPFZ5tyi-nXQ</usedField>
+    <usedField>#_B5-ztVlgEemPFZ5tyi-nXQ</usedField>
+    <usedField>#_B5-zs1lgEemPFZ5tyi-nXQ</usedField>
+    <usedField>#_B5-ztFlgEemPFZ5tyi-nXQ</usedField>
+  </hint>
+</map:map>

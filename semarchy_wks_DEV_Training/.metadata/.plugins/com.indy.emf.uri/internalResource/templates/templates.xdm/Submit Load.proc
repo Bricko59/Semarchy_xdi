@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" description="Semarchy xDM Submit Load Process&#xD;&#xA;@Author: Semarchy&#xD;&#xA;Copyright (c) Semarchy&#xD;&#xA;&#xD;&#xA;About this process&#xD;&#xA;--------------------&#xD;&#xA;This process is used for automating Semarchy xDM load management.&#xD;&#xA;It submits a given external load identified by its Load ID, and starts an integration job.&#xD;&#xA;&#xD;&#xA;Tip: To get started with Semarchy xDM load management, see the &quot;Semarchy xDM Integrator Getting Started Guide&quot;&#xD;&#xA;&#xD;&#xA;Parameters&#xD;&#xA;------------&#xD;&#xA;- Integration Job Name: Name of the integration job to run after submiting the load.&#xD;&#xA;- User Name: Name of the user who has initialized the external load through the Get LoadID process.&#xD;&#xA;- Sem Repo Schema: Name of the Schema hosting the repository.&#xD;&#xA;- Synch: Makes the submit load synchronous. The process waits for the integration job to complete before proceeding. Done, Warning and Error are the completion states for a job. Suspended jobs keeps on waiting. This parameters handles job restarts: Only final instance is considered for the sync parameter.&#xD;&#xA;&#xD;&#xA;Note that the repository schema should be located in the data server linked through a SOURCE metadata link.&#xD;&#xA;&#xD;&#xA;Using this template&#xD;&#xA;---------------------&#xD;&#xA;- From the Project Explorer, drag and drop the data server metadata containing the repository on the metadata link SOURCE in the process editor. This creates a metadata link to the data server.&#xD;&#xA;&#xD;&#xA;Notes&#xD;&#xA;------&#xD;&#xA;- This process uses a metadata link through the &quot;SOURCE&quot; alias. This metadata link points to the metadata file corresponding to the data server containing the repository.&#xD;&#xA;- This process retrieves the current LoadID from the SEM_LOAD_ID variable. This variable must be added to the main process from the &quot;Global Variable&quot; metadata file.&#xD;&#xA;&#xD;&#xA;Change Log&#xD;&#xA;-------------&#xD;&#xA;Legacy: Renamed the template and reviewed the documentation&#xD;&#xA;Legacy: New Sync parameter (boolean, false by default) makes the submit load synchronous. The process waits for the Job in Convergence for MDM to complete before proceeding. Done, Warning and Error are the completion states for a job. Suspended jobs keeps on waiting. This parameters handles job restarts: Only final instance is considered for the sync parameter.&#xD;&#xA;Legacy: Use the ${}$ syntax in the template codes to support variable parameters for the GetLoadId, Submit, Cancel processes.&#xD;&#xA;Legacy: MTA_SUBMIT_LOAD function is renamed INTEGRATION_LOAD.SUBMIT_LOAD&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" id="_VbqAsTMDEeG7UplBQjBrRQ">
+  <parameter description="Name of the integration job to run after submiting the load." id="_Xy6L8DMDEeG7UplBQjBrRQ" name="IntegrationJobName" type="String" value="INTEGRATE_ALL"/>
+  <parameter description="Name of the user who has initialized the external load through the Get LoadID process." id="_eXGC8DMJEeG7UplBQjBrRQ" name="UserName" type="String"/>
+  <parameter description="Name of the Schema hosting the repository." id="_wvxqcDMJEeG7UplBQjBrRQ" name="SemRepoSchema" type="String" value="SEMARCHY_DEMO_REPOSITORY"/>
+  <parameter description="Makes the submit load synchronous. &#xD;&#xA;The process waits for the integration job to complete before proceeding. " id="_zDnlkGjUEeWdvNYuMwrrIQ" name="Synch" type="Boolean" value="false"/>
+  <actionCode description="Calls the submit load API and updates the ETL_PROCESSES table" id="_fn7ncDMDEeG7UplBQjBrRQ" isBeginAction="false" name="SubmitLoad (Oracle)" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_ea6mwGjVEeWdvNYuMwrrIQ" executionCondition="'${Synch}$'=='true'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_ajY7kGjVEeWdvNYuMwrrIQ"/>
+    <link id="_kPChgGjVEeWdvNYuMwrrIQ" executionCondition="'${Synch}$'=='false'" executionType="OK" generationType="OK_KO" mandatory="0" targetId="_ioRYAGjVEeWdvNYuMwrrIQ"/>
+    <parameter description="Sql Action type (DDL_DML or SELECT, INSERT, UPDATE, DELETE)" id="_fn_R0DMDEeG7UplBQjBrRQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter description="SQL Connection" id="_fn_R0TMDEeG7UplBQjBrRQ" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+    <code>DECLARE&#xD;
+  P_LOAD_ID NUMBER;&#xD;
+  P_INTEGRATION_JOB_NAME VARCHAR2(200);&#xD;
+  P_USERNAME VARCHAR2(200);&#xD;
+  vBatchID NUMBER;&#xD;
+BEGIN&#xD;
+  P_LOAD_ID := %{SEM_LOAD_ID}%;&#xD;
+  P_INTEGRATION_JOB_NAME := '${../IntegrationJobName}$';&#xD;
+  P_USERNAME := '${../UserName}$';&#xD;
+&#xD;
+  vBatchID := ${../SemRepoSchema}$.INTEGRATION_LOAD.SUBMIT_LOAD(&#xD;
+    P_LOAD_ID => P_LOAD_ID,&#xD;
+    P_INTEGRATION_JOB_NAME => P_INTEGRATION_JOB_NAME,&#xD;
+    P_USERNAME => P_USERNAME&#xD;
+  );&#xD;
+  &#xD;
+  update ETL_PROCESSES&#xD;
+  set &#xD;
+  	SEM_BATCH_ID = vBatchID,&#xD;
+  	SEM_STATUS = 'SUBMITTED',&#xD;
+  	SEM_SUBMIT_OR_CANCEL_DATE = current_timestamp&#xD;
+  where SESSION_ID = '${/CORE_SESSION_ID}$'&#xD;
+  ;&#xD;
+END;</code>
+  </actionCode>
+  <actionCode id="_phY_4DMDEeG7UplBQjBrRQ" isBeginAction="false" name="Start" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_fIck0DUhEeGLZPpFKzDUhw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_naPfEDUlEeGLZPpFKzDUhw"/>
+  </actionCode>
+  <actionCode description="Step that simply declares the fact that this process is using the SEM_LOAD_ID variable" id="_naPfEDUlEeGLZPpFKzDUhw" isBeginAction="false" name="declare SEM_LOAD_ID" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.VariableManagerActionCodeI">
+    <link id="_pBlQUDUlEeGLZPpFKzDUhw" generationCondition="$TargetTechno='ORACLE'" executionCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_fn7ncDMDEeG7UplBQjBrRQ"/>
+    <link id="_7fgHsJuuEeip3roJS2BlsQ" generationCondition="$TargetTechno='POSTGRESSQL'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_xC_FgJuuEeip3roJS2BlsQ"/>
+    <link id="_VXI04GYiEemHuprG477biA" generationCondition="$TargetTechno='MICROSOFT_SQL_SERVER'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_Ai-CYGYiEemHuprG477biA"/>
+    <metaDataLink id="_naVlsDUlEeGLZPpFKzDUhw" name="SEM_LOAD_ID" target="resource.md#_2gwCADLyEeG7UplBQjBrRQ?fileId=_1RYE0DLyEeG7UplBQjBrRQ$type=md$name=SEM_LOAD_ID?" visibility="parent"/>
+  </actionCode>
+  <actionCode id="_ajY7kGjVEeWdvNYuMwrrIQ" enable="true" isBeginAction="false" name="WaitForEndOfBatch (Oracle)" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_lIHekGjVEeWdvNYuMwrrIQ" executionType="OK" generationType="OK_KO" mandatory="0" targetId="_ioRYAGjVEeWdvNYuMwrrIQ"/>
+    <parameter description="Sql Action type (DDL_DML or SELECT, INSERT, UPDATE, DELETE)" id="_ajY7lGjVEeWdvNYuMwrrIQ" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+    <parameter description="SQL Connection" id="_ajY7lWjVEeWdvNYuMwrrIQ" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+    <parameter id="_ajY7lmjVEeWdvNYuMwrrIQ" name="SQL_WAIT_TIMEOUT" type="String" value="-1"/>
+    <parameter id="_ajY7l2jVEeWdvNYuMwrrIQ" name="SQL_WAIT_NB_ROWS" type="String" value="1"/>
+    <parameter id="_ajY7mWjVEeWdvNYuMwrrIQ" name="SQL_WAIT_DATA" type="String" value="true"/>
+    <code>select LastStatus, IsFinalStatus &#xD;
+from (&#xD;
+	select max(STATUS2) keep(dense_rank first order by credate desc) as IsFinalStatus, &#xD;
+	max(STATUS) keep(dense_rank first order by credate desc) as LastStatus &#xD;
+	from (&#xD;
+		SELECT case when STATUS in ('STARTING', 'RUNNING', 'SUSPENDED') then 0 else 1 end as STATUS2, &#xD;
+		JL.CREDATE as CREDATE, STATUS&#xD;
+		FROM  ${../SemRepoSchema}$.MTA_JOB_LOG JL&#xD;
+		inner join ${../SemRepoSchema}$.MTA_JOB_LOG_PARAM JLP on JL.UUID = JLP.O_JOBLOG&#xD;
+		WHERE param_name = 'V_LOADID'&#xD;
+		and param_value = %{SEM_LOAD_ID}%&#xD;
+	) LS&#xD;
+) where IsFinalStatus = 1&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_ioRYAGjVEeWdvNYuMwrrIQ" isBeginAction="false" name="End" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI"/>
+  <actionCode description="Calls the submit load API and updates the ETL_PROCESSES table" id="_xC_FgJuuEeip3roJS2BlsQ" isBeginAction="false" name="SubmitLoad (Postgresql)" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_V0llEJuvEeip3roJS2BlsQ" executionCondition="'${Synch}$'=='false'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_ioRYAGjVEeWdvNYuMwrrIQ"/>
+    <link id="_tYUVIJuvEeip3roJS2BlsQ" executionCondition="'${Synch}$'=='true'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_grp1QJuvEeip3roJS2BlsQ"/>
+    <parameter description="Sql Action type (DDL_DML or SELECT, INSERT, UPDATE, DELETE)" id="_xC_Fg5uuEeip3roJS2BlsQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter description="SQL Connection" id="_xC_FhJuuEeip3roJS2BlsQ" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+    <code>  update ETL_PROCESSES&#xD;
+  set &#xD;
+  	sem_batch_id = ${../SemRepoSchema}$.submit_load(%{SEM_LOAD_ID}%, '${../IntegrationJobName}$', '${../UserName}$'),&#xD;
+  	sem_status = 'SUBMITTED',&#xD;
+  	sem_submit_or_cancel_date = current_timestamp&#xD;
+  where SESSION_ID = '${/CORE_SESSION_ID}$'&#xD;
+  ;</code>
+  </actionCode>
+  <actionCode id="_grp1QJuvEeip3roJS2BlsQ" enable="true" isBeginAction="false" name="WaitForEndOfBatch (Postgresql)" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_wtQ3sJuvEeip3roJS2BlsQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_ioRYAGjVEeWdvNYuMwrrIQ"/>
+    <parameter description="Sql Action type (DDL_DML or SELECT, INSERT, UPDATE, DELETE)" id="_grp1QpuvEeip3roJS2BlsQ" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+    <parameter description="SQL Connection" id="_grp1Q5uvEeip3roJS2BlsQ" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+    <parameter id="_grp1RJuvEeip3roJS2BlsQ" name="SQL_WAIT_TIMEOUT" type="String" value="-1"/>
+    <parameter id="_grp1RZuvEeip3roJS2BlsQ" name="SQL_WAIT_NB_ROWS" type="String" value="1"/>
+    <parameter id="_grp1RpuvEeip3roJS2BlsQ" name="SQL_WAIT_DATA" type="String" value="true"/>
+    <code>select LastStatus, IsFinalStatus &#xD;
+from (&#xD;
+	select first_value(status2) over wndw as isfinalstatus, &#xD;
+	first_value(status) over wndw as laststatus &#xD;
+	from (&#xD;
+		select case when status in ('STARTING', 'RUNNING', 'SUSPENDED') then 0 else 1 end as status2, &#xD;
+		jl.credate as credate, status&#xD;
+		from  ${../SemRepoSchema}$.mta_job_log jl&#xD;
+		inner join ${../SemRepoSchema}$.mta_job_log_param jlp on jl.uuid = jlp.o_joblog&#xD;
+		 where param_name = 'V_LOADID'&#xD;
+		and param_value = '%{SEM_LOAD_ID}%'&#xD;
+	) ls&#xD;
+	window wndw as (&#xD;
+	order by credate desc&#xD;
+	rows between unbounded preceding and unbounded following&#xD;
+	)&#xD;
+) x where isfinalstatus = 1&#xD;
+</code>
+  </actionCode>
+  <actionCode description="Calls the submit load API and updates the ETL_PROCESSES table" id="_Ai-CYGYiEemHuprG477biA" isBeginAction="false" name="SubmitLoad (MS SQL Server)" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_Ai-CYWYiEemHuprG477biA" executionCondition="'${Synch}$'=='true'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_G0vicGYiEemHuprG477biA"/>
+    <link id="_Ai-CYmYiEemHuprG477biA" executionCondition="'${Synch}$'=='false'" executionType="OK" generationType="OK_KO" mandatory="0" targetId="_ioRYAGjVEeWdvNYuMwrrIQ"/>
+    <parameter description="Sql Action type (DDL_DML or SELECT, INSERT, UPDATE, DELETE)" id="_Ai-CY2YiEemHuprG477biA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter description="SQL Connection" id="_Ai-CZGYiEemHuprG477biA" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+    <code>DECLARE&#xD;
+  @P_LOAD_ID numeric(18, 0),&#xD;
+  @P_INTEGRATION_JOB_NAME VARCHAR(200),&#xD;
+  @P_USERNAME VARCHAR(200),&#xD;
+  @vBatchID numeric(18, 0);&#xD;
+BEGIN&#xD;
+  SET @P_LOAD_ID = %{SEM_LOAD_ID}%&#xD;
+  SET @P_INTEGRATION_JOB_NAME = '${../IntegrationJobName}$'&#xD;
+  SET @P_USERNAME = '${../UserName}$'&#xD;
+&#xD;
+  exec ${../SemRepoSchema}$.SUBMIT_LOAD&#xD;
+  	@vBatchID OUTPUT,&#xD;
+    @P_LOAD_ID = @P_LOAD_ID,&#xD;
+    @P_INTEGRATION_JOB_NAME = @P_INTEGRATION_JOB_NAME,&#xD;
+    @P_USERNAME = @P_USERNAME&#xD;
+  ;&#xD;
+  &#xD;
+  update ETL_PROCESSES&#xD;
+  set &#xD;
+  	SEM_BATCH_ID = @vBatchID,&#xD;
+  	SEM_STATUS = 'SUBMITTED',&#xD;
+  	SEM_SUBMIT_OR_CANCEL_DATE = current_timestamp&#xD;
+  where SESSION_ID = '${/CORE_SESSION_ID}$'&#xD;
+  ;&#xD;
+END;</code>
+  </actionCode>
+  <actionCode id="_G0vicGYiEemHuprG477biA" enable="true" isBeginAction="false" name="WaitForEndOfBatch (MS SQL Server)" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_G0vicWYiEemHuprG477biA" executionType="OK" generationType="OK_KO" mandatory="0" targetId="_ioRYAGjVEeWdvNYuMwrrIQ"/>
+    <parameter description="Sql Action type (DDL_DML or SELECT, INSERT, UPDATE, DELETE)" id="_G0vicmYiEemHuprG477biA" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+    <parameter description="SQL Connection" id="_G0vic2YiEemHuprG477biA" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+    <parameter id="_G0vidGYiEemHuprG477biA" name="SQL_WAIT_TIMEOUT" type="String" value="-1"/>
+    <parameter id="_G0vidWYiEemHuprG477biA" name="SQL_WAIT_NB_ROWS" type="String" value="1"/>
+    <parameter id="_G0vidmYiEemHuprG477biA" name="SQL_WAIT_DATA" type="String" value="true"/>
+    <code>select LastStatus, IsFinalStatus &#xD;
+from (&#xD;
+	select top 1 STATUS2 as IsFinalStatus, &#xD;
+	STATUS as LastStatus &#xD;
+	from (&#xD;
+		SELECT case when STATUS in ('STARTING', 'RUNNING', 'SUSPENDED') then 0 else 1 end as STATUS2, &#xD;
+		JL.CREDATE as CREDATE, STATUS&#xD;
+		FROM  ${../SemRepoSchema}$.MTA_JOB_LOG JL&#xD;
+		inner join ${../SemRepoSchema}$.MTA_JOB_LOG_PARAM JLP on JL.UUID = JLP.O_JOBLOG&#xD;
+		WHERE param_name = 'V_LOADID'&#xD;
+		and param_value = %{SEM_LOAD_ID}%&#xD;
+	) LS&#xD;
+	 order by credate desc&#xD;
+) xx where IsFinalStatus = 1</code>
+  </actionCode>
+  <xslVariable id="_3aTM4JuuEeip3roJS2BlsQ" code="%x{$SOURCE/tech:productCode()}x%" name="TargetTechno" type="xsl"/>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.3/notation#/?fileId=_VbqAsTMDEeG7UplBQjBrRQ?" xmi:id="_VbqnwDMDEeG7UplBQjBrRQ" type="Proc" name="SubmitLoad.proc_diagram" measurementUnit="Pixel">
+  <children xmi:type="notation:Node" xmi:id="_Xy92UDMDEeG7UplBQjBrRQ" type="2005">
+    <children xmi:type="notation:Node" xmi:id="_Xy-dYDMDEeG7UplBQjBrRQ" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_Xy92UTMDEeG7UplBQjBrRQ"/>
+    <element xmi:type="proc:Parameter" href="resource.proc#_Xy6L8DMDEeG7UplBQjBrRQ?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc$name=IntegrationJobName?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Xy92UjMDEeG7UplBQjBrRQ" x="1185" y="30"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_foC8MDMDEeG7UplBQjBrRQ" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_foC8MzMDEeG7UplBQjBrRQ" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_foDjQDMDEeG7UplBQjBrRQ" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_foDjQTMDEeG7UplBQjBrRQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_foDjQjMDEeG7UplBQjBrRQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_foDjQzMDEeG7UplBQjBrRQ"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_foDjRDMDEeG7UplBQjBrRQ" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_foDjRTMDEeG7UplBQjBrRQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_foDjRjMDEeG7UplBQjBrRQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_foDjRzMDEeG7UplBQjBrRQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_foC8MTMDEeG7UplBQjBrRQ"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_fn7ncDMDEeG7UplBQjBrRQ?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc$name=SubmitLoad%20(Oracle)?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_foC8MjMDEeG7UplBQjBrRQ" x="210" y="300"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_phcDMDMDEeG7UplBQjBrRQ" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_phcqQDMDEeG7UplBQjBrRQ" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_phcqQTMDEeG7UplBQjBrRQ" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_phcqQjMDEeG7UplBQjBrRQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_phcqQzMDEeG7UplBQjBrRQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_phcqRDMDEeG7UplBQjBrRQ"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_phdRUDMDEeG7UplBQjBrRQ" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_phdRUTMDEeG7UplBQjBrRQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_phdRUjMDEeG7UplBQjBrRQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_phdRUzMDEeG7UplBQjBrRQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_phcDMTMDEeG7UplBQjBrRQ"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_phY_4DMDEeG7UplBQjBrRQ?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc$name=Start?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_phcDMjMDEeG7UplBQjBrRQ" x="665" y="65"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_eXH4IDMJEeG7UplBQjBrRQ" type="2005">
+    <children xmi:type="notation:Node" xmi:id="_eXIfMDMJEeG7UplBQjBrRQ" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_eXH4ITMJEeG7UplBQjBrRQ"/>
+    <element xmi:type="proc:Parameter" href="resource.proc#_eXGC8DMJEeG7UplBQjBrRQ?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc$name=UserName?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_eXH4IjMJEeG7UplBQjBrRQ" x="1185" y="110"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_wvy4kDMJEeG7UplBQjBrRQ" type="2005">
+    <children xmi:type="notation:Node" xmi:id="_wvzfoDMJEeG7UplBQjBrRQ" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_wvy4kTMJEeG7UplBQjBrRQ"/>
+    <element xmi:type="proc:Parameter" href="resource.proc#_wvxqcDMJEeG7UplBQjBrRQ?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc$name=SemRepoSchema?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_wvy4kjMJEeG7UplBQjBrRQ" x="1185" y="55"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_naRUQDUlEeGLZPpFKzDUhw" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_naR7UDUlEeGLZPpFKzDUhw" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_naR7UTUlEeGLZPpFKzDUhw" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_naR7UjUlEeGLZPpFKzDUhw"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_naR7UzUlEeGLZPpFKzDUhw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_naR7VDUlEeGLZPpFKzDUhw"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_naR7VTUlEeGLZPpFKzDUhw" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_naR7VjUlEeGLZPpFKzDUhw"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_naR7VzUlEeGLZPpFKzDUhw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_naR7WDUlEeGLZPpFKzDUhw"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_naRUQTUlEeGLZPpFKzDUhw"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_naPfEDUlEeGLZPpFKzDUhw?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc$name=declare%20SEM_LOAD_ID?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_naRUQjUlEeGLZPpFKzDUhw" x="620" y="180"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_zHDUEGjUEeWdvNYuMwrrIQ" type="2005">
+    <children xmi:type="notation:Node" xmi:id="_zHJasGjUEeWdvNYuMwrrIQ" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_zHDUEWjUEeWdvNYuMwrrIQ" fontName="Segoe UI"/>
+    <element xmi:type="proc:Parameter" href="resource.proc#_zDnlkGjUEeWdvNYuMwrrIQ?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc$name=Synch?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_zHDUEmjUEeWdvNYuMwrrIQ" x="1185" y="85"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_ajY7mmjVEeWdvNYuMwrrIQ" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_ajfCMGjVEeWdvNYuMwrrIQ" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_ajfCMWjVEeWdvNYuMwrrIQ" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_ajfCMmjVEeWdvNYuMwrrIQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_ajfCM2jVEeWdvNYuMwrrIQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_ajfCNGjVEeWdvNYuMwrrIQ"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_ajfCNWjVEeWdvNYuMwrrIQ" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_ajfCNmjVEeWdvNYuMwrrIQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_ajfCN2jVEeWdvNYuMwrrIQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_ajfCOGjVEeWdvNYuMwrrIQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_ajY7m2jVEeWdvNYuMwrrIQ" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_ajY7kGjVEeWdvNYuMwrrIQ?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc$name=WaitForEndOfBatch%20(Oracle)?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ajY7nGjVEeWdvNYuMwrrIQ" x="30" y="440"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_ipOaQGjVEeWdvNYuMwrrIQ" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_ipOaQ2jVEeWdvNYuMwrrIQ" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_ipOaRGjVEeWdvNYuMwrrIQ" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_ipOaRWjVEeWdvNYuMwrrIQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_ipOaRmjVEeWdvNYuMwrrIQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_ipOaR2jVEeWdvNYuMwrrIQ"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_ipOaSGjVEeWdvNYuMwrrIQ" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_ipOaSWjVEeWdvNYuMwrrIQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_ipOaSmjVEeWdvNYuMwrrIQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_ipOaS2jVEeWdvNYuMwrrIQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_ipOaQWjVEeWdvNYuMwrrIQ" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_ioRYAGjVEeWdvNYuMwrrIQ?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc$name=End?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_ipOaQmjVEeWdvNYuMwrrIQ" x="665" y="620"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_xDElEJuuEeip3roJS2BlsQ" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_xDElE5uuEeip3roJS2BlsQ" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_xDElFJuuEeip3roJS2BlsQ" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_xDElFZuuEeip3roJS2BlsQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_xDElFpuuEeip3roJS2BlsQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_xDElF5uuEeip3roJS2BlsQ"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_xDElGJuuEeip3roJS2BlsQ" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_xDElGZuuEeip3roJS2BlsQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_xDElGpuuEeip3roJS2BlsQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_xDElG5uuEeip3roJS2BlsQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_xDElEZuuEeip3roJS2BlsQ" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_xC_FgJuuEeip3roJS2BlsQ?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc$name=SubmitLoad%20(Postgresql)?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_xDElEpuuEeip3roJS2BlsQ" x="570" y="300"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_3aUbAJuuEeip3roJS2BlsQ" type="2007">
+    <children xmi:type="notation:Node" xmi:id="_3aVCEJuuEeip3roJS2BlsQ" type="5007"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_3aUbAZuuEeip3roJS2BlsQ" fontName="Segoe UI"/>
+    <element xmi:type="proc:XslVariable" href="resource.proc#_3aTM4JuuEeip3roJS2BlsQ?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_3aUbApuuEeip3roJS2BlsQ" x="1535" y="30"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_grqcUJuvEeip3roJS2BlsQ" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_grqcU5uvEeip3roJS2BlsQ" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_grqcVJuvEeip3roJS2BlsQ" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_grqcVZuvEeip3roJS2BlsQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_grqcVpuvEeip3roJS2BlsQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_grqcV5uvEeip3roJS2BlsQ"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_grrDYJuvEeip3roJS2BlsQ" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_grrDYZuvEeip3roJS2BlsQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_grrDYpuvEeip3roJS2BlsQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_grrDY5uvEeip3roJS2BlsQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_grqcUZuvEeip3roJS2BlsQ" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_grp1QJuvEeip3roJS2BlsQ?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc$name=WaitForEndOfBatch%20(Postgresql)?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_grqcUpuvEeip3roJS2BlsQ" x="390" y="440"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_Ai-pcGYiEemHuprG477biA" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_Ai-pc2YiEemHuprG477biA" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_Ai-pdGYiEemHuprG477biA" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_Ai-pdWYiEemHuprG477biA"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Ai-pdmYiEemHuprG477biA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Ai-pd2YiEemHuprG477biA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Ai-peGYiEemHuprG477biA" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_Ai-peWYiEemHuprG477biA"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Ai-pemYiEemHuprG477biA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Ai-pe2YiEemHuprG477biA"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_Ai-pcWYiEemHuprG477biA" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_Ai-CYGYiEemHuprG477biA?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc$name=SubmitLoad%20(MS%20SQL%20Server)?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Ai-pcmYiEemHuprG477biA" x="900" y="300"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_G0vid2YiEemHuprG477biA" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_G0wJgGYiEemHuprG477biA" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_G0wJgWYiEemHuprG477biA" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_G0wJgmYiEemHuprG477biA"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_G0wJg2YiEemHuprG477biA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_G0wJhGYiEemHuprG477biA"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_G0wJhWYiEemHuprG477biA" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_G0wJhmYiEemHuprG477biA"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_G0wJh2YiEemHuprG477biA"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_G0wJiGYiEemHuprG477biA"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_G0vieGYiEemHuprG477biA" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="resource.proc#_G0vicGYiEemHuprG477biA?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc$name=WaitForEndOfBatch%20(MS%20SQL%20Server)?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_G0vieWYiEemHuprG477biA" x="750" y="440"/>
+  </children>
+  <children xmi:type="notation:Shape" xmi:id="_2JxNkDMYEeK6Wf5jdAfqTw" type="Note" fontName="Segoe UI" description="Note: Read the process description &#xD;&#xA;for detailed description and &#xD;&#xA;usage information." fillColor="13369343" transparency="0" lineColor="6737151" lineWidth="1">
+    <children xmi:type="notation:BasicDecorationNode" xmi:id="_2JzCwDMYEeK6Wf5jdAfqTw" type="DiagramName">
+      <element xsi:nil="true"/>
+    </children>
+    <children xmi:type="notation:BasicDecorationNode" xmi:id="_2JzCwTMYEeK6Wf5jdAfqTw" type="Description">
+      <element xsi:nil="true"/>
+    </children>
+    <styles xmi:type="notation:TextStyle" xmi:id="_2JxNkTMYEeK6Wf5jdAfqTw"/>
+    <styles xmi:type="notation:LineTypeStyle" xmi:id="_2JxNkjMYEeK6Wf5jdAfqTw"/>
+    <element xsi:nil="true"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2JxNkzMYEeK6Wf5jdAfqTw" x="225" y="85"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_VbqnwTMDEeG7UplBQjBrRQ"/>
+  <element xmi:type="proc:ActionProcess" href="resource.proc#_VbqAsTMDEeG7UplBQjBrRQ?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc$name=Submit%20Load?"/>
+  <edges xmi:type="notation:Edge" xmi:id="_fI_-cDUhEeGLZPpFKzDUhw" type="4001" source="_phcDMDMDEeG7UplBQjBrRQ" target="_naRUQDUlEeGLZPpFKzDUhw">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_fI_-cTUhEeGLZPpFKzDUhw"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_fI_-cjUhEeGLZPpFKzDUhw"/>
+    <element xmi:type="proc:Link" href="resource.proc#_fIck0DUhEeGLZPpFKzDUhw?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_fI_-czUhEeGLZPpFKzDUhw" points="[0, 0, 0, -73]$[0, 73, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_0R_MkDMYEeK6Wf5jdAfqTw" id="(0.5,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_0R_zoDMYEeK6Wf5jdAfqTw" id="(0.5,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_pBnskDUlEeGLZPpFKzDUhw" type="4001" source="_naRUQDUlEeGLZPpFKzDUhw" target="_foC8MDMDEeG7UplBQjBrRQ">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_pBnskTUlEeGLZPpFKzDUhw"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_pBnskjUlEeGLZPpFKzDUhw"/>
+    <element xmi:type="proc:Link" href="resource.proc#_pBlQUDUlEeGLZPpFKzDUhw?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_pBnskzUlEeGLZPpFKzDUhw" points="[0, 0, 319, -60]$[-319, 60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_pBqv4DUlEeGLZPpFKzDUhw" id="(0.25,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_pBqv4TUlEeGLZPpFKzDUhw" id="(0.5,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_ebAtYGjVEeWdvNYuMwrrIQ" type="4001" source="_foC8MDMDEeG7UplBQjBrRQ" target="_ajY7mmjVEeWdvNYuMwrrIQ">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_ebAtYWjVEeWdvNYuMwrrIQ"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_ebAtYmjVEeWdvNYuMwrrIQ" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="resource.proc#_ea6mwGjVEeWdvNYuMwrrIQ?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_ebAtY2jVEeWdvNYuMwrrIQ" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_ebM6oGjVEeWdvNYuMwrrIQ" id="(0.2518518518518518,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_ebM6oWjVEeWdvNYuMwrrIQ" id="(0.9185185185185185,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_kPChgWjVEeWdvNYuMwrrIQ" type="4001" source="_foC8MDMDEeG7UplBQjBrRQ" target="_ipOaQGjVEeWdvNYuMwrrIQ">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_kPChgmjVEeWdvNYuMwrrIQ"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_kPChg2jVEeWdvNYuMwrrIQ" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="resource.proc#_kPChgGjVEeWdvNYuMwrrIQ?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_kPChhGjVEeWdvNYuMwrrIQ" points="[0, 0, -339, -244]$[0, 183, -339, -61]$[339, 244, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_kPIoIGjVEeWdvNYuMwrrIQ" id="(0.5074074074074074,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_kPIoIWjVEeWdvNYuMwrrIQ" id="(0.25,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_lINlMGjVEeWdvNYuMwrrIQ" type="4001" source="_ajY7mmjVEeWdvNYuMwrrIQ" target="_ipOaQGjVEeWdvNYuMwrrIQ">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_lINlMWjVEeWdvNYuMwrrIQ"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_lINlMmjVEeWdvNYuMwrrIQ" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="resource.proc#_lIHekGjVEeWdvNYuMwrrIQ?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_lINlM2jVEeWdvNYuMwrrIQ" points="[0, 0, -511, -60]$[511, 60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_lITr0GjVEeWdvNYuMwrrIQ" id="(0.5,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_bdD98CqrEeyOQPSs-baVZA" id="(0.125,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_7fhV0JuuEeip3roJS2BlsQ" type="4001" source="_naRUQDUlEeGLZPpFKzDUhw" target="_xDElEJuuEeip3roJS2BlsQ">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_7fhV0ZuuEeip3roJS2BlsQ"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_7fhV0puuEeip3roJS2BlsQ" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="resource.proc#_7fgHsJuuEeip3roJS2BlsQ?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_7fhV05uuEeip3roJS2BlsQ" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_7fij8JuuEeip3roJS2BlsQ" id="(0.5,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_bdFzICqrEeyOQPSs-baVZA" id="(0.5,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_V0mzMJuvEeip3roJS2BlsQ" type="4001" source="_xDElEJuuEeip3roJS2BlsQ" target="_ipOaQGjVEeWdvNYuMwrrIQ">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_V0mzMZuvEeip3roJS2BlsQ"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_V0mzMpuvEeip3roJS2BlsQ" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="resource.proc#_V0llEJuvEeip3roJS2BlsQ?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_V0mzM5uvEeip3roJS2BlsQ" points="[0, 0, 0, -244]$[0, 244, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_V0oBUJuvEeip3roJS2BlsQ" id="(0.5,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_V0oBUZuvEeip3roJS2BlsQ" id="(0.5,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_tYWKUJuvEeip3roJS2BlsQ" type="4001" source="_xDElEJuuEeip3roJS2BlsQ" target="_grqcUJuvEeip3roJS2BlsQ">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_tYWKUZuvEeip3roJS2BlsQ"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_tYWKUpuvEeip3roJS2BlsQ" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="resource.proc#_tYUVIJuvEeip3roJS2BlsQ?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_tYWKU5uvEeip3roJS2BlsQ" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_tYXYcJuvEeip3roJS2BlsQ" id="(0.24814814814814815,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_bdHBQCqrEeyOQPSs-baVZA" id="(0.9148148148148149,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_wtSF0JuvEeip3roJS2BlsQ" type="4001" source="_grqcUJuvEeip3roJS2BlsQ" target="_ipOaQGjVEeWdvNYuMwrrIQ">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_wtSF0ZuvEeip3roJS2BlsQ"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_wtSF0puvEeip3roJS2BlsQ" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="resource.proc#_wtQ3sJuvEeip3roJS2BlsQ?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_wtSF05uvEeip3roJS2BlsQ" points="[0, 0, -170, -60]$[170, 60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_wtTT8JuvEeip3roJS2BlsQ" id="(0.5,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_bdCv0CqrEeyOQPSs-baVZA" id="(0.375,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_Ai_3kGYiEemHuprG477biA" type="4001" source="_Ai-pcGYiEemHuprG477biA" target="_G0vid2YiEemHuprG477biA">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_Ai_3kWYiEemHuprG477biA"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Ai_3kmYiEemHuprG477biA" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="resource.proc#_Ai-CYWYiEemHuprG477biA?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Ai_3k2YiEemHuprG477biA" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_bdHoUCqrEeyOQPSs-baVZA" id="(0.3037037037037037,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_M0SqEGYiEemHuprG477biA" id="(0.8555555555555555,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_AjAeoGYiEemHuprG477biA" type="4001" source="_Ai-pcGYiEemHuprG477biA" target="_ipOaQGjVEeWdvNYuMwrrIQ">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_AjAeoWYiEemHuprG477biA"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_AjAeomYiEemHuprG477biA" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="resource.proc#_Ai-CYmYiEemHuprG477biA?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_AjAeo2YiEemHuprG477biA" points="[0, 0, 334, -244]$[0, 183, 334, -61]$[-334, 244, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_bdKEkCqrEeyOQPSs-baVZA" id="(0.6111111111111112,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_KL9V4GYiEemHuprG477biA" id="(0.825,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_G0xXoGYiEemHuprG477biA" type="4001" source="_G0vid2YiEemHuprG477biA" target="_ipOaQGjVEeWdvNYuMwrrIQ">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_G0xXoWYiEemHuprG477biA"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_G0xXomYiEemHuprG477biA" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="resource.proc#_G0vicWYiEemHuprG477biA?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_G0xXo2YiEemHuprG477biA" points="[0, 0, 168, -60]$[-168, 60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_bdD98SqrEeyOQPSs-baVZA" id="(0.5,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_bdElACqrEeyOQPSs-baVZA" id="(0.6625,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_VXKDAGYiEemHuprG477biA" type="4001" source="_naRUQDUlEeGLZPpFKzDUhw" target="_Ai-pcGYiEemHuprG477biA">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_VXKDAWYiEemHuprG477biA"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_VXKDAmYiEemHuprG477biA" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="resource.proc#_VXI04GYiEemHuprG477biA?fileId=_VbqAsTMDEeG7UplBQjBrRQ$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_VXKDA2YiEemHuprG477biA" points="[0, 0, -288, -60]$[288, 60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_VXKqEGYiEemHuprG477biA" id="(0.75,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_VXKqEWYiEemHuprG477biA" id="(0.5,0.0)"/>
+  </edges>
+</notation:Diagram>
+]]></diagram>
+</proc:process>

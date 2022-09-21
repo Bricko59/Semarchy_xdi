@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_vqT6AbPNEeeO8Nz9uFCg8w" description="This tool with generate an error if there are rejects of a defined level on a reject table for the current session.&#xD;&#xA;The functional table linked to the reject table must be drag &amp; drop on this tool : for example, if you want to test R_DIM_CUSTOMER, you will have to drag &amp; drop DIM_CUSTOMER table">
+  <parameter id="_11EMELPNEeeO8Nz9uFCg8w" description="This parameter defines for which reject level the component will generate an error" metaInf="&lt;metaInf id=&quot;value&quot; value=&quot;Warning Reject Fatal&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;Reject Fatal&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;Fatal&quot;/>" name="SEVERITY_LEVEL_TO_GENERATE_ERROR" type="String" value="Reject"/>
+  <parameter id="_wS6gMLPPEeeO8Nz9uFCg8w" description="This parameter allows you to choose a label to generate as an error in case of reject found" label="Label to generate as an error in case of reject" name="ERROR_LABEL" type="String" value="Data quality reject"/>
+  <actionCode id="_aRqE87POEeeO8Nz9uFCg8w" isBeginAction="false" name="EmptyAction" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_aRqE9LPOEeeO8Nz9uFCg8w" generationCondition="exists($MAPPING_TABLE) " executionType="OK" generationType="OK_KO" mandatory="1" targetId="_aRqsBrPOEeeO8Nz9uFCg8w"/>
+  </actionCode>
+  <actionCode id="_aRqsALPOEeeO8Nz9uFCg8w" generationCondition="" isBeginAction="false" name="drop of reject table" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <parameter id="_aRqsAbPOEeeO8Nz9uFCg8w" name="SQL_CONNECTION" type="String" value="%targetConnection{$MAPPING_TABLE}%"/>
+    <parameter id="_aRqsArPOEeeO8Nz9uFCg8w" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <code>drop table %x{md:physicalPath($MAPPING_TABLE,'rejectName')}x%</code>
+  </actionCode>
+  <actionCode id="_aRqsBrPOEeeO8Nz9uFCg8w" generationCondition="" isBeginAction="false" name="SQL Try to create reject table" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_aRqsB7POEeeO8Nz9uFCg8w" executionType="KO" generationType="OK_KO" mandatory="1" targetId="__Nld0LPREeeO8Nz9uFCg8w"/>
+    <link id="_aRqsCLPOEeeO8Nz9uFCg8w" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_aRqsALPOEeeO8Nz9uFCg8w"/>
+    <parameter id="_aRqsCbPOEeeO8Nz9uFCg8w" name="SQL_CONNECTION" type="String" value="%targetConnection{$MAPPING_TABLE}%"/>
+    <parameter id="_aRqsCrPOEeeO8Nz9uFCg8w" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <code>create table %x{md:physicalPath($MAPPING_TABLE,'rejectName')}x%
+(
+	SESSION_ID			%x{$MAPPING_TABLE/ref:target()/tech:varcharDdl(35)}x% %x{$MAPPING_TABLE/tech:nullWord()}x%,
+	REJECT_MODE			%x{$MAPPING_TABLE/ref:target()/tech:varcharDdl(1)}x% %x{$MAPPING_TABLE/tech:nullWord()}x%,
+	REJECT_MESSAGE		%x{$MAPPING_TABLE/ref:target()/tech:varcharDDL(250)}x% %x{$MAPPING_TABLE/tech:nullWord()}x%, 
+	REJECT_CODE			%x{$MAPPING_TABLE/ref:target()/tech:varcharDDL(35)}x% %x{$MAPPING_TABLE/tech:nullWord()}x%,
+	REJECTED_BY			%x{$MAPPING_TABLE/ref:target()/tech:varcharDDL(100)}x% %x{$MAPPING_TABLE/tech:nullWord()}x%,
+	RULE_NAME			%x{$MAPPING_TABLE/ref:target()/tech:varcharDDL(35)}x% %x{$MAPPING_TABLE/tech:nullWord()}x%,
+	RULE_TYPE			%x{$MAPPING_TABLE/ref:target()/tech:varcharDDL(2)}x% %x{$MAPPING_TABLE/tech:nullWord()}x%,
+	RULE_SEVERITY		%x{$MAPPING_TABLE/ref:target()/tech:varcharDDL(10)}x% %x{$MAPPING_TABLE/tech:nullWord()}x%,
+	REJECT_DATE			%x{$MAPPING_TABLE/ref:target()/tech:dateDDL()}x% %x{$MAPPING_TABLE/tech:nullWord()}x%,
+	%x{md:patternList($MAPPING_TABLE/ref:targetColumns(),'[colName]\t\t[targetWritableType] [nullWord]', ',\n\t')}x%
+)
+</code>
+  </actionCode>
+  <actionCode id="_oUhtULPPEeeO8Nz9uFCg8w" generationCondition="" isBeginAction="false" name="Throw a data quality error" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <parameter id="_oUhtUbPPEeeO8Nz9uFCg8w" description="Scripting language (Rhino, Jython, etc.)" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+    <code>throw(&quot;${../ERROR_LABEL}$ stored in %x{md:physicalPath($MAPPING_TABLE,'rejectName')}x%&quot;)</code>
+  </actionCode>
+  <actionCode id="__Nld0LPREeeO8Nz9uFCg8w" isBeginAction="false" name="Sql To Parameters" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+    <link id="_aRqE9rPOEeeO8Nz9uFCg8w" executionCondition="${./Sql To Parameters/TOOL_SEWR_NB_REJECTS}$ > 0" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_oUhtULPPEeeO8Nz9uFCg8w"/>
+    <parameter id="_Z9cLoLPSEeeO8Nz9uFCg8w" name="SQL_CONNECTION" type="String" value="%targetConnection{$MAPPING_TABLE}%"/>
+    <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;./TOOL_SEWR_NB_REJECTS&quot; type=&quot;Integer&quot;>&#xD;
+SELECT COUNT(*) AS NB_REJECTS&#xD;
+FROM   %x{md:physicalPath($MAPPING_TABLE,'rejectName')}x%&#xD;
+WHERE  SESSION_ID='${/CORE_SESSION_ID}$'&#xD;
+%e(rhino){ switch ('${../SEVERITY_LEVEL_TO_GENERATE_ERROR}$')&#xD;
+           {  &#xD;
+             &#xD;
+              case 'Warning Reject Fatal' : __ctx__.retValue = &quot; AND RULE_SEVERITY IN ('WARNING','REJECT','FATAL')&quot;;&#xD;
+                               break;&#xD;
+              case 'Reject Fatal'  : __ctx__.retValue = &quot; AND RULE_SEVERITY IN ('REJECT','FATAL')&quot;;&#xD;
+                               break;&#xD;
+              case 'Fatal'   : __ctx__.retValue = &quot; AND RULE_SEVERITY = 'FATAL'&quot;;&#xD;
+                               break;&#xD;
+           }&#xD;
+}e(rhino)%     &#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters> </code>
+  </actionCode>
+  <xslVariable id="_IjDVMLPOEeeO8Nz9uFCg8w" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='datastore'][1]" name="MAPPING_TABLE" type="xpath"/>
+</proc:process>

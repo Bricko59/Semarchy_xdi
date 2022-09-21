@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="c532695b-c653-4821-a920-36899e91310d">
+  <parameter id="8ec5c897-01b6-4998-9fc3-cfa4df80c288" name="tableName" type="String" value="DIM_CUSTOMER"/>
+  <actionCode id="782f865d-f7a0-47af-96d6-d1c440f0d15e" isBeginAction="false" name="Bean Scripting" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.BeanScriptingActionCodeI">
+    <parameter id="211949af-7982-4e04-bf87-f4f1870943e8" name="SCRIPTING_LANGUAGE" type="String" value="beanshell"/>
+    <parameter id="b37485c6-1ffb-4119-b5c4-5bb0d3020d37" name="MODULE" type="String" value="HSQL"/>
+    <code>import java.sql.Connection; &#xD;
+import java.sql.DriverManager;&#xD;
+import java.sql.DatabaseMetaData;&#xD;
+import java.sql.ResultSet;&#xD;
+import java.sql.SQLException;&#xD;
+      Connection con = null;&#xD;
+      &#xD;
+      try {&#xD;
+         //Registering the HSQLDB JDBC driver&#xD;
+         Class.forName(&quot;org.hsqldb.jdbc.JDBCDriver&quot;);&#xD;
+         //Creating the connection with HSQLDB&#xD;
+         con = DriverManager.getConnection(&quot;%x{$TARGET_SCHEMA/tech:jdbcUrl()}x%&quot;, &quot;%x{$TARGET_SCHEMA/tech:jdbcUser()}x%&quot;, &quot;%x{$TARGET_SCHEMA/tech:jdbcPassword()}x%&quot;);&#xD;
+         if (con!= null){&#xD;
+            System.out.println(&quot;Connection created successfully&quot;);&#xD;
+         DatabaseMetaData dbm = con.getMetaData();&#xD;
+          ResultSet tables = dbm.getTables(null, &quot;%x{$TARGET_SCHEMA/tech:name()}x%&quot;, &quot;${../tableName}$&quot;, null);&#xD;
+          if (tables.next()) {&#xD;
+              System.out.println(&quot;table exists&quot;);&#xD;
+              __ctx__.publishVariable(&quot;~/existsTable&quot;,&quot;true&quot;,&quot;Boolean&quot;);&#xD;
+}&#xD;
+else {&#xD;
+  System.out.println(&quot;table does not exist&quot;);&#xD;
+  __ctx__.publishVariable(&quot;~/existsTable&quot;,&quot;false&quot;,&quot;Boolean&quot;);&#xD;
+}&#xD;
+            &#xD;
+         }else{&#xD;
+            System.out.println(&quot;Problem with creating connection&quot;);&#xD;
+         }&#xD;
+      &#xD;
+      }  catch (Exception e) {&#xD;
+      e.printStackTrace(System.out);&#xD;
+         &#xD;
+}&#xD;
+</code>
+  </actionCode>
+  <xslVariable description="How to use it ?&#xD;&#xA;----------------&#xD;&#xA;1-Drag &amp; Drop this template at the top (main) level of a process&#xD;&#xA;2-Drag &amp; Drop a RDBMS schema in this template&#xD;&#xA;3-Link the end of the process to this template with a &quot;Unsuccessful Link&quot;&#xD;&#xA;4-Define the properties of the template&#xD;&#xA;&#xD;&#xA;What will be done ?&#xD;&#xA;---------------------&#xD;&#xA;The template will try to CREATE the STB_ERROR_LOG table in the schema &#xD;&#xA;The template will INSERT error properties in the STB_ERROR_LOG table , one record per error&#xD;&#xA;At the end, an error is generated to keep the process in error&#xD;&#xA;&#xD;&#xA;What are your options ?&#xD;&#xA;-------------------------&#xD;&#xA;You can add a process reference/code, different to the process name. It will work even if there is no value&#xD;&#xA;You can choose to drop the STB_ERROR_LOG table at the begin of the template&#xD;&#xA;You can choose to insert also the TOLERATED errors in the table&#xD;&#xA;&#xD;&#xA;mdj:getMetaDataRef($this/metaDataLink[1])" id="21563242-a4ed-47a8-92f1-3d9155c24bf0" code="($this/metaDataLink/mdj:getMetaDataRef(.)[@defType='com.stambia.rdbms.schema'])[1]" name="TARGET_SCHEMA" type="xpath" visibility="current"/>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.2/notation#/?fileId=c532695b-c653-4821-a920-36899e91310d?" xmi:id="_eZX8QH2PEeuOXfAZRQ4elw" type="Proc" measurementUnit="Pixel">
+  <children xmi:type="notation:Node" xmi:id="_svVVMH2PEeuOXfAZRQ4elw" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_svXxcH2PEeuOXfAZRQ4elw" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_svXxcX2PEeuOXfAZRQ4elw" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_svXxcn2PEeuOXfAZRQ4elw"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_svXxc32PEeuOXfAZRQ4elw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_svXxdH2PEeuOXfAZRQ4elw"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_svXxdX2PEeuOXfAZRQ4elw" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_svXxdn2PEeuOXfAZRQ4elw"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_svXxd32PEeuOXfAZRQ4elw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_svXxeH2PEeuOXfAZRQ4elw"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_svVVMX2PEeuOXfAZRQ4elw" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../Tool_ExistsHSQL_Table.proc#782f865d-f7a0-47af-96d6-d1c440f0d15e?fileId=c532695b-c653-4821-a920-36899e91310d$type=proc$name=Bean%20Scripting?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_svVVMn2PEeuOXfAZRQ4elw" x="222" y="90"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_p15wUH2XEeuOXfAZRQ4elw" type="2007">
+    <children xmi:type="notation:Node" xmi:id="_p16XYH2XEeuOXfAZRQ4elw" type="5007"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_p15wUX2XEeuOXfAZRQ4elw" fontName="Segoe UI"/>
+    <element xmi:type="proc:XslVariable" href="../../Tool_ExistsHSQL_Table.proc#21563242-a4ed-47a8-92f1-3d9155c24bf0?fileId=c532695b-c653-4821-a920-36899e91310d$type=proc?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_p15wUn2XEeuOXfAZRQ4elw" x="498" y="54"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_93OwoH2XEeuOXfAZRQ4elw" type="2005">
+    <children xmi:type="notation:Node" xmi:id="_93PXsH2XEeuOXfAZRQ4elw" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_93OwoX2XEeuOXfAZRQ4elw" fontName="Segoe UI"/>
+    <element xmi:type="proc:Parameter" href="../../Tool_ExistsHSQL_Table.proc#8ec5c897-01b6-4998-9fc3-cfa4df80c288?fileId=c532695b-c653-4821-a920-36899e91310d$type=proc$name=tableName?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_93Owon2XEeuOXfAZRQ4elw" x="496" y="18"/>
+  </children>
+  <children xmi:type="notation:Shape" xmi:id="_XVIR4H2ZEeuOXfAZRQ4elw" type="Note" fontName="Segoe UI" description="Nécessite de mettre le .jar de la techno utilisée dans lib/internal du runtime : va être référencé comme bug : à suivre" fillColor="13369343" transparency="0" lineColor="6737151" lineWidth="1">
+    <children xmi:type="notation:BasicDecorationNode" xmi:id="_XVKHEH2ZEeuOXfAZRQ4elw" type="DiagramName">
+      <element xsi:nil="true"/>
+    </children>
+    <children xmi:type="notation:BasicDecorationNode" xmi:id="_XVKHEX2ZEeuOXfAZRQ4elw" type="Description">
+      <element xsi:nil="true"/>
+    </children>
+    <styles xmi:type="notation:TextStyle" xmi:id="_XVIR4X2ZEeuOXfAZRQ4elw"/>
+    <styles xmi:type="notation:LineTypeStyle" xmi:id="_XVIR4n2ZEeuOXfAZRQ4elw"/>
+    <element xsi:nil="true"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_XVIR432ZEeuOXfAZRQ4elw" x="60" y="264"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_eZX8QX2PEeuOXfAZRQ4elw"/>
+  <element xmi:type="proc:ActionProcess" href="../../Tool_ExistsHSQL_Table.proc#c532695b-c653-4821-a920-36899e91310d?fileId=c532695b-c653-4821-a920-36899e91310d$type=proc$name=Tool_ExistsHSQL_Table?"/>
+  <edges xmi:type="notation:Connector" xmi:id="_cCv3kH2ZEeuOXfAZRQ4elw" type="NoteAttachment" source="_XVIR4H2ZEeuOXfAZRQ4elw" target="_svVVMH2PEeuOXfAZRQ4elw" lineWidth="1">
+    <styles xmi:type="notation:ArrowStyle" xmi:id="_cCv3kX2ZEeuOXfAZRQ4elw"/>
+    <styles xmi:type="notation:LineTypeStyle" xmi:id="_cCv3kn2ZEeuOXfAZRQ4elw"/>
+    <element xsi:nil="true"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cCv3k32ZEeuOXfAZRQ4elw" points="[-40, -25, 264, 135]$[-171, -167, 133, -7]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cCweoH2ZEeuOXfAZRQ4elw" id="(0.3764478764478765,0.23214285714285715)"/>
+  </edges>
+</notation:Diagram>
+]]></diagram>
+</proc:process>

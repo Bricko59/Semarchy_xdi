@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ref:mapRef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:ref="http://www.indy.com/v2/ref" id="_9rJKJzTDEe2K1spis4bODw">
+  <dataModel>_mcd7IB23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map$name=LOAD%20HST_CUSTOMER?</dataModel>
+  <containerRef xsi:type="ref:RDatastore" id="_9rSUEDTDEe2K1spis4bODw" countShownFields="4" hierarchical="false">
+    <dataModel>_mcd7IR23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_9rS7IDTDEe2K1spis4bODw" size="100" type="VARCHAR" position="9">
+      <dataModel>_mcd7Ih23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map$name=CUS_ADDRESS?</dataModel>
+      <usage>_9rjZ0DTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9rhkoDTDEe2K1spis4bODw" size="100" type="VARCHAR" position="6">
+      <dataModel>_mcd7Ix23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map$name=CUS_NAME?</dataModel>
+      <usage>_9riywTTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9rhkoTTDEe2K1spis4bODw" size="1000" type="VARCHAR" position="12">
+      <dataModel>_mcd7JB23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map$name=CUS_COMMENT?</dataModel>
+      <usage>_9rjZ1TTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9rhkojTDEe2K1spis4bODw" precision="0" size="32" type="INTEGER" mandatory="true" position="3">
+      <dataModel>_mcd7JR23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map$name=CUS_ID?</dataModel>
+      <usage>_9rjZ0TTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <constraintRef id="_9rl2EDTDEe2K1spis4bODw" type="pk">
+      <dataModel>_mcd7Jh23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map$name=PK_SRC_CUSTOMER?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_9rhkozTDEe2K1spis4bODw" countShownFields="7" hierarchical="false">
+    <dataModel>_mcd7Jx23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_9riLsDTDEe2K1spis4bODw" size="26" type="TIMESTAMP" position="18">
+      <dataModel>_mceiOB23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map$name=VALID_TO?</dataModel>
+      <expressionRef id="_9rjZ0zTDEe2K1spis4bODw">
+        <dataModel>_mceiOR23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9riLsTTDEe2K1spis4bODw" precision="0" size="32" type="INTEGER" position="21">
+      <dataModel>_mceiOh23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map$name=IS_VALID_VERSION?</dataModel>
+      <expressionRef id="_9rjZ1DTDEe2K1spis4bODw">
+        <dataModel>_mceiOx23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9riLsjTDEe2K1spis4bODw" precision="0" size="32" type="INTEGER" mandatory="true" position="3">
+      <dataModel>_mceiNB23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map$name=CUS_ID?</dataModel>
+      <expressionRef id="_9rjZ0TTDEe2K1spis4bODw" internalExpression="${SRC_CUSTOMER.CUS_ID}$">
+        <dataModel>_mceiNR23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map?</dataModel>
+        <sourceRef>_9rhkojTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9riLszTDEe2K1spis4bODw" size="100" type="VARCHAR" position="6">
+      <dataModel>_mceiMB23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map$name=CUS_NAME?</dataModel>
+      <expressionRef id="_9riywTTDEe2K1spis4bODw" internalExpression="${SRC_CUSTOMER.CUS_NAME}$">
+        <dataModel>_mceiMR23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map?</dataModel>
+        <sourceRef>_9rhkoDTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9riLtDTDEe2K1spis4bODw" size="100" type="VARCHAR" position="9">
+      <dataModel>_mceiMh23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map$name=CUS_ADDRESS?</dataModel>
+      <expressionRef id="_9rjZ0DTDEe2K1spis4bODw" internalExpression="${SRC_CUSTOMER.CUS_ADDRESS}$">
+        <dataModel>_mceiMx23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map?</dataModel>
+        <sourceRef>_9rS7IDTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9riLtTTDEe2K1spis4bODw" size="1000" type="VARCHAR" position="12">
+      <dataModel>_mceiPB23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map$name=CUS_COMMENT?</dataModel>
+      <expressionRef id="_9rjZ1TTDEe2K1spis4bODw" internalExpression="${SRC_CUSTOMER.CUS_COMMENT}$">
+        <dataModel>_mceiPR23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map?</dataModel>
+        <sourceRef>_9rhkoTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_9riLtjTDEe2K1spis4bODw" size="26" type="TIMESTAMP" position="15">
+      <dataModel>_mceiNh23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map$name=VALID_FROM?</dataModel>
+      <expressionRef id="_9rjZ0jTDEe2K1spis4bODw" internalExpression="current_timestamp">
+        <dataModel>_mceiNx23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+  </containerRef>
+  <targetSetRef id="_9rjZ4zTDEe2K1spis4bODw" sourceSet="_9rjZ4jTDEe2K1spis4bODw">
+    <container>_9rhkozTDEe2K1spis4bODw</container>
+  </targetSetRef>
+  <sourceSetRef id="_9rjZ4jTDEe2K1spis4bODw" targetSet="_9rjZ4zTDEe2K1spis4bODw">
+    <dataSet xsi:type="map:DataSet">#_mceiQh23EeuD985QaHlOAw</dataSet>
+  </sourceSetRef>
+  <templateRef id="_9rjZ2zTDEe2K1spis4bODw" description="Integration : HST_CUSTOMER" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=HYPERSONIC_SQL;trgPath=server:HSQL_Datamart/schema:SCD/datastore:HST_CUSTOMER;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=HYPERSONIC_SQL">
+    <dataModel>_mceiPx23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map$name=I_HST_CUSTOMER?</dataModel>
+    <problem id="_9rnEMDTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <targetRef>_mcd7Jx23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map?</targetRef>
+  </templateRef>
+  <loadSet id="_9rjZ2DTDEe2K1spis4bODw">
+    <container>_mcd7IR23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map?</container>
+  </loadSet>
+  <loadSet id="_9rjZ2jTDEe2K1spis4bODw">
+    <container>_mcd7Jx23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map?</container>
+  </loadSet>
+</ref:mapRef>

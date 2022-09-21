@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_eXkwgLtzEeq0z_EvR_Ojng">
+  <actionCode id="_eXlXkLtzEeq0z_EvR_Ojng" isBeginAction="false" name="Create function nextGaussian" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <metaDataLink id="_eXl-oLtzEeq0z_EvR_Ojng" name="STORED_PROC" target="HSQL_Hotel.md#_k9v8gOOZEemkOsYcvTop0Q?fileId=_jZf-wOBoEemkOsYcvTop0Q$type=md$name=STORED_PROC?"/>
+    <parameter id="_eXmlsLtzEeq0z_EvR_Ojng" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_eXmlsbtzEeq0z_EvR_Ojng" name="SQL_CONNECTION" type="String"/>
+    <code>CREATE FUNCTION STORED_PROC.nextGaussian(stdrv DOUBLE ,mean DOUBLE ) RETURNS DOUBLE&#xD;
+   LANGUAGE JAVA NOT DETERMINISTIC NO SQL&#xD;
+   EXTERNAL NAME 'CLASSPATH:com.stambia.privacyprotect.RandomGeneration.nextgauss'&#xD;
+   &#xD;
+   </code>
+  </actionCode>
+  <actionCode id="_eXmlsrtzEeq0z_EvR_Ojng" isBeginAction="false" name="Drop function nextGaussian" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_eXnMwLtzEeq0z_EvR_Ojng" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_eXlXkLtzEeq0z_EvR_Ojng"/>
+    <metaDataLink id="_eXnMwbtzEeq0z_EvR_Ojng" name="STORED_PROC" target="HSQL_Hotel.md#_k9v8gOOZEemkOsYcvTop0Q?fileId=_jZf-wOBoEemkOsYcvTop0Q$type=md$name=STORED_PROC?"/>
+    <parameter id="_eXoa4LtzEeq0z_EvR_Ojng" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_eXoa4btzEeq0z_EvR_Ojng" name="SQL_CONNECTION" type="String"/>
+    <code>DROP FUNCTION STORED_PROC.nextGaussian IF EXISTS</code>
+  </actionCode>
+  <actionProcessRef id="_eXpB8LtzEeq0z_EvR_Ojng" isBeginAction="false" name="TOOL_resetSchema_HSQL" nbCycles="-1" toleratedError="false" targetName="../../Components/Simplify/TOOL_resetSchema.proc#_mbXZ0SCBEeWkpdwlbgb5vw?fileId=_mbXZ0SCBEeWkpdwlbgb5vw$type=proc$name=TOOL_resetSchema?">
+    <link id="_eXpB8btzEeq0z_EvR_Ojng" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_eXmlsrtzEeq0z_EvR_Ojng"/>
+    <metaDataLink id="_eXpB8rtzEeq0z_EvR_Ojng" name="STORED_PROC" target="HSQL_Hotel.md#_k9v8gOOZEemkOsYcvTop0Q?fileId=_jZf-wOBoEemkOsYcvTop0Q$type=md$name=STORED_PROC?"/>
+  </actionProcessRef>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.2/notation#/?fileId=_eXkwgLtzEeq0z_EvR_Ojng?" xmi:id="_hUZTcOBoEemkOsYcvTop0Q" type="Proc" measurementUnit="Pixel">
+  <children xmi:type="notation:Node" xmi:id="_lc3ksOBoEemkOsYcvTop0Q" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_lc6A8OBoEemkOsYcvTop0Q" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_lc6oAOBoEemkOsYcvTop0Q" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_lc6oAeBoEemkOsYcvTop0Q"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_lc6oAuBoEemkOsYcvTop0Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_lc6oA-BoEemkOsYcvTop0Q"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_lc6oBOBoEemkOsYcvTop0Q" type="7002">
+      <children xmi:type="notation:Node" xmi:id="_4aHOkOOZEemkOsYcvTop0Q" type="3002">
+        <element xmi:type="proc:MetaDataLink" href="../../CreateJavaFunction.proc#_eXl-oLtzEeq0z_EvR_Ojng?fileId=_eXkwgLtzEeq0z_EvR_Ojng$type=proc?"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_4aHOkeOZEemkOsYcvTop0Q"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_lc6oBeBoEemkOsYcvTop0Q"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_lc6oBuBoEemkOsYcvTop0Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_lc6oB-BoEemkOsYcvTop0Q"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_lc4LwOBoEemkOsYcvTop0Q" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../CreateJavaFunction.proc#_eXlXkLtzEeq0z_EvR_Ojng?fileId=_eXkwgLtzEeq0z_EvR_Ojng$type=proc$name=Create%20function%20nextGaussian?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lc4LweBoEemkOsYcvTop0Q" x="30" y="300"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_YGq8YOOZEemkOsYcvTop0Q" type="2003">
+    <children xmi:type="notation:Node" xmi:id="_YGsxkOOZEemkOsYcvTop0Q" type="5003"/>
+    <children xmi:type="notation:Node" xmi:id="_YGsxkeOZEemkOsYcvTop0Q" type="7003">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_YGsxkuOZEemkOsYcvTop0Q" collapsed="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_YGsxk-OZEemkOsYcvTop0Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_YGsxlOOZEemkOsYcvTop0Q"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_YGt_sOOZEemkOsYcvTop0Q" type="7004">
+      <children xmi:type="notation:Node" xmi:id="_n6KDQOOZEemkOsYcvTop0Q" type="3004">
+        <element xmi:type="proc:MetaDataLink" href="../../CreateJavaFunction.proc#_eXpB8rtzEeq0z_EvR_Ojng?fileId=_eXkwgLtzEeq0z_EvR_Ojng$type=proc?"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_n6KDQeOZEemkOsYcvTop0Q"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_YGt_seOZEemkOsYcvTop0Q"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_YGt_suOZEemkOsYcvTop0Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_YGt_s-OZEemkOsYcvTop0Q"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_YGq8YeOZEemkOsYcvTop0Q" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionProcessRef" href="../../CreateJavaFunction.proc#_eXpB8LtzEeq0z_EvR_Ojng?fileId=_eXkwgLtzEeq0z_EvR_Ojng$type=proc$name=TOOL_resetSchema_HSQL?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_YGq8YuOZEemkOsYcvTop0Q" x="72" y="30"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_nOxQouQgEemkOsYcvTop0Q" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_nOxQo-QgEemkOsYcvTop0Q" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_nOxQpOQgEemkOsYcvTop0Q" type="7001">
+      <children xmi:type="notation:Node" xmi:id="_nOxQpeQgEemkOsYcvTop0Q" type="3001">
+        <element xmi:type="proc:Parameter" href="../../CreateJavaFunction.proc#_eXoa4LtzEeq0z_EvR_Ojng?fileId=_eXkwgLtzEeq0z_EvR_Ojng$type=proc$name=SQL_ACTION_TYPE?"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_nOxQpuQgEemkOsYcvTop0Q"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_nOxQp-QgEemkOsYcvTop0Q" type="3001">
+        <element xmi:type="proc:Parameter" href="../../CreateJavaFunction.proc#_eXoa4btzEeq0z_EvR_Ojng?fileId=_eXkwgLtzEeq0z_EvR_Ojng$type=proc$name=SQL_CONNECTION?"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_nOxQqOQgEemkOsYcvTop0Q"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_nOxQqeQgEemkOsYcvTop0Q"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_nOxQquQgEemkOsYcvTop0Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_nOxQq-QgEemkOsYcvTop0Q"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_nOxQrOQgEemkOsYcvTop0Q" type="7002">
+      <children xmi:type="notation:Node" xmi:id="_nOxQreQgEemkOsYcvTop0Q" type="3002">
+        <element xmi:type="proc:MetaDataLink" href="../../CreateJavaFunction.proc#_eXnMwbtzEeq0z_EvR_Ojng?fileId=_eXkwgLtzEeq0z_EvR_Ojng$type=proc?"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_nOxQruQgEemkOsYcvTop0Q"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_nOxQr-QgEemkOsYcvTop0Q"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_nOxQsOQgEemkOsYcvTop0Q"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_nOxQseQgEemkOsYcvTop0Q"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_nOxQsuQgEemkOsYcvTop0Q" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../CreateJavaFunction.proc#_eXmlsrtzEeq0z_EvR_Ojng?fileId=_eXkwgLtzEeq0z_EvR_Ojng$type=proc$name=Drop%20function%20nextGaussian?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_nOxQs-QgEemkOsYcvTop0Q" x="30" y="144"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_hUZ6gOBoEemkOsYcvTop0Q"/>
+  <element xmi:type="proc:ActionProcess" href="../../CreateJavaFunction.proc#_eXkwgLtzEeq0z_EvR_Ojng?fileId=_eXkwgLtzEeq0z_EvR_Ojng$type=proc$name=CreateJavaFunction?"/>
+  <edges xmi:type="notation:Edge" xmi:id="_ZVnbwOOZEemkOsYcvTop0Q" type="4001" source="_YGq8YOOZEemkOsYcvTop0Q" target="_nOxQouQgEemkOsYcvTop0Q">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_ZVnbweOZEemkOsYcvTop0Q"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_ZVnbwuOZEemkOsYcvTop0Q" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="../../CreateJavaFunction.proc#_eXpB8btzEeq0z_EvR_Ojng?fileId=_eXkwgLtzEeq0z_EvR_Ojng$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_ZVnbw-OZEemkOsYcvTop0Q" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_ZVqfEOOZEemkOsYcvTop0Q" id="(0.5,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_-BVVwOOZEemkOsYcvTop0Q" id="(0.4984423676012461,0.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_tsTUsOQgEemkOsYcvTop0Q" type="4001" source="_nOxQouQgEemkOsYcvTop0Q" target="_lc3ksOBoEemkOsYcvTop0Q">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_tsTUseQgEemkOsYcvTop0Q"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_tsTUsuQgEemkOsYcvTop0Q" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="../../CreateJavaFunction.proc#_eXnMwLtzEeq0z_EvR_Ojng?fileId=_eXkwgLtzEeq0z_EvR_Ojng$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_tsTUs-QgEemkOsYcvTop0Q" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_tsVJ4OQgEemkOsYcvTop0Q" id="(0.4984423676012461,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_tsVJ4eQgEemkOsYcvTop0Q" id="(0.4984423676012461,0.0)"/>
+  </edges>
+</notation:Diagram>
+]]></diagram>
+</proc:process>

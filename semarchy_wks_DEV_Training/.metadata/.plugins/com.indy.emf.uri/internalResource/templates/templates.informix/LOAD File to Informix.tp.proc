@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:UUID="java.util.UUID" xmlns:common="http://exslt.org/common" xmlns:mdj="java:com.indy.xsl.global.Functions" xmlns:proc="http://www.example.org/proc" xmlns:saxon="http://saxon.sf.net/" id="_SeiaptE2EeiqadpQbccNDg" description="This template is used to load a file into Informix using the file driver.&#xD;&#xA;&#xD;&#xA;Refer to the description of each Parameter for more information.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;16/10/2018&#x9;Template creation&#xD;&#xA;" isBeginAction="false" nbCycles="-1" toleratedError="false">
+  <parameter id="_Seiap9E2EeiqadpQbccNDg" description="If true, the temporary objects created during the load are removed at the end of the process." name="cleanTemporaryObjects" type="Boolean" value="true"/>
+  <parameter id="_SeiaqNE2EeiqadpQbccNDg" description="If true, a DISTINCT statement will be added on the query retrieving source data.&#xD;&#xA;This is used to avoid having duplicates." name="useDistinct" type="Boolean" value="false"/>
+  <parameter id="_SeiaqdE2EeiqadpQbccNDg" description="Name of the transaction when 'Use Transaction On Work Tables' is set to true.&#xD;&#xA;&#xD;&#xA;Using the same name in multiple templates / mappings executed in the same Process allows to process them in the same transaction." name="transactionName" type="String" value="T1"/>
+  <parameter id="_SeiaqtE2EeiqadpQbccNDg" description="If true, the operations on the load tables will be executed through a transaction in NOCOMMIT mode.&#xD;&#xA;If false, the actions will be in AUTOCOMMIT mode.&#xD;&#xA;&#xD;&#xA;See also 'Transaction Name' parameter&#xD;&#xA;" name="useTransactionOnWorkTables" type="Boolean" value="false"/>
+  <subProcess id="_Seiaq9E2EeiqadpQbccNDg" generationCondition="" name="load">
+    <link id="_SeiarNE2EeiqadpQbccNDg" executionType="OK" generationType="OK" mandatory="1" targetId="_Seiaw9E2EeiqadpQbccNDg?fileId=_SeiaptE2EeiqadpQbccNDg$type=proc$name=Clean?"/>
+    <actionCode id="_SeiardE2EeiqadpQbccNDg" generationCondition="" isBeginAction="false" name="Drop of load table" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_SeiartE2EeiqadpQbccNDg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_Seias9E2EeiqadpQbccNDg"/>
+      <parameter id="_Seiar9E2EeiqadpQbccNDg" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_SeiasNE2EeiqadpQbccNDg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_SeiasdE2EeiqadpQbccNDg" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_SeiastE2EeiqadpQbccNDg" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <parameter id="_iVwyANE2EeiqadpQbccNDg" name="SQL_MULTI_QUERYS" type="Boolean" value="true"/>
+      <code>DATABASE %x{$REF/ref:target()/ref:schema()/ref:work()/tech:catalogName()}x%;&#xD;
+%x{$REF/ref:target()/tech:dropTableIfExists(md:physicalPath($REF,'workName'))}x%;&#xD;
+DATABASE %x{$REF/ref:target()/ref:schema()/tech:catalogName()}x%;&#xD;
+</code>
+    </actionCode>
+    <actionCode id="_Seias9E2EeiqadpQbccNDg" generationCondition="" isBeginAction="false" name="Creation of load table" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_SeiatNE2EeiqadpQbccNDg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_SeiaudE2EeiqadpQbccNDg"/>
+      <parameter id="_SeiatdE2EeiqadpQbccNDg" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_SeiattE2EeiqadpQbccNDg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_Seiat9E2EeiqadpQbccNDg" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_SeiauNE2EeiqadpQbccNDg" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <parameter id="_iFHt8NE2EeiqadpQbccNDg" name="SQL_MULTI_QUERYS" type="Boolean" value="true"/>
+      <code>DATABASE %x{$REF/ref:target()/ref:schema()/ref:work()/tech:catalogName()}x%;&#xD;
+create table %x{md:physicalPath($REF,'workName')}x%&#xD;
+(&#xD;
+	%x{md:patternList($REF/ref:columns(),'[workName]\t[targetWritableType] [targetNullWord]',',\n\t')}x%	&#xD;
+);&#xD;
+DATABASE %x{$REF/ref:target()/ref:schema()/tech:catalogName()}x%;&#xD;
+</code>
+    </actionCode>
+    <actionCode id="_SeiaudE2EeiqadpQbccNDg" generationCondition="" isBeginAction="false" name="Select on source table (SRC)" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <bindLink id="_SeiautE2EeiqadpQbccNDg" bindType="DirectBind" executionType="OK" targetId="_SeiavdE2EeiqadpQbccNDg"/>
+      <parameter id="_Seiau9E2EeiqadpQbccNDg" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_SeiavNE2EeiqadpQbccNDg" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+      <code>select		%x{if (md:paramValue($this,'useDistinct')='true') then 'DISTINCT' else ''}x%&#xD;
+			%x{md:patternList($REF/ref:columns(),'[expression] [columnAliasWord] [workName]', ',\n\t\t\t')}x%&#xD;
+from	 %x{$REF/ref:source()/tech:name()}x% as %x{$REF/source[1]/tech:alias()}x% &#xD;
+where	(1=1)%xsl{&#xD;
+%x{$REF/tech:joinPart()}x%&#xD;
+%x{$REF/tech:filterPart()}x%&#xD;
+%x{$REF/tech:cdcFilterPart2($this)}x%&#xD;
+%x{$REF/tech:groupByPart()}x%&#xD;
+%x{$REF/tech:havingPart()}x%}xsl%&#xD;
+%x{$REF/ref:source()/mdj:xpath(.,'AFTER_FROM')}x%</code>
+    </actionCode>
+    <actionCode id="_SeiavdE2EeiqadpQbccNDg" generationCondition="" isBeginAction="false" name="Load of data (TRG)" nbCycles="-1" repetitionQuery="" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_SeiavtE2EeiqadpQbccNDg" executionType="OK" generationType="OK" mandatory="1"/>
+      <parameter id="_Seiav9E2EeiqadpQbccNDg" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_SeiawNE2EeiqadpQbccNDg" name="SQL_ACTION_TYPE" type="String" value="INSERT"/>
+      <parameter id="_SeiawdE2EeiqadpQbccNDg" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_SeiawtE2EeiqadpQbccNDg" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <code>insert into %x{md:physicalPath($REF,'workName')}x%&#xD;
+(&#xD;
+	%x{md:patternList($REF/ref:columns(),'[workName]', ',\n\t')}x%&#xD;
+)&#xD;
+values&#xD;
+(&#xD;
+	%x{md:patternList($REF/ref:columns(),':{{[workName]}}:', ',\n\t')}x%&#xD;
+)</code>
+    </actionCode>
+    <templateType>L-TP.RDBMS.LOADING</templateType>
+  </subProcess>
+  <subProcess id="_Seiaw9E2EeiqadpQbccNDg" generationCondition="" name="Clean">
+    <actionCode id="_SeiaxNE2EeiqadpQbccNDg" generationCondition="'${cleanTemporaryObjects}$'='true'" isBeginAction="false" name="Drop of load table" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_SeiaxdE2EeiqadpQbccNDg" executionType="OK" generationType="OK_KO" mandatory="1"/>
+      <parameter id="_SeiaxtE2EeiqadpQbccNDg" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_Seiax9E2EeiqadpQbccNDg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_SeiayNE2EeiqadpQbccNDg" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_SeiaydE2EeiqadpQbccNDg" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <parameter id="_kXq_YNE2EeiqadpQbccNDg" name="SQL_MULTI_QUERYS" type="Boolean" value="true"/>
+      <code>DATABASE %x{$REF/ref:target()/ref:schema()/ref:work()/tech:catalogName()}x%;&#xD;
+drop table %x{md:physicalPath($REF,'workName')}x%;&#xD;
+DATABASE %x{$REF/ref:target()/ref:schema()/tech:catalogName()}x%;&#xD;
+</code>
+    </actionCode>
+    <templateType>L-TP.RDBMS.CLEANING</templateType>
+  </subProcess>
+  <templateType>L-TP.RDBMS</templateType>
+</proc:process>

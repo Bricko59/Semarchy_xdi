@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tpc:conf xmlns:tpc="http://www.stambia.com/tpc" id="_YX8U4Fb3EemGFfagYqRCOQ">
+  <case name="I-TP">
+    <propertyState name="TYPE" value="I-TP"/>
+    <case name="Case STORED PROCEDURE">
+      <propertyState name="trgTech" value="RDBMS_STORED_PROCEDURE"/>
+      <template id="_YYDppFb3EemGFfagYqRCOQ" ref="INTEGRATION%20Stored%20Procedure.tp.proc#_3LjdoUdBEemY2or4OqFeDQ?fileId=_3LjdoUdBEemY2or4OqFeDQ$type=proc$name=INTEGRATION%20Stored%20Procedure.tp?"/>
+    </case>
+  </case>
+  <case name="L-TP">
+    <propertyState name="TYPE" value="L-TP"/>
+    <case name="TRG_RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="Case SRC STORED PROCEDURE">
+        <propertyState name="srcTech" value="RDBMS_STORED_PROCEDURE"/>
+        <template id="_YYEQsFb3EemGFfagYqRCOQ" ref="../templates.generic/Xml/LOAD%20Xml%20to%20Rdbms.proc#_eNVMMrdDEd6wPMNq-9tkHw?fileId=_eNVMMrdDEd6wPMNq-9tkHw$type=proc$name=Load%20Xml%20to%20Rdbms?"/>
+      </case>
+    </case>
+  </case>
+</tpc:conf>

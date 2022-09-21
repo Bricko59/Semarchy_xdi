@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" description="" id="UUID_TECH_CONNECTION" name="connection" ref="resource.md#UUID_MD_SUPER_TYPE?fileId=UUID_MD_SUPER_TYPE$type=md$name=super?">
+  <level icon="icons/full/custom/16x16/com.stambia.connection-16x16.png" iconBundleName="com.indy.ui.md.edit" xmlName="connection" code="com.stambia.connection" displayName="Connection Definitions" hasName="false" isFile="false"/>
+  <level icon="icons/full/custom/16x16/com.stambia.connection.connection-16x16.png" iconBundleName="com.indy.ui.md.edit" xmlName="conDef" xpathCondition="" xpathDisplayName="concat('Connection ', @name)" code="com.stambia.connection.definition" displayName="Connection" hasName="false">
+    <attribute xmlName="name" code="name" displayName="Name"/>
+    <parent>com.stambia.connection</parent>
+    <xPathExpression description="The nodes representing the parameters expected for a connection" expression="parameter">
+      <code>PARAMETERS_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="@name">
+      <code>CONNECTION_TYPE</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/16x16/UF-Parameter16x16-1.png" iconBundleName="com.indy.ui.md.edit" xmlName="parameter" xpathDisplayName="concat('Parameter ', @name, '[',@xPathExpressionCode,']')" code="com.stambia.connection.parameter" displayName="Parameter" hasName="false">
+    <attribute xmlName="name" code="name" default="" displayName="Name"/>
+    <attribute xmlName="xPathExpressionCode" code="xPathExpressionCode" displayName="xPathExpression Name"/>
+    <parent>com.stambia.connection.definition</parent>
+  </level>
+</tech:tech>

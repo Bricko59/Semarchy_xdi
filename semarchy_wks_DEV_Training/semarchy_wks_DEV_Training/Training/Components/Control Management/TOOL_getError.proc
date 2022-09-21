@@ -1,0 +1,798 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" description="How to use it ?&#xD;&#xA;----------------&#xD;&#xA;1-Drag &amp; Drop this template at the top (main) level of a process&#xD;&#xA;2-To store the errors in a table, Drag &amp; Drop a SCHEMA &#xD;&#xA;    --> a table will be created and errors will be inserted&#xD;&#xA;3-To send an email, &#xD;&#xA;    Solution A : Drag &amp; Drop a MAILING_LIST&#xD;&#xA;    --> This mailing list must be in a metadata with a SMTP server&#xD;&#xA;    --> An email will be sent with the SMTP server in HTML mode &#xD;&#xA;    Solution B : Drag &amp; Drop a TARGET_MESSAGE&#xD;&#xA;    --> An email will be sent with the SMTP server defined for the message in HTML mode&#xD;&#xA;4-To generate a file, Drag &amp; Drop a FILE_FOLDER&#xD;&#xA;    -- > A CSV file will be generated &#xD;&#xA;&#xD;&#xA;What will be done ?&#xD;&#xA;---------------------&#xD;&#xA;Depending on the metadata links dropped on getError, the template will &#xD;&#xA;&#xD;&#xA;- send an email in a HTML list, one error per row&#xD;&#xA;- insert a record per error&#xD;&#xA;- generate a csv file with one row per error&#xD;&#xA;- generate a message in Stambia Analytics&#xD;&#xA;- generate a message in Stambia Runtime Console&#xD;&#xA;&#xD;&#xA;What are your options ?&#xD;&#xA;-------------------------&#xD;&#xA;You can add a process reference/code, different to the process name. It will work even if there is no value&#xD;&#xA;You can define the prefix of the stored table&#xD;&#xA;You can define the name of the file to generate and if the file name must have the session_id&#xD;&#xA;You can define the file type (csv or txt)&#xD;&#xA;You can choose to generate an error at the end of the error treatment to keep the process in error&#xD;&#xA;You can choose to generate a message in Stambia Analytics&#xD;&#xA;You can choose to generate a message in Stambia Console" id="_mowwwYF-Eean7JATlUQCiw" metaInf="&lt;userLog path=&quot;getError&quot; trigger=&quot;beforeExecution&quot;>&#xD;&#xA;&#x9;&lt;info>ERROR on ${/CORE_SESSION_NAME}$ &lt;/info>&#xD;&#xA;&#x9;&lt;logger>stambiaLog&lt;/logger>  &#xD;&#xA;&#x9;&lt;logger>mainConsole&lt;/logger> &#xD;&#xA;&lt;/userLog> ">
+  <parameter id="_mowwwoF-Eean7JATlUQCiw" metaInf="&lt;xslVariableName>LOG_TABLE_PREFIX&lt;/xslVariableName>" label="Log table prefix" name="LOG_TABLE_PREFIX" type="String" value="LOG_"/>
+  <parameter id="_mowww4F-Eean7JATlUQCiw" label="Raise an error after logging previous errors" name="ERROR_TO_GENERATE" type="Boolean" value="true"/>
+  <parameter id="_mowwxIF-Eean7JATlUQCiw" label="Get the tolerated error messages" name="GET_TOLERATED_ERROR" type="Boolean" value="false"/>
+  <parameter id="_mowwxYF-Eean7JATlUQCiw" metaInf="" label="Add Session ID to file name" name="ADD_SESSION_ID_TO_FILE_NAME" type="Boolean" value="true"/>
+  <parameter id="_mowwxoF-Eean7JATlUQCiw" metaInf="&lt;xslVariableName>FILE_NAME&lt;/xslVariableName>" label="Name of the text file" name="FILE_NAME" type="String" value="error_"/>
+  <parameter id="_mowwx4F-Eean7JATlUQCiw" metaInf="&lt;xslVariableName>PROCESS_REFERENCE&lt;/xslVariableName>" label="Process reference (Altenate Process Name)" name="PROCESS_REFERENCE" type="String" value=""/>
+  <parameter id="_mowwyIF-Eean7JATlUQCiw" label="Generate Error Message in Production Analytics" name="GENERATE_ERROR_MESS_ANALYTICS" type="Boolean" value="false"/>
+  <parameter id="_mowwyYF-Eean7JATlUQCiw" label="Generate Error Message in Runtime Console" name="GENERATE_ERROR_MESS_CONSOLE" type="Boolean" value="false"/>
+  <parameter id="_mowwyoF-Eean7JATlUQCiw" metaInf="&lt;metaInf id=&quot;value&quot; value=&quot;csv&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;txt&quot;/>&#xD;&#xA;&lt;xslVariableName>FILE_TYPE&lt;/xslVariableName>" label="Extension of the text file" name="FILE_EXTENSION" type="String" value="txt"/>
+  <parameter id="_mowwy4F-Eean7JATlUQCiw" metaInf="&lt;metaInf id=&quot;value&quot; value=&quot;;&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;,&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;\t&quot;/>&#xD;&#xA;&lt;xslVariableName>FIELD_SEPARATOR&lt;/xslVariableName>" name="FIELD_SEPARATOR" type="String" value="\t"/>
+  <actionCode id="_mowwzIF-Eean7JATlUQCiw" generationCondition="" enable="true" isBeginAction="false" name="CREATE TABLE # ERROR #" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_mowwzYF-Eean7JATlUQCiw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_moww14F-Eean7JATlUQCiw"/>
+    <parameter description="Sql Action type (DDL_DML or SELECT, INSERT, UPDATE, DELETE)" id="_mowwzoF-Eean7JATlUQCiw" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter description="SQL Connection" id="_mowwz4F-Eean7JATlUQCiw" name="SQL_CONNECTION" type="String" value="%targetConnection{$TARGET_SCHEMA}%"/>
+    <code>CREATE TABLE %x{$tableName}x% &#xD;
+(&#xD;
+	session_id			%x{$TARGET_SCHEMA/tech:varcharDdl(100)}x%,&#xD;
+	process_label		%x{$TARGET_SCHEMA/tech:varcharDdl(100)}x%,&#xD;
+	process_reference	%x{$TARGET_SCHEMA/tech:varcharDdl(100)}x%,&#xD;
+	action_reference	%x{$TARGET_SCHEMA/tech:varcharDdl(400)}x%,&#xD;
+	error_title			%x{$TARGET_SCHEMA/tech:varcharDdl(4000)}x%,&#xD;
+	error_message_label	%x{$TARGET_SCHEMA/tech:varcharDdl(4000)}x%,&#xD;
+	severity			%x{$TARGET_SCHEMA/tech:varcharDdl(20)}x%,&#xD;
+	process_begin_date	%x{$TARGET_SCHEMA/tech:varcharDdl(100)}x%,&#xD;
+	process_error_date	%x{$TARGET_SCHEMA/tech:varcharDdl(100)}x%&#xD;
+)&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_moww0IF-Eean7JATlUQCiw" generationCondition="" isBeginAction="false" name="WriteTxtFile Header" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+    <link id="_moww0YF-Eean7JATlUQCiw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_moww3YF-Eean7JATlUQCiw"/>
+    <parameter description="Name of the file" id="_moww0oF-Eean7JATlUQCiw" name="TXT_WRITE_FILENAME" type="String" value="%x{$txtFileName}x%"/>
+    <code>BEGIN DATE%e(rhino){&quot;%x{$FIELD_SEPARATOR}x%&quot;}e%SESSION ID%e(rhino){&quot;%x{$FIELD_SEPARATOR}x%&quot;}e%SESSION NAME%e(rhino){&quot;%x{$FIELD_SEPARATOR}x%&quot;}e%PROCESS REFERENCE%e(rhino){&quot;%x{$FIELD_SEPARATOR}x%&quot;}e%ACTION REFERENCE%e(rhino){&quot;%x{$FIELD_SEPARATOR}x%&quot;}e%ERROR TITLE%e(rhino){&quot;%x{$FIELD_SEPARATOR}x%&quot;}e%ERROR TYPE</code>
+  </actionCode>
+  <actionCode id="_moww04F-Eean7JATlUQCiw" isBeginAction="false" name="Retrieve errors for Emails" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <bindLink id="_moww1IF-Eean7JATlUQCiw" bindType="DirectBind" targetId="_moww5YF-Eean7JATlUQCiw"/>
+    <parameter description="Scripting language (Rhino, Jython, etc.)" id="_moww1YF-Eean7JATlUQCiw" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+    <parameter id="_moww1oF-Eean7JATlUQCiw" name="SCRIPTING_CONNECTION" type="String" value="${CORE_ACTION_ID}$"/>
+    <code>${../Retrieve errors code/CORE_ACTION_TXT}$</code>
+  </actionCode>
+  <actionCode id="_moww14F-Eean7JATlUQCiw" generationCondition="" isBeginAction="false" name="Insert into error table" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_moww2IF-Eean7JATlUQCiw" generationCondition="" executionType="OK" generationType="OK" mandatory="1" targetId="_moww24F-Eean7JATlUQCiw"/>
+    <parameter description="Sql Action type (DDL_DML or SELECT, INSERT, UPDATE, DELETE)" id="_moww2YF-Eean7JATlUQCiw" name="SQL_ACTION_TYPE" type="String" value="INSERT"/>
+    <parameter description="SQL Connection" id="_moww2oF-Eean7JATlUQCiw" name="SQL_CONNECTION" type="String" value="%targetConnection{$TARGET_SCHEMA}%"/>
+    <code>INSERT INTO %x{$tableName}x%  &#xD;
+(&#xD;
+	session_id,&#xD;
+	process_label,&#xD;
+	process_reference,&#xD;
+	action_reference,&#xD;
+	error_title,&#xD;
+	error_message_label,&#xD;
+	severity,&#xD;
+	process_begin_date,&#xD;
+	process_error_date&#xD;
+)&#xD;
+VALUES&#xD;
+(&#xD;
+	'${/CORE_SESSION_ID}$',&#xD;
+	'${/CORE_SESSION_NAME}$',&#xD;
+	'%x{$PROCESS_REFERENCE}x%',&#xD;
+	:{ACTION_REFERENCE}:,&#xD;
+    :{ERROR_TITLE}:,&#xD;
+    :{ERROR_MESSAGE_WITHOUT_CR}:,&#xD;
+	:{ERROR_TYPE}:,&#xD;
+	'${/CORE_BEGIN_DATE}$',&#xD;
+	'${../CORE_BEGIN_DATE}$'&#xD;
+)&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_moww24F-Eean7JATlUQCiw" generationCondition="'${ERROR_TO_GENERATE}$'='true'" isBeginAction="false" name="#Throw an error#" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <parameter description="Scripting language (Rhino, Jython, etc.)" id="_moww3IF-Eean7JATlUQCiw" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+    <code>throw(&quot;An error occured during the session, please check the logs&quot;);</code>
+  </actionCode>
+  <actionCode id="_moww3YF-Eean7JATlUQCiw" generationCondition="" isBeginAction="false" name="WriteTxtFile Body" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+    <link id="_moww3oF-Eean7JATlUQCiw" generationCondition="" executionType="OK" generationType="OK" mandatory="1" targetId="_moww24F-Eean7JATlUQCiw"/>
+    <parameter description="Name of the file" id="_moww34F-Eean7JATlUQCiw" name="TXT_WRITE_FILENAME" type="String" value="%x{$txtFileName}x%"/>
+    <parameter id="_moww4IF-Eean7JATlUQCiw" name="TXT_WRITE_APPEND" type="String" value="after"/>
+    <code>${/CORE_BEGIN_DATE}$%e(rhino){&quot;%x{$FIELD_SEPARATOR}x%&quot;}e%${/CORE_SESSION_ID}$%e(rhino){&quot;%x{$FIELD_SEPARATOR}x%&quot;}e%${/CORE_SESSION_NAME}$%e(rhino){&quot;%x{$FIELD_SEPARATOR}x%&quot;}e%%x{$PROCESS_REFERENCE}x%%e(rhino){&quot;%x{$FIELD_SEPARATOR}x%&quot;}e%:{ACTION_REFERENCE}:%e(rhino){&quot;%x{$FIELD_SEPARATOR}x%&quot;}e%:{ERROR_TITLE}:%e(rhino){&quot;%x{$FIELD_SEPARATOR}x%&quot;}e%:{ERROR_TYPE}:</code>
+  </actionCode>
+  <actionCode id="_moww4YF-Eean7JATlUQCiw" generationCondition="" isBeginAction="false" name="Write HTML Header" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+    <link id="_moww4oF-Eean7JATlUQCiw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_moww5YF-Eean7JATlUQCiw"/>
+    <parameter description="Name of the file" id="_moww44F-Eean7JATlUQCiw" name="TXT_WRITE_FILENAME" type="String" value="%x{$htmlFileName}x%"/>
+    <parameter id="_moww5IF-Eean7JATlUQCiw" name="TXT_WRITE_APPEND_LINE_SEPARATOR" type="String" value="false"/>
+    <code>&lt;h1> Error in treatment %x{md:paramValue($this,'PROCESS_REFERENCE')}x% - ${/CORE_SESSION_NAME}$&lt;P>&lt;/font>&lt;/h1>&#xD;
+&lt;h2> Session Id : ${/CORE_SESSION_ID}$ &lt;P>&lt;/h2>&#xD;
+&lt;h3> Timing : ${/CORE_BEGIN_DATE}$ &lt;P> &lt;/font> &lt;/h3>&lt;P>&#xD;
+&lt;TABLE BORDER=&quot;1&quot;> &#xD;
+  &lt;CAPTION> ERROR LIST &lt;/CAPTION> &#xD;
+           &lt;TR> &#xD;
+               &lt;TH> PROCESS REFERENCE &lt;/TH>&#xD;
+               &lt;TH> ACTION REFERENCE &lt;/TH>&#xD;
+               &lt;TH> ERROR TITLE &lt;/TH>&#xD;
+               &lt;TH> ERROR TYPE &lt;/TH>&#xD;
+               &lt;TH> ERROR MESSAGE &lt;/TH>&#xD;
+           &lt;/TR></code>
+  </actionCode>
+  <actionCode id="_moww5YF-Eean7JATlUQCiw" generationCondition="" isBeginAction="false" name="Write HTML Body" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+    <link id="_moww5oF-Eean7JATlUQCiw" generationCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_moww6oF-Eean7JATlUQCiw"/>
+    <parameter description="Name of the file" id="_moww54F-Eean7JATlUQCiw" name="TXT_WRITE_FILENAME" type="String" value="%x{$htmlFileName}x%"/>
+    <parameter id="_moww6IF-Eean7JATlUQCiw" name="TXT_WRITE_APPEND_LINE_SEPARATOR" type="String" value="false"/>
+    <parameter id="_moww6YF-Eean7JATlUQCiw" name="TXT_WRITE_APPEND" type="String" value="after"/>
+    <code>:{HTML_LINE_BEGIN}:  &lt;TD> %x{$PROCESS_REFERENCE}x% &lt;/TD>  &lt;TD> :{ACTION_REFERENCE}: &lt;/TD>  &lt;TD> :{ERROR_TITLE}: &lt;/TD>  &lt;TD> :{ERROR_TYPE}: &lt;/TD>  &lt;TD> :{ERROR_MESSAGE}: &lt;/TD>  &lt;/TR></code>
+  </actionCode>
+  <actionCode id="_moww6oF-Eean7JATlUQCiw" generationCondition="" isBeginAction="false" name="Write HTML Footer" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+    <link id="_moww64F-Eean7JATlUQCiw" generationCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_moww84F-Eean7JATlUQCiw"/>
+    <parameter description="Name of the file" id="_moww7IF-Eean7JATlUQCiw" name="TXT_WRITE_FILENAME" type="String" value="%x{$htmlFileName}x%"/>
+    <parameter id="_moww7YF-Eean7JATlUQCiw" name="TXT_WRITE_APPEND_LINE_SEPARATOR" type="String" value="false"/>
+    <parameter id="_moww7oF-Eean7JATlUQCiw" name="TXT_WRITE_APPEND" type="String" value="after"/>
+    <code>&lt;/TABLE> </code>
+  </actionCode>
+  <actionCode id="_moww74F-Eean7JATlUQCiw" metaInf="&lt;userLog path=&quot;../../Errors found&quot; trigger=&quot;beforeExecution&quot;>&#xD;&#xA;&#x9;&lt;info>${../ERROR_LIST}$ &lt;/info>&#xD;&#xA;&#x9;&lt;logger>stambiaLog&lt;/logger>  &#xD;&#xA;&lt;/userLog> " generationCondition="" isBeginAction="false" name="Messages in Analytics" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_moww8IF-Eean7JATlUQCiw" generationCondition="" executionCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_moww24F-Eean7JATlUQCiw"/>
+  </actionCode>
+  <actionCode id="_moww8YF-Eean7JATlUQCiw" metaInf="&lt;userLog path=&quot;../../Errors found&quot; trigger=&quot;beforeExecution&quot;>&#xD;&#xA;&#x9;&lt;info>${../ERROR_LIST}$ &lt;/info>&#xD;&#xA;&#x9;&lt;logger>mainConsole&lt;/logger> &#xD;&#xA;&lt;/userLog> " generationCondition="" isBeginAction="false" name="Messages in Console" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_moww8oF-Eean7JATlUQCiw" generationCondition="" executionCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_moww24F-Eean7JATlUQCiw"/>
+  </actionCode>
+  <actionCode id="_moww84F-Eean7JATlUQCiw" generationCondition="" enable="true" isBeginAction="false" name="SendMail Message" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$MAIL_TARGET[name()='message']" repetitionVariableName="CUR_MAIL" toleratedError="false" technology="com.indy.engine.actionCodes.SendMailActionCodeI">
+    <link id="_moww9IF-Eean7JATlUQCiw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_mowxB4F-Eean7JATlUQCiw"/>
+    <parameter description="SMTP Host name" id="_moww9YF-Eean7JATlUQCiw" name="MAIL_HOSTNAME" type="String" value="%x{$CUR_MAIL/tech:hostName()}x%"/>
+    <parameter description="Mail sender" id="_moww9oF-Eean7JATlUQCiw" name="MAIL_FROM" type="String" value="%x{md:ifEmpty($CUR_MAIL/tech:sender(),$CUR_MAIL/tech:user())}x%"/>
+    <parameter id="_moww94F-Eean7JATlUQCiw" name="MAIL_TO" type="String" value="%x{$CUR_MAIL/tech:to()}x%"/>
+    <parameter id="_moww-IF-Eean7JATlUQCiw" name="MAIL_SUBJECT" type="String" value="%x{md:ifEmpty($CUR_MAIL/tech:subject(),'Error in ${/CORE_SESSION_NAME}$')}x%"/>
+    <parameter id="_moww-YF-Eean7JATlUQCiw" name="MAIL_PORT" type="String" value="%x{$CUR_MAIL/tech:port()}x%"/>
+    <parameter id="_moww-oF-Eean7JATlUQCiw" name="MAIL_USER" type="String" value="%x{$CUR_MAIL/tech:user()}x%"/>
+    <parameter id="_moww-4F-Eean7JATlUQCiw" name="MAIL_PASSWORD" type="String" value="%x{$CUR_MAIL/tech:password()}x%"/>
+    <parameter id="_moww_IF-Eean7JATlUQCiw" name="MAIL_SSL_PROTOCOL" type="String" value="%x{$CUR_MAIL/tech:sslProtocol()}x%"/>
+    <parameter id="_moww_YF-Eean7JATlUQCiw" name="MAIL_USE_SSL" type="String" value="%x{$CUR_MAIL/tech:useSsl()}x%"/>
+    <parameter id="_moww_oF-Eean7JATlUQCiw" name="MAIL_HTML_MODE" type="String" value="true"/>
+    <parameter id="_moww_4F-Eean7JATlUQCiw" name="MAIL_CONTENT_FILE" type="String" value="%x{if (string-length($CUR_MAIL/tech:message())=0) then $htmlFileName else ''}x%"/>
+    <parameter id="_mowxAIF-Eean7JATlUQCiw" name="MAIL_ATTACH" type="String" value="%x{if (string-length($CUR_MAIL/tech:message())=0) then '' else $htmlFileName}x%"/>
+    <parameter id="_mowxAYF-Eean7JATlUQCiw" name="MAIL_TEXT" type="String" value="%x{$CUR_MAIL/tech:message()}x%"/>
+    <parameter id="_mowxAoF-Eean7JATlUQCiw" name="MAIL_CC" type="String" value="%x{$CUR_MAIL/tech:cc()}x%"/>
+    <parameter id="_mowxA4F-Eean7JATlUQCiw" name="MAIL_BCC" type="String" value="%x{$CUR_MAIL/tech:bcc()}x%"/>
+    <code></code>
+  </actionCode>
+  <actionCode id="_mowxBIF-Eean7JATlUQCiw" isBeginAction="false" name="Delete HTML File" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+    <link id="_mowxBYF-Eean7JATlUQCiw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_moww24F-Eean7JATlUQCiw"/>
+    <parameter id="_mowxBoF-Eean7JATlUQCiw" name="DEL_FILE" type="String" value="%x{$htmlFileName}x%"/>
+  </actionCode>
+  <actionCode id="_mowxB4F-Eean7JATlUQCiw" generationCondition="" enable="true" isBeginAction="false" name="SendMail not Message" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$MAIL_TARGET[not(name()='message')]" repetitionVariableName="CUR_MAIL" toleratedError="false" technology="com.indy.engine.actionCodes.SendMailActionCodeI">
+    <link id="_mowxCIF-Eean7JATlUQCiw" generationCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_mowxBIF-Eean7JATlUQCiw"/>
+    <parameter description="SMTP Host name" id="_mowxCYF-Eean7JATlUQCiw" name="MAIL_HOSTNAME" type="String" value="%x{$DEFAULT_OUTGOING_SERVER/tech:hostName()}x%"/>
+    <parameter description="Mail sender" id="_mowxCoF-Eean7JATlUQCiw" name="MAIL_FROM" type="String" value="%x{$DEFAULT_OUTGOING_SERVER/tech:user()}x%"/>
+    <parameter id="_mowxC4F-Eean7JATlUQCiw" name="MAIL_TO" type="String" value="%x{$CUR_MAIL/tech:address()}x%%x{$CUR_MAIL/tech:addressList()}x%"/>
+    <parameter id="_mowxDIF-Eean7JATlUQCiw" name="MAIL_SUBJECT" type="String" value="Error in ${/CORE_SESSION_NAME}$"/>
+    <parameter id="_mowxDYF-Eean7JATlUQCiw" name="MAIL_PORT" type="String" value="%x{$DEFAULT_OUTGOING_SERVER/tech:port()}x%"/>
+    <parameter id="_mowxDoF-Eean7JATlUQCiw" name="MAIL_USER" type="String" value="%x{$DEFAULT_OUTGOING_SERVER/tech:user()}x%"/>
+    <parameter id="_mowxD4F-Eean7JATlUQCiw" name="MAIL_PASSWORD" type="String" value="%x{$DEFAULT_OUTGOING_SERVER/tech:password()}x%"/>
+    <parameter id="_mowxEIF-Eean7JATlUQCiw" name="MAIL_SSL_PROTOCOL" type="String" value="%x{$DEFAULT_OUTGOING_SERVER/tech:sslProtocol()}x%"/>
+    <parameter id="_mowxEYF-Eean7JATlUQCiw" name="MAIL_USE_SSL" type="String" value="%x{$DEFAULT_OUTGOING_SERVER/tech:useSsl()}x%"/>
+    <parameter id="_mowxEoF-Eean7JATlUQCiw" name="MAIL_HTML_MODE" type="String" value="true"/>
+    <parameter id="_mowxE4F-Eean7JATlUQCiw" name="MAIL_CONTENT_FILE" type="String" value="%x{$htmlFileName}x%"/>
+    <code></code>
+  </actionCode>
+  <actionCode id="_mowxFIF-Eean7JATlUQCiw" isBeginAction="false" name="Retrieve errors code" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_mowxFYF-Eean7JATlUQCiw" generationCondition="exists($MAIL_TARGET)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_mowxIIF-Eean7JATlUQCiw"/>
+    <link id="_mowxFoF-Eean7JATlUQCiw" generationCondition="exists($TARGET_FOLDER)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_mowxKoF-Eean7JATlUQCiw"/>
+    <link id="_mowxF4F-Eean7JATlUQCiw" generationCondition="exists($TARGET_SCHEMA)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_mowxJ4F-Eean7JATlUQCiw"/>
+    <code>&#xD;
+ ps=__ctx__.createBindedPreparedStatement();&#xD;
+ ps.setColumn(1,&quot;ACTION_REFERENCE&quot;,&quot;VARCHAR&quot;,400);&#xD;
+ ps.setColumn(2,&quot;ERROR_TITLE&quot;,&quot;VARCHAR&quot;,400);&#xD;
+ ps.setColumn(3,&quot;ERROR_TYPE&quot;,&quot;VARCHAR&quot;,50);&#xD;
+ ps.setColumn(4,&quot;ERROR_MESSAGE&quot;,&quot;VARCHAR&quot;,4000);&#xD;
+ ps.setColumn(5,&quot;HTML_LINE_BEGIN&quot;,&quot;VARCHAR&quot;,100);&#xD;
+ ps.setColumn(6,&quot;ERROR_MESSAGE_WITHOUT_CR&quot;,&quot;VARCHAR&quot;,4000);&#xD;
+ &#xD;
+ var hasTolerated = &quot;%x{md:paramValue($this,'GET_TOLERATED_ERROR')}x%&quot;;&#xD;
+ var error_list =&quot;&quot;;&#xD;
+ &#xD;
+ tree = __ctx__.getVariableTreeByName(&quot;CORE_STACK_TRACE&quot;,&quot;~/&quot;);&#xD;
+ &#xD;
+ if (tree.size() != 0) &#xD;
+ {&#xD;
+    for (i= tree.keySet().iterator() ; i.hasNext() ; ) &#xD;
+    {&#xD;
+        action = i.next();&#xD;
+        if (!(action.indexOf(&quot;#Throw an error#&quot;) > 0 || action.indexOf(&quot;CREATE TABLE # ERROR #&quot;) > 0 || action.indexOf(&quot;Internal Reject treatment&quot;) > 0))&#xD;
+        {  &#xD;
+           maVar = tree.get(action);&#xD;
+           cte = __ctx__.getVariableValue(&quot;/&quot; + action + &quot;/CORE_TOLERATED_ERROR&quot;);&#xD;
+           if (cte.substring(0,1).equals('f') || hasTolerated.substring(0,1).equals('t'))&#xD;
+           {&#xD;
+&#xD;
+              ps.setString(1,action);&#xD;
+              my_message=__ctx__.getVariableValue(&quot;/&quot; + action + &quot;/CORE_RET_MESS&quot;);&#xD;
+              my_message=my_message.replace('/(\r\n|\n|\r)/gm',&quot; &quot;);&#xD;
+              ps.setString(2,my_message);&#xD;
+              error_list = error_list + action + &quot; : &quot; + __ctx__.getVariableValue(&quot;/&quot; + action + &quot;/CORE_RET_MESS&quot;);&#xD;
+              if (cte.substring(0,1).equals('t'))&#xD;
+              {&#xD;
+                 ps.setString(3,&quot;TOLERATED&quot;);&#xD;
+                 ps.setString(5,&quot;&lt;TR bgcolor=#ffffe0>&quot;);&#xD;
+                 error_list = error_list + &quot; (Tolerated)\n\r&quot;;&#xD;
+              }&#xD;
+              else&#xD;
+              {&#xD;
+                 ps.setString(3,&quot;FATAL&quot;);&#xD;
+                 ps.setString(5,&quot;&lt;TR bgcolor=#FFEFD5>&quot;);&#xD;
+                 error_list = error_list + &quot; (Tolerated)\n\r&quot;;&#xD;
+              }&#xD;
+              ps.setString(4,maVar.getValue());&#xD;
+              ps.setString(6,maVar.getValue().replace('/[\n\r;]/g', &quot; &quot;));&#xD;
+              ps.addBatch();&#xD;
+           }&#xD;
+        }           &#xD;
+        &#xD;
+    }&#xD;
+    ps.executeBatch();&#xD;
+    &#xD;
+ }&#xD;
+&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_mowxGIF-Eean7JATlUQCiw" isBeginAction="false" name="Retrieve errors for File" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <bindLink id="_mowxGYF-Eean7JATlUQCiw" bindType="DirectBind" targetId="_moww3YF-Eean7JATlUQCiw"/>
+    <parameter description="Scripting language (Rhino, Jython, etc.)" id="_mowxGoF-Eean7JATlUQCiw" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+    <parameter id="_mowxG4F-Eean7JATlUQCiw" name="SCRIPTING_CONNECTION" type="String" value="${CORE_ACTION_ID}$"/>
+    <code>${../Retrieve errors code/CORE_ACTION_TXT}$</code>
+  </actionCode>
+  <actionCode id="_mowxHIF-Eean7JATlUQCiw" isBeginAction="false" name="Retrieve errors for Table" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <bindLink id="_mowxHYF-Eean7JATlUQCiw" bindType="DirectBind" targetId="_moww14F-Eean7JATlUQCiw"/>
+    <parameter description="Scripting language (Rhino, Jython, etc.)" id="_mowxHoF-Eean7JATlUQCiw" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+    <parameter id="_mowxH4F-Eean7JATlUQCiw" name="SCRIPTING_CONNECTION" type="String" value="${CORE_ACTION_ID}$"/>
+    <code>${../Retrieve errors code/CORE_ACTION_TXT}$</code>
+  </actionCode>
+  <actionCode id="_mowxIIF-Eean7JATlUQCiw" isBeginAction="false" name="Emails" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_mowxIYF-Eean7JATlUQCiw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_moww4YF-Eean7JATlUQCiw"/>
+    <link id="_mowxIoF-Eean7JATlUQCiw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_moww04F-Eean7JATlUQCiw"/>
+  </actionCode>
+  <actionCode id="_mowxI4F-Eean7JATlUQCiw" isBeginAction="false" name="Analytics" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_mowxJIF-Eean7JATlUQCiw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_moww74F-Eean7JATlUQCiw"/>
+  </actionCode>
+  <actionCode id="_mowxJYF-Eean7JATlUQCiw" isBeginAction="false" name="Console" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_mowxJoF-Eean7JATlUQCiw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_moww8YF-Eean7JATlUQCiw"/>
+  </actionCode>
+  <actionCode id="_mowxJ4F-Eean7JATlUQCiw" isBeginAction="false" name="Table" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_mowxKIF-Eean7JATlUQCiw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_mowwzIF-Eean7JATlUQCiw"/>
+    <link id="_mowxKYF-Eean7JATlUQCiw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_mowxHIF-Eean7JATlUQCiw"/>
+  </actionCode>
+  <actionCode id="_mowxKoF-Eean7JATlUQCiw" isBeginAction="false" name="File" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_mowxK4F-Eean7JATlUQCiw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_moww0IF-Eean7JATlUQCiw"/>
+    <link id="_mowxLIF-Eean7JATlUQCiw" generationCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_mowxGIF-Eean7JATlUQCiw"/>
+  </actionCode>
+  <actionCode id="_mowxLYF-Eean7JATlUQCiw" isBeginAction="false" name="Publish errors" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <link id="_mowxLoF-Eean7JATlUQCiw" generationCondition="'${GENERATE_ERROR_MESS_ANALYTICS}$'='true'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_mowxI4F-Eean7JATlUQCiw"/>
+    <link id="_mowxL4F-Eean7JATlUQCiw" generationCondition="'${GENERATE_ERROR_MESS_CONSOLE}$'='true' " executionType="OK" generationType="OK_KO" mandatory="1" targetId="_mowxJYF-Eean7JATlUQCiw"/>
+    <parameter description="Scripting language (Rhino, Jython, etc.)" id="_mowxMIF-Eean7JATlUQCiw" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+    <parameter id="_mowxMYF-Eean7JATlUQCiw" name="SCRIPTING_CONNECTION" type="String" value="${CORE_ACTION_ID}$"/>
+    <code> var hasTolerated = &quot;%x{md:paramValue($this,'GET_TOLERATED_ERROR')}x%&quot;;&#xD;
+ var error_list =&quot;&quot;;&#xD;
+ &#xD;
+ tree = __ctx__.getVariableTreeByName(&quot;CORE_STACK_TRACE&quot;,&quot;~/&quot;);&#xD;
+ &#xD;
+ if (tree.size() != 0) &#xD;
+ {&#xD;
+    for (i= tree.keySet().iterator() ; i.hasNext() ; ) &#xD;
+    {&#xD;
+        action = i.next();&#xD;
+        if (!(action.indexOf(&quot;#Throw an error#&quot;) > 0 || action.indexOf(&quot;CREATE TABLE # ERROR #&quot;) > 0 || action.indexOf(&quot;Internal Reject treatment&quot;) > 0))&#xD;
+        {  &#xD;
+           maVar = tree.get(action);&#xD;
+           cte = __ctx__.getVariableValue(&quot;/&quot; + action + &quot;/CORE_TOLERATED_ERROR&quot;);&#xD;
+           if (cte.substring(0,1).equals('f') || hasTolerated.substring(0,1).equals('t'))&#xD;
+           {&#xD;
+&#xD;
+              error_list = error_list + action + &quot; : &quot; + __ctx__.getVariableValue(&quot;/&quot; + action + &quot;/CORE_RET_MESS&quot;);&#xD;
+              if (cte.substring(0,1).equals('t'))&#xD;
+              {&#xD;
+                 error_list = error_list + &quot; (Tolerated)\n\r&quot;;&#xD;
+              }&#xD;
+              else&#xD;
+              {&#xD;
+                 error_list = error_list + &quot; (Tolerated)\n\r&quot;;&#xD;
+              }&#xD;
+           }&#xD;
+        }           &#xD;
+        &#xD;
+    }&#xD;
+    __ctx__.publishVariable(&quot;../ERROR_LIST&quot;,error_list);&#xD;
+    &#xD;
+ }&#xD;
+&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_mowxMoF-Eean7JATlUQCiw" isBeginAction="false" name="Start" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_mowxM4F-Eean7JATlUQCiw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_mowxFIF-Eean7JATlUQCiw"/>
+    <link id="_mowxNIF-Eean7JATlUQCiw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_mowxLYF-Eean7JATlUQCiw"/>
+  </actionCode>
+  <xslVariable id="_mowxNYF-Eean7JATlUQCiw" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='directory'][1]" name="TARGET_FOLDER" type="xpath" visibility="current"/>
+  <xslVariable description="How to use it ?&#xD;&#xA;----------------&#xD;&#xA;1-Drag &amp; Drop this template at the top (main) level of a process&#xD;&#xA;2-Drag &amp; Drop a RDBMS schema in this template&#xD;&#xA;3-Link the end of the process to this template with a &quot;Unsuccessful Link&quot;&#xD;&#xA;4-Define the properties of the template&#xD;&#xA;&#xD;&#xA;What will be done ?&#xD;&#xA;---------------------&#xD;&#xA;The template will try to CREATE the STB_ERROR_LOG table in the schema &#xD;&#xA;The template will INSERT error properties in the STB_ERROR_LOG table , one record per error&#xD;&#xA;At the end, an error is generated to keep the process in error&#xD;&#xA;&#xD;&#xA;What are your options ?&#xD;&#xA;-------------------------&#xD;&#xA;You can add a process reference/code, different to the process name. It will work even if there is no value&#xD;&#xA;You can choose to drop the STB_ERROR_LOG table at the begin of the template&#xD;&#xA;You can choose to insert also the TOLERATED errors in the table&#xD;&#xA;&#xD;&#xA;mdj:getMetaDataRef($this/metaDataLink[1])" id="_mowxNoF-Eean7JATlUQCiw" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='schema'][1]" name="TARGET_SCHEMA" type="xpath" visibility="current"/>
+  <xslVariable id="_mowxN4F-Eean7JATlUQCiw" code="$this/metaDataLink/mdj:getMetaDataRef(.)[ancestor-or-self::server[@defType='com.stambia.mail.server']]" name="MAIL" type="xpath" visibility="current"/>
+  <xslVariable id="_mowxOIF-Eean7JATlUQCiw" code="concat(&#xD;&#xA;&#x9;'${/CORE_TEMPORARY_FOLDER}$/',&#xD;&#xA;&#x9;md:paramValue($this,'FILE_NAME'),&#xD;&#xA;&#x9;if (md:paramValue($this,'ADD_SESSION_ID_TO_FILE_NAME')='true') then '${/CORE_SESSION_ID}$' else '', &#xD;&#xA;&#x9;'.html'&#xD;&#xA;)" name="htmlFileName" order="1" type="xpath" visibility="current"/>
+  <xslVariable id="_mowxOYF-Eean7JATlUQCiw" code="md:objectPath($TARGET_SCHEMA,concat(md:paramValue($this,'LOG_TABLE_PREFIX'),'ERROR'))" name="tableName" order="1" type="xpath" visibility="current"/>
+  <xslVariable id="_mowxOoF-Eean7JATlUQCiw" code="concat(&#xD;&#xA;&#x9;$TARGET_FOLDER/tech:path(),&#xD;&#xA;&#x9;'/',&#xD;&#xA;&#x9;md:paramValue($this,'FILE_NAME'),&#xD;&#xA;&#x9;if (md:paramValue($this,'ADD_SESSION_ID_TO_FILE_NAME')='true') then '${/CORE_SESSION_ID}$' else '',&#xD;&#xA;&#x9;'.',&#xD;&#xA;&#x9;md:paramValue($this,'FILE_EXTENSION')&#xD;&#xA;)" name="txtFileName" order="1" type="xpath" visibility="current"/>
+  <xslVariable id="_mowxO4F-Eean7JATlUQCiw" code="$MAIL[name()='message' or name()='mailingList' or name()='incomingAccount']" name="MAIL_TARGET" order="1" type="xpath"/>
+  <xslVariable id="_mowxPIF-Eean7JATlUQCiw" code="if(exists($MAIL[name()='outgoingServer'])) &#xD;&#xA;then $MAIL[name()='outgoingServer'][1]&#xD;&#xA;else $MAIL/ancestor-or-self::*/outgoingServer[1]" name="DEFAULT_OUTGOING_SERVER" order="1" type="xpath"/>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.2/notation#/?fileId=_mowwwYF-Eean7JATlUQCiw?" xmi:id="_907i8IFeEean7JATlUQCiw" type="Proc" measurementUnit="Pixel">
+  <children xmi:type="notation:Node" xmi:id="_CJHcQFpcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJJRcFpcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJJ4gFpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJJ4gVpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJJ4glpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJJ4g1pcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJLGoFpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJLGoVpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJLGolpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJLGo1pcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJHcQVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_mowwzIF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=CREATE%20TABLE%20%23%20ERROR%20%23?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJHcQlpcEeuxJP3sIsuW8w" x="48" y="378"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJLtsFpcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJLts1pcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJMUwFpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJMUwVpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJMUwlpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJMUw1pcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJMUxFpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJMUxVpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJMUxlpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJMUx1pcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJLtsVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_moww0IF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=WriteTxtFile%20Header?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJLtslpcEeuxJP3sIsuW8w" x="942" y="378"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJMUyFpcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJMUy1pcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJMUzFpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJMUzVpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJMUzlpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJMUz1pcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJM70FpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJM70VpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJM70lpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJM701pcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJMUyVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_moww04F-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=Retrieve%20errors%20for%20Emails?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJMUylpcEeuxJP3sIsuW8w" x="-756" y="378"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJM71FpcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJM711pcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJM72FpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJM72VpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJM72lpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJM721pcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJNi4FpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJNi4VpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJNi4lpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJNi41pcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJM71VpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_moww14F-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=Insert%20into%20error%20table?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJM71lpcEeuxJP3sIsuW8w" x="498" y="516"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJNi5FpcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJOJ8FpcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJOJ8VpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJOJ8lpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJOJ81pcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJOJ9FpcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJOJ9VpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJOxAFpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJOxAVpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJOxAlpcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJNi5VpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_moww24F-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=%23Throw%20an%20error%23?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJNi5lpcEeuxJP3sIsuW8w" x="1014" y="1584"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJOxA1pcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJPYEFpcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJPYEVpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJPYElpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJPYE1pcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJPYFFpcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJPYFVpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJPYFlpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJPYF1pcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJPYGFpcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJOxBFpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_moww3YF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=WriteTxtFile%20Body?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJOxBVpcEeuxJP3sIsuW8w" x="972" y="516"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJP_IFpcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJP_I1pcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJQmMFpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJQmMVpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJQmMlpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJQmM1pcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJQmNFpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJQmNVpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJQmNlpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJQmN1pcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJP_IVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_moww4YF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=Write%20HTML%20Header?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJP_IlpcEeuxJP3sIsuW8w" x="-342" y="378"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJQmOFpcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJRNQFpcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJRNQVpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJRNQlpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJRNQ1pcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJRNRFpcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJRNRVpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJRNRlpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJRNR1pcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJRNSFpcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJQmOVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_moww5YF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=Write%20HTML%20Body?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJQmOlpcEeuxJP3sIsuW8w" x="-342" y="516"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJR0UFpcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJR0U1pcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJSbYFpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJSbYVpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJSbYlpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJSbY1pcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJSbZFpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJSbZVpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJSbZlpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJSbZ1pcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJR0UVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_moww6oF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=Write%20HTML%20Footer?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJR0UlpcEeuxJP3sIsuW8w" x="-102" y="666"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJSbaFpcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJTCcFpcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJTCcVpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJTCclpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJTCc1pcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJTCdFpcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJTCdVpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJTCdlpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJTCd1pcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJTCeFpcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJSbaVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_moww74F-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=Messages%20in%20Analytics?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJSbalpcEeuxJP3sIsuW8w" x="1176" y="1464"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJTpgFpcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJTpg1pcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJTphFpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJTphVpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJTphlpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJTph1pcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJUQkFpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJUQkVpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJUQklpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJUQk1pcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJTpgVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_moww8YF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=Messages%20in%20Console?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJTpglpcEeuxJP3sIsuW8w" x="1422" y="1464"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJUQlFpcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJU3oFpcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJU3oVpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJU3olpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJU3o1pcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJU3pFpcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJU3pVpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJU3plpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJU3p1pcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJU3qFpcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJUQlVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_moww84F-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=SendMail%20Message?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJUQllpcEeuxJP3sIsuW8w" y="816"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJU3qVpcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJVesFpcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJVesVpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJVeslpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJVes1pcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJVetFpcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJVetVpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJVetlpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJVet1pcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJVeuFpcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJU3qlpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_mowxBIF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=Delete%20HTML%20File?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJU3q1pcEeuxJP3sIsuW8w" x="648" y="1464"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJWFwFpcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJWFw1pcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJWFxFpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJWFxVpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJWFxlpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJWFx1pcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJWs0FpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJWs0VpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJWs0lpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJWs01pcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJWFwVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_mowxB4F-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=SendMail%20not%20Message?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJWFwlpcEeuxJP3sIsuW8w" x="270" y="1170"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJWs1FpcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJWs11pcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJXT4FpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJXT4VpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJXT4lpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJXT41pcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJXT5FpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJXT5VpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJXT5lpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJXT51pcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJWs1VpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_mowxFIF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=Retrieve%20errors%20code?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJWs1lpcEeuxJP3sIsuW8w" x="750" y="168"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJX68FpcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJYiAFpcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJYiAVpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJYiAlpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJYiA1pcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJYiBFpcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJZJEFpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJZJEVpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJZJElpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJZJE1pcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJX68VpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_mowxGIF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=Retrieve%20errors%20for%20File?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJX68lpcEeuxJP3sIsuW8w" x="1320" y="378"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJZwIFpcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJaXMFpcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJaXMVpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJaXMlpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJaXM1pcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJaXNFpcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJaXNVpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJaXNlpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJaXN1pcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJaXOFpcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJZwIVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_mowxHIF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=Retrieve%20errors%20for%20Table?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJZwIlpcEeuxJP3sIsuW8w" x="528" y="378"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJa-QFpcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJblUFpcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJblUVpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJblUlpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJblU1pcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJblVFpcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJblVVpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJblVlpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJblV1pcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJblWFpcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJa-QVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_mowxIIF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=Emails?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJa-QlpcEeuxJP3sIsuW8w" x="-222" y="276"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJcMYFpcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJczcFpcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJczcVpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJczclpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJczc1pcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJczdFpcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJdagFpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJdagVpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJdaglpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJdag1pcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJcMYVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_mowxI4F-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=Analytics?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJcMYlpcEeuxJP3sIsuW8w" x="1368" y="1170"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJdahFpcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJeBkFpcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJeBkVpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJeBklpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJeBk1pcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJeBlFpcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJeBlVpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJeBllpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJeBl1pcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJeBmFpcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJdahVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_mowxJYF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=Console?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJdahlpcEeuxJP3sIsuW8w" x="1530" y="1170"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJeBmVpcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJeBnFpcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJeooFpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJeooVpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJeoolpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJeoo1pcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJeopFpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJeopVpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJeoplpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJeop1pcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJeBmlpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_mowxJ4F-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=Table?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJeBm1pcEeuxJP3sIsuW8w" x="666" y="276"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJeoqFpcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJfPsFpcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJfPsVpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJfPslpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJfPs1pcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJfPtFpcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJfPtVpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJfPtlpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJfPt1pcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJfPuFpcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJeoqVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_mowxKoF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=File?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJeoqlpcEeuxJP3sIsuW8w" x="1062" y="276"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJf2wFpcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJf2w1pcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJf2xFpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJf2xVpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJf2xlpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJf2x1pcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJf2yFpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJf2yVpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJf2ylpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJf2y1pcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJf2wVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_mowxLYF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=Publish%20errors?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJf2wlpcEeuxJP3sIsuW8w" x="1428" y="816"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJgd0FpcEeuxJP3sIsuW8w" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_CJgd01pcEeuxJP3sIsuW8w" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="_CJhE4FpcEeuxJP3sIsuW8w" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJhE4VpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJhE4lpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJhE41pcEeuxJP3sIsuW8w"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CJhE5FpcEeuxJP3sIsuW8w" type="7002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_CJhE5VpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_CJhE5lpcEeuxJP3sIsuW8w"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_CJhE51pcEeuxJP3sIsuW8w"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJgd0VpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../TOOL_getError.proc#_mowxMoF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=Start?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJgd0lpcEeuxJP3sIsuW8w" x="1674" y="66"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJhr8FpcEeuxJP3sIsuW8w" type="2005">
+    <children xmi:type="notation:Node" xmi:id="_CJiTAFpcEeuxJP3sIsuW8w" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJhr8VpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:Parameter" href="../../TOOL_getError.proc#_mowwwoF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=LOG_TABLE_PREFIX?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJhr8lpcEeuxJP3sIsuW8w" x="1800" y="252"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJi6EFpcEeuxJP3sIsuW8w" type="2005">
+    <children xmi:type="notation:Node" xmi:id="_CJi6E1pcEeuxJP3sIsuW8w" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJi6EVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:Parameter" href="../../TOOL_getError.proc#_mowww4F-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=ERROR_TO_GENERATE?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJi6ElpcEeuxJP3sIsuW8w" x="1800" y="60"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJi6FFpcEeuxJP3sIsuW8w" type="2005">
+    <children xmi:type="notation:Node" xmi:id="_CJjhIFpcEeuxJP3sIsuW8w" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJi6FVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:Parameter" href="../../TOOL_getError.proc#_mowwxIF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=GET_TOLERATED_ERROR?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJi6FlpcEeuxJP3sIsuW8w" x="1800" y="228"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJjhIVpcEeuxJP3sIsuW8w" type="2005">
+    <children xmi:type="notation:Node" xmi:id="_CJjhJFpcEeuxJP3sIsuW8w" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJjhIlpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:Parameter" href="../../TOOL_getError.proc#_mowwxYF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=ADD_SESSION_ID_TO_FILE_NAME?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJjhI1pcEeuxJP3sIsuW8w" x="1800" y="30"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJjhJVpcEeuxJP3sIsuW8w" type="2005">
+    <children xmi:type="notation:Node" xmi:id="_CJjhKFpcEeuxJP3sIsuW8w" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJjhJlpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:Parameter" href="../../TOOL_getError.proc#_mowwxoF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=FILE_NAME?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJjhJ1pcEeuxJP3sIsuW8w" x="1800" y="144"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJjhKVpcEeuxJP3sIsuW8w" type="2005">
+    <children xmi:type="notation:Node" xmi:id="_CJkIMFpcEeuxJP3sIsuW8w" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJjhKlpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:Parameter" href="../../TOOL_getError.proc#_mowwx4F-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=PROCESS_REFERENCE?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJjhK1pcEeuxJP3sIsuW8w" x="1800" y="282"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJkIMVpcEeuxJP3sIsuW8w" type="2005">
+    <children xmi:type="notation:Node" xmi:id="_CJkINFpcEeuxJP3sIsuW8w" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJkIMlpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:Parameter" href="../../TOOL_getError.proc#_mowwyIF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=GENERATE_ERROR_MESS_ANALYTICS?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJkIM1pcEeuxJP3sIsuW8w" x="1800" y="168"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJkINVpcEeuxJP3sIsuW8w" type="2005">
+    <children xmi:type="notation:Node" xmi:id="_CJkIOFpcEeuxJP3sIsuW8w" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJkINlpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:Parameter" href="../../TOOL_getError.proc#_mowwyYF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=GENERATE_ERROR_MESS_CONSOLE?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJkIN1pcEeuxJP3sIsuW8w" x="1800" y="198"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJkvQFpcEeuxJP3sIsuW8w" type="2005">
+    <children xmi:type="notation:Node" xmi:id="_CJkvQ1pcEeuxJP3sIsuW8w" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJkvQVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:Parameter" href="../../TOOL_getError.proc#_mowwyoF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=FILE_EXTENSION?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJkvQlpcEeuxJP3sIsuW8w" x="1800" y="114"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJkvRFpcEeuxJP3sIsuW8w" type="2005">
+    <children xmi:type="notation:Node" xmi:id="_CJlWUFpcEeuxJP3sIsuW8w" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJkvRVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:Parameter" href="../../TOOL_getError.proc#_mowwy4F-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=FIELD_SEPARATOR?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJkvRlpcEeuxJP3sIsuW8w" x="1800" y="84"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJlWUVpcEeuxJP3sIsuW8w" type="2007">
+    <children xmi:type="notation:Node" xmi:id="_CJl9YFpcEeuxJP3sIsuW8w" type="5007"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJlWUlpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:XslVariable" href="../../TOOL_getError.proc#_mowxNYF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJlWU1pcEeuxJP3sIsuW8w" x="2160" y="108"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJmkcFpcEeuxJP3sIsuW8w" type="2007">
+    <children xmi:type="notation:Node" xmi:id="_CJmkc1pcEeuxJP3sIsuW8w" type="5007"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJmkcVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:XslVariable" href="../../TOOL_getError.proc#_mowxNoF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJmkclpcEeuxJP3sIsuW8w" x="2160" y="132"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJnLgFpcEeuxJP3sIsuW8w" type="2007">
+    <children xmi:type="notation:Node" xmi:id="_CJnLg1pcEeuxJP3sIsuW8w" type="5007"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJnLgVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:XslVariable" href="../../TOOL_getError.proc#_mowxN4F-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJnLglpcEeuxJP3sIsuW8w" x="2160" y="54"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJnykFpcEeuxJP3sIsuW8w" type="2007">
+    <children xmi:type="notation:Node" xmi:id="_CJoZoFpcEeuxJP3sIsuW8w" type="5007"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJnykVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:XslVariable" href="../../TOOL_getError.proc#_mowxOIF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJnyklpcEeuxJP3sIsuW8w" x="2160" y="156"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJoZoVpcEeuxJP3sIsuW8w" type="2007">
+    <children xmi:type="notation:Node" xmi:id="_CJpAsFpcEeuxJP3sIsuW8w" type="5007"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJoZolpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:XslVariable" href="../../TOOL_getError.proc#_mowxOYF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJoZo1pcEeuxJP3sIsuW8w" x="2160" y="180"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJpAsVpcEeuxJP3sIsuW8w" type="2007">
+    <children xmi:type="notation:Node" xmi:id="_CJpAtFpcEeuxJP3sIsuW8w" type="5007"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJpAslpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:XslVariable" href="../../TOOL_getError.proc#_mowxOoF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJpAs1pcEeuxJP3sIsuW8w" x="2160" y="204"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJpnwFpcEeuxJP3sIsuW8w" type="2007">
+    <children xmi:type="notation:Node" xmi:id="_CJpnw1pcEeuxJP3sIsuW8w" type="5007"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJpnwVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:XslVariable" href="../../TOOL_getError.proc#_mowxO4F-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJpnwlpcEeuxJP3sIsuW8w" x="2160" y="78"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_CJpnxFpcEeuxJP3sIsuW8w" type="2007">
+    <children xmi:type="notation:Node" xmi:id="_CJqO0FpcEeuxJP3sIsuW8w" type="5007"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_CJpnxVpcEeuxJP3sIsuW8w" fontName="Segoe UI"/>
+    <element xmi:type="proc:XslVariable" href="../../TOOL_getError.proc#_mowxPIF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CJpnxlpcEeuxJP3sIsuW8w" x="2160" y="30"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_907i8YFeEean7JATlUQCiw"/>
+  <element xmi:type="proc:ActionProcess" href="../../TOOL_getError.proc#_mowwwYF-Eean7JATlUQCiw?fileId=_mowwwYF-Eean7JATlUQCiw$type=proc$name=TOOL_getError?"/>
+</notation:Diagram>
+]]></diagram>
+</proc:process>

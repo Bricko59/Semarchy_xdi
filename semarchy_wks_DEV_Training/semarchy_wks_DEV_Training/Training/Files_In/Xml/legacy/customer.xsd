@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:com="http://stambia.org/samples/common" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://stambia.org/samples/common" schemaLocation="common.xsd"/>
+	<xs:complexType name="Customer">
+		<xs:sequence>
+			<xs:element name="address" type="Address" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="phones" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="phone" type="Phone" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="mail" type="Mail" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="com:stay" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="ident" type="xs:ID"/>
+		<xs:attribute name="title" type="xs:string"/>
+		<xs:attribute ref="com:name"/>
+		<xs:attribute name="forname" type="xs:string"/>
+		<xs:attribute name="company" type="xs:string"/>
+	</xs:complexType>
+	<xs:complexType name="Mail">
+		<xs:attribute name="ident" type="xs:string"/>
+		<xs:attribute name="address" type="xs:string"/>
+		<xs:attribute name="localisation" type="xs:string"/>
+	</xs:complexType>
+	<xs:complexType name="Address">
+		<xs:simpleContent>
+			<xs:extension base="xs:string"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="Phone">
+		<xs:sequence>
+			<xs:element name="num" type="xs:string"/>
+			<xs:element name="localisation" type="xs:anySimpleType" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="type" type="xs:string"/>
+	</xs:complexType>
+	<xs:complexType name="Title"/>
+	<xs:complexType name="PhoneType"/>
+	<xs:element name="customer" type="Customer"/>
+	<xs:complexType name="Customers">
+		<xs:sequence>
+			<xs:element ref="customer" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="customers" type="Customers"/>
+</xs:schema>

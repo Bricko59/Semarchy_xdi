@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_Zu9j8YCmEeaFYYDyqENveQ" description="This tool is used to export data from an LDAP server into a file.&#xD;&#xA;&#xD;&#xA;To use the tool:&#xD;&#xA;1. Drag and drop it in a process&#xD;&#xA;2. Add a LDAP server Metadata Link on the process&#xD;&#xA;3. Add a File Metadata Link on the process&#xD;&#xA;&#xD;&#xA;The name of the fields defined in the file must match the names of the ldap attributes to export.&#xD;&#xA;E.g. &quot;cn&quot;,&quot;sn&quot;, ...&#xD;&#xA;&#xD;&#xA;Refer to the description of each Parameter for more information.&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;18/03/2020&#x9;new option attributesFormattedAsSidString to list attributes to be exported in &quot;SID String&quot; format&#xD;&#xA;30/01/2020&#x9;optimization: ignore attributes not listed in target file &#xD;&#xA;27/12/2019&#x9;fix scripting error when the tool is used several times in the same process&#xD;&#xA;08/08/2019&#x9;fix parameter countLimit could be ignored&#xD;&#xA;07/08/2019&#x9;support for pagination - see pageSize parameter&#xD;&#xA;05/10/2018&#x9;fix undefined variable issue&#xD;&#xA;22/09/2016  tool creation&#xD;&#xA;">
+  <parameter id="_Zu9j-ICmEeaFYYDyqENveQ" description="Defines the LDAP context in which the search will be performed.&#xD;&#xA;This correspond to the DN where the search will begin.&#xD;&#xA;&#xD;&#xA;E.g. dc=example,dc=com&#xD;&#xA;&#xD;&#xA;Note: If you already specified a DN in the LDAP Provider Url, the value defined in the search context parameter will inherit from it." name="searchContext" type="String" value=""/>
+  <parameter id="_Zu9j8oCmEeaFYYDyqENveQ" description="Defines the LDAP filter expression to use when searching data in the LDAP server.&#xD;&#xA;This allows to retrieve only the records matching the specified expression.&#xD;&#xA;&#xD;&#xA;E.g. (objectClass=person)&#xD;&#xA;&#xD;&#xA;Please refer to ldap documentation for more information about the filter syntax." name="filterExpression" type="String" value="(objectClass=*)"/>
+  <parameter id="_Zu9j94CmEeaFYYDyqENveQ" description="Name of the field that will contain the distinguished name (DN) of the record.&#xD;&#xA;This allows to write the DN of each record in the target file.&#xD;&#xA;The name defined in this parameter must match the name of a field defined in the file.&#xD;&#xA;" name="dnFieldName" type="String" value="dn"/>
+  <parameter id="_Zu9j-YCmEeaFYYDyqENveQ" description="This parameter defines how the template matches the ldap attributes with the file's fields. &#xD;&#xA;- physical name: the template gets the ldap attributes which have the same name as the fields' physical names&#xD;&#xA;- logical name: the template gets the ldap attributes named as the field name (not physical)&#xD;&#xA;" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;physical name&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;logical name&quot;/>" name="matchLdapAttributesWith" type="String" value="physical name"/>
+  <parameter id="_Zu9j84CmEeaFYYDyqENveQ" description="If true, a header line containing the name of the exported attributes is added to the target file.&#xD;&#xA;If false, no header line is written, data is directly exported to the file." metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;true&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;false&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;onFileCreation&quot;/>" name="generateHeader" type="String" value="false"/>
+  <parameter id="_Zu9j9ICmEeaFYYDyqENveQ" description="If set to true, the target file will be truncated prior to the export if it already exists.&#xD;&#xA;If false, exported data will be appended to the existing file." name="truncateTargetFile" type="Boolean" value="false"/>
+  <parameter id="_Zu9j9YCmEeaFYYDyqENveQ" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;true&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;false&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;leftTruncation&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;rightTruncation&quot;/>" name="acceptDataOverflow" type="String" value="false"/>
+  <parameter id="_Zu9j9oCmEeaFYYDyqENveQ" description="Defines where the file separator character should be written.&#xD;&#xA;- before: the file separator is written before the exported data.&#xD;&#xA;- after: the file separator is written after the exported data." metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;before&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;after&quot;/>" name="fileSeparator" type="String" value="before"/>
+  <parameter id="_vt3O4IGQEeadw9-p_puXuw" description="This parameter specifies the number of records returned in a single search.&#xD;&#xA;&#xD;&#xA;When paging is enabled, this has no effect, except that the value must be greater than or equal to the page size.&#xD;&#xA;For example, if you set PAGESIZE to 100 and COUNTLIMIT to 90, the server will return &quot;LDAP errpr code 4 - sizeLimit Exceeded&quot; because the server tried to read a page of 100 records and the count limit is only 90.&#xD;&#xA;&#xD;&#xA;If COUNTLIMIT is specified and PAGESIZE is not, then the number of rows is limited to COUNTLIMIT.&#xD;&#xA;&#xD;&#xA;The default is 0 (no limit is set, except that imposed by the LDAP server. " name="countLimit" type="Integer" value=""/>
+  <parameter id="_Xf9S4LOPEemLNNGxVlfrnw" description="This parameter specifies the number of records requested per page.&#xD;&#xA;&#xD;&#xA;The default is 0 (no paging), which means that it will only ask for one page from the LDAP server.&#xD;&#xA;The number of records returned in this case will therefore depend of the LDAP server page size.&#xD;&#xA;If the server has a page size set to 1000 on its side, then only 1000 records will be returned.&#xD;&#xA;&#xD;&#xA;When &quot;Page Size&quot; parameter is set, it will ask the LDAP server the number of records specified, in a loop, and will continue to ask the LDAP server for records until all records are returned.&#xD;&#xA;&#xD;&#xA;Setting &quot;Page Size&quot; parameter means that the number of records returned is no longer limited by the paging restrictions in the LDAP server, as records will be retrieved page by page until all are retrieved." name="pageSize" type="Integer" value=""/>
+  <parameter id="_Yt1bMGj9EeqeoMS8VK7coQ" description="Specify in this option the names of the parameters to be exported as &quot;SID String&quot; format. &#xD;&#xA;SID String format is for example &quot;S-1-5-21-2562418665-3218585558-1813906818-1576&quot;. &#xD;&#xA;Typically in Active Directory the &quot;objectSid&quot; attribute may be exported as SID String. &#xD;&#xA;&#xD;&#xA;This option must be a space separated list of attributes names. &#xD;&#xA;For example: objectSid MyOtherAttribute" name="attributesFormattedAsSidString" type="String" value="objectSid"/>
+  <actionCode id="_Zu9j-oCmEeaFYYDyqENveQ" isBeginAction="false" name="Bean Scripting" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.BeanScriptingActionCodeI">
+    <bindLink id="_Zu9j-4CmEeaFYYDyqENveQ" bindType="DirectBind" targetId="_Zu9kA4CmEeaFYYDyqENveQ"/>
+    <bindLink id="_Zu9j_ICmEeaFYYDyqENveQ" bindType="DirectBind" targetId="_Zu9kBYCmEeaFYYDyqENveQ"/>
+    <parameter id="_Zu9j_YCmEeaFYYDyqENveQ" description="Scripting language (groovy, jython)" name="SCRIPTING_LANGUAGE" type="String" value="beanshell"/>
+    <parameter id="_Zu9j_oCmEeaFYYDyqENveQ" name="SCRIPTING_CONNECTION" type="String" value="${../CORE_ACTION_ID}$"/>
+    <code>import java.io.IOException;&#xD;
+import java.sql.ResultSet;&#xD;
+import java.sql.SQLException;&#xD;
+import java.util.HashMap;&#xD;
+import java.util.Map;&#xD;
+import java.util.Properties;&#xD;
+&#xD;
+import javax.naming.Context;&#xD;
+import javax.naming.NamingException;&#xD;
+import javax.naming.ldap.InitialLdapContext;&#xD;
+&#xD;
+String filter = &quot;%x{md:paramValue($this,'filterExpression')}x%&quot;;&#xD;
+String basePath= &quot;%x{md:paramValue($this,'searchContext')}x%&quot;;&#xD;
+int countLimit=%x{md:ifEmpty(md:paramValue($this,'countLimit'),&quot;-1&quot;)}x%;&#xD;
+int pageSize=%x{md:ifEmpty(md:paramValue($this,'pageSize'),&quot;-1&quot;)}x%;&#xD;
+String attributesFormattedAsSidString = &quot;%x{md:paramValue($this,'attributesFormattedAsSidString')}x%&quot;;&#xD;
+&#xD;
+&#xD;
+String providerURL=&quot;%x{$ldap/tech:providerURL()}x%&quot;;&#xD;
+String securityCredentials=&quot;%x{$ldap/tech:securityCredentials()}x%&quot;;&#xD;
+String securityPrincipal=&quot;%x{$ldap/tech:securityPrincipal()}x%&quot;;&#xD;
+String initialContextFactory=&quot;%x{$ldap/tech:initialContextFactory()}x%&quot;;&#xD;
+String dnFieldName=&quot;${../dnFieldName}$&quot;;&#xD;
+Properties props = new Properties();&#xD;
+props.put(Context.PROVIDER_URL,providerURL);&#xD;
+props.put(Context.INITIAL_CONTEXT_FACTORY,&quot;com.sun.jndi.ldap.LdapCtxFactory&quot;);&#xD;
+props.put(&quot;STB_ENCODED_PROPERTY:&quot;+Context.SECURITY_CREDENTIALS, securityCredentials);&#xD;
+props.put(Context.SECURITY_PRINCIPAL, securityPrincipal); &#xD;
+props.put(&quot;java.naming.ldap.attributes.binary&quot;, attributesFormattedAsSidString);&#xD;
+InitialLdapContext initialContext = __ctx__.getInitialContextManager().createInitialLdapContext(props,null);&#xD;
+ps=__ctx__.createBindedPreparedStatement();&#xD;
+&#xD;
+&#xD;
+Map fields=new HashMap();&#xD;
+index=1;&#xD;
+&#xD;
+%xsl{&#xD;
+&lt;xsl:for-each select=&quot;$file/ref:field()&quot;>&#xD;
+	fields.put(&quot;%x{if(md:paramValue($this,'matchLdapAttributesWith')='logical name') then @name else tech:name()}x%&quot;,index);&#xD;
+	ps.setColumn(index++, &quot;%x{tech:name()}x%&quot;);&#xD;
+&lt;/xsl:for-each>&#xD;
+}xsl%&#xD;
+&#xD;
+LdapExtractor lde = new LdapExtractor(fields,initialContext,ps,&quot;,&quot;,dnFieldName, attributesFormattedAsSidString);&#xD;
+if (pageSize &lt;= 0) {&#xD;
+	lde.search(basePath,filter, countLimit);&#xD;
+}&#xD;
+else {&#xD;
+	//print(&quot;Using fetch&quot;);&#xD;
+	lde.searchWithFetch(basePath,filter, countLimit, pageSize);&#xD;
+}&#xD;
+initialContext.close();&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_Zu9j_4CmEeaFYYDyqENveQ" isBeginAction="false" name="DeclareClass" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.BeanScriptingActionCodeI">
+    <link id="_Zu9kAICmEeaFYYDyqENveQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_Zu9j-oCmEeaFYYDyqENveQ"/>
+    <parameter id="_Zu9kAYCmEeaFYYDyqENveQ" description="Scripting language (groovy, jython)" name="SCRIPTING_LANGUAGE" type="String" value="beanshell"/>
+    <parameter id="_Zu9kAoCmEeaFYYDyqENveQ" name="SCRIPTING_CONNECTION" type="String" value="${../CORE_ACTION_ID}$"/>
+    <code>import java.io.IOException;&#xD;
+import java.lang.reflect.Array;&#xD;
+import java.sql.ParameterMetaData;&#xD;
+import java.sql.PreparedStatement;&#xD;
+import java.sql.SQLException;&#xD;
+import java.util.ArrayList;&#xD;
+import java.util.Arrays;&#xD;
+import java.util.Collections;&#xD;
+import java.util.Enumeration;&#xD;
+import java.util.HashMap;&#xD;
+import java.util.List;&#xD;
+import java.util.Map;&#xD;
+import javax.naming.NameClassPair;&#xD;
+import javax.naming.NamingEnumeration;&#xD;
+import javax.naming.NamingException;&#xD;
+import javax.naming.directory.Attribute;&#xD;
+import javax.naming.ldap.InitialLdapContext;&#xD;
+&#xD;
+public class LdapExtractor {&#xD;
+&#xD;
+&#xD;
+&#xD;
+	Map parameters = null;&#xD;
+&#xD;
+	PreparedStatement ps;&#xD;
+	&#xD;
+	String[] attributesFormattedAsSidString;&#xD;
+	&#xD;
+	private String decodeSID(byte[] sid) {&#xD;
+	&#xD;
+	    StringBuilder strSid = new StringBuilder(&quot;S-&quot;);&#xD;
+	    &#xD;
+	    // get byte(0) - revision level&#xD;
+	    int revision = sid[0];&#xD;
+	    strSid.append(Integer.toString(revision));&#xD;
+	    &#xD;
+	    //next byte byte(1) - count of sub-authorities&#xD;
+	    int countSubAuths = sid[1] &amp; 0xFF;&#xD;
+	    //print(&quot;countSubAuths: &quot;+countSubAuths);&#xD;
+	    &#xD;
+	    //byte(2-7) - 48 bit authority ([Big-Endian])&#xD;
+	    long authority = 0;&#xD;
+	    //String rid = &quot;&quot;;&#xD;
+	    for(int i = 2; i &lt;= 7; i++) {&#xD;
+	        authority |= ((long)sid[i]) &lt;&lt; (8 * (5 - (i - 2)));&#xD;
+	    }&#xD;
+	    strSid.append(&quot;-&quot;);&#xD;
+	    strSid.append(Long.toHexString(authority));&#xD;
+	    &#xD;
+	    //iterate all the sub-auths and then countSubAuths x 32 bit sub authorities ([Little-Endian])&#xD;
+	    int offset = 8;&#xD;
+	    int size = 4; //4 bytes for each sub auth&#xD;
+	    &#xD;
+	    for(int j = 0; j &lt; countSubAuths; j++) {&#xD;
+	        long subAuthority = 0;&#xD;
+	        for(int k = 0; k &lt; size; k++) {&#xD;
+	            subAuthority |= (long)(sid[offset + k] &amp; 0xFF) &lt;&lt; (8 * k);&#xD;
+	        }&#xD;
+	        // format it&#xD;
+	        strSid.append(&quot;-&quot;);&#xD;
+	        strSid.append(subAuthority);&#xD;
+	        offset += size;&#xD;
+	    }&#xD;
+	    return strSid.toString();    &#xD;
+	}&#xD;
+	&#xD;
+&#xD;
+	private void visit(Enumeration _enum, String path)&#xD;
+			throws IOException {&#xD;
+&#xD;
+		try {&#xD;
+			Map values = new HashMap();&#xD;
+&#xD;
+			&#xD;
+			for (; _enum.hasMoreElements();) {&#xD;
+				Attribute attr = (Attribute) _enum.nextElement();&#xD;
+				&#xD;
+				String id = attr.getID();&#xD;
+				String val = null;&#xD;
+				Boolean isSidString = Arrays.asList(attributesFormattedAsSidString).contains(id);&#xD;
+				&#xD;
+				// zap attribute if it is not part of the target file's fields&#xD;
+				if (!parameters.containsKey(id)) continue;&#xD;
+&#xD;
+				if (attr.size() > 0) {&#xD;
+					for (int i = 0; i &lt; attr.size(); i++) {&#xD;
+						String tmp = &quot;&quot;;&#xD;
+						if (isSidString) {&#xD;
+							byte[] bytes = (byte[])attr.get(i);&#xD;
+							tmp = decodeSID(bytes);&#xD;
+							//print(&quot;Attribute &quot;+id+&quot; has SidString value: &quot; + tmp);&#xD;
+						}&#xD;
+						else {&#xD;
+							tmp = attr.get(i).toString();&#xD;
+						}&#xD;
+						if (val != null) {&#xD;
+							val += multiValueSeparator + tmp;&#xD;
+						} else {&#xD;
+							Object o = tmp;&#xD;
+							val = o.toString();&#xD;
+						}&#xD;
+/*						if (classFilter!=null &amp;&amp; id.equals(&quot;objectClass&quot;) &amp;&amp; tmp!=null &amp;&amp; list.contains(tmp)){&#xD;
+							list.remove(tmp);&#xD;
+						}&#xD;
+						*/&#xD;
+					}&#xD;
+				} else {&#xD;
+					// TODO : is this block really useful?? I suspect size() = 0 cannot happen...&#xD;
+					if (isSidString) {&#xD;
+						val = decodeSID((byte[])attr.get());&#xD;
+					}&#xD;
+					else {&#xD;
+						val = (String) attr.get();&#xD;
+					}&#xD;
+					/*if (classFilter!=null &amp;&amp; id.equals(&quot;objectClass&quot;) &amp;&amp; val!=null &amp;&amp; list.contains(val)){&#xD;
+						list.remove(val);&#xD;
+						&#xD;
+					}*/&#xD;
+				}&#xD;
+				&#xD;
+				values.put(attr.getID(), val);&#xD;
+			}&#xD;
+			/*if (list.isEmpty()) */&#xD;
+			{&#xD;
+				ParameterMetaData pm = ps.getParameterMetaData();&#xD;
+				for (Object paramter : parameters.keySet()) {&#xD;
+					&#xD;
+					int position = (Integer) parameters.get((String)paramter);&#xD;
+					if (paramter.equals(dnName)){&#xD;
+						ps.setString(position, path);&#xD;
+					}else{&#xD;
+						ps.setString(position, (String) values.get(paramter));&#xD;
+					}&#xD;
+				}&#xD;
+				ps.executeUpdate();&#xD;
+			}&#xD;
+&#xD;
+		} catch (NamingException e) {&#xD;
+			e.printStackTrace();&#xD;
+		} catch (SQLException e) {&#xD;
+			e.printStackTrace();&#xD;
+		}&#xD;
+	}&#xD;
+&#xD;
+&#xD;
+&#xD;
+&#xD;
+	&#xD;
+	&#xD;
+		public void searchWithFetch(String searchBase, String filter, int countLimit, int fetchSize)&#xD;
+			throws NamingException, IOException {&#xD;
+		String curClassName;&#xD;
+		byte[] cookie = null;&#xD;
+		&#xD;
+		javax.naming.directory.SearchControls ctls = new javax.naming.directory.SearchControls();&#xD;
+		ctls.setSearchScope(javax.naming.directory.SearchControls.SUBTREE_SCOPE);&#xD;
+		if (countLimit>-1){&#xD;
+			ctls.setCountLimit(countLimit);&#xD;
+		}&#xD;
+		&#xD;
+		if (fetchSize>0){&#xD;
+			initialContext.setRequestControls(new javax.naming.ldap.Control[] { new javax.naming.ldap.PagedResultsControl(fetchSize,javax.naming.ldap.Control.CRITICAL) });&#xD;
+		}&#xD;
+   	&#xD;
+		do{&#xD;
+			NamingEnumeration childList = initialContext.search(searchBase,filter,ctls);&#xD;
+			while (childList.hasMore()) {&#xD;
+				javax.naming.directory.SearchResult entry = (javax.naming.directory.SearchResult) childList.next();	&#xD;
+				attrs=entry.getAttributes();&#xD;
+				visit(attrs.getAll(),entry.getName().replace(&quot;\&quot;&quot;,&quot;&quot;).replace(&quot;\\\\&quot;,&quot;\\&quot;));&#xD;
+			}&#xD;
+			&#xD;
+			if (fetchSize>0){&#xD;
+			&#xD;
+			// Examine the paged results control response&#xD;
+        javax.naming.ldap.Control[] controls = initialContext.getResponseControls();&#xD;
+        if (controls != null) {&#xD;
+          for (int i = 0; i &lt; controls.length; i++) {&#xD;
+            if (controls[i] instanceof javax.naming.ldap.PagedResultsResponseControl) {&#xD;
+              javax.naming.ldap.PagedResultsResponseControl prrc = (javax.naming.ldap.PagedResultsResponseControl) controls[i];&#xD;
+              /*total = prrc.getResultSize();&#xD;
+              if (total != 0) {&#xD;
+                System.out.println(&quot;***************** END-OF-PAGE &quot;&#xD;
+                    + &quot;(total : &quot; + total + &quot;) *****************\n&quot;);&#xD;
+              } else {&#xD;
+                System.out.println(&quot;***************** END-OF-PAGE &quot;&#xD;
+                    + &quot;(total: unknown) ***************\n&quot;);&#xD;
+              }*/&#xD;
+              cookie = prrc.getCookie();&#xD;
+            }&#xD;
+          }&#xD;
+        } else {&#xD;
+/*          System.out.println(&quot;No controls were sent from the server&quot;);*/&#xD;
+        }&#xD;
+        // Re-activate paged results&#xD;
+        initialContext.setRequestControls(new javax.naming.ldap.Control[] { new javax.naming.ldap.PagedResultsControl(&#xD;
+            fetchSize, cookie, javax.naming.ldap.Control.CRITICAL) });&#xD;
+		}&#xD;
+		&#xD;
+		}while (cookie != null &amp;&amp; fetchSize>0);&#xD;
+	}&#xD;
+	public void search(String searchBase, String filter, int countLimit)&#xD;
+			throws NamingException, IOException {&#xD;
+		String curClassName;&#xD;
+		javax.naming.directory.SearchControls ctls = new javax.naming.directory.SearchControls();&#xD;
+		ctls.setSearchScope(javax.naming.directory.SearchControls.SUBTREE_SCOPE);&#xD;
+&#xD;
+		if (countLimit>-1){&#xD;
+			ctls.setCountLimit(countLimit);&#xD;
+		}&#xD;
+		&#xD;
+		NamingEnumeration childList = initialContext.search(searchBase,filter,ctls);&#xD;
+&#xD;
+		while (childList.hasMore()) {&#xD;
+			javax.naming.directory.SearchResult entry = (javax.naming.directory.SearchResult) childList.next();&#xD;
+			&#xD;
+			attrs=entry.getAttributes();&#xD;
+			visit(attrs.getAll(),entry.getName().replace(&quot;\&quot;&quot;,&quot;&quot;).replace(&quot;\\\\&quot;,&quot;\\&quot;));&#xD;
+			&#xD;
+		}&#xD;
+	}&#xD;
+&#xD;
+	InitialLdapContext initialContext;&#xD;
+&#xD;
+	private String multiValueSeparator;&#xD;
+&#xD;
+	private String dnName;&#xD;
+&#xD;
+&#xD;
+	LdapExtractor(Map positions,&#xD;
+			InitialLdapContext initialContext, PreparedStatement ps, &#xD;
+			String multiValueSeparator, String dnName,&#xD;
+			String attributesFormattedAsSidString) {&#xD;
+		super();&#xD;
+		this.basePath=basePath;&#xD;
+		this.filter=filter;&#xD;
+	&#xD;
+		this.dnName=dnName;&#xD;
+&#xD;
+		if(dnName==null){&#xD;
+			this.dnName=&quot;dn&quot;;&#xD;
+		}&#xD;
+		this.multiValueSeparator=multiValueSeparator;&#xD;
+		this.parameters = positions;&#xD;
+		this.initialContext = initialContext;&#xD;
+		this.ps = ps;&#xD;
+		&#xD;
+		this.attributesFormattedAsSidString = attributesFormattedAsSidString.split(&quot; &quot;);&#xD;
+	}&#xD;
+&#xD;
+}&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_Zu9kA4CmEeaFYYDyqENveQ" enable="false" isBeginAction="false" name="Scripting" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <parameter id="_Zu9kBICmEeaFYYDyqENveQ" description="Scripting language (Rhino, Jython, etc.)" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+    <code>%xsl{&#xD;
+&lt;xsl:for-each select=&quot;$file/ref:field()&quot;>&#xD;
+	print(&quot; %x{tech:name()}x%: &quot;); &#xD;
+	print(&quot;:{%x{tech:name()}x%}:&quot;);&#xD;
+&#xD;
+&lt;/xsl:for-each>&#xD;
+}xsl%&#xD;
+	println();&#xD;
+&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_Zu9kBYCmEeaFYYDyqENveQ" generationCondition="" isBeginAction="false" name="Load of data (TRG)" nbCycles="-1" repetitionQuery="" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_Zu9kBoCmEeaFYYDyqENveQ" executionType="OK" generationType="OK" mandatory="1"/>
+    <parameter id="_Zu9kB4CmEeaFYYDyqENveQ" name="SQL_CONNECTION" type="String" value="%connection{$file}%"/>
+    <parameter id="_Zu9kCICmEeaFYYDyqENveQ" name="SQL_ACTION_TYPE" type="String" value="INSERT"/>
+    <parameter id="_Zu9kCYCmEeaFYYDyqENveQ" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+    <code>insert into %x{$file/@name}x%&#xD;
+(&#xD;
+	%x{md:patternList($file/ref:field(),'[name]', ',\n\t')}x%&#xD;
+)&#xD;
+values&#xD;
+(&#xD;
+	%x{md:patternList($file/ref:field(),':{{[name]}}:', ',\n\t')}x%&#xD;
+)&#xD;
+&#xD;
+/* &lt;properties verifyLength=&quot;%x{if (md:paramValue($this,'acceptDataOverflow')='false') &#xD;
+									then 'true' &#xD;
+									else if (md:paramValue($this,'acceptDataOverflow')='true') &#xD;
+										then 'false' &#xD;
+										else md:paramValue($this,'acceptDataOverflow')}x%&quot; generateHeader=&quot;%x{if (md:paramValue($this,'truncateTargetFile')='false') then md:paramValue($this,'generateHeader') else 'false'}%&quot; lineSeparatorBefore=&quot;%x{md:paramValue($this,'fileSeparator')='before'}%&quot; lineSeparatorAfter=&quot;%x{md:paramValue($this,'fileSeparator')='after'}%&quot;>&lt;/properties> */&#xD;
+&#xD;
+%x{$file/tech:xmlMetadata()}x%</code>
+  </actionCode>
+  <actionCode id="_Zu9kCoCmEeaFYYDyqENveQ" generationCondition="'${truncateTargetFile}$' = 'true'" isBeginAction="false" name="Create File" nbCycles="-1" repetitionQuery="" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_Zu9kC4CmEeaFYYDyqENveQ" executionType="OK" generationType="OK" mandatory="1"/>
+    <link id="_Zu9kDICmEeaFYYDyqENveQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_Zu9j-oCmEeaFYYDyqENveQ"/>
+    <parameter id="_Zu9kDYCmEeaFYYDyqENveQ" name="SQL_CONNECTION" type="String" value="%connection{$file}%"/>
+    <parameter id="_Zu9kDoCmEeaFYYDyqENveQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_Zu9kD4CmEeaFYYDyqENveQ" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+    <code>Truncate table %x{$file/@name}x%&#xD;
+&#xD;
+ /* &lt;properties generateHeader=&quot;%x{md:paramValue($this,'generateHeader')}%&quot;>&lt;/properties> */&#xD;
+&#xD;
+%x{$file/tech:xmlMetadata()}x%</code>
+  </actionCode>
+  <xslVariable id="_Zu9kEICmEeaFYYDyqENveQ" code="$this/metaDataLink/mdj:getMetaDataRef(.)[@defType='com.stambia.ldap.server'][1]" name="ldap" type="xpath"/>
+  <xslVariable id="_Zu9kEYCmEeaFYYDyqENveQ" code="$this/metaDataLink/mdj:getMetaDataRef(.)[@defType='com.stambia.file.file'][1]" name="file" type="xpath"/>
+</proc:process>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ref:mapRef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:ref="http://www.indy.com/v2/ref" id="_AAA4ezXEEe2goMzdputf-Q">
+  <dataModel>_-mS-APcKEeihDLFmfbLxVA?fileId=_-mS-APcKEeihDLFmfbLxVA$type=map$name=Load%20DIM_PMT1?</dataModel>
+  <containerRef xsi:type="ref:RDatastore" id="_AABfgTXEEe2goMzdputf-Q" countShownFields="4" hierarchical="false">
+    <dataModel>_-mS-AfcKEeihDLFmfbLxVA?fileId=_-mS-APcKEeihDLFmfbLxVA$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_AAFw8DXEEe2goMzdputf-Q" size="64" type="VARCHAR" mandatory="true" position="6">
+      <dataModel>_-mS-AvcKEeihDLFmfbLxVA?fileId=_-mS-APcKEeihDLFmfbLxVA$type=map$name=PMT_NAME?</dataModel>
+      <usage>_AAMeoTXEEe2goMzdputf-Q</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_AAGYADXEEe2goMzdputf-Q" size="64" type="VARCHAR" position="9">
+      <dataModel>_-mTlEPcKEeihDLFmfbLxVA?fileId=_-mS-APcKEeihDLFmfbLxVA$type=map$name=PMT_DESCRIPTION?</dataModel>
+      <usage>_AABfgDXEEe2goMzdputf-Q</usage>
+      <usage>_AAMeojXEEe2goMzdputf-Q</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_AAGYATXEEe2goMzdputf-Q" size="8" type="VARCHAR" mandatory="true" position="3">
+      <dataModel>_-mTlEfcKEeihDLFmfbLxVA?fileId=_-mS-APcKEeihDLFmfbLxVA$type=map$name=PMT_CODE?</dataModel>
+      <usage>_AAMeozXEEe2goMzdputf-Q</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_AAGYAjXEEe2goMzdputf-Q" precision="0" size="10" type="NUMERIC" position="12">
+      <dataModel>_-mTlEvcKEeihDLFmfbLxVA?fileId=_-mS-APcKEeihDLFmfbLxVA$type=map$name=PMT_ACTIVE?</dataModel>
+      <usage>_AABfgDXEEe2goMzdputf-Q</usage>
+    </fieldRef>
+    <constraintRef id="_AAGYAzXEEe2goMzdputf-Q" type="pk">
+      <dataModel>_GhfS8PcLEeihDLFmfbLxVA?fileId=_-mS-APcKEeihDLFmfbLxVA$type=map$name=PK_T_PMT1?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_AAG_EDXEEe2goMzdputf-Q" countShownFields="3" hierarchical="false">
+    <dataModel>_-mTlFPcKEeihDLFmfbLxVA?fileId=_-mS-APcKEeihDLFmfbLxVA$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_AAL3kDXEEe2goMzdputf-Q" size="8" type="VARCHAR" mandatory="true" position="3">
+      <dataModel>_-mTlGfcKEeihDLFmfbLxVA?fileId=_-mS-APcKEeihDLFmfbLxVA$type=map$name=PMT_CODE?</dataModel>
+      <expressionRef id="_AAMeozXEEe2goMzdputf-Q" internalExpression="${T_PMT1.PMT_CODE}$">
+        <dataModel>_-mTlGvcKEeihDLFmfbLxVA?fileId=_-mS-APcKEeihDLFmfbLxVA$type=map?</dataModel>
+        <sourceRef>_AAGYATXEEe2goMzdputf-Q</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_AAL3kTXEEe2goMzdputf-Q" size="35" type="VARCHAR" position="6">
+      <dataModel>_-mTlFfcKEeihDLFmfbLxVA?fileId=_-mS-APcKEeihDLFmfbLxVA$type=map$name=PMT_NAME?</dataModel>
+      <expressionRef id="_AAMeoTXEEe2goMzdputf-Q" internalExpression="${T_PMT1.PMT_NAME}$">
+        <dataModel>_-mTlFvcKEeihDLFmfbLxVA?fileId=_-mS-APcKEeihDLFmfbLxVA$type=map?</dataModel>
+        <sourceRef>_AAFw8DXEEe2goMzdputf-Q</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_AAL3kjXEEe2goMzdputf-Q" size="35" type="VARCHAR" position="9">
+      <dataModel>_-mTlF_cKEeihDLFmfbLxVA?fileId=_-mS-APcKEeihDLFmfbLxVA$type=map$name=PMT_DESCRIPTION?</dataModel>
+      <expressionRef id="_AAMeojXEEe2goMzdputf-Q" internalExpression="${T_PMT1.PMT_DESCRIPTION}$">
+        <dataModel>_-mTlGPcKEeihDLFmfbLxVA?fileId=_-mS-APcKEeihDLFmfbLxVA$type=map?</dataModel>
+        <sourceRef>_AAGYADXEEe2goMzdputf-Q</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <constraintRef id="_AAL3kzXEEe2goMzdputf-Q" type="pk">
+      <dataModel>_JUVOAPcLEeihDLFmfbLxVA?fileId=_-mS-APcKEeihDLFmfbLxVA$type=map$name=PK_DIM_PMT1?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <clauseRef id="_AABfgDXEEe2goMzdputf-Q" internalExpression="CASE '${~/genereFilter}$'&#xA;     WHEN 'true' THEN ${T_PMT1.PMT_DESCRIPTION}$ IS NOT NULL &#xA;     ELSE 1=1&#xA;END&#xA;AND ${T_PMT1.PMT_ACTIVE}$ = 1" status="VALID">
+    <dataModel>_-mTlHfcKEeihDLFmfbLxVA?fileId=_-mS-APcKEeihDLFmfbLxVA$type=map?</dataModel>
+    <problem id="_AASlQDXEEe2goMzdputf-Q" code="INFO_USING_SESSION_VARIABLE" message=""/>
+    <sourceRef>_AAGYADXEEe2goMzdputf-Q</sourceRef>
+    <sourceRef>_AAGYAjXEEe2goMzdputf-Q</sourceRef>
+  </clauseRef>
+  <targetSetRef id="_AAO64TXEEe2goMzdputf-Q" sourceSet="_AAO64DXEEe2goMzdputf-Q">
+    <container>_AAG_EDXEEe2goMzdputf-Q</container>
+  </targetSetRef>
+  <sourceSetRef id="_AAO64DXEEe2goMzdputf-Q" targetSet="_AAO64TXEEe2goMzdputf-Q">
+    <dataSet xsi:type="map:DataSet">#_-mTlIPcKEeihDLFmfbLxVA</dataSet>
+  </sourceSetRef>
+  <templateRef id="_AANFtTXEEe2goMzdputf-Q" description="Load : T_PMT1" nodeCode="com.stambia.flow.step" templateCriteria="type=L-TP;trgProduct=HYPERSONIC_SQL;trgPath=server:HSQL_Datamart/schema:DWH/datastore:DIM_PMT1;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProduct=HYPERSONIC_SQL;srcPath=server:HSQL_Hotel/schema:PMT/datastore:T_PMT1;srcWorkspaceCapability=true;srcMapCapability=true;srcFilterCapability=true;srcJoinCapability=true">
+    <dataModel>_-mTlHvcKEeihDLFmfbLxVA?fileId=_-mS-APcKEeihDLFmfbLxVA$type=map$name=L1_DIM_PMT1?</dataModel>
+    <problem id="_AASlQjXEEe2goMzdputf-Q" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <load>_AANFsjXEEe2goMzdputf-Q</load>
+    <targetRef>_-mTlFPcKEeihDLFmfbLxVA?fileId=_-mS-APcKEeihDLFmfbLxVA$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_AAOT1jXEEe2goMzdputf-Q" description="Integration : DIM_PMT1" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=HYPERSONIC_SQL;trgPath=server:HSQL_Datamart/schema:DWH/datastore:DIM_PMT1;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=HYPERSONIC_SQL">
+    <dataModel>_-mTlH_cKEeihDLFmfbLxVA?fileId=_-mS-APcKEeihDLFmfbLxVA$type=map$name=I_DIM_PMT1?</dataModel>
+    <problem id="_AASlQTXEEe2goMzdputf-Q" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <targetRef>_-mTlFPcKEeihDLFmfbLxVA?fileId=_-mS-APcKEeihDLFmfbLxVA$type=map?</targetRef>
+  </templateRef>
+  <loadSet id="_AANFsjXEEe2goMzdputf-Q">
+    <container>_-mS-AfcKEeihDLFmfbLxVA?fileId=_-mS-APcKEeihDLFmfbLxVA$type=map?</container>
+  </loadSet>
+  <loadSet id="_AANFtDXEEe2goMzdputf-Q">
+    <container>_-mTlFPcKEeihDLFmfbLxVA?fileId=_-mS-APcKEeihDLFmfbLxVA$type=map?</container>
+  </loadSet>
+</ref:mapRef>

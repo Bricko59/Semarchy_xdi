@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map:map xmlns:map="http://www.indy.com/v2/map" id="_NVjp8Bg9EeaikNW2PU8LmQ" internalVersion="8" tech="resource.tech#_waYSMH8VEd2__Mzb_dB76A?fileId=_waYSMH8VEd2__Mzb_dB76A$type=tech$name=flow?">
+  <datastore id="_NVjp8Rg9EeaikNW2PU8LmQ" alias="INSCRIPTION" dataset="_NVkRHBg9EeaikNW2PU8LmQ" ref="resource.md#_aTLMcRd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=INSCRIPTION?" subExpression="[A]">
+    <field id="_NVjp8hg9EeaikNW2PU8LmQ" enable="true" insert="true" name="DATE_CONFIRMATION_INSCRIPTION" ref="resource.md#_aTfVghd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=DATE_CONFIRMATION_INSCRIPTION?" update="true">
+      <expression id="_NVjp8xg9EeaikNW2PU8LmQ" location="WRK" setDescriptorRef="_NVjqBBg9EeaikNW2PU8LmQ">
+        <expression>current_timestamp</expression>
+      </expression>
+    </field>
+    <field id="_NVjp9Bg9EeaikNW2PU8LmQ" enable="true" insert="true" name="ID_DEMANDE" ref="resource.md#_aTbrIBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=ID_DEMANDE?" update="true" updateKey="true">
+      <expression id="_NVjp9Rg9EeaikNW2PU8LmQ" setDescriptorRef="_NVjqBBg9EeaikNW2PU8LmQ">
+        <expression>${~/id_demande}$ + stage.NB_PLACES - stage.NB_PLACES</expression>
+      </expression>
+    </field>
+    <field id="_NVjp9hg9EeaikNW2PU8LmQ" enable="true" insert="true" name="DATE_DEMANDE" ref="resource.md#_aTcSMBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=DATE_DEMANDE?" update="true">
+      <expression id="_NVjp9xg9EeaikNW2PU8LmQ" setDescriptorRef="_NVjqBBg9EeaikNW2PU8LmQ">
+        <expression>TO_TIMESTAMP('${~/date_demande}$','YYYY-MM-DD HH:MI:SS:FFF')</expression>
+      </expression>
+    </field>
+    <field id="_NVjp-Bg9EeaikNW2PU8LmQ" enable="true" insert="true" name="PRENOM_DEMANDEUR" ref="resource.md#_aTc5Rxd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=PRENOM_DEMANDEUR?" update="true">
+      <expression id="_NVjp-Rg9EeaikNW2PU8LmQ" setDescriptorRef="_NVjqBBg9EeaikNW2PU8LmQ">
+        <expression>'${~/prenom_demandeur}$'</expression>
+      </expression>
+    </field>
+    <field id="_NVjp-hg9EeaikNW2PU8LmQ" enable="true" insert="true" name="NIVEAU_CONFIRMATION" ref="resource.md#_aTf8kxd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=NIVEAU_CONFIRMATION?" update="true">
+      <expression id="_NVjp-xg9EeaikNW2PU8LmQ" setDescriptorRef="_NVjqBBg9EeaikNW2PU8LmQ">
+        <expression>stage.MAX_NIVEAU</expression>
+      </expression>
+    </field>
+    <field id="_NVjp_Bg9EeaikNW2PU8LmQ" enable="true" insert="true" name="NOM_DEMANDEUR" ref="resource.md#_aTc5QBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=NOM_DEMANDEUR?" update="true">
+      <expression id="_NVjp_Rg9EeaikNW2PU8LmQ" setDescriptorRef="_NVjqBBg9EeaikNW2PU8LmQ">
+        <expression>'${~/nom_demandeur}$'</expression>
+      </expression>
+    </field>
+    <field id="_NVjp_hg9EeaikNW2PU8LmQ" enable="true" insert="true" name="PRENOM_ENFANT" ref="resource.md#_aTdgVBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=PRENOM_ENFANT?" update="true">
+      <expression id="_NVjp_xg9EeaikNW2PU8LmQ" setDescriptorRef="_NVjqBBg9EeaikNW2PU8LmQ">
+        <expression>'${~/prenom_enfant}$'</expression>
+      </expression>
+    </field>
+    <field id="_NVjqABg9EeaikNW2PU8LmQ" enable="true" insert="true" name="DATE_NAISSANCE_ENFANT" ref="resource.md#_aTeHZBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=DATE_NAISSANCE_ENFANT?" update="true">
+      <expression id="_NVjqARg9EeaikNW2PU8LmQ" setDescriptorRef="_NVjqBBg9EeaikNW2PU8LmQ">
+        <expression>TO_DATE('${~/date_naissance_enfant}$','YYYY-MM-DD')</expression>
+      </expression>
+    </field>
+    <field id="_NVjqAhg9EeaikNW2PU8LmQ" name="ID_INSCRIPTION" ref="resource.md#_aTbEEBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=ID_INSCRIPTION?">
+      <expression id="_NVjqAxg9EeaikNW2PU8LmQ" setDescriptorRef="_NVjqBBg9EeaikNW2PU8LmQ"/>
+    </field>
+    <setDescriptor id="_NVjqBBg9EeaikNW2PU8LmQ" label="A"/>
+  </datastore>
+  <datastore id="_NVjqBRg9EeaikNW2PU8LmQ" alias="CRECHE" dataset="_NVkRGhg9EeaikNW2PU8LmQ" ref="resource.md#_yKqtYBd1Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=CRECHE?">
+    <field id="_NVjqBhg9EeaikNW2PU8LmQ" fullAlias="MOIS_FIN_NIVEAU" name="MOIS_FIN_NIVEAU" ref="resource.md#_yK7MGBd1Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=MOIS_FIN_NIVEAU?"/>
+    <field id="_NVjqBxg9EeaikNW2PU8LmQ" fullAlias="NB_PLACES_NIVEAU" name="NB_PLACES_NIVEAU" ref="resource.md#_yK8aNxd1Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=NB_PLACES_NIVEAU?"/>
+    <field id="_NVjqCBg9EeaikNW2PU8LmQ" name="VILLE" ref="resource.md#_yK5W4Bd1Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=VILLE?"/>
+    <field id="_NVjqCRg9EeaikNW2PU8LmQ" fullAlias="MOIS_DEBUT_NIVEAU" name="MOIS_DEBUT_NIVEAU" ref="resource.md#_yK7MEBd1Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=MOIS_DEBUT_NIVEAU?"/>
+    <field id="_NVjqChg9EeaikNW2PU8LmQ" name="INTITULE_NIVEAU" ref="resource.md#_yK8aMBd1Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=INTITULE_NIVEAU?"/>
+    <field id="_NVjqCxg9EeaikNW2PU8LmQ" fullAlias="NIVEAU" name="NIVEAU" ref="resource.md#_yK6lABd1Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=NIVEAU?"/>
+  </datastore>
+  <datastore id="_NVjqDBg9EeaikNW2PU8LmQ" alias="INSCRIPTION_2" dataset="_NVkRHRg9EeaikNW2PU8LmQ" ref="resource.md#_aTLMcRd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=INSCRIPTION?">
+    <field id="_NVjqDRg9EeaikNW2PU8LmQ" name="DATE_CONFIRMATION_INSCRIPTION" ref="resource.md#_aTfVghd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=DATE_CONFIRMATION_INSCRIPTION?"/>
+    <field id="_NVjqDhg9EeaikNW2PU8LmQ" name="ID_DEMANDE" ref="resource.md#_aTbrIBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=ID_DEMANDE?"/>
+    <field id="_NVjqDxg9EeaikNW2PU8LmQ" name="DATE_DEMANDE" ref="resource.md#_aTcSMBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=DATE_DEMANDE?"/>
+    <field id="_NVjqEBg9EeaikNW2PU8LmQ" name="PRENOM_DEMANDEUR" ref="resource.md#_aTc5Rxd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=PRENOM_DEMANDEUR?"/>
+    <field id="_NVjqERg9EeaikNW2PU8LmQ" fullAlias="NIVEAU_CONFIRMATION" name="NIVEAU_CONFIRMATION" ref="resource.md#_aTf8kxd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=NIVEAU_CONFIRMATION?"/>
+    <field id="_NVjqEhg9EeaikNW2PU8LmQ" name="NOM_DEMANDEUR" ref="resource.md#_aTc5QBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=NOM_DEMANDEUR?"/>
+    <field id="_NVjqExg9EeaikNW2PU8LmQ" name="PRENOM_ENFANT" ref="resource.md#_aTdgVBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=PRENOM_ENFANT?"/>
+    <field id="_NVjqFBg9EeaikNW2PU8LmQ" name="DATE_NAISSANCE_ENFANT" ref="resource.md#_aTeHZBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=DATE_NAISSANCE_ENFANT?"/>
+    <field id="_NVjqFRg9EeaikNW2PU8LmQ" fullAlias="ID_INSCRIPTION" name="ID_INSCRIPTION" ref="resource.md#_aTbEEBd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=ID_INSCRIPTION?"/>
+  </datastore>
+  <join id="_NVjqFhg9EeaikNW2PU8LmQ" location="SRC" joinType="Left_Join" left="_NVkRDBg9EeaikNW2PU8LmQ" order="10" right="_NVjqDBg9EeaikNW2PU8LmQ">
+    <expression>stage_2.NIVEAU = INSCRIPTION_2.NIVEAU_CONFIRMATION</expression>
+  </join>
+  <filter id="_NVkRABg9EeaikNW2PU8LmQ" location="SRC">
+    <expression>stage.NB_PLACES > 0</expression>
+  </filter>
+  <filter id="_NVkRARg9EeaikNW2PU8LmQ" location="SRC">
+    <expression>(current_date - TO_DATE('${~/date_naissance_enfant}$','YYYY-MM-DD'))/30 BETWEEN CRECHE.MOIS_DEBUT_NIVEAU AND CRECHE.MOIS_FIN_NIVEAU</expression>
+  </filter>
+  <template id="_NVkRAhg9EeaikNW2PU8LmQ" name="I_INSCRIPTION" process="resource.proc#_HFOfdjEZEd-WZe6cNi2k2w?fileId=_HFOfdjEZEd-WZe6cNi2k2w$type=proc$name=INTEGRATION%20Hsql?" targetId="_NVjp8Rg9EeaikNW2PU8LmQ"/>
+  <template id="_NVkRAxg9EeaikNW2PU8LmQ" name="I_stage_2" process="resource.proc#_v8JEkTNEEeSH5LKy1U4ptg?fileId=_v8JEkTNEEeSH5LKy1U4ptg$type=proc$name=STAGING%20Rdbms%20As%20SubQuery?" sourceId="_HiO37xgmEeapFfTHA28Ggw" targetId="_NVkRDBg9EeaikNW2PU8LmQ"/>
+  <template id="_NVkRBBg9EeaikNW2PU8LmQ" name="I_stage_3" process="resource.proc#_v8JEkTNEEeSH5LKy1U4ptg?fileId=_v8JEkTNEEeSH5LKy1U4ptg$type=proc$name=STAGING%20Rdbms%20As%20SubQuery?" sourceId="_HiPe8xgmEeapFfTHA28Ggw _mohqYBg6EeapFfTHA28Ggw" targetId="_NVkREhg9EeaikNW2PU8LmQ"/>
+  <template id="_NVkRBRg9EeaikNW2PU8LmQ" name="I_stage" process="resource.proc#_v8JEkTNEEeSH5LKy1U4ptg?fileId=_v8JEkTNEEeSH5LKy1U4ptg$type=proc$name=STAGING%20Rdbms%20As%20SubQuery?" targetId="_NVkRBhg9EeaikNW2PU8LmQ"/>
+  <query id="_NVkRBhg9EeaikNW2PU8LmQ" alias="stage" dataset="_NVkRGxg9EeaikNW2PU8LmQ" stagingArea="resource.md#_w4eFsBd1Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=VILLEURBANNE?" subExpression="[A]">
+    <field id="_NVkRBxg9EeaikNW2PU8LmQ" name="NB_PLACES">
+      <expression id="_NVkRCBg9EeaikNW2PU8LmQ" aggregate="true" setDescriptorRef="_NVkRCxg9EeaikNW2PU8LmQ">
+        <expression>SUM(stage_3.NB_PLACES_NIVEAU - stage_3.NB_INSCRIPTION)</expression>
+      </expression>
+    </field>
+    <field id="_NVkRCRg9EeaikNW2PU8LmQ" name="MAX_NIVEAU">
+      <expression id="_NVkRChg9EeaikNW2PU8LmQ" aggregate="false" setDescriptorRef="_NVkRCxg9EeaikNW2PU8LmQ">
+        <expression>stage_3.NIVEAU</expression>
+      </expression>
+    </field>
+    <setDescriptor id="_NVkRCxg9EeaikNW2PU8LmQ" label="A"/>
+  </query>
+  <query id="_NVkRDBg9EeaikNW2PU8LmQ" alias="stage_2" dataset="_NVkRHRg9EeaikNW2PU8LmQ" stagingArea="resource.md#_w4eFsBd1Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=VILLEURBANNE?" subExpression="[A]">
+    <field id="_NVkRDRg9EeaikNW2PU8LmQ" name="NIVEAU">
+      <expression id="_NVkRDhg9EeaikNW2PU8LmQ" setDescriptorRef="_NVkRERg9EeaikNW2PU8LmQ">
+        <expression>CRECHE.NIVEAU</expression>
+      </expression>
+    </field>
+    <field id="_NVkRDxg9EeaikNW2PU8LmQ" name="NB_PLACES_NIVEAU">
+      <expression id="_NVkREBg9EeaikNW2PU8LmQ" setDescriptorRef="_NVkRERg9EeaikNW2PU8LmQ">
+        <expression>CRECHE.NB_PLACES_NIVEAU</expression>
+      </expression>
+    </field>
+    <setDescriptor id="_NVkRERg9EeaikNW2PU8LmQ" label="A"/>
+  </query>
+  <query id="_NVkREhg9EeaikNW2PU8LmQ" alias="stage_3" dataset="_NVkRHhg9EeaikNW2PU8LmQ" stagingArea="resource.md#_w4eFsBd1Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=VILLEURBANNE?" subExpression="[A]">
+    <field id="_NVkRExg9EeaikNW2PU8LmQ" name="NB_INSCRIPTION">
+      <expression id="_NVkRFBg9EeaikNW2PU8LmQ" aggregate="true" setDescriptorRef="_NVkRGRg9EeaikNW2PU8LmQ">
+        <expression>COUNT(INSCRIPTION_2.ID_INSCRIPTION)</expression>
+      </expression>
+    </field>
+    <field id="_NVkRFRg9EeaikNW2PU8LmQ" name="NB_PLACES_NIVEAU">
+      <expression id="_NVkRFhg9EeaikNW2PU8LmQ" setDescriptorRef="_NVkRGRg9EeaikNW2PU8LmQ">
+        <expression>stage_2.NB_PLACES_NIVEAU</expression>
+      </expression>
+    </field>
+    <field id="_NVkRFxg9EeaikNW2PU8LmQ" name="NIVEAU">
+      <expression id="_NVkRGBg9EeaikNW2PU8LmQ" setDescriptorRef="_NVkRGRg9EeaikNW2PU8LmQ">
+        <expression>stage_2.NIVEAU</expression>
+      </expression>
+    </field>
+    <setDescriptor id="_NVkRGRg9EeaikNW2PU8LmQ" label="A"/>
+  </query>
+  <dataSet id="_NVkRGhg9EeaikNW2PU8LmQ">
+    <container>_NVjqBRg9EeaikNW2PU8LmQ</container>
+  </dataSet>
+  <dataSet id="_NVkRGxg9EeaikNW2PU8LmQ">
+    <container>_NVkRBhg9EeaikNW2PU8LmQ</container>
+  </dataSet>
+  <dataSet id="_NVkRHBg9EeaikNW2PU8LmQ">
+    <container>_NVjp8Rg9EeaikNW2PU8LmQ</container>
+  </dataSet>
+  <dataSet id="_NVkRHRg9EeaikNW2PU8LmQ">
+    <container>_NVjqDBg9EeaikNW2PU8LmQ</container>
+    <container>_NVkRDBg9EeaikNW2PU8LmQ</container>
+  </dataSet>
+  <dataSet id="_NVkRHhg9EeaikNW2PU8LmQ">
+    <container>_NVkREhg9EeaikNW2PU8LmQ</container>
+  </dataSet>
+  <hint>
+    <usedField>#_NVjqBhg9EeaikNW2PU8LmQ</usedField>
+    <usedField>#_NVjqBxg9EeaikNW2PU8LmQ</usedField>
+    <usedField>#_NVjqCRg9EeaikNW2PU8LmQ</usedField>
+    <usedField>#_NVjqCxg9EeaikNW2PU8LmQ</usedField>
+    <usedField>#_NVjqERg9EeaikNW2PU8LmQ</usedField>
+    <usedField>#_NVjqFRg9EeaikNW2PU8LmQ</usedField>
+  </hint>
+</map:map>

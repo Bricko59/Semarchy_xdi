@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_BndrccHAEeaZ4aETpmExIg">
+  <parameter id="_HOC5cMHAEeaZ4aETpmExIg" metaInf="&lt;metaInf id=&quot;value&quot; value=&quot;add&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;set&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;setSql&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;concat&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;not&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;and&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;or&quot;/>" name="param_action" type="String" value="set"/>
+  <parameter id="_HONRhsHAEeaZ4aETpmExIg" metaInf="&lt;metaInf id=&quot;value&quot; value=&quot;Integer&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;String&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;Boolean&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;SqlMultiTypes&quot;/>" name="param_type" type="String" value="String"/>
+  <parameter id="_HONRicHAEeaZ4aETpmExIg" name="param_value" type="String" value="0"/>
+  <parameter id="_HON4kMHAEeaZ4aETpmExIg" name="param_name" type="String" value="my_param"/>
+  <actionCode id="_HONRgMHAEeaZ4aETpmExIg" isBeginAction="false" name="Start" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_HONRgcHAEeaZ4aETpmExIg" generationCondition="'${./param_type}$' = 'String'" executionCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_HONRhMHAEeaZ4aETpmExIg"/>
+    <link id="_HONRgsHAEeaZ4aETpmExIg" generationCondition="'${param_type}$' = 'Integer'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_HONRh8HAEeaZ4aETpmExIg"/>
+    <link id="_HONRg8HAEeaZ4aETpmExIg" generationCondition="'${param_type}$' = 'Boolean'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_HONRisHAEeaZ4aETpmExIg"/>
+  </actionCode>
+  <actionCode id="_HONRhMHAEeaZ4aETpmExIg" isBeginAction="false" name="Scripting String" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <parameter id="_HONRhcHAEeaZ4aETpmExIg" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+    <code>var vs_param_value;&#xD;
+var vs_default_value;&#xD;
+var vs_new_value;&#xD;
+&#xD;
+var v_param_type=&quot;${../param_type}$&quot;&#xD;
+var v_param_name=&quot;~/${../param_name}$&quot;;&#xD;
+var v_action_to_apply = '' + __ctx__.getVariableValue(&quot;../param_action&quot;);&#xD;
+// to init the string as a JavaString variable rather than a Java variable add ''+ : with this, the switch works&#xD;
+&#xD;
+&#xD;
+vs_default_value=&quot;&quot;;&#xD;
+vs_new_value=__ctx__.getVariableValue(&quot;../param_value&quot;);&#xD;
+&#xD;
+if (__ctx__.getVariableValue(v_param_name).length()==0)&#xD;
+{&#xD;
+	vs_param_value=vs_default_value;&#xD;
+}&#xD;
+else&#xD;
+{&#xD;
+	vs_param_value = __ctx__.getVariableValue(v_param_name);&#xD;
+}&#xD;
+&#xD;
+switch (v_action_to_apply)&#xD;
+{ &#xD;
+   	case &quot;set&quot;   	:	vs_param_value=vs_new_value;&#xD;
+   						break;&#xD;
+   	case &quot;concat&quot;   :	vs_param_value=vs_param_value+vs_new_value;&#xD;
+   						break;&#xD;
+}	&#xD;
+__ctx__.publishVariable(v_param_name,vs_param_value);&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_HONRh8HAEeaZ4aETpmExIg" isBeginAction="false" name="Scripting Integer" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <parameter id="_HONRiMHAEeaZ4aETpmExIg" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+    <code>var vi_param_value;&#xD;
+var vi_default_value;&#xD;
+var vi_new_value;&#xD;
+&#xD;
+var v_param_type=&quot;${../param_type}$&quot;&#xD;
+var v_param_name=&quot;~/${../param_name}$&quot;;&#xD;
+var v_action_to_apply = __ctx__.getVariableValue(&quot;../param_action&quot;);&#xD;
+&#xD;
+		vi_default_value=0;&#xD;
+		vi_new_value=java.lang.Integer.parseInt(__ctx__.getVariableValue(&quot;../param_value&quot;));&#xD;
+		if (__ctx__.getVariableValue(v_param_name).length()==0)&#xD;
+		{&#xD;
+ 			vi_param_value=vi_default_value;&#xD;
+		}&#xD;
+		else&#xD;
+		{&#xD;
+   			vi_param_value = java.lang.Integer.parseInt(__ctx__.getVariableValue(v_param_name));&#xD;
+&#xD;
+		}&#xD;
+&#xD;
+ 		if (v_action_to_apply.equals(&quot;add&quot;))&#xD;
+		{ &#xD;
+			vi_param_value+=vi_new_value;&#xD;
+		}&#xD;
+		else&#xD;
+		{ &#xD;
+			vi_param_value=vi_new_value;&#xD;
+		}	&#xD;
+		__ctx__.publishVariable(v_param_name,vi_param_value);	&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_HONRisHAEeaZ4aETpmExIg" isBeginAction="false" name="Scripting Boolean" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <parameter id="_HONRi8HAEeaZ4aETpmExIg" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+    <code>var vb_param_value;&#xD;
+var vb_default_value;&#xD;
+var vb_new_value;&#xD;
+&#xD;
+var v_param_type=&quot;${../param_type}$&quot;&#xD;
+var v_param_name=&quot;~/${../param_name}$&quot;;&#xD;
+var v_action_to_apply = '' + __ctx__.getVariableValue(&quot;../param_action&quot;);&#xD;
+// to init the string as a JavaString variable rather than a Java variable add ''+ : with this, the switch works&#xD;
+&#xD;
+vb_default_value=false;&#xD;
+vb_new_value=java.lang.Boolean.parseBoolean(__ctx__.getVariableValue(&quot;../param_value&quot;));&#xD;
+&#xD;
+if (__ctx__.getVariableValue(v_param_name).length()==0)&#xD;
+{&#xD;
+	vb_param_value=vb_default_value;&#xD;
+}&#xD;
+else&#xD;
+{&#xD;
+	vb_param_value = java.lang.Boolean.parseBoolean(__ctx__.getVariableValue(v_param_name));&#xD;
+}&#xD;
+&#xD;
+switch (v_action_to_apply)&#xD;
+{ &#xD;
+   	case &quot;not&quot;   	: 	vb_param_value=!(vb_param_value);&#xD;
+  	 					break;&#xD;
+   	case &quot;set&quot;		:	vb_param_value=vb_new_value;&#xD;
+   						break;  	    &#xD;
+   	case &quot;and&quot;		:	vb_param_value=vb_param_value &amp;&amp; vb_new_value;&#xD;
+   						break;  	   &#xD;
+   	case &quot;or&quot;		:	vb_param_value=vb_param_value || vb_new_value;&#xD;
+   						break;  	   		   								   						                  &#xD;
+}	&#xD;
+__ctx__.publishVariable(v_param_name,vb_param_value);	&#xD;
+</code>
+  </actionCode>
+</proc:process>

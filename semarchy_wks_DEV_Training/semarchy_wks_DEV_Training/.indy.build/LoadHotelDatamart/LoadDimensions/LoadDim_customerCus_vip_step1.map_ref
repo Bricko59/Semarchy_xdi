@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ref:mapRef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:ref="http://www.indy.com/v2/ref" id="_jyBb4DNWEe2HNZiLrCljlg">
+  <dataModel>_fj-uIDNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=LoadDim_customerCus_vip_step1?</dataModel>
+  <containerRef xsi:type="ref:RDatastore" id="_lusj8DNWEe2HNZiLrCljlg" countShownFields="7" hierarchical="false">
+    <dataModel>_luqHsDNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_lutyEzNWEe2HNZiLrCljlg" precision="0" size="10" type="numeric" position="15">
+      <dataModel>_lutLAzNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=geo_key_id?</dataModel>
+      <expressionRef id="_qwTcoDNWEe2HNZiLrCljlg">
+        <dataModel>_qwRncDNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_lutyFDNWEe2HNZiLrCljlg" precision="0" size="10" type="integer" mandatory="true" position="3">
+      <dataModel>_lusj8TNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=cus_id?</dataModel>
+      <expressionRef id="_qwTcoTNWEe2HNZiLrCljlg" internalExpression="${t_billing.cus_id}$">
+        <dataModel>_qwSOgDNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map?</dataModel>
+        <sourceRef>_nFewsTNWEe2HNZiLrCljlg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_lutyFTNWEe2HNZiLrCljlg" precision="0" size="32" type="varchar" position="6">
+      <dataModel>_lutLADNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=cus_title?</dataModel>
+      <expressionRef id="_qwTcojNWEe2HNZiLrCljlg">
+        <dataModel>_qwSOgTNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_luuZIDNWEe2HNZiLrCljlg" precision="0" size="1" type="numeric" position="18">
+      <dataModel>_lutLBDNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=cus_vip?</dataModel>
+      <expressionRef id="_qwTcozNWEe2HNZiLrCljlg" internalExpression="case&#xD;&#xA;when sum(${t_billing_lines.lin_qty}$*((${t_billing_lines.lin_amount}$-${t_billing_lines.lin_discount_amount}$) - (${t_billing_lines.lin_amount}$ * ${t_billing_lines.lin_discount_rate}$ / 100))) > 64000 then 1&#xD;&#xA;else 0&#xD;&#xA;end">
+        <dataModel>_qwSOgjNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map?</dataModel>
+        <sourceRef>_nsK9QjNWEe2HNZiLrCljlg</sourceRef>
+        <sourceRef>_nsKWMzNWEe2HNZiLrCljlg</sourceRef>
+        <sourceRef>_nsK9QzNWEe2HNZiLrCljlg</sourceRef>
+        <sourceRef>_nsKWMTNWEe2HNZiLrCljlg</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_luuZITNWEe2HNZiLrCljlg" precision="0" size="100" type="varchar" mandatory="true" position="9">
+      <dataModel>_lutLATNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=cus_name?</dataModel>
+      <expressionRef id="_qwTcpDNWEe2HNZiLrCljlg">
+        <dataModel>_qwS1kDNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_luuZIjNWEe2HNZiLrCljlg" precision="0" size="100" type="varchar" position="12">
+      <dataModel>_lutLAjNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=cus_company?</dataModel>
+      <expressionRef id="_qwTcpTNWEe2HNZiLrCljlg">
+        <dataModel>_qwS1kTNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_luuZIzNWEe2HNZiLrCljlg" precision="6" size="29" type="timestamp" position="21">
+      <dataModel>_lutLBTNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=update_date?</dataModel>
+      <expressionRef id="_qwTcpjNWEe2HNZiLrCljlg" internalExpression="current_timestamp">
+        <dataModel>_qwS1kjNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <constraintRef id="_luyDgDNWEe2HNZiLrCljlg" type="pk">
+      <dataModel>_lutLBjNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=pk_dim_customer?</dataModel>
+    </constraintRef>
+    <constraintRef id="_luyDgTNWEe2HNZiLrCljlg" type="ck">
+      <dataModel>_lutyEDNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=CK_CUS_GEO_KEY_ID_002?</dataModel>
+    </constraintRef>
+    <constraintRef id="_luyDgjNWEe2HNZiLrCljlg" type="ck">
+      <dataModel>_lutyETNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=CK_CUS_GEO_KEY_ID_001?</dataModel>
+    </constraintRef>
+    <constraintRef id="_luyDgzNWEe2HNZiLrCljlg" type="fk">
+      <dataModel>_lutyEjNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=fk_dim_customer_geo?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_nFdikTNWEe2HNZiLrCljlg" countShownFields="5" hierarchical="false">
+    <dataModel>_nFdikDNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_nFewsDNWEe2HNZiLrCljlg" precision="6" size="29" type="timestamp" position="15">
+      <dataModel>_nFeJpDNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=bil_pmt_date?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_nFewsTNWEe2HNZiLrCljlg" precision="0" size="10" type="integer" mandatory="true" position="6">
+      <dataModel>_nFeJoTNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=cus_id?</dataModel>
+      <usage>_qwTcoTNWEe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_nFfXwDNWEe2HNZiLrCljlg" precision="6" size="29" type="timestamp" mandatory="true" position="12">
+      <dataModel>_nFeJozNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=bil_date?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_nFf-0DNWEe2HNZiLrCljlg" precision="0" size="10" type="integer" mandatory="true" position="3">
+      <dataModel>_nFeJoDNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=bil_id?</dataModel>
+      <usage>__S1skTNWEe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_nFf-0TNWEe2HNZiLrCljlg" precision="0" size="8" type="varchar" position="9">
+      <dataModel>_nFeJojNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=pmt_code?</dataModel>
+    </fieldRef>
+    <constraintRef id="_nFh0ADNWEe2HNZiLrCljlg" type="pk">
+      <dataModel>_nFeJpTNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=pk_t_billing?</dataModel>
+    </constraintRef>
+    <constraintRef id="_nFh0ATNWEe2HNZiLrCljlg" type="fk">
+      <dataModel>_nFeJpjNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=fk_billing_customer?</dataModel>
+    </constraintRef>
+    <constraintRef id="_nFh0AjNWEe2HNZiLrCljlg" type="fk">
+      <dataModel>_nFeJpzNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=fk_billing_payment?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_nsJvIDNWEe2HNZiLrCljlg" countShownFields="8" hierarchical="false">
+    <dataModel>_nsJIEDNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_nsKWMTNWEe2HNZiLrCljlg" precision="4" size="19" type="numeric" position="12">
+      <dataModel>_nsJvJDNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=lin_discount_rate?</dataModel>
+      <usage>_qwTcozNWEe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_nsKWMjNWEe2HNZiLrCljlg" precision="0" size="10" type="integer" mandatory="true" position="3">
+      <dataModel>_nsJvITNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=lin_id?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_nsKWMzNWEe2HNZiLrCljlg" precision="4" size="19" type="numeric" mandatory="true" position="18">
+      <dataModel>_nsJvJjNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=lin_amount?</dataModel>
+      <usage>_qwTcozNWEe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_nsKWNDNWEe2HNZiLrCljlg" precision="0" size="10" type="integer" mandatory="true" position="6">
+      <dataModel>_nsJvIjNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=bil_id?</dataModel>
+      <usage>__S1skTNWEe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_nsK9QDNWEe2HNZiLrCljlg" precision="0" size="3" type="varchar" mandatory="true" position="21">
+      <dataModel>_nsJvJzNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=lin_type?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_nsK9QTNWEe2HNZiLrCljlg" precision="0" size="10" type="integer" position="24">
+      <dataModel>_nsJvKDNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=bdr_id?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_nsK9QjNWEe2HNZiLrCljlg" precision="4" size="19" type="numeric" mandatory="true" position="9">
+      <dataModel>_nsJvIzNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=lin_qty?</dataModel>
+      <usage>_qwTcozNWEe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_nsK9QzNWEe2HNZiLrCljlg" precision="4" size="19" type="numeric" position="15">
+      <dataModel>_nsJvJTNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=lin_discount_amount?</dataModel>
+      <usage>_qwTcozNWEe2HNZiLrCljlg</usage>
+    </fieldRef>
+    <constraintRef id="_nsMycDNWEe2HNZiLrCljlg" type="pk">
+      <dataModel>_nsJvKTNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=pk_t_billing_lines?</dataModel>
+    </constraintRef>
+    <constraintRef id="_nsMycTNWEe2HNZiLrCljlg" type="fk">
+      <dataModel>_nsJvKjNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=fk_billing_lines_billing?</dataModel>
+    </constraintRef>
+    <constraintRef id="_nsMycjNWEe2HNZiLrCljlg" type="fk">
+      <dataModel>_nsKWMDNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=fk_billing_lines_bedroom?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <clauseRef id="__S1skTNWEe2HNZiLrCljlg" internalExpression="${t_billing.bil_id}$ = ${t_billing_lines.bil_id}$">
+    <dataModel>__S1skDNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map?</dataModel>
+    <sourceRef>_nFf-0DNWEe2HNZiLrCljlg</sourceRef>
+    <sourceRef>_nsKWNDNWEe2HNZiLrCljlg</sourceRef>
+  </clauseRef>
+  <targetSetRef id="__TDH8TNWEe2HNZiLrCljlg" sourceSet="__TDH8DNWEe2HNZiLrCljlg">
+    <container>_lusj8DNWEe2HNZiLrCljlg</container>
+  </targetSetRef>
+  <sourceSetRef id="__TDH8DNWEe2HNZiLrCljlg" targetSet="__TDH8TNWEe2HNZiLrCljlg">
+    <dataSet xsi:type="map:DataSet">#_nsLkUDNWEe2HNZiLrCljlg</dataSet>
+  </sourceSetRef>
+  <templateRef id="_qwUqwTNWEe2HNZiLrCljlg" description="Integration : dim_customer" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=POSTGRESSQL;trgPath=server:PG_datamart/schema:datamart.hotel_datamart/datastore:dim_customer;trgTech=RDBMS;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcTechList=RDBMS;srcProductList=POSTGRESSQL">
+    <dataModel>_qwUqwDNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=I_dim_customer?</dataModel>
+    <targetRef>_luqHsDNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_qwlJcTNWEe2HNZiLrCljlg" description="Load : t_billing_lines, t_billing" nodeCode="com.stambia.flow.step" templateCriteria="type=L-TP;trgProduct=POSTGRESSQL;trgPath=server:PG_datamart/schema:datamart.hotel_datamart/datastore:dim_customer;trgTech=RDBMS;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProduct=POSTGRESSQL;srcPath=server:PG_hotel/schema:hotel.hotel_management/datastore:t_billing_lines;srcTech=RDBMS;srcWorkspaceCapability=true;srcMapCapability=true;srcFilterCapability=true;srcJoinCapability=true">
+    <dataModel>_qwlJcDNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map$name=L1_dim_customer?</dataModel>
+    <load>_nFhM8zNWEe2HNZiLrCljlg</load>
+    <targetRef>_luqHsDNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map?</targetRef>
+  </templateRef>
+  <loadSet id="_luwOUTNWEe2HNZiLrCljlg">
+    <container>_luqHsDNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map?</container>
+  </loadSet>
+  <loadSet id="_nFhM8zNWEe2HNZiLrCljlg">
+    <container>_nFdikDNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map?</container>
+    <container>_nsJIEDNWEe2HNZiLrCljlg?fileId=_fj-uIDNWEe2HNZiLrCljlg$type=map?</container>
+  </loadSet>
+</ref:mapRef>

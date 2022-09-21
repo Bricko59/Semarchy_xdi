@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tpc:conf xmlns:tpc="http://www.stambia.com/tpc" id="_dmP-QFE3Ed-SQuyZS8LpiA">
+  <case name="I-TP">
+    <propertyState name="TYPE" value="I-TP"/>
+    <case name="RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="TRG MSSQL">
+        <propertyState name="trgProduct" value="MICROSOFT_SQL_SERVER"/>
+        <case name="CASE_SRC_FILE">
+          <propertyState mode="CONTAINS" name="srcTechList" value="FILE"/>
+          <template id="_qqRESNL2Eeik8NiUR3zizA" ref="INTEGRATION%20Mssql.tp.proc#_a2719aba-507e-4079-8a63-91104b13ede2?fileId=_a2719aba-507e-4079-8a63-91104b13ede2$type=proc$name=INTEGRATION%20Mssql?"/>
+          <template id="_rO9sxNL2Eeik8NiUR3zizA" ref="INTEGRATION%20File%20to%20Mssql%20(with%20BULK).tp.proc#_7DkDYdL1Eeik8NiUR3zizA?fileId=_7DkDYdL1Eeik8NiUR3zizA$type=proc$name=INTEGRATION%20File%20to%20Mssql%20(with%20BULK).tp?"/>
+        </case>
+        <template id="_dmQlUVE3Ed-SQuyZS8LpiA" ref="INTEGRATION%20Mssql.tp.proc#_a2719aba-507e-4079-8a63-91104b13ede2?fileId=_a2719aba-507e-4079-8a63-91104b13ede2$type=proc$name=INTEGRATION%20Mssql?"/>
+      </case>
+    </case>
+    <case name="FILE">
+      <propertyState name="trgTech" value="FILE"/>
+      <case name="SRC MSSQL">
+        <propertyState name="srcProduct" value="MICROSOFT_SQL_SERVER"/>
+        <template id="_LCuHNBS_EemJ-PVUNWIcUA" ref="INTEGRATION%20File%20(Mssql%20File%20Export%20with%20BCP).tp.proc#_Zn-84RS-EemJ-PVUNWIcUA?fileId=_Zn-84RS-EemJ-PVUNWIcUA$type=proc$name=INTEGRATION%20File%20(Mssql%20File%20Export%20with%20BCP)?"/>
+      </case>
+    </case>
+  </case>
+  <case name="L-TP">
+    <propertyState name="TYPE" value="L-TP"/>
+    <case name="TRG_RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="TRG_MSSQL">
+        <propertyState name="trgProduct" value="MICROSOFT_SQL_SERVER"/>
+        <case name="SRC_RDBMS">
+          <or>
+            <propertyState name="srcTech" value="RDBMS"/>
+            <propertyState mode="CONTAINS" name="srcCompatibleTechList" value="RDBMS"/>
+          </or>
+          <template id="_R3lntpTjEd-tv7v5yj0V3Q" ref="LOAD%20Rdbms%20to%20Mssql.proc#_g8DKkZTREd-A7bm8ettXjQ?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=LOAD%20Rdbms%20to%20Mssql?"/>
+        </case>
+        <case name="SRC_FILE">
+          <propertyState name="srcTech" value="FILE"/>
+          <template id="_YuansVFcEeG7rrmrTCPtTg" ref="LOAD%20File%20to%20Mssql%20(with%20BULK).proc#_fd_lcVFZEeGOorpBdKd57Q?fileId=_fd_lcVFZEeGOorpBdKd57Q$type=proc$name=LOAD%20File%20to%20Mssql%20(with%20BULK)?"/>
+        </case>
+        <case name="Case SRC_XML">
+          <or>
+            <propertyState name="srcTech" value="XML"/>
+            <propertyState name="srcTech" value="JSON"/>
+          </or>
+          <template id="_jeQHoyaeEeiDnfIiVtjdFA" ref="LOAD%20XML%20to%20Mssql.proc#_E2XY4QTfEeiR2oBMqV_uzQ?fileId=_E2XY4QTfEeiR2oBMqV_uzQ$type=proc$name=LOAD%20XML%20to%20Mssql?"/>
+        </case>
+      </case>
+    </case>
+  </case>
+  <case name="IS-TP">
+    <propertyState name="TYPE" value="IS-TP"/>
+    <case name="TRG_RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="TRG_MSSQL">
+        <propertyState name="trgProduct" value="MICROSOFT_SQL_SERVER"/>
+        <template id="_9HmRZDwxEeWeZ9_OehYjjQ" ref="STAGING%20Mssql%20As%20Table.proc#_s2DyATwwEeWeZ9_OehYjjQ?fileId=_s2DyATwwEeWeZ9_OehYjjQ$type=proc$name=STAGING%20Mssql%20As%20Table?"/>
+        <template id="_ctw75NupEeWIdu0rdnx7VQ" ref="STAGING%20Mssql%20As%20View.proc#_46jXMduoEeWIdu0rdnx7VQ?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=STAGING%20Mssql%20As%20View?"/>
+      </case>
+    </case>
+  </case>
+  <case name="C-TP">
+    <propertyState name="TYPE" value="C-TP"/>
+    <case name="RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="TRG MSSQL">
+        <propertyState name="trgProduct" value="MICROSOFT_SQL_SERVER"/>
+        <template id="_EHV6GNaxEeiBdf0kDvEMnQ" ref="REJECT%20Mssql.tp.proc#_dtYVltawEeiBdf0kDvEMnQ?fileId=_dtYVltawEeiBdf0kDvEMnQ$type=proc$name=REJECT%20Mssql.tp?"/>
+      </case>
+    </case>
+  </case>
+</tpc:conf>

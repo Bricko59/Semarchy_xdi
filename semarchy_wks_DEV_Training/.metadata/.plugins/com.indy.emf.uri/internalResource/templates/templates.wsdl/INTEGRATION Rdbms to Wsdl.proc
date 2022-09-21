@@ -1,0 +1,877 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" description="This template is used to invoke a web service from a source database.&#xD;&#xA;&#xD;&#xA;An invocation will be performed for each value returned by the source for the repetition key specified on the target web service operation.&#xD;&#xA;&#xD;&#xA;Important note:&#xD;&#xA;When facing issues with the web service invocation, do not hesitate to have a look at the 'Sent Messages Folder', 'Received Messages Folder', and 'Error Acceptance Number' parameters.&#xD;&#xA;They may help to investigate and find more information about what is going on and what are the messages exchanged with the Web Service.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;Refer to the description of each Parameter for more information.&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;23/09/2021&#x9;New parameter &quot;Json Node Null Behaviour&quot;&#xD;&#xA;09/09/2020&#x9;New parameter &quot;Read Timeout&quot; and &quot;Connection Timeout&quot;&#xD;&#xA;16/06/2020&#x9;Bug fix: the 'Cdc Subscriber' parameter is ignored when querying the source data&#xD;&#xA;16/06/2020&#x9;New Parameters 'Unlock Cdc Table' and 'Lock Cdc Table'&#xD;&#xA;16/06/2020&#x9;New Parameter 'Cdc Subscriber'&#xD;&#xA;16/06/2020&#x9;Bug fix: the 'Cdc Subscriber' parameter is ignored on Lock/Unlock CDC steps&#xD;&#xA;04/10/2019&#x9;New parameter &quot;Clean Temporary Objects&quot;&#xD;&#xA;05/04/2019&#x9;Support 'Raw Content' attribute which can be defined on soap security node (requires Runtime S17.6.6)&#xD;&#xA;30/11/2018&#x9;New parameter &quot;Retry Delay&quot;&#xD;&#xA;05/09/2018&#x9;Support changing the HTTP Method used to generate the OAuth2 token (requires Runtime S17.5.8)&#xD;&#xA;05/09/2018&#x9;Support sending the additional OAuth2 authorization parameters (requires Runtime S17.5.8)&#xD;&#xA;05/09/2018&#x9;Support &quot;Client Credentials Grant&quot;, &quot;Implicit Grant&quot;, and &quot;Resource Owner Password Credentials Grant&quot; OAuth2 flows (requires Runtime S17.5.8)&#xD;&#xA;19/04/2018&#x9;Remove unused 'Out File Mask' parameter&#xD;&#xA;04/04/2018&#x9;New parameter 'Received Attachments folder'&#xD;&#xA;03/10/2017&#x9;Set the default value of 'Error Acceptance Number' to -1 (Runtime default value when it was not specified)&#xD;&#xA;27/07/2017&#x9;Reorganize the parameters display order&#xD;&#xA;27/07/2017&#x9;Add new 'Url Encoded Charset' parameter&#xD;&#xA;27/07/2017&#x9;Remove unused 'Url Encoding' parameter&#xD;&#xA;16/02/2017&#x9;Add support for SORT_DESC and SORT_ASC tags&#xD;&#xA;16/02/2017  Initialize template history" id="_oO96sQXbEd-3ZKnpc_AwVw" metaInf="&lt;template-feature-support name=&quot;stagingArea&quot; enable=&quot;true&quot; evaluation=&quot;NATIVE&quot;/>">
+  <parameter description="Specifies if the XML declaration node should be written at the begin of the exchange file.&#xD;&#xA;This node helps the readers that will next process the file to find out which encoding is used, for instance.&#xD;&#xA;It can moreover help the user, for debug purposes.&#xD;&#xA;&#xD;&#xA;Set this to true (default) if you want the Runtime to write it.&#xD;&#xA;&#xD;&#xA;Example of declaration&#xD;&#xA;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xD;&#xA;&#xD;&#xA;" id="_oO96tQXbEd-3ZKnpc_AwVw" name="WRITE_XML_DECLARATION" type="Boolean" value="true"/>
+  <parameter description="If true, the temporary exchange objects created during integration are removed at the end of the process." id="_qlzLEN9wEemSaoh-0HM60Q" name="cleanTemporaryObjects" type="Boolean" value="false"/>
+  <parameter description="Optional debug parameter used to extract into files the descriptors of the Web Service Invocation.&#xD;&#xA;These are files containing the select query that is performed on the source table and the structure of the invocation.&#xD;&#xA;Set this parameter to true if you want the Runtime to write these files." id="_oO96ugXbEd-3ZKnpc_AwVw" name="WRITE_XML_DESCRIPTOR" type="Boolean" value="false"/>
+  <parameter description="If true, a DISTINCT statement will be added on the query selecting source data.&#xD;&#xA;This is used to avoid having duplicates." id="_oO96swXbEd-3ZKnpc_AwVw" name="DISTINCT" type="Boolean" value="true"/>
+  <parameter id="_oO96vAXbEd-3ZKnpc_AwVw" name="XML_COMMIT" type="Boolean" value="true"/>
+  <parameter description="Optional path to the target file where the exchanges between the Runtime and the Web Service will be stored.&#xD;&#xA;&#xD;&#xA;IMPORTANT:&#xD;&#xA;When setting this parameter, the exchange file will be located at another place than default.&#xD;&#xA;&#xD;&#xA;Therefore, be careful if you are retrieving the response of the Web Service lnvocation in a target database in your Mapping.&#xD;&#xA;->In this case you must set the 'In file Name' parameter of the target 'Load Wsdl to Rdbms' template to the same path.&#xD;&#xA;-> Otherwise, the load template will not find the exchange file and will not be able to load the response.&#xD;&#xA;" id="_oO96sgXbEd-3ZKnpc_AwVw" name="OUT_FILE_NAME" type="String"/>
+  <parameter description="Encoding to use for the exchange file in which the communications between the Runtime and the Web Service are written." id="_oO96tAXbEd-3ZKnpc_AwVw" name="OUT_FILE_ENCODING" type="String"/>
+  <parameter description="Encoding used to encode the URL and URL parameters, such as UTF-8 for instance.&#xD;&#xA;This applies also for 'part' set as 'application/x-www-form-urlencoded' in the Metadata.&#xD;&#xA;&#xD;&#xA;Prerequisites:&#xD;&#xA;Runtime S17.3.3 or higher" id="_p97d0HIVEeeFnYW-ODUCOA" name="urlEncodedCharset" type="String" value=""/>
+  <parameter description="JDBC Fetch size (number of lines) used when querying the source database.&#xD;&#xA;Larger values provide better performance but consume more memory in the Runtime as the data is stored in the Memory before being sent." id="_oO96uwXbEd-3ZKnpc_AwVw" name="SQL_FECTH_SIZE" type="String" value=""/>
+  <parameter description="Delay in millisecond between each invocation of the Web Service.&#xD;&#xA;&#xD;&#xA;As explained in the Template's global description, the Web Service will be called for each value returned on the root node (used as repetition key).&#xD;&#xA;This parameter will therefore defines the amount of time to wait between each of these invocations." id="_G44GdEfLEd-ZuOn11eINGw" name="DELAY_BETWEEN_INVOCATIONS" type="String" value=""/>
+  <parameter description="Delay in millisecond to wait between each retry when an invocation fails.&#xD;&#xA;&#xD;&#xA;See also 'Retry Number' to define the amount of time the invocation should be retried when facing an error.&#xD;&#xA;&#xD;&#xA;Notes:&#xD;&#xA;When this parameter is not set, the value specified in the 'Delay Between Invocations' parameter is used.&#xD;&#xA;Using this parameter requires Runtime S17.6.2 or higher." id="_zS8c4NufEeiM7cwl6gI3xQ" label="Functional Retry Delay" name="retryDelay" type="Integer"/>
+  <parameter description="Specifies the number of retry attempts to perform when an invocation fails.&#xD;&#xA;&#xD;&#xA;When an invocation fails, attempts to re-execute it will be performed the specified amount of time until it succeeds.&#xD;&#xA;&#xD;&#xA;As soon as a retry attempts succeed the Runtime will stop performing retries for the given invocation and goes to next invocation.&#xD;&#xA;&#xD;&#xA;When the amount of retry is reached without succeeding, the Runtime will stop attempting to perform the given invocation and go or not to the next one depending on the &quot;Error Acceptance Number&quot;.&#xD;&#xA;When the amount of retry is reached, the Runtime will stop trying to perform the invocation.&#xD;&#xA;&#xD;&#xA;" id="_Cg3kYEfLEd-ZuOn11eINGw" label="Functional Retry Number" name="RETRY_NUMBER" type="Integer" value=""/>
+  <parameter description="Number of tolerated invocation failures when invoking the web service.&#xD;&#xA;Invocations will continue even if some of them are failing until this number is reached.&#xD;&#xA;When the number of failed invocation is exceeded execution stops and an error is thrown.&#xD;&#xA;&#xD;&#xA;The default value when this parameter is not set is -1 (no error limit).&#xD;&#xA;&#xD;&#xA;Depending on web service invoked, you may have the possibility to retrieve the errors returned by the web service using the 'Fault' node when errors are tolerated.&#xD;&#xA;&#xD;&#xA;Notes:&#xD;&#xA;- An invocation is considered as an error if, even after all the retries, it is still failing.&#xD;&#xA;- Retry mechanism can also be implemented to perform retry attempts when an error is encountered (see &quot;Retry Number&quot; parameter).&#xD;&#xA;- Technical errors (such as network issues, unavailable services, ...) will not take into account this parameter.&#xD;&#xA;When a technical errors encountered the execution stops and an error is thrown.&#xD;&#xA;Note that this behavior applies from Runtime S17.6.2 and higher." id="_7XJmtHGuEd-MhtlhghVbHg" label="Functional Error Acceptance Number" name="ERROR_ACCEPTANCE_NUMBER" type="Integer" value="-1"/>
+  <parameter description="Optional path to a local folder where the Runtime will store the messages that are sent to the Web Service.&#xD;&#xA;This is used only for debug purposes, to have an extract of the exchanges between the Runtime and the Web Service.&#xD;&#xA;If this parameter is left empty no file will be written.&#xD;&#xA;&#xD;&#xA;See also the 'Received Message Folder' to specify a path to extract the messages returned by the Web Service." id="_DqbEdXGvEd-MhtlhghVbHg" name="SENT_MESSAGES_FOLDER" type="String" value=""/>
+  <parameter description="Optional path to a local folder where the Runtime will store the response messages that are returned the Web Service.&#xD;&#xA;This is used only for debug purposes, to have an extract of the exchanges between the Runtime and the Web Service.&#xD;&#xA;If this parameter is left empty no file will be written.&#xD;&#xA;&#xD;&#xA;See also the 'Sent Message Folder' to specify a path to extract the messages sent by the Runtime to the Web Service." id="_FamBlXGvEd-MhtlhghVbHg" name="RECEIVED_MESSAGES_FOLDER" type="String" value=""/>
+  <parameter description="Path to a local folder where the Runtime will store the attachments returned by SOAP requests.&#xD;&#xA;&#xD;&#xA;Note that this requires a Runtime S17.5.6 or higher, and that this works only for SOAP requests." id="_-QYJADQVEeiwYcXY9ta6dw" name="RECEIVED_ATTACHMENTS_FOLDER" type="String" value=""/>
+  <parameter id="_T4dcUHd7EeKPWLTXCe39HA" name="HTTP_HEADER_PARAMETERS" type="String" value=""/>
+  <parameter description="Defines what to do when a null value is loaded into a target xml element or JSON value:&#xD;&#xA;&#xD;&#xA;- ForceToTrue: The element is created with the xsi:nil=&quot;true&quot; attribute.&#xD;&#xA;- ForceToFalse: The element or JSON value is not created.&#xD;&#xA;- TrueIfNotDefined: When the 'isNullable' property is not defined in Metadata, the element is created with the xsi:nil=&quot;true&quot; attribute.&#xD;&#xA;- FalseIfNotDefined: When the 'isNullable' property is not defined in Metadata, the element is not created.&#xD;&#xA;&#xD;&#xA;Note that this applies to all the elements that are loaded and that the 'ForceToTrue' and 'ForceToFalse' options override what is defined in Metadata.&#xD;&#xA;These two options allow to force manually in the template to create or not elements with xsi:nil=&quot;true&quot; attribute when a null value is encountered.&#xD;&#xA;&#xD;&#xA;If you want to impact only the behavior of elements where the 'isNullable' property is not defined in Metadata, use the two other options.&#xD;&#xA;They allow to choose what to do when it is the case, and simply follow what is defined in Metadata when it is already defined in.&#xD;&#xA;&#xD;&#xA;Note:&#xD;&#xA;From Runtime S17.5.6, the 'ForceToFalse' option is also supported for JSON values.&#xD;&#xA;When this option is set the JSON values will not be created when the source value is null.&#xD;&#xA;All other options are supported for XML elements only." id="_MKi31NoFEeCi_78PNYk6Cg" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;FalseIfNotDefined&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;TrueIfNotDefined&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;ForceToFalse&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;ForceToTrue&quot;/>" name="nilBehaviour" type="String" value="FalseIfNotDefined"/>
+  <parameter description="Defines what to do when a null value is loaded into a JSON array or a JSON object&#xD;&#xA;&#xD;&#xA;- Do Not Write Node: The JSON array or Object is not created in the target file.&#xD;&#xA;- Write Empty Node: The JSON array or Object is created in the target file with an empty array of an empty object&#xD;&#xA;- Write Null Node: The JSON array or Object is created in the target file with null as value&#xD;&#xA; " id="8bc2def9-ba5f-4f7e-a96e-d6f35a1551ce" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;Do Not Write Node&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;Write Null Node&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;Write Empty Node&quot;/>" name="jsonNodeNullBehaviour" type="String" value="Do Not Write Node"/> 
+  <parameter id="_-gWJkHowEd-N4JwHbNVfHA" name="ACTIVE_SCRIPTING" type="String" value="false"/>
+  <parameter id="_sGTYgLlBEeWP-9kUtJNtfw" metaInf="&lt;metaInf id=&quot;value&quot; value=&quot;manual&quot;/>&#xD;&#xA;&lt;!--&lt;metaInf id=&quot;value&quot; value=&quot;auto&quot;/>-->&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;off&quot;/>" name="sourceSetOptimization" type="String" value="off"/>
+  <parameter description="Optional parameter to specify the name to be used for the root XML name of the exchange file.&#xD;&#xA;This is by default set to server name of the WSDL Metadata (root node of the Metadata).&#xD;&#xA;&#xD;&#xA;IMPORTANT:&#xD;&#xA;When setting this parameter, the root node of the exchange file will be different than the default value.&#xD;&#xA;&#xD;&#xA;Therefore, be careful if you are retrieving the response of the Web Service lnvocation in a target database in your Mapping.&#xD;&#xA;->In this case you must set the 'Super Root Name' parameter of the target 'Load Wsdl to Rdbms' template to the same value.&#xD;&#xA;-> Otherwise, the load template will not find the root node in the exchange file and will not be able to load the response.&#xD;&#xA;" id="_oO96uQXbEd-3ZKnpc_AwVw" name="SUPER_ROOT_NAME" type="String" value=""/>
+  <parameter id="_oO96tgXbEd-3ZKnpc_AwVw" name="XML_VERSION" type="String" value="1.1"/>
+  <parameter id="_oO96twXbEd-3ZKnpc_AwVw" name="XML_FACTORY_CLASS_NAME" type="String" value="com.ctc.wstx.stax.WstxOutputFactory"/>
+  <parameter id="6441b9cb-c7de-4610-b882-349eb7a686f9" label="Connection Timeout" name="connectionTimeout" type="Integer"/>
+  <parameter id="0255c3ef-2999-4334-a2e8-05cae4a4eb84" label="Read Timeout" name="readTimeout" type="Integer"/>
+  <parameter description="When a source table is used as CDC a lock is performed on it. It makes the changed data available in the Mapping.&#xD;&#xA;If set to false, the Lock must have been performed as part of a previous Mapping." id="_PJRs8LCUEeqAJL64qj9Gxw" name="lockCdcTable" type="Boolean" value="true"/>
+  <parameter description="When a source table is used as CDC an unlock is performed on it after processing. It marks the changed data as consumed.&#xD;&#xA;If set to false, the Unlock must be performed as part of an upcoming Mapping." id="_PJZBsLCUEeqAJL64qj9Gxw" name="unlockCdcTable" type="Boolean" value="true"/>
+  <parameter description="CDC Subscriber to use when CDC has been enabled on a source table." id="_PJZBsbCUEeqAJL64qj9Gxw" name="cdcSubscriber" type="String"/>
+  <parameter id="d89aed0a-3cd3-40ef-adde-bc749ec1bafb" name="technicalErrorAcceptanceNumber" type="Integer" value="0"/>
+  <parameter id="b73611e7-bc5d-4e71-ae64-493da8669178" name="technicalErrorRetryNumber" type="Integer"/>
+  <parameter id="c225c6a1-8a09-4762-9fa1-6d83448fec3f" name="technicalErrorRetryDelay" type="Integer" value=""/>
+  <subProcess id="_oO96vQXbEd-3ZKnpc_AwVw" isBeginAction="false" name="INT" nbCycles="-1" toleratedError="false">
+    <link id="_E1_EsOagEeme96bTNt0eBg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_-JTxUOafEeme96bTNt0eBg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=Clean?"/>
+    <actionCode id="_oO96vgXbEd-3ZKnpc_AwVw" enable="true" isBeginAction="false" name="SqlToXml" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcToXmlActionCodeI">
+      <link id="_-J1fABxiEd-jk_Cl4HeIIQ" executionCondition="${SqlToXml/XML_NB_ELEMENTS}$>0" executionType="OK" generationType="OK" mandatory="1" targetId="_0OQmsBxiEd-jk_Cl4HeIIQ"/>
+      <link id="_zOKlcFuiEeCrIMs4Xb-vBQ" executionCondition="${SqlToXml/XML_NB_ELEMENTS}$==0" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_uY9KAFuiEeCrIMs4Xb-vBQ"/>
+      <parameter id="_oO96vwXbEd-3ZKnpc_AwVw" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_oO96wAXbEd-3ZKnpc_AwVw" name="OUT_FILE_NAME" type="String" value="%x{$fileName}x%"/>
+      <parameter id="_oO96wQXbEd-3ZKnpc_AwVw" name="WRITE_XML_DECLARATION" ref="#_oO96tQXbEd-3ZKnpc_AwVw" type="Boolean" value="true"/>
+      <parameter id="_oO96wgXbEd-3ZKnpc_AwVw" name="OUT_FILE_ENCODING" ref="#_oO96tAXbEd-3ZKnpc_AwVw" type="String"/>
+      <parameter id="_oO96wwXbEd-3ZKnpc_AwVw" name="WRITE_XML_VERSION" ref="#_oO96tgXbEd-3ZKnpc_AwVw" type="String"/>
+      <parameter id="_oO96xAXbEd-3ZKnpc_AwVw" name="XML_FACTORY_CLASS_NAME" ref="#_oO96twXbEd-3ZKnpc_AwVw" type="String" value=""/>
+      <parameter id="_oO96xQXbEd-3ZKnpc_AwVw" name="OUT_FILE_MASK" type="String" value=""/>
+      <parameter id="_oO96xgXbEd-3ZKnpc_AwVw" name="SUPER_ROOT_NAME" ref="#_oO96uQXbEd-3ZKnpc_AwVw" type="String"/>
+      <parameter id="_oO96xwXbEd-3ZKnpc_AwVw" name="WRITE_XML_DESCRIPTOR" ref="#_oO96ugXbEd-3ZKnpc_AwVw" type="Boolean" value="false"/>
+      <parameter id="_oO96yAXbEd-3ZKnpc_AwVw" name="SQL_FETCH_SIZE" ref="#_oO96uwXbEd-3ZKnpc_AwVw" type="Integer"/>
+      <parameter id="_oO96yQXbEd-3ZKnpc_AwVw" name="XML_COMMIT" type="Boolean" value="%x{md:ifEmpty(md:paramValue($this,'XML_COMMIT',3),md:paramValue($this,'XML_COMMIT',2))}x%"/>
+      <parameter id="_YbNxABx3Ed-jk_Cl4HeIIQ" name="WRITE_METADATA_ATTRIBUTS" type="String" value="true"/>
+      <parameter id="_RXlcUDzbEd-Syah8m0fPgw" name="KEEP_ELEMENTS" type="String" value="com.stambia.wsdl.output,com.stambia.wsdl.input,com.stambia.wsdl.fault,com.stambia.xml.namespace"/>
+      <parameter id="_FbtvQEenEd-22LO3wIVIuQ" name="WRITE_KEY_VALUES" type="String" value="true"/>
+      <parameter id="_Ri9uANoFEeCi_78PNYk6Cg" name="NIL_BEHAVIOUR" ref="#_MKi31NoFEeCi_78PNYk6Cg" type="String" value=""/>
+      <parameter id="_Ri9uANoFEeCi_78PNYk6Ch" name="JSON_NODE_NULL_BEHAVIOUR" type="String" value="%x{md:ifEmpty(md:paramValue($this/..,'jsonNodeNullBehaviour'),'Do Not Write Node')}x%"/>
+      <code>&lt;sqlToXml:descriptor xmlns:sqlToXml=&quot;http://www.stambia.com/sqlToXml&quot;>&#xD;
+%xsl{&#xD;
+&#xD;
+&lt;xsl:variable name=&quot;sourceSets&quot;>&#xD;
+	&lt;xsl:for-each select=&quot;($REF/tech:sourceSets())&quot;>&#xD;
+		&lt;sourceSet name=&quot;{md:ifEmpty(.,'__monoSS__')}&quot; distinct=&quot;{md:paramValue($this,'DISTINCT')}&quot;>&#xD;
+		&lt;xsl:for-each select=&quot;$REF/ref:fields()[tech:sourceSet()=current() or (not(tech:sourceSet()!='')) and (tech:onSrc() or tech:onWrk())]&quot;>&#xD;
+			&lt;field isKey=&quot;{tech:isUk()}&quot; id=&quot;{ref:target()/@id}&quot; alias=&quot;{replace(replace(tech:workName(),'-','_'),':','_')}&quot; aliasWord=&quot;{tech:columnAliasWord()}&quot; isAggregate=&quot;{tech:isAggregate()}&quot; location=&quot;{tech:location()}&quot; forceIsNillable=&quot;{if (tech:tag()='IS_NILLABLE') then 'true' else if (tech:tag()='IS_NOT_NILLABLE') then 'false' else ''}&quot; sortOrder=&quot;{if (tech:tag()='SORT_ASC') then 'ASC' else if (tech:tag()='SORT_DESC' ) then 'DESC' else ''}&quot;>&lt;xsl:value-of select=&quot;tech:expression()&quot;/>&#xD;
+			&lt;xsl:copy-of select=&quot;tag&quot;/>&#xD;
+			&lt;xsl:for-each select=&quot;./ref:froms()&quot;>&#xD;
+				&lt;from>&lt;xsl:value-of select=&quot;tech:from()&quot;/>&lt;/from>&#xD;
+			&lt;/xsl:for-each>&#xD;
+			&lt;/field>&#xD;
+		&lt;/xsl:for-each>&#xD;
+		&lt;query>&#xD;
+			&lt;xsl:choose>&#xD;
+			&#xD;
+				&lt;xsl:when test=&quot;md:paramValue($this,'sourceSetOptimization')='manual'&quot;>&#xD;
+					&lt;xsl:variable name=&quot;joins&quot;>&#xD;
+						&lt;explicitJoins bracket=&quot;{$REF/ref:srcProduct()/tech:hasExplicitJoinInBracket()}&quot;>&#xD;
+						&lt;xsl:call-template name=&quot;rdbms:fromPart&quot;>&#xD;
+							&lt;xsl:with-param select=&quot;$REF&quot; name=&quot;context&quot;/>&#xD;
+							&lt;xsl:with-param name=&quot;sourceSet&quot; select=&quot;current()&quot;/>&#xD;
+							&lt;xsl:with-param name=&quot;mode&quot; select=&quot;'NODE'&quot;/>&#xD;
+						&lt;/xsl:call-template>&#xD;
+						&lt;/explicitJoins>&#xD;
+						&lt;implicitJoins>&#xD;
+						&lt;xsl:for-each select=&quot;$REF/ref:implicitJoin(current())&quot;>&#xD;
+							&lt;join>&#xD;
+								&lt;expr>&lt;xsl:value-of select=&quot;tech:implicitExpression()&quot;/>&lt;/expr>&#xD;
+								&lt;xsl:for-each select=&quot;./ref:froms()&quot;>&#xD;
+										&lt;from>&lt;xsl:value-of select=&quot;tech:from()&quot;/>&lt;/from>&#xD;
+								&lt;/xsl:for-each>&#xD;
+							&lt;/join>&#xD;
+						&lt;/xsl:for-each>&#xD;
+						&lt;/implicitJoins>&#xD;
+					&lt;/xsl:variable>&#xD;
+					&lt;xsl:copy-of select=&quot;$joins&quot;/>&#xD;
+					&lt;xsl:for-each select=&quot;$REF/ref:froms()/tech:from()&quot;>&#xD;
+						&lt;xsl:if test=&quot;.!=$joins//from&quot;>&#xD;
+							&lt;from>&lt;xsl:value-of select=&quot;.&quot;/>&lt;/from>&#xD;
+						&lt;/xsl:if>&#xD;
+					&lt;/xsl:for-each>&#xD;
+				&lt;/xsl:when>&#xD;
+				&lt;xsl:otherwise>&#xD;
+					&lt;from>&#xD;
+						&lt;xsl:value-of select=&quot;$REF/tech:fromPart(current())&quot;/>&#xD;
+					&lt;/from>&#xD;
+				&lt;/xsl:otherwise>&#xD;
+			&lt;/xsl:choose>	&#xD;
+		&lt;where>&#xD;
+		&lt;xsl:value-of select=&quot;$REF/tech:joinPart(current())&quot;/>&#xD;
+		&lt;xsl:value-of select=&quot;$REF/tech:filterPart(current())&quot;/>&#xD;
+		&lt;xsl:value-of select=&quot;$REF/tech:cdcFilterPart2($this,current())&quot;/>&#xD;
+		&lt;xsl:value-of select=&quot;$REF/tech:havingPart(current())&quot;/>&#xD;
+&lt;!--		&lt;xsl:value-of select=&quot;$REF/tech:groupByPart(current())&quot;/>-->&#xD;
+&lt;!-- calculé automatiquement-->&#xD;
+		&lt;/where>&#xD;
+		&lt;/query>&#xD;
+		&lt;/sourceSet>&#xD;
+	&lt;/xsl:for-each>&#xD;
+&lt;/xsl:variable>&#xD;
+	&lt;xsl:apply-templates select=&quot;$sourceSets&quot; mode=&quot;xmlToText&quot;/>&#xD;
+	&amp;lt;data>&#xD;
+	&lt;xsl:apply-templates select=&quot;$REF/ref:target()/ref:wsdl()&quot; mode=&quot;xmlToText&quot;>&#xD;
+			&lt;xsl:with-param name=&quot;filters&quot; tunnel=&quot;yes&quot;>name()='md:ref' or (name()='httpHeaderProperties' and ../name()='operation')&lt;/xsl:with-param>&#xD;
+			&lt;xsl:with-param name=&quot;indent&quot; tunnel=&quot;yes&quot;> &lt;/xsl:with-param>&#xD;
+			&lt;xsl:with-param name=&quot;id&quot;  select=&quot;$REF/ref:target()/@id&quot;/>&#xD;
+			&lt;xsl:with-param name=&quot;useXmlForm&quot;  select=&quot;true()&quot; tunnel=&quot;yes&quot;/>&#xD;
+			&#xD;
+	&lt;/xsl:apply-templates>&#xD;
+	&lt;xsl:apply-templates select=&quot;$REF/ref:target()/ref:namespace()&quot; mode=&quot;xmlToText&quot;/>&#xD;
+	&amp;lt;/data>&#xD;
+&#xD;
+}xsl%&#xD;
+&lt;/sqlToXml:descriptor></code>
+    </actionCode>
+    <actionCode id="_0OQmsBxiEd-jk_Cl4HeIIQ" enable="true" isBeginAction="false" name="Call WebServices" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.XmlToWsdlActionCodeI">
+      <link id="_y2Z9AENJEeCcsKFd3RQ7Tg" executionType="OK" generationType="OK_KO" mandatory="0" targetId="_x2CFI0NJEeCcsKFd3RQ7Tg"/>
+      <parameter id="_5AIaQBxiEd-jk_Cl4HeIIQ" name="IN_FILE_NAME" type="String" value="%x{$fileName}x%"/>
+      <parameter id="_6vZzMEfKEd-ZuOn11eINGw" name="DELAY_BETWEEN_INVOCATIONS" ref="#_G44GdEfLEd-ZuOn11eINGw" type="String" value=""/>
+      <parameter id="_9LZUgEfKEd-ZuOn11eINGw" name="RETRY_NUMBER" ref="#_Cg3kYEfLEd-ZuOn11eINGw" type="String" value=""/>
+      <parameter id="_8S8bkEhkEd-Sb8Mio6PnEg" name="WRITE_XML_DECLARATION" ref="#_oO96tQXbEd-3ZKnpc_AwVw" type="String" value=""/>
+      <parameter id="_-rXrgEhkEd-Sb8Mio6PnEg" name="WRITE_XML_VERSION" ref="#_oO96tgXbEd-3ZKnpc_AwVw" type="String" value=""/>
+      <parameter id="_A1xGgEhlEd-Sb8Mio6PnEg" name="OUT_FILE_ENCODING" ref="#_oO96tAXbEd-3ZKnpc_AwVw" type="String" value=""/>
+      <parameter id="_YNtZUEiREd-9nuBQNZKXWw" name="URL_ENCODED_CHARSET" type="String" value="%x{md:paramValue($this,'urlEncodedCharset')}x%"/>
+      <parameter id="_RC9mcEudEd-CGq_TMNCtXw" name="PROXY_HOST" type="String" value="%x{$REF/ref:target()/tech:proxyHost()}%"/>
+      <parameter id="_RWLdYEudEd-CGq_TMNCtXw" name="PROXY_PORT" type="String" value="%x{$REF/ref:target()/tech:proxyPort()}%"/>
+      <parameter id="_RjYL4EudEd-CGq_TMNCtXw" name="PROXY_USER" type="String" value="%x{$REF/ref:target()/tech:proxyUser()}%"/>
+      <parameter id="_XalP0EudEd-CGq_TMNCtXw" name="PROXY_PASSWORD" type="String" value="%x{$REF/ref:target()/tech:proxyPassword()}%"/>
+      <parameter id="_MljzcHGvEd-MhtlhghVbHg" name="ERROR_ACCEPTANCE_NUMBER" ref="#_7XJmtHGuEd-MhtlhghVbHg" type="Integer" value=""/>
+      <parameter id="_SdgeQHGvEd-MhtlhghVbHg" name="RECEIVED_MESSAGES_FOLDER" ref="#_FamBlXGvEd-MhtlhghVbHg" type="String"/>
+      <parameter id="_XCcpEHGvEd-MhtlhghVbHg" name="SENT_MESSAGES_FOLDER" ref="#_DqbEdXGvEd-MhtlhghVbHg" type="String"/>
+      <parameter id="_3e8zIHofEd-N4JwHbNVfHA" name="SOAP_START_MESSAGE_SCRIPT" type="String" value="%comment{&#xD;&#xA;import com.indy.engine.actionCodes.wsdl.HttpSOAPConnection&#xD;&#xA;import javax.xml.soap.MessageFactory&#xD;&#xA;import javax.xml.soap.SOAPConnectionFactory&#xD;&#xA;&#xD;&#xA;if (operation.proxyHost != null) {&#xD;&#xA;&#x9;operation.connection = HttpSOAPConnection()&#xD;&#xA;&#x9;((HttpSOAPConnection) operation.connection).setProxy(operation.proxyHost,operation.proxyPort)&#xD;&#xA;&#x9;if (operation.proxyUser != null)&#xD;&#xA;&#x9;&#x9;((HttpSOAPConnection) operation.connection).setProxyUser(&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;&#x9;operation.proxyUser, operation.proxyPassword)&#xD;&#xA;&#x9;} else {&#xD;&#xA;&#x9;&#x9;operation.connection = SOAPConnectionFactory.newInstance().createConnection()&#xD;&#xA;&#x9;}&#xD;&#xA;&#x9;// Next, create the actual message&#xD;&#xA;operation.message = MessageFactory.newInstance().createMessage()&#xD;&#xA;&#xD;&#xA;// Create objects for the message parts&#xD;&#xA;operation.envelope=operation.message.getSOAPPart().getEnvelope()&#xD;&#xA;}comment%&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;operation.connection = javax.xml.soap.SOAPConnectionFactory.newInstance().createConnection()&#xD;&#xA;&#x9;// Next, create the actual message&#xD;&#xA;operation.message = javax.xml.soap.MessageFactory.newInstance().createMessage()&#xD;&#xA;&#xD;&#xA;// Create objects for the message parts&#xD;&#xA;operation.envelope=operation.message.getSOAPPart().getEnvelope()"/>
+      <parameter id="_U5eHsHoxEd-N4JwHbNVfHA" name="ACTIVE_SCRIPTING" ref="#_-gWJkHowEd-N4JwHbNVfHA" type="String" value=""/>
+      <parameter id="_1z13wH02Ed-WZ7uSK5GYLA" name="IGNORE_TRUST_STORE" type="String" value="true"/>
+      <parameter id="_Yqw34H16Ed-WZ7uSK5GYLA" name="KEY_STORE" type="String" value="%x{$REF/ref:target()/tech:keyStore()}%"/>
+      <parameter id="_Zy0sIH16Ed-WZ7uSK5GYLA" name="KEY_STORE_TYPE" type="String" value="%x{$REF/ref:target()/tech:keyStoreType()}%"/>
+      <parameter id="_aeEokH16Ed-WZ7uSK5GYLA" name="KEY_STORE_PASSWORD" type="String" value="%x{$REF/ref:target()/tech:keyStorePassword()}%"/>
+      <parameter id="_KknAEH17Ed-WZ7uSK5GYLA" name="IGNORE_HOSTNAME_VERIFIER" type="String" value="true"/>
+      <parameter id="_By2l8INiEd-IoaIVtuAGTw" name="TRUST_STORE" type="String" value="%x{$REF/ref:target()/tech:trustStore()}%"/>
+      <parameter id="_EoKmMINiEd-IoaIVtuAGTw" name="TRUST_STORE_TYPE" type="String" value="%x{$REF/ref:target()/tech:trustStoreType()}%"/>
+      <parameter id="_G2p3AINiEd-IoaIVtuAGTw" name="TRUST_STORE_PASSWORD" type="String" value="%x{$REF/ref:target()/tech:trustStorePassword()}%"/>
+      <parameter id="_zErC4DVGEeG6l9o-xz7vPw" name="USER" type="String" value="%x{$REF/ref:target()/tech:user()}%"/>
+      <parameter id="_2fSvoDVGEeG6l9o-xz7vPw" name="PASSWORD" type="String" value="%x{$REF/ref:target()/tech:password()}%"/>
+      <parameter id="_-XO24Hd3EeKPWLTXCe39HA" name="HTTP_HEADER_PARAMETERS" type="String" value="%x{md:ifEmpty(md:paramValue($this/..,'HTTP_HEADER_PARAMETERS'),$REF/ref:target()/tech:httpHeaderProperties())}x%"/>
+      <parameter id="_xwRykMIXEeKcx4gGvrqWmw" name="WSSE_USERNAME" type="String" value="%x{$REF/ref:target()/ref:wsse()/tech:username()}%"/>
+      <parameter id="_V8LYgMIiEeKcx4gGvrqWmw" name="WSSE_TIME_TO_LIVE" type="String" value="%x{$REF/ref:target()/ref:wsse()/tech:timeToLive()}%"/>
+      <parameter id="_EnS54MIuEeKcx4gGvrqWmw" name="WSSE_ADDS_NONCE" type="Boolean" value="%x{$REF/ref:target()/ref:wsse()/tech:addsNonce()}%"/>
+      <parameter id="_F6DiQMIuEeKcx4gGvrqWmw" name="WSSE_ADDS_CREATED" type="Boolean" value="%x{$REF/ref:target()/ref:wsse()/tech:addsCreated()}%"/>
+      <parameter id="_H81SUMIuEeKcx4gGvrqWmw" name="WSSE_PASSWORD" type="String" value="%x{$REF/ref:target()/ref:wsse()/tech:password()}%"/>
+      <parameter id="_pCPXgMIvEeKcx4gGvrqWmw" name="WSSE_PASSWORD_TYPE" type="String" value="%x{$REF/ref:target()/ref:wsse()/tech:passwordType()}%"/>
+      <parameter id="_chvTAFd_EemSbbPtBJex4A" name="WSSE_RAW_CONTENT" type="String" value="%x{$REF/ref:target()/ref:wsse()/tech:rawContent()}x%"/>
+      <parameter id="_qUPNEJvgEeS1QbcOjYZc6Q" name="OAUTH2_ACCESS_TOKEN" type="String" value="%x{$REF/ref:target()/ref:oauth2()/tech:accessToken()}%"/>
+      <parameter id="_1Uw7cJwFEeS1QbcOjYZc6Q" name="OAUTH2_REFRESH_TOKEN" type="String" value="%x{$REF/ref:target()/ref:oauth2()/tech:refreshToken()}%"/>
+      <parameter id="_1fwqgJwFEeS1QbcOjYZc6Q" name="OAUTH2_EXPIRES_IN" type="String" value="%x{$REF/ref:target()/ref:oauth2()/tech:expiresIn()}%"/>
+      <parameter id="_59y8EJwFEeS1QbcOjYZc6Q" name="OAUTH2_TOKEN_ENDPOINT" type="String" value="%x{$REF/ref:target()/ref:oauth2()/tech:tokenEndpoint()}%"/>
+      <parameter id="_6KfUQJwFEeS1QbcOjYZc6Q" name="OAUTH2_CLIENT_ID" type="String" value="%x{$REF/ref:target()/ref:oauth2()/tech:clientId()}%"/>
+      <parameter id="_7-oLYJwFEeS1QbcOjYZc6Q" name="OAUTH2_CLIENT_SECRET" type="String" value="%x{$REF/ref:target()/ref:oauth2()/tech:clientSecret()}%"/>
+      <parameter id="_F7A0oJwJEeS1QbcOjYZc6Q" name="OAUTH2_CONNECTION_TIMEOUT" type="String" value="%x{$REF/ref:target()/ref:oauth2()/tech:connectionTimeout()}%"/>
+      <parameter id="_LoTuoJwJEeS1QbcOjYZc6Q" name="OAUTH2_NUMBER_OF_ATTEMPTS" type="String" value="%x{$REF/ref:target()/ref:oauth2()/tech:numberOfAttempts()}%"/>
+      <parameter id="_tpzkMJywEeS1QbcOjYZc6Q" name="OAUTH_CONSUMER_KEY" type="String" value="%x{$REF/ref:target()/ref:oauth()/tech:consumerKey()}%"/>
+      <parameter id="_tvTIMJywEeS1QbcOjYZc6Q" name="OAUTH_CONSUMER_SECRET" type="String" value="%x{$REF/ref:target()/ref:oauth()/tech:consumerSecret()}%"/>
+      <parameter id="_t1TpkJywEeS1QbcOjYZc6Q" name="OAUTH_SIGNATURE_METHOD" type="String" value="%x{$REF/ref:target()/ref:oauth()/tech:signatureMethod()}%"/>
+      <parameter id="_0Fw7AJywEeS1QbcOjYZc6Q" name="OAUTH_TOKEN_SECRET" type="String" value="%x{$REF/ref:target()/ref:oauth()/tech:tokenSecret()}%"/>
+      <parameter id="_0QN3gJywEeS1QbcOjYZc6Q" name="OAUTH_TOKEN" type="String" value="%x{$REF/ref:target()/ref:oauth()/tech:token()}%"/>
+      <parameter id="_RutfEDQYEeiwYcXY9ta6dw" name="RECEIVED_ATTACHMENTS_FOLDER" type="String" value="%x{md:paramValue($this/..,'RECEIVED_ATTACHMENTS_FOLDER')}x%"/>
+      <parameter id="__dXqoKz1Eei84ZhSkEBIAg" name="OAUTH2_SEND_CLIENT_ID" type="String" value="%x{$REF/ref:target()/ref:oauth2()/@useClientId4TokenGeneration}x%"/>
+      <parameter id="_QmsjEKz2Eei84ZhSkEBIAg" name="OAUTH2_SEND_CLIENT_SECRET" type="String" value="%x{$REF/ref:target()/ref:oauth2()/@useClientSecret4TokenGeneration}x%"/>
+      <parameter id="_rNBsAKz3Eei84ZhSkEBIAg" name="OAUTH2_FLOW_TYPE" type="String" value="%x{$REF/ref:target()/ref:oauth2()/@flowType}x%"/>
+      <parameter id="_IWb1sKz5Eei84ZhSkEBIAg" name="OAUTH2_USERNAME" type="String" value="%x{$REF/ref:target()/ref:oauth2()/@username}x%"/>
+      <parameter id="_Kk7tkKz5Eei84ZhSkEBIAg" name="OAUTH2_PASSWORD" type="String" value="%x{$REF/ref:target()/ref:oauth2()/@password}x%"/>
+      <parameter id="_227ccKz5EeiS-usYhrgbNw" name="OAUTH2_TOKEN_ENDPOINT_HTTP_METHOD" type="String" value="%x{$REF/ref:target()/ref:oauth2()/@tokenEndpointHttpMethod}x%"/>
+      <parameter id="_bR6VIK9SEeibJL8SZhxT3A" name="OAUTH2_SCOPE" type="String" value="%x{$REF/ref:target()/ref:oauth2()/scope}x%"/>
+      <parameter id="_zMwnEK-GEeibJL8SZhxT3A" name="OAUTH2_ADDITIONAL_PARAMETERS" type="String" value="%x{$REF/ref:target()/ref:oauth2()/md:list(authorizationParameter/concat(@key,'=',.),'\n')}x%"/>
+      <parameter id="_rISIkNufEeiM7cwl6gI3xQ" name="RETRY_DELAY" type="String" value="%x{md:paramValue($this,'retryDelay')}x%"/>
+      <parameter id="_BNKGkFcfEeqYbtTngpJg3w" name="NTLM_USER" type="String" value="%x{$REF/ref:target()/ref:ntlm()/tech:username()}%"/>
+      <parameter id="_IeQ8sFcfEeqYbtTngpJg3w" name="NTLM_PASSWORD" type="String" value="%x{$REF/ref:target()/ref:ntlm()/tech:password()}%"/>
+      <parameter id="_VJc14FcfEeqYbtTngpJg3w" name="NTLM_DOMAIN" type="String" value="%x{$REF/ref:target()/ref:ntlm()/tech:domain()}%"/>
+      <parameter id="25788155-1596-4342-9980-4b894ee82ce6" name="XML_OUTPUT_FACTORY" ref="#_oO96twXbEd-3ZKnpc_AwVw" type="String"/>
+      <parameter id="248bf8c4-5dd6-408b-845d-6b425d2a7a11" name="OAUTH2_SEND_CLIENT_CREDENTIALS_POLICY" type="String" value="%x{$REF/ref:target()/ref:oauth2()/@sendClientCredentialsPolicy}x%"/>
+      <parameter id="ce98e2cd-f3b4-419a-a776-f3752efc3cd1" name="READ_TIMEOUT" type="Integer" value="%x{md:ifEmpty(md:paramValue($this,'readTimeout'), $REF/ref:target()/ancestor-or-self::operation/tech:defaultReadTimeout())}x%"/>
+      <parameter id="ac7d0ca7-bf96-4572-9e83-764fcd400b48" name="CONNECTION_TIMEOUT" type="Integer" value="%x{md:ifEmpty(md:paramValue($this,'connectionTimeout'), $REF/ref:target()/ancestor-or-self::operation/tech:defaultConnectionTimeout())}x%"/>
+      <parameter id="3b730d81-9554-42a5-9d59-ff9d7356eaf2" name="TECHNICAL_ERROR_ACCEPTANCE_NUMBER" ref="#d89aed0a-3cd3-40ef-adde-bc749ec1bafb" type="String"/>
+      <parameter id="0c9916af-f94f-46ae-9746-cb12f130e34a" name="TECHNICAL_ERROR_RETRY_DELAY" ref="#c225c6a1-8a09-4762-9fa1-6d83448fec3f" type="String"/>
+      <parameter id="6c0e8b54-5dd4-4daf-8f90-03eec34282b6" name="TECHNICAL_ERROR_RETRY_NUMBER" ref="#b73611e7-bc5d-4e71-ae64-493da8669178" type="String"/>
+      <code></code>
+    </actionCode>
+    <actionCode id="_v9vt0ENJEeCcsKFd3RQ7Tg" generationCondition="not(md:paramValue($this, 'lockCdcTable')='false')" isBeginAction="false" name="Lock of CDC table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$REF/ref:from()[tech:isCDC() and not(tech:isLoaded())]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_w5eWQENJEeCcsKFd3RQ7Tg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_oO96vgXbEd-3ZKnpc_AwVw"/>
+      <parameter id="_v9vt0kNJEeCcsKFd3RQ7Tg" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_v9vt00NJEeCcsKFd3RQ7Tg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_v9vt1ENJEeCcsKFd3RQ7Tg" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>update 	%x{md:physicalPath($CDC,'cdcTableName')}x%
+set 	CDC_CONSUMMATION = '1'
+where	(1=1)
+%x{$CDC/tech:cdcFilterPart2($this)}x%</code>
+    </actionCode>
+    <actionCode id="_x2CFI0NJEeCcsKFd3RQ7Tg" generationCondition="not(md:paramValue($this, 'unlockCdcTable')='false')" isBeginAction="false" name="Unlock of CDC table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$REF/ref:from()[tech:isCDC() and not(tech:isLoaded())]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter id="_x2CFJUNJEeCcsKFd3RQ7Tg" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_x2CFJkNJEeCcsKFd3RQ7Tg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_x2CFJ0NJEeCcsKFd3RQ7Tg" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>Delete 	from 	%x{md:physicalPath($CDC,'cdcTableName')}x%
+Where	CDC_CONSUMMATION = '1'
+%x{$CDC/tech:cdcFilterPart2($this)}x%</code>
+    </actionCode>
+    <actionCode id="_uY9KAFuiEeCrIMs4Xb-vBQ" isBeginAction="false" name="FileDelete" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+      <link id="_3cTu8FukEeCrIMs4Xb-vBQ" executionType="OK" generationType="OK_KO" mandatory="0" targetId="_x2CFI0NJEeCcsKFd3RQ7Tg"/>
+      <parameter id="_wXYlkFuiEeCrIMs4Xb-vBQ" name="DEL_FILE" type="String" value="%x{$fileName}x%"/>
+    </actionCode>
+    <templateType>I-TP.RDBMS.INTEGRATING</templateType>
+    <xslVariable id="_J9ofA2W_EeCsEvnGSErBgQ" code="md:ifEmpty(md:paramValue($this,'OUT_FILE_NAME'),$REF/ref:target()/tech:xmlFilePath(),concat('${/CORE_TEMPORARY_FOLDER}$/',$REF/ref:target()/@id,'.xml'))" name="fileName" type="xpath"/>
+  </subProcess>
+  <subProcess id="_-JTxUOafEeme96bTNt0eBg" generationCondition="'${cleanTemporaryObjects}$'='true'" isBeginAction="false" name="Clean" nbCycles="-1" toleratedError="false">
+    <actionCode id="_Gae9UOagEeme96bTNt0eBg" generationCondition="'${cleanTemporaryObjects}$'='true'" isBeginAction="false" name="deleteExchangeFile" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+      <parameter id="_Gae9UeagEeme96bTNt0eBg" name="DEL_FILE" type="String" value="%x{$fileName}x%"/>
+    </actionCode>
+    <templateType>CLEANUP</templateType>
+    <xslVariable id="_Ho3cAOagEeme96bTNt0eBg" code="md:ifEmpty(md:paramValue($this,'OUT_FILE_NAME'),$REF/ref:target()/tech:xmlFilePath(),concat('${/CORE_TEMPORARY_FOLDER}$/',$REF/ref:target()/@id,'.xml'))" name="fileName" type="xpath"/>
+  </subProcess>
+  <templateType>I-TP.RDBMS</templateType>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.2/notation#/?fileId=_oO96sQXbEd-3ZKnpc_AwVw?">
+  <notation:Diagram xmi:id="_QbO90MduEeqz1-FLvOls8w" type="Proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_GxmuAPKYEeqKJc3Gd3X7Mg" type="2004">
+      <children xmi:type="notation:Node" xmi:id="_GxnVEPKYEeqKJc3Gd3X7Mg" type="5004"/>
+      <children xmi:type="notation:Node" xmi:id="_GxnVEfKYEeqKJc3Gd3X7Mg" type="7005">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_GxnVEvKYEeqKJc3Gd3X7Mg"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_GxnVE_KYEeqKJc3Gd3X7Mg"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_GxnVFPKYEeqKJc3Gd3X7Mg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_GxnVFfKYEeqKJc3Gd3X7Mg" type="7006">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_GxnVFvKYEeqKJc3Gd3X7Mg"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_GxnVF_KYEeqKJc3Gd3X7Mg"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_GxnVGPKYEeqKJc3Gd3X7Mg"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GxmuAfKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <styles xmi:type="notation:HintedDiagramLinkStyle" xmi:id="_GxmuAvKYEeqKJc3Gd3X7Mg"/>
+      <element xmi:type="proc:SubActionProcess" href="resource.proc#_oO96vQXbEd-3ZKnpc_AwVw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=INT?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GxmuA_KYEeqKJc3Gd3X7Mg" x="30" y="65"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GxnVGfKYEeqKJc3Gd3X7Mg" type="2004">
+      <children xmi:type="notation:Node" xmi:id="_Gxn8IPKYEeqKJc3Gd3X7Mg" type="5004"/>
+      <children xmi:type="notation:Node" xmi:id="_Gxn8IfKYEeqKJc3Gd3X7Mg" type="7005">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_Gxn8IvKYEeqKJc3Gd3X7Mg"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_Gxn8I_KYEeqKJc3Gd3X7Mg"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_Gxn8JPKYEeqKJc3Gd3X7Mg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_Gxn8JfKYEeqKJc3Gd3X7Mg" type="7006">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_Gxn8JvKYEeqKJc3Gd3X7Mg"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_Gxn8J_KYEeqKJc3Gd3X7Mg"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_Gxn8KPKYEeqKJc3Gd3X7Mg"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GxnVGvKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <styles xmi:type="notation:HintedDiagramLinkStyle" xmi:id="_GxnVG_KYEeqKJc3Gd3X7Mg"/>
+      <element xmi:type="proc:SubActionProcess" href="resource.proc#_-JTxUOafEeme96bTNt0eBg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=Clean?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GxnVHPKYEeqKJc3Gd3X7Mg" x="30" y="170"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Gxn8KfKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_GxojMPKYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_Gxn8KvKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_oO96tQXbEd-3ZKnpc_AwVw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=WRITE_XML_DECLARATION?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Gxn8K_KYEeqKJc3Gd3X7Mg" x="125" y="380"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GxojMfKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_GxojNPKYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GxojMvKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_qlzLEN9wEemSaoh-0HM60Q?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=cleanTemporaryObjects?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GxojM_KYEeqKJc3Gd3X7Mg" x="125" y="545"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GxpKQPKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_GxpKQ_KYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GxpKQfKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_oO96ugXbEd-3ZKnpc_AwVw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=WRITE_XML_DESCRIPTOR?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GxpKQvKYEeqKJc3Gd3X7Mg" x="125" y="410"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GxpKRPKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_GxpKR_KYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GxpKRfKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_oO96swXbEd-3ZKnpc_AwVw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=DISTINCT?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GxpKRvKYEeqKJc3Gd3X7Mg" x="125" y="85"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GxpKSPKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_GxpKS_KYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GxpKSfKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_oO96vAXbEd-3ZKnpc_AwVw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=XML_COMMIT?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GxpKSvKYEeqKJc3Gd3X7Mg" x="125" y="435"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GxpKTPKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_GxpxUPKYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GxpKTfKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_oO96sgXbEd-3ZKnpc_AwVw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OUT_FILE_NAME?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GxpKTvKYEeqKJc3Gd3X7Mg" x="125" y="190"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GxpxUfKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_GxpxVPKYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GxpxUvKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_oO96tAXbEd-3ZKnpc_AwVw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OUT_FILE_ENCODING?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GxpxU_KYEeqKJc3Gd3X7Mg" x="125" y="165"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GxpxVfKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_GxpxWPKYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GxpxVvKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_p97d0HIVEeeFnYW-ODUCOA?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=urlEncodedCharset?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GxpxV_KYEeqKJc3Gd3X7Mg" x="125" y="760"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GxpxWfKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_GxqYYPKYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GxpxWvKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_oO96uwXbEd-3ZKnpc_AwVw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=SQL_FECTH_SIZE?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GxpxW_KYEeqKJc3Gd3X7Mg" x="125" y="325"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GxqYYfKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_GxqYZPKYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GxqYYvKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_G44GdEfLEd-ZuOn11eINGw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=DELAY_BETWEEN_INVOCATIONS?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GxqYY_KYEeqKJc3Gd3X7Mg" x="125" y="55"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GxqYZfKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_GxqYaPKYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GxqYZvKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_zS8c4NufEeiM7cwl6gI3xQ?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=retryDelay?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GxqYZ_KYEeqKJc3Gd3X7Mg" x="125" y="680"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Gxq_cPKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_Gxq_c_KYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_Gxq_cfKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_Cg3kYEfLEd-ZuOn11eINGw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=RETRY_NUMBER?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Gxq_cvKYEeqKJc3Gd3X7Mg" x="125" y="275"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Gxq_dPKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_Gxq_d_KYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_Gxq_dfKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_7XJmtHGuEd-MhtlhghVbHg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=ERROR_ACCEPTANCE_NUMBER?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Gxq_dvKYEeqKJc3Gd3X7Mg" x="125" y="110"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Gxq_ePKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_Gxq_e_KYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_Gxq_efKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_DqbEdXGvEd-MhtlhghVbHg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=SENT_MESSAGES_FOLDER?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Gxq_evKYEeqKJc3Gd3X7Mg" x="125" y="300"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Gxq_fPKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_GxrmgPKYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_Gxq_ffKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_FamBlXGvEd-MhtlhghVbHg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=RECEIVED_MESSAGES_FOLDER?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Gxq_fvKYEeqKJc3Gd3X7Mg" x="125" y="245"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GxrmgfKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_GxrmhPKYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GxrmgvKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_-QYJADQVEeiwYcXY9ta6dw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=RECEIVED_ATTACHMENTS_FOLDER?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Gxrmg_KYEeqKJc3Gd3X7Mg" x="125" y="220"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GxrmhfKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_GxrmiPKYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GxrmhvKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_T4dcUHd7EeKPWLTXCe39HA?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=HTTP_HEADER_PARAMETERS?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Gxrmh_KYEeqKJc3Gd3X7Mg" x="125" y="140"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GxsNkPKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_GxsNk_KYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GxsNkfKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_MKi31NoFEeCi_78PNYk6Cg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=nilBehaviour?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GxsNkvKYEeqKJc3Gd3X7Mg" x="125" y="625"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GxsNkPKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_GxsNk_KYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GxsNkfKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_MKi31NoFEeCi_78PNYk6Cg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=jsonNodeNullBehaviour?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GxsNkvKYEeqKJc3Gd3X7Mg" x="125" y="650"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GxsNlPKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_GxsNl_KYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GxsNlfKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_-gWJkHowEd-N4JwHbNVfHA?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=ACTIVE_SCRIPTING?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GxsNlvKYEeqKJc3Gd3X7Mg" x="125" y="30"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GxsNmPKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_GxsNm_KYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GxsNmfKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_sGTYgLlBEeWP-9kUtJNtfw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=sourceSetOptimization?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GxsNmvKYEeqKJc3Gd3X7Mg" x="125" y="705"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_GxsNnPKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_GxsNn_KYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_GxsNnfKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_oO96uQXbEd-3ZKnpc_AwVw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=SUPER_ROOT_NAME?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GxsNnvKYEeqKJc3Gd3X7Mg" x="125" y="355"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Gxs0oPKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_Gxs0o_KYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_Gxs0ofKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_oO96tgXbEd-3ZKnpc_AwVw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=XML_VERSION?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Gxs0ovKYEeqKJc3Gd3X7Mg" x="125" y="490"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Gxs0pPKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_Gxs0p_KYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_Gxs0pfKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_oO96twXbEd-3ZKnpc_AwVw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=XML_FACTORY_CLASS_NAME?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Gxs0pvKYEeqKJc3Gd3X7Mg" x="125" y="460"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_PKymgPKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_PK1p0PKYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_PKymgfKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#6441b9cb-c7de-4610-b882-349eb7a686f9?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=connectionTimeout?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_PKymgvKYEeqKJc3Gd3X7Mg" x="125" y="570"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Q-WO0PKYEeqKJc3Gd3X7Mg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_Q-YrEPKYEeqKJc3Gd3X7Mg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_Q-WO0fKYEeqKJc3Gd3X7Mg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#0255c3ef-2999-4334-a2e8-05cae4a4eb84?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=readTimeout?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Q-WO0vKYEeqKJc3Gd3X7Mg" x="125" y="650"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_eQA1EHqTEeuXv9nV1Gg0Fw" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_eQA1E3qTEeuXv9nV1Gg0Fw" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_eQA1EXqTEeuXv9nV1Gg0Fw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_PJRs8LCUEeqAJL64qj9Gxw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=lockCdcTable?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_eQA1EnqTEeuXv9nV1Gg0Fw" x="125" y="595"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_eQA1FHqTEeuXv9nV1Gg0Fw" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_eQA1F3qTEeuXv9nV1Gg0Fw" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_eQA1FXqTEeuXv9nV1Gg0Fw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_PJZBsLCUEeqAJL64qj9Gxw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=unlockCdcTable?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_eQA1FnqTEeuXv9nV1Gg0Fw" x="125" y="730"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_eQA1GHqTEeuXv9nV1Gg0Fw" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_eQA1G3qTEeuXv9nV1Gg0Fw" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_eQA1GXqTEeuXv9nV1Gg0Fw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_PJZBsbCUEeqAJL64qj9Gxw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=cdcSubscriber?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_eQA1GnqTEeuXv9nV1Gg0Fw" x="125" y="515"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_B7fKQAQhEeyJAoj-0E0CUQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_B7mfAAQhEeyJAoj-0E0CUQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_B7fKQQQhEeyJAoj-0E0CUQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#d89aed0a-3cd3-40ef-adde-bc749ec1bafb?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=technicalErrorAcceptanceNumber?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_B7fKQgQhEeyJAoj-0E0CUQ" x="326" y="740"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_OOqzIAQhEeyJAoj-0E0CUQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_OOwSsAQhEeyJAoj-0E0CUQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_OOqzIQQhEeyJAoj-0E0CUQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#b73611e7-bc5d-4e71-ae64-493da8669178?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=technicalErrorRetryNumber?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_OOqzIgQhEeyJAoj-0E0CUQ" x="339" y="711"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_QCBAEAQhEeyJAoj-0E0CUQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_QCFRgAQhEeyJAoj-0E0CUQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_QCBAEQQhEeyJAoj-0E0CUQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#c225c6a1-8a09-4762-9fa1-6d83448fec3f?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=technicalErrorRetryDelay?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_QCBAEgQhEeyJAoj-0E0CUQ" x="357" y="682"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_QbO90cduEeqz1-FLvOls8w"/>
+    <element xmi:type="proc:ActionProcess" href="resource.proc#_oO96sQXbEd-3ZKnpc_AwVw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=INTEGRATION%20Rdbms%20to%20Wsdl?"/>
+    <edges xmi:type="notation:Edge" xmi:id="_eQUXEHqTEeuXv9nV1Gg0Fw" type="4001" source="_GxmuAPKYEeqKJc3Gd3X7Mg" target="_GxnVGfKYEeqKJc3Gd3X7Mg">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_eQUXEXqTEeuXv9nV1Gg0Fw"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_eQUXEnqTEeuXv9nV1Gg0Fw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_E1_EsOagEeme96bTNt0eBg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_eQUXE3qTEeuXv9nV1Gg0Fw" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_e1tjIHqTEeuXv9nV1Gg0Fw" id="(0.5,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_e1tjIXqTEeuXv9nV1Gg0Fw" id="(0.5,0.0)"/>
+    </edges>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_QbQL8MduEeqz1-FLvOls8w" type="Proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_gEsb4uawEeq28KPWkw_hjQ" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_gEsb5eawEeq28KPWkw_hjQ" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_gEsb5uawEeq28KPWkw_hjQ" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_gEsb5-awEeq28KPWkw_hjQ"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_gEsb6OawEeq28KPWkw_hjQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_gEsb6eawEeq28KPWkw_hjQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_gEsb6uawEeq28KPWkw_hjQ" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_gEsb6-awEeq28KPWkw_hjQ"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_gEsb7OawEeq28KPWkw_hjQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_gEsb7eawEeq28KPWkw_hjQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_gEsb4-awEeq28KPWkw_hjQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_oO96vgXbEd-3ZKnpc_AwVw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=SqlToXml?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_gEsb5OawEeq28KPWkw_hjQ" x="60" y="225"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_gEsb-uawEeq28KPWkw_hjQ" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_gEsb_eawEeq28KPWkw_hjQ" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_gEsb_uawEeq28KPWkw_hjQ" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_gEsb_-awEeq28KPWkw_hjQ"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_gEscAOawEeq28KPWkw_hjQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_gEscAeawEeq28KPWkw_hjQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_gEscAuawEeq28KPWkw_hjQ" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_gEscA-awEeq28KPWkw_hjQ"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_gEscBOawEeq28KPWkw_hjQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_gEscBeawEeq28KPWkw_hjQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_gEsb--awEeq28KPWkw_hjQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_v9vt0ENJEeCcsKFd3RQ7Tg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=Lock%20of%20CDC%20table?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_gEsb_OawEeq28KPWkw_hjQ" x="210" y="65"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_gEscBuawEeq28KPWkw_hjQ" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_gEscCeawEeq28KPWkw_hjQ" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_gEscCuawEeq28KPWkw_hjQ" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_gEscC-awEeq28KPWkw_hjQ"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_gEscDOawEeq28KPWkw_hjQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_gEscDeawEeq28KPWkw_hjQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_gEscDuawEeq28KPWkw_hjQ" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_gEscD-awEeq28KPWkw_hjQ"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_gEscEOawEeq28KPWkw_hjQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_gEscEeawEeq28KPWkw_hjQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_gEscB-awEeq28KPWkw_hjQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_x2CFI0NJEeCcsKFd3RQ7Tg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=Unlock%20of%20CDC%20table?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_gEscCOawEeq28KPWkw_hjQ" x="210" y="1685"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_gEscEuawEeq28KPWkw_hjQ" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_gEscFeawEeq28KPWkw_hjQ" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_gEscFuawEeq28KPWkw_hjQ" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_gEscF-awEeq28KPWkw_hjQ"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_gEscGOawEeq28KPWkw_hjQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_gEscGeawEeq28KPWkw_hjQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_gEscGuawEeq28KPWkw_hjQ" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_gEscG-awEeq28KPWkw_hjQ"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_gEscHOawEeq28KPWkw_hjQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_gEscHeawEeq28KPWkw_hjQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_gEscE-awEeq28KPWkw_hjQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_uY9KAFuiEeCrIMs4Xb-vBQ?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=FileDelete?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_gEscFOawEeq28KPWkw_hjQ" x="30" y="570"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_gEscHuawEeq28KPWkw_hjQ" type="2007">
+      <children xmi:type="notation:Node" xmi:id="_gEscIeawEeq28KPWkw_hjQ" type="5007"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_gEscH-awEeq28KPWkw_hjQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:XslVariable" href="resource.proc#_J9ofA2W_EeCsEvnGSErBgQ?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_gEscIOawEeq28KPWkw_hjQ" x="910" y="30"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_gEsb7uawEeq28KPWkw_hjQ" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_gEsb8eawEeq28KPWkw_hjQ" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_gEsb8uawEeq28KPWkw_hjQ" type="7001">
+        <children xmi:type="notation:Node" xmi:id="_gEscQOawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_5AIaQBxiEd-jk_Cl4HeIIQ?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=IN_FILE_NAME?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gEscQeawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gEscQuawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_6vZzMEfKEd-ZuOn11eINGw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=DELAY_BETWEEN_INVOCATIONS?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gEscQ-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2M4OawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_9LZUgEfKEd-ZuOn11eINGw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=RETRY_NUMBER?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2M4eawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2M4uawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_8S8bkEhkEd-Sb8Mio6PnEg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=WRITE_XML_DECLARATION?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2M4-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2M5OawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_-rXrgEhkEd-Sb8Mio6PnEg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=XML_VERSION?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2M5eawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2M5uawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_A1xGgEhlEd-Sb8Mio6PnEg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OUT_FILE_ENCODING?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2M5-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2M6OawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_YNtZUEiREd-9nuBQNZKXWw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=URL_ENCODED_CHARSET?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2M6eawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2M6uawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_RC9mcEudEd-CGq_TMNCtXw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=PROXY_HOST?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2M6-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2M7OawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_RWLdYEudEd-CGq_TMNCtXw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=PROXY_PORT?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2M7eawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2M7uawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_RjYL4EudEd-CGq_TMNCtXw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=PROXY_USER?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2M7-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2M8OawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_XalP0EudEd-CGq_TMNCtXw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=PROXY_PASSWORD?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2M8eawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2M8uawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_MljzcHGvEd-MhtlhghVbHg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=ERROR_ACCEPTANCE_NUMBER?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2M8-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2M9OawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_SdgeQHGvEd-MhtlhghVbHg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=RECEIVED_MESSAGES_FOLDER?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2M9eawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2M9uawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_XCcpEHGvEd-MhtlhghVbHg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=SENT_MESSAGES_FOLDER?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2M9-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2M-OawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_3e8zIHofEd-N4JwHbNVfHA?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=SOAP_START_MESSAGE_SCRIPT?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2M-eawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2M-uawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_U5eHsHoxEd-N4JwHbNVfHA?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=ACTIVE_SCRIPTING?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2M--awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2M_OawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_1z13wH02Ed-WZ7uSK5GYLA?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=IGNORE_TRUST_STORE?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2M_eawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2M_uawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_Yqw34H16Ed-WZ7uSK5GYLA?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=KEY_STORE?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2M_-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NAOawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_Zy0sIH16Ed-WZ7uSK5GYLA?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=KEY_STORE_TYPE?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NAeawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NAuawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_aeEokH16Ed-WZ7uSK5GYLA?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=KEY_STORE_PASSWORD?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NA-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NBOawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_KknAEH17Ed-WZ7uSK5GYLA?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=IGNORE_HOSTNAME_VERIFIER?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NBeawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NBuawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_By2l8INiEd-IoaIVtuAGTw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=TRUST_STORE?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NB-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NCOawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_EoKmMINiEd-IoaIVtuAGTw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=TRUST_STORE_TYPE?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NCeawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NCuawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_G2p3AINiEd-IoaIVtuAGTw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=TRUST_STORE_PASSWORD?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NC-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NDOawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_zErC4DVGEeG6l9o-xz7vPw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=USER?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NDeawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NDuawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_2fSvoDVGEeG6l9o-xz7vPw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=PASSWORD?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2ND-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NEOawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_-XO24Hd3EeKPWLTXCe39HA?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=HTTP_HEADER_PARAMETERS?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NEeawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NEuawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_xwRykMIXEeKcx4gGvrqWmw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=WSSE_USERNAME?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NE-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NFOawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_V8LYgMIiEeKcx4gGvrqWmw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=WSSE_TIME_TO_LIVE?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NFeawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NFuawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_EnS54MIuEeKcx4gGvrqWmw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=WSSE_ADDS_NONCE?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NF-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NGOawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_F6DiQMIuEeKcx4gGvrqWmw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=WSSE_ADDS_CREATED?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NGeawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NGuawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_H81SUMIuEeKcx4gGvrqWmw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=WSSE_PASSWORD?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NG-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NHOawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_pCPXgMIvEeKcx4gGvrqWmw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=WSSE_PASSWORD_TYPE?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NHeawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NHuawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_chvTAFd_EemSbbPtBJex4A?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=WSSE_RAW_CONTENT?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NH-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NIOawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_qUPNEJvgEeS1QbcOjYZc6Q?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OAUTH2_ACCESS_TOKEN?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NIeawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NIuawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_1Uw7cJwFEeS1QbcOjYZc6Q?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OAUTH2_REFRESH_TOKEN?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NI-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NJOawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_1fwqgJwFEeS1QbcOjYZc6Q?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OAUTH2_EXPIRES_IN?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NJeawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NJuawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_59y8EJwFEeS1QbcOjYZc6Q?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OAUTH2_TOKEN_ENDPOINT?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NJ-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NKOawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_6KfUQJwFEeS1QbcOjYZc6Q?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OAUTH2_CLIENT_ID?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NKeawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NKuawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_7-oLYJwFEeS1QbcOjYZc6Q?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OAUTH2_CLIENT_SECRET?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NK-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NLOawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_F7A0oJwJEeS1QbcOjYZc6Q?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OAUTH2_CONNECTION_TIMEOUT?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NLeawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NLuawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_LoTuoJwJEeS1QbcOjYZc6Q?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OAUTH2_NUMBER_OF_ATTEMPTS?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NL-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NMOawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_tpzkMJywEeS1QbcOjYZc6Q?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OAUTH_CONSUMER_KEY?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NMeawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NMuawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_tvTIMJywEeS1QbcOjYZc6Q?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OAUTH_CONSUMER_SECRET?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NM-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NNOawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_t1TpkJywEeS1QbcOjYZc6Q?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OAUTH_SIGNATURE_METHOD?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NNeawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NNuawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_0Fw7AJywEeS1QbcOjYZc6Q?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OAUTH_TOKEN_SECRET?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NN-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NOOawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_0QN3gJywEeS1QbcOjYZc6Q?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OAUTH_TOKEN?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NOeawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NOuawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_RutfEDQYEeiwYcXY9ta6dw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=RECEIVED_ATTACHMENTS_FOLDER?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NO-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NPOawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#__dXqoKz1Eei84ZhSkEBIAg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OAUTH2_SEND_CLIENT_ID?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NPeawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NPuawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_QmsjEKz2Eei84ZhSkEBIAg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OAUTH2_SEND_CLIENT_SECRET?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NP-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NQOawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_rNBsAKz3Eei84ZhSkEBIAg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OAUTH2_FLOW_TYPE?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NQeawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NQuawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_IWb1sKz5Eei84ZhSkEBIAg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OAUTH2_USERNAME?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NQ-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NROawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_Kk7tkKz5Eei84ZhSkEBIAg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OAUTH2_PASSWORD?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NReawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NRuawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_227ccKz5EeiS-usYhrgbNw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OAUTH2_TOKEN_ENDPOINT_HTTP_METHOD?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NR-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NSOawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_bR6VIK9SEeibJL8SZhxT3A?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OAUTH2_SCOPE?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NSeawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NSuawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_zMwnEK-GEeibJL8SZhxT3A?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OAUTH2_ADDITIONAL_PARAMETERS?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NS-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NTOawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_rISIkNufEeiM7cwl6gI3xQ?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=RETRY_DELAY?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NTeawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NTuawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_BNKGkFcfEeqYbtTngpJg3w?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=NTLM_USER?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NT-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NUOawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_IeQ8sFcfEeqYbtTngpJg3w?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=NTLM_PASSWORD?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NUeawEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_gE2NUuawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#_VJc14FcfEeqYbtTngpJg3w?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=NTLM_DOMAIN?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_gE2NU-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_j1744uawEeq28KPWkw_hjQ" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#248bf8c4-5dd6-408b-845d-6b425d2a7a11?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=OAUTH2_SEND_CLIENT_CREDENTIALS_POLICY?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_j1744-awEeq28KPWkw_hjQ"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_niWQ4PNAEeqU8InQ7O9Emg" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#ce98e2cd-f3b4-419a-a776-f3752efc3cd1?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=READ_TIMEOUT?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_niWQ4fNAEeqU8InQ7O9Emg"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_oEUVgPNAEeqU8InQ7O9Emg" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#ac7d0ca7-bf96-4572-9e83-764fcd400b48?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=CONNECTION_TIMEOUT?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_oEUVgfNAEeqU8InQ7O9Emg"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_9eIb0ATpEeyG3959_YoO3Q" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#3b730d81-9554-42a5-9d59-ff9d7356eaf2?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=TECHNICAL_ERROR_ACCEPTANCE_NUMBER?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_9eIb0QTpEeyG3959_YoO3Q"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_CBvw8ATqEeyG3959_YoO3Q" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#0c9916af-f94f-46ae-9746-cb12f130e34a?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=TECHNICAL_ERROR_RETRY_DELAY?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_CBvw8QTqEeyG3959_YoO3Q"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_EtJAMATqEeyG3959_YoO3Q" type="3001">
+          <element xmi:type="proc:Parameter" href="resource.proc#6c0e8b54-5dd4-4daf-8f90-03eec34282b6?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=TECHNICAL_ERROR_RETRY_NUMBER?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_EtJAMQTqEeyG3959_YoO3Q"/>
+        </children>
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_gEsb8-awEeq28KPWkw_hjQ"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_gEsb9OawEeq28KPWkw_hjQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_gEsb9eawEeq28KPWkw_hjQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_gEsb9uawEeq28KPWkw_hjQ" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_gEsb9-awEeq28KPWkw_hjQ"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_gEsb-OawEeq28KPWkw_hjQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_gEsb-eawEeq28KPWkw_hjQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_gEsb7-awEeq28KPWkw_hjQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_0OQmsBxiEd-jk_Cl4HeIIQ?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=Call%20WebServices?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_gEsb8OawEeq28KPWkw_hjQ" x="280" y="570"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_QbQL8cduEeqz1-FLvOls8w"/>
+    <element xmi:type="proc:SubActionProcess" href="resource.proc#_oO96vQXbEd-3ZKnpc_AwVw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=INT?"/>
+    <edges xmi:type="notation:Edge" xmi:id="_f0NywHqTEeuXv9nV1Gg0Fw" type="4001" source="_gEsb4uawEeq28KPWkw_hjQ" target="_gEsb7uawEeq28KPWkw_hjQ">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_f0NywXqTEeuXv9nV1Gg0Fw"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_f0NywnqTEeuXv9nV1Gg0Fw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_-J1fABxiEd-jk_Cl4HeIIQ?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_f0Nyw3qTEeuXv9nV1Gg0Fw" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_gVYmJ3qTEeuXv9nV1Gg0Fw" id="(0.5,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_gVYmKHqTEeuXv9nV1Gg0Fw" id="(0.12,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_f0_14HqTEeuXv9nV1Gg0Fw" type="4001" source="_gEsb4uawEeq28KPWkw_hjQ" target="_gEscEuawEeq28KPWkw_hjQ">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_f0_14XqTEeuXv9nV1Gg0Fw"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_f0_14nqTEeuXv9nV1Gg0Fw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_zOKlcFuiEeCrIMs4Xb-vBQ?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_f0_143qTEeuXv9nV1Gg0Fw" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_gVYmJXqTEeuXv9nV1Gg0Fw" id="(0.10862068965517241,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_gVYmJnqTEeuXv9nV1Gg0Fw" id="(0.5,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_f1C5MHqTEeuXv9nV1Gg0Fw" type="4001" source="_gEsb-uawEeq28KPWkw_hjQ" target="_gEsb4uawEeq28KPWkw_hjQ">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_f1C5MXqTEeuXv9nV1Gg0Fw"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_f1C5MnqTEeuXv9nV1Gg0Fw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_w5eWQENJEeCcsKFd3RQ7Tg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_f1C5M3qTEeuXv9nV1Gg0Fw" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_gVO1IHqTEeuXv9nV1Gg0Fw" id="(0.4982698961937716,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_gVYmIHqTEeuXv9nV1Gg0Fw" id="(0.5,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_f1EuYHqTEeuXv9nV1Gg0Fw" type="4001" source="_gEscEuawEeq28KPWkw_hjQ" target="_gEscBuawEeq28KPWkw_hjQ">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_f1EuYXqTEeuXv9nV1Gg0Fw"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_f1EuYnqTEeuXv9nV1Gg0Fw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_3cTu8FukEeCrIMs4Xb-vBQ?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_f1EuY3qTEeuXv9nV1Gg0Fw" points="[0, 0, -155, -1052]$[110, 991, -45, -61]$[155, 1052, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_gVYmIXqTEeuXv9nV1Gg0Fw" id="(0.5,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_gVYmInqTEeuXv9nV1Gg0Fw" id="(0.2491349480968858,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_f1LcEHqTEeuXv9nV1Gg0Fw" type="4001" source="_gEsb7uawEeq28KPWkw_hjQ" target="_gEscBuawEeq28KPWkw_hjQ">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_f1LcEXqTEeuXv9nV1Gg0Fw"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_f1LcEnqTEeuXv9nV1Gg0Fw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_y2Z9AENJEeCcsKFd3RQ7Tg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_f1LcE3qTEeuXv9nV1Gg0Fw" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_gVYmI3qTEeuXv9nV1Gg0Fw" id="(0.12,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_gVYmJHqTEeuXv9nV1Gg0Fw" id="(0.4982698961937716,0.0)"/>
+    </edges>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_QbQL8sduEeqz1-FLvOls8w" type="Proc" measurementUnit="Pixel">
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_QbQL88duEeqz1-FLvOls8w"/>
+    <element xmi:type="proc:SubActionProcess" href="resource.proc#_-JTxUOafEeme96bTNt0eBg?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=Clean?"/>
+  </notation:Diagram>
+</xmi:XMI>
+]]></diagram>
+</proc:process>

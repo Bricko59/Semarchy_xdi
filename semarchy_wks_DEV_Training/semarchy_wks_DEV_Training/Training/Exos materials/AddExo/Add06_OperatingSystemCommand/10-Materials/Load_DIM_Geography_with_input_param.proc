@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_okag8bljEeqGVuTxU36Wdg">
+  <parameter id="_okbH8LljEeqGVuTxU36Wdg" input="true" name="STATE_CODE" type="String" value="CA"/>
+  <parameter id="_okbH8bljEeqGVuTxU36Wdg" input="true" name="CITY_NAME" type="String" value="LOS ANGELES"/>
+  <actionCode id="_okbH8rljEeqGVuTxU36Wdg" isBeginAction="false" name="WriteTxtFile" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+    <metaDataLink id="1f6bfc17-17a1-4264-92a6-d9917c6b27a9" name="OS_Command_Folder" target="FILE_Server.md#_kYKDALk7EeqGVuTxU36Wdg?fileId=_kYJb87k7EeqGVuTxU36Wdg$type=md$name=OS_Command_Folder?"/>
+    <parameter id="_okbH9LljEeqGVuTxU36Wdg" name="TXT_WRITE_FILENAME" type="String" value="%x{$OS_Command_Folder/tech:path()}x%/OS_result_command%x{md:formatDate(&quot;yyyyMMdd&quot;)}x%.txt"/>
+    <code>Input Parameters : &#xD;
+&#xD;
+%x{md:list($this/../parameter[@input]/concat(@name,'\t:\t','$','{~/',@name,'}$'), '\n')}x%&#xD;
+</code>
+  </actionCode>
+  <actionProcessRef id="_okbH9bljEeqGVuTxU36Wdg" isBeginAction="false" name="Load DIM_Geography with param filter" nbCycles="-1" toleratedError="false" processMap="true" targetName="Load%20DIM_Geography%20with%20param%20filter.map#_okZ50LljEeqGVuTxU36Wdg?fileId=_okZ50LljEeqGVuTxU36Wdg$name=Load%20DIM_GEOGRAPHY%20with%20param%20filter$type=map?">
+    <link id="_okbH9rljEeqGVuTxU36Wdg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_okbH8rljEeqGVuTxU36Wdg"/>
+  </actionProcessRef>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.2/notation#/?fileId=_okag8bljEeqGVuTxU36Wdg?" xmi:id="77ad73eb-20a9-47d9-8489-26b5b4c473a7" type="Proc" measurementUnit="Pixel">
+  <children xmi:type="notation:Node" xmi:id="574721c3-0800-4db4-af7b-cfd0f702a1ec" type="2005">
+    <children xmi:type="notation:Node" xmi:id="3dae4566-c47a-48fe-becf-e1064700647a" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="37b4f0ab-11a9-455b-838f-9e0abecfba6f" fontName="Segoe UI"/>
+    <element xmi:type="proc:Parameter" href="../../Load_DIM_Geography_with_input_param.proc#_okbH8LljEeqGVuTxU36Wdg?fileId=_okag8bljEeqGVuTxU36Wdg$type=proc$name=STATE_CODE?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="3cd43ebd-c2b1-40f7-b491-fd72c00c7350" x="648" y="60"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="c32ed56d-5f1d-416e-ab40-711f17d1c3fc" type="2003">
+    <children xmi:type="notation:Node" xmi:id="b13261b2-4839-4e2c-9bf2-aaef848b4509" type="5003"/>
+    <children xmi:type="notation:Node" xmi:id="55012f68-2d1e-458c-aa1a-f2a92300ebc5" type="7003">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="6beecad5-d231-415c-b79b-36fa86f2fa01" collapsed="true"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="a6fff61e-9992-455f-8084-cc462299c388"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="30a5adad-28cc-48d0-9567-49a3890dcf29"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="d9c3182a-51b4-4c7b-b0b1-2668c887748d" type="7004">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="2ec2ab72-1d8e-4929-8342-f8b344329c98"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="329ae8c6-ea99-403b-8d51-19c75eda2528"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="4749fae0-b8ea-4a40-8364-82dc08f91292"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="13217f83-78af-4112-b382-967b578e237a" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionProcessRef" href="../../Load_DIM_Geography_with_input_param.proc#_okbH9bljEeqGVuTxU36Wdg?fileId=_okag8bljEeqGVuTxU36Wdg$type=proc$name=Load%20DIM_Geography%20with%20param%20filter?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="fcf700e0-3c5b-4691-affd-cc0a11ac4498" x="186" y="66"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="d6462026-762c-4752-8939-4d15aecc1e2c" type="2005">
+    <children xmi:type="notation:Node" xmi:id="3a5cbfa4-d3c5-4847-b629-2f7e3931fa3f" type="5005"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="394a404c-4250-4422-9bf7-cd2f3f6aaa1c" fontName="Segoe UI"/>
+    <element xmi:type="proc:Parameter" href="../../Load_DIM_Geography_with_input_param.proc#_okbH8bljEeqGVuTxU36Wdg?fileId=_okag8bljEeqGVuTxU36Wdg$type=proc$name=CITY_NAME?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="25250c0f-9f92-4410-82c7-ab71e82d352c" x="648" y="30"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="58432466-5eac-47e9-a9b4-387cc270a787" type="2001">
+    <children xmi:type="notation:Node" xmi:id="ebd373ec-8b82-4c91-a762-49191f335eaa" type="5001"/>
+    <children xmi:type="notation:Node" xmi:id="a47d639c-665a-48f4-ae65-2dce0a048487" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="205d2da1-e45b-4b48-aded-bdb51f1c42ce"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="7d9f5a4b-9534-4a66-bb4d-c96eb3a97eea"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="f369f6d0-6831-4185-a864-a4ff380e7d80"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="1190b994-e65f-4167-854f-1cc14c2073c0" type="7002">
+      <children xmi:type="notation:Node" xmi:id="_cgTd8MUYEeqlFMxK4WGtuA" type="3002">
+        <element xmi:type="proc:MetaDataLink" href="../../Load_DIM_Geography_with_input_param.proc#1f6bfc17-17a1-4264-92a6-d9917c6b27a9?fileId=_okag8bljEeqGVuTxU36Wdg$type=proc?"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_cgTd8cUYEeqlFMxK4WGtuA"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="38ed39af-d58e-401f-8680-c54fbb8783ed"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="bfab10a4-7c77-400b-8ff9-b0bf1147496e"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="9ed1322d-08eb-44c8-85b1-6150c872a97f"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="61434f9e-a4e7-4122-8ec7-87e7e3001c72" fontName="Segoe UI"/>
+    <element xmi:type="proc:ActionCode" href="../../Load_DIM_Geography_with_input_param.proc#_okbH8rljEeqGVuTxU36Wdg?fileId=_okag8bljEeqGVuTxU36Wdg$type=proc$name=WriteTxtFile?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="09d2cefd-c82d-45f5-b829-1241f22aa877" x="30" y="168"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="c9e4507d-725e-4254-b1bd-788eae5d6aa9"/>
+  <element xmi:type="proc:ActionProcess" href="../../Load_DIM_Geography_with_input_param.proc#_okag8bljEeqGVuTxU36Wdg?fileId=_okag8bljEeqGVuTxU36Wdg$type=proc$name=Load_DIM_Geography_with_input_param?"/>
+  <edges xmi:type="notation:Edge" xmi:id="91a5b1b8-7cd5-4836-99ba-349d45a6a5b2" type="4001" source="c32ed56d-5f1d-416e-ab40-711f17d1c3fc" target="58432466-5eac-47e9-a9b4-387cc270a787">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="dcd4252c-e32e-4660-85aa-33275106250c"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="04226d9a-e50e-4012-be40-728b2230ccdb" fontName="Segoe UI"/>
+    <element xmi:type="proc:Link" href="../../Load_DIM_Geography_with_input_param.proc#_okbH9rljEeqGVuTxU36Wdg?fileId=_okag8bljEeqGVuTxU36Wdg$type=proc?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="0e294bcf-19ea-424b-b0ce-1a1a5cf23bb5" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="852c454b-19b0-4ceb-85c3-dce54d367840" id="(0.5,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="88888d26-524d-41bc-8614-c70577f74490" id="(0.5,0.0)"/>
+  </edges>
+</notation:Diagram>
+]]></diagram>
+</proc:process>

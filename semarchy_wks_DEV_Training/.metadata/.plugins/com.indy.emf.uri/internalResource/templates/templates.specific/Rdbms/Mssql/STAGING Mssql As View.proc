@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:UUID="java.util.UUID" xmlns:common="http://exslt.org/common" xmlns:mdj="java:com.indy.xsl.global.Functions" xmlns:proc="http://www.example.org/proc" xmlns:saxon="http://saxon.sf.net/" description="This template is used to create a stage view on the Mssql schema provided.&#xD;&#xA;The view is created from the columns provided on stage.&#xD;&#xA;This offers the possibility to have a staging area to store data during an integration process.&#xD;&#xA;&#xD;&#xA;Refer to the description of each Parameter for more information.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;16/06/2020&#x9;New Parameters 'Unlock Cdc Table' and 'Lock Cdc Table'&#xD;&#xA;16/06/2020&#x9;New Parameter 'Cdc Subscriber'&#xD;&#xA;16/06/2020&#x9;Add support for CDC Sources&#xD;&#xA;05/08/2019   Add transaction isolation level option&#xD;&#xA;06/02/2017   Add support for custom temporary object name&#xD;&#xA;26/02/2016   Template creation" id="_46jXMduoEeWIdu0rdnx7VQ" isBeginAction="true" nbCycles="-1" toleratedError="false">
+  <parameter description="If true, a DISTINCT statement will be added on the query creating the stage view.&#xD;&#xA;This is used to avoid having duplicates in the view." id="_46jXM9uoEeWIdu0rdnx7VQ" name="useDistinct" type="Boolean" value="false"/>
+  <parameter description="If true, the temporary objects created during staging are removed at the end of the process." id="_46jXMtuoEeWIdu0rdnx7VQ" name="cleanTemporaryObjects " type="Boolean" value="true"/>
+  <parameter description="If true, the operations on the work tables will be executed in a dedicated transaction.&#xD;&#xA;&#xD;&#xA;If false, each statement on the work tables uses an Autocommit transaction." id="_46jXNduoEeWIdu0rdnx7VQ" name="transactionalModeOnWorkTables" type="Boolean" value="false"/>
+  <parameter description="If true, the transactions are committed at the end of the staging.&#xD;&#xA;Please note that this option is taken into acount only if TransactionalModeOnWorkTables is set to true." id="_46jXNtuoEeWIdu0rdnx7VQ" name="commitTransaction" type="Boolean" value="false"/>
+  <parameter description="Set this option to true to use the name of the Stage to create the temporary object.&#xD;&#xA;This can be useful to create a named table on the fly using a Stage and reuse it afterwards." id="_CYQdcOx5EeaHab5deMqBaw" name="useStageNameForTemporaryObjectName" type="Boolean" value="false"/>
+  <parameter description="Name of the transaction when Transaction Mode is set to true." id="_46jXNNuoEeWIdu0rdnx7VQ" name="transactionName" type="String" value="T1"/>
+  <parameter id="_1T38kLeKEembhIKAg0nc2Q" metaInf="&lt;metaInf id=&quot;value&quot; value=&quot;TRANSACTION_READ_UNCOMMITTED&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;TRANSACTION_READ_COMMITTED&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;TRANSACTION_NONE&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;TRANSACTION_REPEATABLE_READ&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;TRANSACTION_SERIALIZABLE&quot;/>" name="transactionIsolationLevel" type="String" value=""/>
+  <parameter description="When a source table is used as CDC an unlock is performed on it after processing. It marks the changed data as consumed.&#xD;&#xA;If set to false, the Unlock must be performed as part of an upcoming Mapping." id="_LEOv0LFoEeqAJL64qj9Gxw" name="unlockCdcTable" type="Boolean" value="true"/>
+  <parameter id="_LEdZULFoEeqAJL64qj9Gxw" name="cdcSubscriber" type="String"/>
+  <parameter description="When a source table is used as CDC a lock is performed on it. It makes the changed data available in the Mapping.&#xD;&#xA;If set to false, the Lock must have been performed as part of a previous Mapping." id="_LEdZUbFoEeqAJL64qj9Gxw" name="lockCdcTable" type="Boolean" value="true"/>
+  <subProcess id="_46jXN9uoEeWIdu0rdnx7VQ" name="INTEGRATION">
+    <link id="_46jXONuoEeWIdu0rdnx7VQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_46jXRNuoEeWIdu0rdnx7VQ?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=CLEAN_INTEGRATION?"/>
+    <actionCode id="_46jXOduoEeWIdu0rdnx7VQ" generationCondition="" isBeginAction="false" name="Creation of staging" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_46jXOtuoEeWIdu0rdnx7VQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_46jXP9uoEeWIdu0rdnx7VQ"/>
+      <parameter id="_46jXO9uoEeWIdu0rdnx7VQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_46jXPNuoEeWIdu0rdnx7VQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_46jXPduoEeWIdu0rdnx7VQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_46jXPtuoEeWIdu0rdnx7VQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <parameter id="_BK3YsLeLEembhIKAg0nc2Q" name="SQL_TRANSACTION_ISOLATION" ref="#_1T38kLeKEembhIKAg0nc2Q" type="String"/>
+      <parameter id="5cf0f3a9-2a51-4aec-88cc-b92def432235" name="SQL_MULTI_QUERYS" type="Boolean" value="true"/>
+      <code>USE %x{$REF/ref:parent()/tech:catalogName()}x%;
+
+%xsl{Create view %x{$stageTableName}x%
+AS
+&lt;xsl:variable name=&quot;sets&quot;>
+&lt;xsl:for-each select=&quot;if (count($REF/tech:sourceSets())=0) then '' else $REF/tech:sourceSets() &quot;>
+&lt;set name=&quot;{.}&quot;>
+&lt;xsl:variable name=&quot;sourceSetName&quot; select=&quot;.&quot;/>
+&lt;xsl:variable name=&quot;columns&quot; select=&quot;$REF/ref:columns($sourceSetName)&quot;/>
+select		%x{if (md:paramValue($this,'useDistinct')='true') then 'DISTINCT ' else ''}x%
+	%x{md:patternList($columns,'[expression] AS [workName]', ',\n\t')}x%
+	%x{if($REF/tech:hasCdcSource()) then if($REF/tech:hasCdc($sourceSetName)) then ', CDC_CHANGE_TYPE' else ', ''I'' AS CDC_CHANGE_TYPE' else ''}x%
+from	%x{$REF/tech:fromPart($sourceSetName)}x%
+where	(1=1)%xsl{
+%x{$REF/tech:joinPart($sourceSetName)}x%
+%x{$REF/tech:filterPart($sourceSetName)}x%
+%x{$REF/tech:cdcFilterPart($sourceSetName)}x%
+%x{$REF/tech:groupByPart($sourceSetName)}x%
+%x{$REF/tech:havingPart($sourceSetName)}x%}xsl%&lt;/set>
+&lt;/xsl:for-each>
+&lt;/xsl:variable>
+%x{md:resolveSetExpression($sets/set,$REF/@setExpression)}%
+}xsl%
+
+%x{if(md:paramValue($this,'useStageNameForTemporaryObjectName') = 'true')
+	then md:setStagingPoint($REF/@id,concat('select * from ', $stageTableName),'query')
+	else '' 
+}x%
+</code>
+    </actionCode>
+    <actionCode id="_46jXP9uoEeWIdu0rdnx7VQ" generationCondition="'${commitTransaction}$'='true' and '${transactionalModeOnWorkTables}$'='true'" isBeginAction="false" name="T - Commit of transaction" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter id="_46jXQNuoEeWIdu0rdnx7VQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_46jXQduoEeWIdu0rdnx7VQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_46jXQtuoEeWIdu0rdnx7VQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <parameter id="_46jXQ9uoEeWIdu0rdnx7VQ" name="SQL_TRANSACTION_TYPE" type="String" value="COMMIT"/>
+      <code></code>
+    </actionCode>
+    <subProcess id="_Ei2tgLFoEeqAJL64qj9Gxw" generationCondition="not(md:paramValue($this, 'lockCdcTable')='false')" isBeginAction="false" name="Lock CDC" nbCycles="-1" repetitionMode="Parallelize" repetitionQuery="$sourceSets/sourceSet" repetitionVariableName="CUR_SOURCE_SET" toleratedError="false">
+      <link id="_E1IwULFoEeqAJL64qj9Gxw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_46jXOduoEeWIdu0rdnx7VQ"/>
+      <actionCode id="_Ei2tgbFoEeqAJL64qj9Gxw" generationCondition="" isBeginAction="false" name="Lock of CDC table" nbCycles="-1" repetitionMode="Parallelize" repetitionQuery="$REF/ref:from($CUR_SOURCE_SET/@name)[tech:isCdc()]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+        <parameter id="_Ei2tgrFoEeqAJL64qj9Gxw" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+        <parameter id="_Ei2tg7FoEeqAJL64qj9Gxw" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+        <code>update 	%x{$CDC/ref:target()/tech:cdcTablePath()}x%&#xD;
+set 	CDC_CONSUMMATION = '1'&#xD;
+where	(1=1)&#xD;
+%x{$CDC/tech:cdcFilterPart2($this)}x%</code>
+      </actionCode>
+    </subProcess>
+    <templateType>EXECUTE</templateType>
+    <xslVariable id="_bqmEYOx5EeaHab5deMqBaw" code="if(md:paramValue($this,'useStageNameForTemporaryObjectName') = 'true')&#xD;&#xA;&#x9;then concat($REF/ref:parent()/tech:schemaName(),'.',$REF/ref:schema()/tech:addDelimiter(substring-after($REF/ancestor-or-self::step/@name, '_')))&#xD;&#xA;&#x9;else concat($REF/ref:parent()/tech:schemaName(),'.',$REF/tech:workName())" name="stageTableName" type="xpath"/>
+    <xslVariable id="_EjN54LFoEeqAJL64qj9Gxw" code="%xsl{&#xD;&#xA;&lt;xsl:for-each select=&quot;if (count($REF/tech:sourceSets())=0) then '' else $REF/tech:sourceSets() &quot;>&#xD;&#xA;&lt;xsl:variable name=&quot;sourceSetName&quot; select=&quot;.&quot; />&#xD;&#xA;&lt;xsl:if test=&quot;exists($REF/ref:from($sourceSetName)[tech:isCdc()])&quot;>&#xD;&#xA;&lt;sourceSet name=&quot;{$sourceSetName}&quot;/>&#xD;&#xA;&lt;/xsl:if>&#xD;&#xA;&lt;/xsl:for-each>&#xD;&#xA;}xsl%" name="sourceSets" type="xsl"/>
+  </subProcess>
+  <subProcess id="_46jXRNuoEeWIdu0rdnx7VQ" generationCondition="" name="CLEAN_INTEGRATION">
+    <actionCode id="_46jXRduoEeWIdu0rdnx7VQ" generationCondition="'${cleanTemporaryObjects }$'='true' " enable="true" isBeginAction="false" name="Drop view staging" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter id="_46jXRtuoEeWIdu0rdnx7VQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_46jXR9uoEeWIdu0rdnx7VQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_46jXSNuoEeWIdu0rdnx7VQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_46jXSduoEeWIdu0rdnx7VQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <code>%x{if($REF/ref:target()/tech:dropViewIfExists()) then $REF/ref:target()/tech:dropViewIfExists($stageTableName) else concat('drop view ',$stageTableName)}x%</code>
+    </actionCode>
+    <subProcess id="_HLI-YLFoEeqAJL64qj9Gxw" generationCondition="not(md:paramValue($this, 'unlockCdcTable')='false')" isBeginAction="false" name="Unlock CDC" nbCycles="-1" repetitionMode="Parallelize" repetitionQuery="$sourceSets/sourceSet" repetitionVariableName="CUR_SOURCE_SET" toleratedError="false">
+      <actionCode id="_HLI-YbFoEeqAJL64qj9Gxw" generationCondition="" isBeginAction="false" name="Unlock of CDC table" nbCycles="-1" repetitionMode="Parallelize" repetitionQuery="$REF/ref:from($CUR_SOURCE_SET/@name)[tech:isCdc()]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+        <parameter id="_HLI-YrFoEeqAJL64qj9Gxw" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+        <parameter id="_HLI-Y7FoEeqAJL64qj9Gxw" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+        <code>%x{$CDC/ref:target()/tech:cdcDeleteDml()}x%&#xD;
+Where	CDC_CONSUMMATION = '1'&#xD;
+%x{$CDC/tech:cdcFilterPart2($this)}x%</code>
+      </actionCode>
+    </subProcess>
+    <templateType>CLEANUP</templateType>
+    <xslVariable id="_dxBlYOx5EeaHab5deMqBaw" code="if(md:paramValue($this,'useStageNameForTemporaryObjectName') = 'true')&#xD;&#xA;&#x9;then concat($REF/ref:parent()/tech:schemaName(),'.',$REF/ref:schema()/tech:addDelimiter(substring-after($REF/ancestor-or-self::step/@name, '_')))&#xD;&#xA;&#x9;else concat($REF/ref:parent()/tech:schemaName(),'.',$REF/tech:workName())" name="stageTableName" type="xpath"/>
+    <xslVariable id="_HLZdELFoEeqAJL64qj9Gxw" code="%xsl{&#xD;&#xA;&lt;xsl:for-each select=&quot;if (count($REF/tech:sourceSets())=0) then '' else $REF/tech:sourceSets() &quot;>&#xD;&#xA;&lt;xsl:variable name=&quot;sourceSetName&quot; select=&quot;.&quot; />&#xD;&#xA;&lt;xsl:if test=&quot;exists($REF/ref:from($sourceSetName)[tech:isCdc()])&quot;>&#xD;&#xA;&lt;sourceSet name=&quot;{$sourceSetName}&quot;/>&#xD;&#xA;&lt;/xsl:if>&#xD;&#xA;&lt;/xsl:for-each>&#xD;&#xA;}xsl%" name="sourceSets" type="xsl"/>
+  </subProcess>
+  <subProcess id="_46jXStuoEeWIdu0rdnx7VQ" name="PRECLEAN_INTEGRATION">
+    <link id="_46jXS9uoEeWIdu0rdnx7VQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_46jXN9uoEeWIdu0rdnx7VQ?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=INTEGRATION?"/>
+    <actionCode id="_46jXTNuoEeWIdu0rdnx7VQ" generationCondition="" enable="true" isBeginAction="false" name="Drop view staging" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_46jXTduoEeWIdu0rdnx7VQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_46jXUtuoEeWIdu0rdnx7VQ"/>
+      <parameter id="_46jXTtuoEeWIdu0rdnx7VQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_46jXT9uoEeWIdu0rdnx7VQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_46jXUNuoEeWIdu0rdnx7VQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_46jXUduoEeWIdu0rdnx7VQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <code>%xsl{&#xD;
+&lt;xsl:variable name=&quot;viewPath&quot; select=&quot;concat($REF/ref:parent()/tech:schemaName(),concat('.',$REF/tech:workName()))&quot;/>&#xD;
+}xsl%&#xD;
+%x{if($REF/ref:target()/tech:dropViewIfExists()) then $REF/ref:target()/tech:dropViewIfExists($stageTableName) else concat('drop view ',$stageTableName)}x%</code>
+    </actionCode>
+    <actionCode id="_46jXUtuoEeWIdu0rdnx7VQ" generationCondition="" isBeginAction="false" name="Drop table stagging" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter id="_46jXU9uoEeWIdu0rdnx7VQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_46jXVNuoEeWIdu0rdnx7VQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_46jXVduoEeWIdu0rdnx7VQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_46jXVtuoEeWIdu0rdnx7VQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'transactionalModeOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <code>%x{if($REF/ref:target()/tech:dropTableIfExists()) then $REF/ref:target()/tech:dropTableIfExists($stageTableName) else concat('drop table ',$stageTableName)}x%</code>
+    </actionCode>
+    <templateType>SETTUP</templateType>
+    <xslVariable id="_aPCsYOx5EeaHab5deMqBaw" code="if(md:paramValue($this,'useStageNameForTemporaryObjectName') = 'true')&#xD;&#xA;&#x9;then concat($REF/ref:parent()/tech:schemaName(),'.',$REF/ref:schema()/tech:addDelimiter(substring-after($REF/ancestor-or-self::step/@name, '_')))&#xD;&#xA;&#x9;else concat($REF/ref:parent()/tech:schemaName(),'.',$REF/tech:workName())" name="stageTableName" type="xpath"/>
+  </subProcess>
+  <templateType>I-TP.RDBMS</templateType>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.2/notation#/?fileId=_46jXMduoEeWIdu0rdnx7VQ?">
+  <notation:Diagram xmi:id="_UMPiADdVEeSQbNYX9yjhcA" type="Proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_UNCzQDdVEeSQbNYX9yjhcA" type="2004">
+      <children xmi:type="notation:Node" xmi:id="_UNDaUzdVEeSQbNYX9yjhcA" type="5004"/>
+      <children xmi:type="notation:Node" xmi:id="_UNDaVDdVEeSQbNYX9yjhcA" type="7005">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_UNDaVTdVEeSQbNYX9yjhcA"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_UNDaVjdVEeSQbNYX9yjhcA"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_UNDaVzdVEeSQbNYX9yjhcA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_UNEBYDdVEeSQbNYX9yjhcA" type="7006">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_UNEBYTdVEeSQbNYX9yjhcA"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_UNEBYjdVEeSQbNYX9yjhcA"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_UNEBYzdVEeSQbNYX9yjhcA"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_UNDaUDdVEeSQbNYX9yjhcA" fontName="Segoe UI"/>
+      <styles xmi:type="notation:HintedDiagramLinkStyle" xmi:id="_UNDaUTdVEeSQbNYX9yjhcA" diagramLink="_cuqMkDpWEeSZcqDUob-voA"/>
+      <element xmi:type="proc:SubActionProcess" href="resource.proc#_46jXN9uoEeWIdu0rdnx7VQ?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=INTEGRATION?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_UNDaUjdVEeSQbNYX9yjhcA" x="72" y="168"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_UNEBZDdVEeSQbNYX9yjhcA" type="2004">
+      <children xmi:type="notation:Node" xmi:id="_UNEocDdVEeSQbNYX9yjhcA" type="5004"/>
+      <children xmi:type="notation:Node" xmi:id="_UNEocTdVEeSQbNYX9yjhcA" type="7005">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_UNEocjdVEeSQbNYX9yjhcA"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_UNEoczdVEeSQbNYX9yjhcA"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_UNEodDdVEeSQbNYX9yjhcA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_UNEodTdVEeSQbNYX9yjhcA" type="7006">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_UNEodjdVEeSQbNYX9yjhcA"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_UNEodzdVEeSQbNYX9yjhcA"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_UNEoeDdVEeSQbNYX9yjhcA"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_UNEBZTdVEeSQbNYX9yjhcA" fontName="Segoe UI"/>
+      <styles xmi:type="notation:HintedDiagramLinkStyle" xmi:id="_UNEBZjdVEeSQbNYX9yjhcA" diagramLink="_hpDC8DpWEeSZcqDUob-voA"/>
+      <element xmi:type="proc:SubActionProcess" href="resource.proc#_46jXRNuoEeWIdu0rdnx7VQ?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=CLEAN_INTEGRATION?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_UNEBZzdVEeSQbNYX9yjhcA" x="48" y="276"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_UNFPgDdVEeSQbNYX9yjhcA" type="2004">
+      <children xmi:type="notation:Node" xmi:id="_UNFPhDdVEeSQbNYX9yjhcA" type="5004"/>
+      <children xmi:type="notation:Node" xmi:id="_UNFPhTdVEeSQbNYX9yjhcA" type="7005">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_UNFPhjdVEeSQbNYX9yjhcA"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_UNFPhzdVEeSQbNYX9yjhcA"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_UNFPiDdVEeSQbNYX9yjhcA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_UNF2kDdVEeSQbNYX9yjhcA" type="7006">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_UNF2kTdVEeSQbNYX9yjhcA"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_UNF2kjdVEeSQbNYX9yjhcA"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_UNF2kzdVEeSQbNYX9yjhcA"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_UNFPgTdVEeSQbNYX9yjhcA" fontName="Segoe UI"/>
+      <styles xmi:type="notation:HintedDiagramLinkStyle" xmi:id="_UNFPgjdVEeSQbNYX9yjhcA" diagramLink="_VzP8EDdVEeSQbNYX9yjhcA"/>
+      <element xmi:type="proc:SubActionProcess" href="resource.proc#_46jXStuoEeWIdu0rdnx7VQ?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=PRECLEAN_INTEGRATION?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_UNFPgzdVEeSQbNYX9yjhcA" x="24" y="60"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_UNF2lDdVEeSQbNYX9yjhcA" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_UNGdoDdVEeSQbNYX9yjhcA" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_UNF2lTdVEeSQbNYX9yjhcA" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_46jXMtuoEeWIdu0rdnx7VQ?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=cleanTemporaryObjects%20?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_UNF2ljdVEeSQbNYX9yjhcA" x="240" y="60"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_p7jZADnEEeS0Vbf-U-V7Kg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_p7kAEDnEEeS0Vbf-U-V7Kg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_p7jZATnEEeS0Vbf-U-V7Kg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_46jXM9uoEeWIdu0rdnx7VQ?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=useDistinct?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_p7jZAjnEEeS0Vbf-U-V7Kg" x="240" y="240"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_jdhIoNoNEeW99p-QqQIaxQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_jdhIo9oNEeW99p-QqQIaxQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_jdhIodoNEeW99p-QqQIaxQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_46jXNNuoEeWIdu0rdnx7VQ?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=transactionName?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jdhIotoNEeW99p-QqQIaxQ" x="240" y="168"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_jdhIpNoNEeW99p-QqQIaxQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_jdiWwNoNEeW99p-QqQIaxQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_jdhIpdoNEeW99p-QqQIaxQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_46jXNduoEeWIdu0rdnx7VQ?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=transactionalModeOnWorkTables?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_jdhIptoNEeW99p-QqQIaxQ" x="240" y="192"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_WxbgYNrlEeWYjZegBSkYwA" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_WxcHctrlEeWYjZegBSkYwA" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_WxcHcNrlEeWYjZegBSkYwA" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_46jXNtuoEeWIdu0rdnx7VQ?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=commitTransaction?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_WxcHcdrlEeWYjZegBSkYwA" x="240" y="84"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_zzlCUOyUEeaHab5deMqBaw" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_zzlCU-yUEeaHab5deMqBaw" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_zzlCUeyUEeaHab5deMqBaw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_CYQdcOx5EeaHab5deMqBaw?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=useStageNameForTemporaryObjectName?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_zzlCUuyUEeaHab5deMqBaw" x="240" y="276"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_1T_4YLeKEembhIKAg0nc2Q" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_1T_4Y7eKEembhIKAg0nc2Q" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_1T_4YbeKEembhIKAg0nc2Q" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_1T38kLeKEembhIKAg0nc2Q?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=transactionIsolationLevel?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_1T_4YreKEembhIKAg0nc2Q" x="240" y="144"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_LEencLFoEeqAJL64qj9Gxw" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_LEfOgLFoEeqAJL64qj9Gxw" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_LEencbFoEeqAJL64qj9Gxw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_LEOv0LFoEeqAJL64qj9Gxw?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=unlockCdcTable?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_LEencrFoEeqAJL64qj9Gxw" x="240" y="216"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_LEfOgbFoEeqAJL64qj9Gxw" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_LEfOhLFoEeqAJL64qj9Gxw" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_LEfOgrFoEeqAJL64qj9Gxw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_LEdZULFoEeqAJL64qj9Gxw?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=cdcSubscriber?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_LEfOg7FoEeqAJL64qj9Gxw" x="240" y="24"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_LEfOhbFoEeqAJL64qj9Gxw" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_LEfOiLFoEeqAJL64qj9Gxw" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_LEfOhrFoEeqAJL64qj9Gxw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_LEdZUbFoEeqAJL64qj9Gxw?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=lockCdcTable?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_LEfOh7FoEeqAJL64qj9Gxw" x="240" y="108"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_UMPiATdVEeSQbNYX9yjhcA"/>
+    <element xmi:type="proc:ActionProcess" href="resource.proc#_46jXMduoEeWIdu0rdnx7VQ?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=STAGING%20Mssql%20As%20View?"/>
+    <edges xmi:type="notation:Edge" xmi:id="_py3-IDnEEeS0Vbf-U-V7Kg" type="4001" source="_UNCzQDdVEeSQbNYX9yjhcA" target="_UNEBZDdVEeSQbNYX9yjhcA">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_py3-ITnEEeS0Vbf-U-V7Kg"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_py3-IjnEEeS0Vbf-U-V7Kg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_46jXONuoEeWIdu0rdnx7VQ?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_py3-IznEEeS0Vbf-U-V7Kg" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_qIYUEDnEEeS0Vbf-U-V7Kg" id="(0.5,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_qIYUETnEEeS0Vbf-U-V7Kg" id="(0.49700598802395207,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_py5MQDnEEeS0Vbf-U-V7Kg" type="4001" source="_UNFPgDdVEeSQbNYX9yjhcA" target="_UNCzQDdVEeSQbNYX9yjhcA">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_py5MQTnEEeS0Vbf-U-V7Kg"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_py5MQjnEEeS0Vbf-U-V7Kg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_46jXS9uoEeWIdu0rdnx7VQ?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_py5MQznEEeS0Vbf-U-V7Kg" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_qIY7IDnEEeS0Vbf-U-V7Kg" id="(0.5,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_qIY7ITnEEeS0Vbf-U-V7Kg" id="(0.5,0.0)"/>
+    </edges>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_VzP8EDdVEeSQbNYX9yjhcA" type="Proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_aPD6gOx5EeaHab5deMqBaw" type="2007">
+      <children xmi:type="notation:Node" xmi:id="_aPFIoOx5EeaHab5deMqBaw" type="5007"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_aPD6gex5EeaHab5deMqBaw" fontName="Segoe UI"/>
+      <element xmi:type="proc:XslVariable" href="resource.proc#_aPCsYOx5EeaHab5deMqBaw?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_aPD6gux5EeaHab5deMqBaw" x="850" y="48"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_RbVNENujEeWIdu0rdnx7VQ" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_RbVNE9ujEeWIdu0rdnx7VQ" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_RbV0INujEeWIdu0rdnx7VQ" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_RbV0IdujEeWIdu0rdnx7VQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_RbV0ItujEeWIdu0rdnx7VQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_RbV0I9ujEeWIdu0rdnx7VQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_RbV0JNujEeWIdu0rdnx7VQ" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_RbV0JdujEeWIdu0rdnx7VQ"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_RbV0JtujEeWIdu0rdnx7VQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_RbV0J9ujEeWIdu0rdnx7VQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_RbVNEdujEeWIdu0rdnx7VQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_46jXTNuoEeWIdu0rdnx7VQ?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=Drop%20view%20staging?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_RbVNEtujEeWIdu0rdnx7VQ" x="30" y="30"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_RbWbMNujEeWIdu0rdnx7VQ" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_RbWbM9ujEeWIdu0rdnx7VQ" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_RbXCQNujEeWIdu0rdnx7VQ" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_RbXCQdujEeWIdu0rdnx7VQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_RbXCQtujEeWIdu0rdnx7VQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_RbXCQ9ujEeWIdu0rdnx7VQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_RbXCRNujEeWIdu0rdnx7VQ" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_RbXCRdujEeWIdu0rdnx7VQ"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_RbXCRtujEeWIdu0rdnx7VQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_RbXCR9ujEeWIdu0rdnx7VQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_RbWbMdujEeWIdu0rdnx7VQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_46jXUtuoEeWIdu0rdnx7VQ?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=Drop%20table%20stagging?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_RbWbMtujEeWIdu0rdnx7VQ" x="30" y="200"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_VzP8ETdVEeSQbNYX9yjhcA"/>
+    <element xmi:type="proc:SubActionProcess" href="resource.proc#_46jXStuoEeWIdu0rdnx7VQ?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=PRECLEAN_INTEGRATION?"/>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_cuqMkDpWEeSZcqDUob-voA" type="Proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_bqnSgOx5EeaHab5deMqBaw" type="2007">
+      <children xmi:type="notation:Node" xmi:id="_bqrj8Ox5EeaHab5deMqBaw" type="5007"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_bqnSgex5EeaHab5deMqBaw" fontName="Segoe UI"/>
+      <element xmi:type="proc:XslVariable" href="resource.proc#_bqmEYOx5EeaHab5deMqBaw?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_bqnSgux5EeaHab5deMqBaw" x="990" y="55"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_eCAyENrlEeWYjZegBSkYwA" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_eCBZINrlEeWYjZegBSkYwA" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_eCCAMNrlEeWYjZegBSkYwA" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_eCCAMdrlEeWYjZegBSkYwA" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_eCCAMtrlEeWYjZegBSkYwA"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_eCCAM9rlEeWYjZegBSkYwA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_eCCnQNrlEeWYjZegBSkYwA" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_eCCnQdrlEeWYjZegBSkYwA"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_eCCnQtrlEeWYjZegBSkYwA"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_eCCnQ9rlEeWYjZegBSkYwA"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_eCAyEdrlEeWYjZegBSkYwA" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_46jXP9uoEeWIdu0rdnx7VQ?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=T%20-%20Commit%20of%20transaction?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_eCAyEtrlEeWYjZegBSkYwA" x="205" y="365" width="246"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_EjPIALFoEeqAJL64qj9Gxw" type="2004">
+      <children xmi:type="notation:Node" xmi:id="_EjPvELFoEeqAJL64qj9Gxw" type="5004"/>
+      <children xmi:type="notation:Node" xmi:id="_EjPvEbFoEeqAJL64qj9Gxw" type="7005">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_EjPvErFoEeqAJL64qj9Gxw"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_EjPvE7FoEeqAJL64qj9Gxw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_EjPvFLFoEeqAJL64qj9Gxw"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_EjPvFbFoEeqAJL64qj9Gxw" type="7006">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_EjPvFrFoEeqAJL64qj9Gxw"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_EjPvF7FoEeqAJL64qj9Gxw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_EjPvGLFoEeqAJL64qj9Gxw"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_EjPIAbFoEeqAJL64qj9Gxw" fontName="Segoe UI"/>
+      <styles xmi:type="notation:HintedDiagramLinkStyle" xmi:id="_EjPIArFoEeqAJL64qj9Gxw"/>
+      <element xmi:type="proc:SubActionProcess" href="resource.proc#_Ei2tgLFoEeqAJL64qj9Gxw?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=Lock%20CDC?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_EjPIA7FoEeqAJL64qj9Gxw" x="275" y="65"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_EjPvGbFoEeqAJL64qj9Gxw" type="2007">
+      <children xmi:type="notation:Node" xmi:id="_EjPvHLFoEeqAJL64qj9Gxw" type="5007"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_EjPvGrFoEeqAJL64qj9Gxw" fontName="Segoe UI"/>
+      <element xmi:type="proc:XslVariable" href="resource.proc#_EjN54LFoEeqAJL64qj9Gxw?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_EjPvG7FoEeqAJL64qj9Gxw" x="990" y="30"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_cwoigDpWEeSZcqDUob-voA" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_cwuCEDpWEeSZcqDUob-voA" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_cwvQMDpWEeSZcqDUob-voA" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_cwvQMTpWEeSZcqDUob-voA"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_cwvQMjpWEeSZcqDUob-voA"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_cwvQMzpWEeSZcqDUob-voA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_cwv3QDpWEeSZcqDUob-voA" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_cwv3QTpWEeSZcqDUob-voA"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_cwv3QjpWEeSZcqDUob-voA"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_cwv3QzpWEeSZcqDUob-voA"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_cwoigTpWEeSZcqDUob-voA" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_46jXOduoEeWIdu0rdnx7VQ?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=Creation%20of%20staging?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_cwoigjpWEeSZcqDUob-voA" x="30" y="180"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_cuqMkTpWEeSZcqDUob-voA"/>
+    <element xmi:type="proc:SubActionProcess" href="resource.proc#_46jXN9uoEeWIdu0rdnx7VQ?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=INTEGRATION?"/>
+    <edges xmi:type="notation:Edge" xmi:id="_ec9BoNrlEeWYjZegBSkYwA" type="4001" source="_cwoigDpWEeSZcqDUob-voA" target="_eCAyENrlEeWYjZegBSkYwA">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_ec9BodrlEeWYjZegBSkYwA"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_ec9BotrlEeWYjZegBSkYwA" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_46jXOtuoEeWIdu0rdnx7VQ?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_ec9Bo9rlEeWYjZegBSkYwA" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_edChMNrlEeWYjZegBSkYwA" id="(0.5,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cquEoOx5EeaHab5deMqBaw" id="(0.5,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_E1J-cLFoEeqAJL64qj9Gxw" type="4001" source="_EjPIALFoEeqAJL64qj9Gxw" target="_cwoigDpWEeSZcqDUob-voA">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_E1J-cbFoEeqAJL64qj9Gxw"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_E1J-crFoEeqAJL64qj9Gxw" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_E1IwULFoEeqAJL64qj9Gxw?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_E1J-c7FoEeqAJL64qj9Gxw" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_E1O28LFoEeqAJL64qj9Gxw" id="(0.4953271028037383,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_E1O28bFoEeqAJL64qj9Gxw" id="(0.5,0.0)"/>
+    </edges>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_hpDC8DpWEeSZcqDUob-voA" type="Proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_hqbjADpWEeSZcqDUob-voA" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_hqcKEDpWEeSZcqDUob-voA" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_hqcKETpWEeSZcqDUob-voA" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_hqcKEjpWEeSZcqDUob-voA" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_hqcKEzpWEeSZcqDUob-voA"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_hqcKFDpWEeSZcqDUob-voA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_hqcKFTpWEeSZcqDUob-voA" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_hqcKFjpWEeSZcqDUob-voA"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_hqcKFzpWEeSZcqDUob-voA"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_hqcKGDpWEeSZcqDUob-voA"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_hqbjATpWEeSZcqDUob-voA" fontName="Segoe UI"/>
+      <element xmi:type="proc:ActionCode" href="resource.proc#_46jXRduoEeWIdu0rdnx7VQ?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=Drop%20view%20staging?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_hqbjAjpWEeSZcqDUob-voA" x="24" y="60"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_F1PieLFoEeqAJL64qj9Gxw" type="2007">
+      <children xmi:type="notation:Node" xmi:id="_F1WQILFoEeqAJL64qj9Gxw" type="5007"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_F1PiebFoEeqAJL64qj9Gxw" fontName="Segoe UI"/>
+      <element xmi:type="proc:XslVariable" href="resource.proc#_dxBlYOx5EeaHab5deMqBaw?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_F1PierFoEeqAJL64qj9Gxw" x="504" y="60"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_HLaEILFoEeqAJL64qj9Gxw" type="2004">
+      <children xmi:type="notation:Node" xmi:id="_HLaEJLFoEeqAJL64qj9Gxw" type="5004"/>
+      <children xmi:type="notation:Node" xmi:id="_HLaEJbFoEeqAJL64qj9Gxw" type="7005">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_HLaEJrFoEeqAJL64qj9Gxw"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_HLaEJ7FoEeqAJL64qj9Gxw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_HLaEKLFoEeqAJL64qj9Gxw"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_HLaEKbFoEeqAJL64qj9Gxw" type="7006">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_HLaEKrFoEeqAJL64qj9Gxw"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_HLaEK7FoEeqAJL64qj9Gxw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_HLaELLFoEeqAJL64qj9Gxw"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_HLaEIbFoEeqAJL64qj9Gxw" fontName="Segoe UI"/>
+      <styles xmi:type="notation:HintedDiagramLinkStyle" xmi:id="_HLaEIrFoEeqAJL64qj9Gxw"/>
+      <element xmi:type="proc:SubActionProcess" href="resource.proc#_HLI-YLFoEeqAJL64qj9Gxw?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=Unlock%20CDC?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_HLaEI7FoEeqAJL64qj9Gxw" x="348" y="60"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_HLaELbFoEeqAJL64qj9Gxw" type="2007">
+      <children xmi:type="notation:Node" xmi:id="_HLaEMLFoEeqAJL64qj9Gxw" type="5007"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_HLaELrFoEeqAJL64qj9Gxw" fontName="Segoe UI"/>
+      <element xmi:type="proc:XslVariable" href="resource.proc#_HLZdELFoEeqAJL64qj9Gxw?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_HLaEL7FoEeqAJL64qj9Gxw" x="504" y="24"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_hpDC8TpWEeSZcqDUob-voA"/>
+    <element xmi:type="proc:SubActionProcess" href="resource.proc#_46jXRNuoEeWIdu0rdnx7VQ?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=CLEAN_INTEGRATION?"/>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_F1AR4LFoEeqAJL64qj9Gxw" type="Proc" measurementUnit="Pixel">
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_F1AR4bFoEeqAJL64qj9Gxw"/>
+    <element xmi:type="proc:SubActionProcess" href="resource.proc#_Ei2tgLFoEeqAJL64qj9Gxw?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=Lock%20CDC?"/>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_wbrCsLePEeqjIJV1j-1Gjw" type="Proc" measurementUnit="Pixel">
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_wbrCsbePEeqjIJV1j-1Gjw"/>
+    <element xmi:type="proc:SubActionProcess" href="resource.proc#_HLI-YLFoEeqAJL64qj9Gxw?fileId=_46jXMduoEeWIdu0rdnx7VQ$type=proc$name=Unlock%20CDC?"/>
+  </notation:Diagram>
+</xmi:XMI>
+]]></diagram>
+</proc:process>

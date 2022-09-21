@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_8fa24535-b67f-4d00-aca7-ac642ec8ff0f" description="This template is used to load a file to PostgreSQL.&#xD;&#xA;&#xD;&#xA;It supports sending or retrieving the file from FTP before processing it.&#xD;&#xA;&#xD;&#xA;Refer to the description of each Parameter for more information.&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;21/08/2018&#x9;Reorganize the parameters display order&#xD;&#xA;21/08/2018&#x9;Initialize template history" isBeginAction="false" name="LOAD File to PostGre SQL (with Copy)" nbCycles="-1" toleratedError="false">
+  <parameter id="_omQcwKEnEd6X2-yiU0STCg" description="Specifies if the file should be sent through FTP before processing.&#xD;&#xA;This can be useful when the file is not already on the target PostgreSQL server.&#xD;&#xA;When you are in this case, you can use this parameter to process the file through FTP before loading it.&#xD;&#xA;&#xD;&#xA;When setting this parameter to true, you have to define the other FTP parameters to specify the FTP server properties:&#xD;&#xA;See 'Ftp Host', 'Ftp Port', 'Ftp User', 'Ftp Pass', 'Ftp Remote Path', 'Ftp Put', 'Path On Server' parameters.&#xD;&#xA;&#xD;&#xA;The templates supports both sending or retrieving the file from FTP.&#xD;&#xA;See 'Ftp Put' parameter." name="useFtp" type="Boolean" value="false"/>
+  <parameter id="_QDBr0p7oEd6kL_K3nJkXcQ" description="If true, the temporary objects created during the load are removed at the end of the process." name="cleanTemporaryObjects" type="Boolean" value="true"/>
+  <parameter id="_KZAdMKE2Ed6X2-yiU0STCg" description="Specifies how the file should be processed when 'Use Ftp' parameter is set to true.&#xD;&#xA;&#xD;&#xA;If set to true, the file will be sent on a target FTP server before processing it.&#xD;&#xA;The target FTP server must therefore be located on the target PostgreSQL server, for the load step to be able to next load it.&#xD;&#xA;&#xD;&#xA;If set to false, the file will be retrieved locally from a target FTP server, and then processed.&#xD;&#xA;The Runtime must so be located on the target PosgreSQL server for the load step to be able next to load it.&#xD;&#xA;&#xD;&#xA;Note that as indicated this parameter applies only when using the 'Use Ftp' parameter to process the file through FTP.&#xD;&#xA;If your file is already located on the target server, you do not have to do this, as it can be loaded directly.&#xD;&#xA;It is useful only if the file is not already on the server." name="ftpPut" type="Boolean" value="true"/>
+  <parameter id="_914xyuiHEeGCDfZuhYd9mg" description="If true, the operations on the load table will be executed in a dedicated transaction.&#xD;&#xA;This is useful for instance if one of a the source tables has been loaded in a previous and uncommitted Mapping.&#xD;&#xA;In this case, it is necessary to populate the load table within the same transaction so that the data loaded as part of this previous Mapping are visible.&#xD;&#xA;&#xD;&#xA;If false, each statement on the load table uses an Autocommit transaction." label="Transactional Mode On Work Tables" name="useTransactionOnWorkTables" type="Boolean" value="false"/>
+  <parameter id="_kMLeOKEnEd6X2-yiU0STCg" description="" name="ftpHost" type="String"/>
+  <parameter id="_kMLePKEnEd6X2-yiU0STCg" name="ftpPort" type="Integer" value=""/>
+  <parameter id="_kMLeOaEnEd6X2-yiU0STCg" name="ftpUser" type="String"/>
+  <parameter id="_kMLeOqEnEd6X2-yiU0STCg" name="ftpPass" type="String"/>
+  <parameter id="_kMLePaEnEd6X2-yiU0STCg" description="Remote Path where the file should be stored on the FTP server." name="ftpRemotePath" type="String"/>
+  <parameter id="_kMLeO6EnEd6X2-yiU0STCg" description="Absolute path to the folder where the file is located on the PostgreSQL server.&#xD;&#xA;&#xD;&#xA;You have to specify this only if the file is sent through FTP with both the 'Use Ftp' and 'Ftp Put' parameters are set to true.&#xD;&#xA;When they are, this means that you have specified FTP information on the other parameters to send the file through FTP before processing.&#xD;&#xA;If this is the case, you have to specify here the absolute folder path where the file has been sent.&#xD;&#xA;&#xD;&#xA;Otherwise you can leave this empty, the template will use the path defined on File Metadata." name="pathOnServer" type="String"/>
+  <parameter id="_914xyeiHEeGCDfZuhYd9mg" description="Name of the transaction when &quot;Transactional Mode On Work Tables&quot; is set to true." name="transactionName" type="String" value="T1"/>
+  <subProcess id="_8fa24535-b67f-4d00-aca7-ac642ec8ff0f_BEFORE" name="Load">
+    <link id="_QDBr1J7oEd6kL_K3nJkXcQ" executionType="OK" generationType="OK" mandatory="1" targetId="_8fa24535-b67f-4d00-aca7-ac642ec8ff0f_AFTER?fileId=_8fa24535-b67f-4d00-aca7-ac642ec8ff0f$type=proc$name=Clean?"/>
+    <actionCode id="_8fa24535-b67f-4d00-aca7-ac642ec8ff0f_51" generationCondition="" isBeginAction="false" name="Drop of load table" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_QDBr1Z7oEd6kL_K3nJkXcQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_8fa24535-b67f-4d00-aca7-ac642ec8ff0f_71"/>
+      <parameter id="_QDBr1p7oEd6kL_K3nJkXcQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_QDBr157oEd6kL_K3nJkXcQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_QDBr2J7oEd6kL_K3nJkXcQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_5SgtMOiHEeGCDfZuhYd9mg" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <code>%x{$REF/ref:target()/tech:dropTableIfExists()}x%  %x{md:physicalPath($REF,'workName')}x%</code>
+    </actionCode>
+    <actionCode id="_8fa24535-b67f-4d00-aca7-ac642ec8ff0f_71" generationCondition="" isBeginAction="false" name="Creation of load table" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_QDBr2Z7oEd6kL_K3nJkXcQ" description="" generationCondition="'${useFtp}$'='true' and '${ftpPut}$'='true'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_0wQUfaEnEd6X2-yiU0STCg"/>
+      <link id="_2lFIEKEnEd6X2-yiU0STCg" generationCondition="'${useFtp}$'='false'" executionType="OK" generationType="OK" mandatory="1" targetId="_8fa24535-b67f-4d00-aca7-ac642ec8ff0f_101"/>
+      <link id="_X4h9YKE2Ed6X2-yiU0STCg" description="" generationCondition="'${useFtp}$'='true' and '${ftpPut}$'='false'" executionType="OK" generationType="OK" mandatory="1" targetId="_fD50YKE1Ed6X2-yiU0STCg"/>
+      <parameter id="_QDBr2p7oEd6kL_K3nJkXcQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_QDBr257oEd6kL_K3nJkXcQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_QDBr3J7oEd6kL_K3nJkXcQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_5w3dIOiHEeGCDfZuhYd9mg" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <code>create table %x{md:physicalPath($REF,'workName')}x%
+(
+	%x{md:patternList($REF/ref:columns(),'[workName]\t[targetWritableType] [targetNullWord]',',\n\t')}x%	
+)
+
+</code>
+    </actionCode>
+    <actionCode id="_8fa24535-b67f-4d00-aca7-ac642ec8ff0f_101" generationCondition="" isBeginAction="false" name="Load into target" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_QDBr3Z7oEd6kL_K3nJkXcQ" executionType="OK" generationType="OK" mandatory="1"/>
+      <parameter id="_QDBr3p7oEd6kL_K3nJkXcQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_QDBr357oEd6kL_K3nJkXcQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_QDBr4Z7oEd6kL_K3nJkXcQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_6mgrsOiHEeGCDfZuhYd9mg" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <code>COPY %x{md:physicalPath($REF,'workName')}x% (%x{md:list($cols/col/@workName,', ')}x%)&#xD;
+FROM '%x{if (md:paramValue($this,'useFtp')='false' or md:paramValue($this,'ftpPut')='false') &#xD;
+	then $REF/tech:sourceRef()/tech:filePath() &#xD;
+ 	else concat(md:paramValue($this,'pathOnServer'),'/',$REF/tech:sourceRef()/tech:physicalName()) }x%' &#xD;
+WITH&#xD;
+DELIMITER '%x{$REF/tech:sourceRef()/tech:asciiFieldSeparator()}x%'&#xD;
+CSV %x{if ( $REF/tech:sourceRef()/tech:header() = 1)&#xD;
+	then 'HEADER' else '' }x%&#xD;
+</code>
+    </actionCode>
+    <actionCode id="_0wQUfaEnEd6X2-yiU0STCg" generationCondition="'${useFtp}$'='true'" isBeginAction="false" name="Put file on target server" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FtpPutActionCodeI">
+      <link id="_26-fkKEnEd6X2-yiU0STCg" executionType="OK" generationType="OK" mandatory="1" targetId="_8fa24535-b67f-4d00-aca7-ac642ec8ff0f_101"/>
+      <parameter id="_0wQUf6EnEd6X2-yiU0STCg" name="FTP_HOSTNAME" ref="#_kMLeOKEnEd6X2-yiU0STCg" type="String"/>
+      <parameter id="_0wQUgKEnEd6X2-yiU0STCg" name="FTP_USER" ref="#_kMLeOaEnEd6X2-yiU0STCg" type="String"/>
+      <parameter id="_0wQUgaEnEd6X2-yiU0STCg" name="FTP_PASSWORD" ref="#_kMLeOqEnEd6X2-yiU0STCg" type="String"/>
+      <parameter id="_0wQUgqEnEd6X2-yiU0STCg" name="FTP_REMOTE_PATH" ref="#_kMLePaEnEd6X2-yiU0STCg" type="String"/>
+      <parameter id="_0wQUg6EnEd6X2-yiU0STCg" name="FTP_LOCAL_FILENAME" type="String" value="%x{$REF/tech:sourceRef()/tech:physicalName()}x%"/>
+      <parameter id="_0wQUhKEnEd6X2-yiU0STCg" name="FTP_LOCAL_PATH" type="String" value="%x{$REF/tech:sourceRef()/tech:directoryRef()/tech:path()}x%"/>
+      <parameter id="_0wQUhaEnEd6X2-yiU0STCg" name="FTP_PORT" ref="#_kMLePKEnEd6X2-yiU0STCg" type="Integer"/>
+    </actionCode>
+    <actionCode id="_fD50YKE1Ed6X2-yiU0STCg" isBeginAction="false" name="FtpGet" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FtpGetActionCodeI">
+      <link id="_ecvRQKE2Ed6X2-yiU0STCg" executionType="OK" generationType="OK" mandatory="1" targetId="_8fa24535-b67f-4d00-aca7-ac642ec8ff0f_101"/>
+      <parameter id="_fD50YaE1Ed6X2-yiU0STCg" name="FTP_HOSTNAME" ref="#_kMLeOKEnEd6X2-yiU0STCg" type="String"/>
+      <parameter id="_fD50YqE1Ed6X2-yiU0STCg" name="FTP_USER" ref="#_kMLeOaEnEd6X2-yiU0STCg" type="String"/>
+      <parameter id="_fD50Y6E1Ed6X2-yiU0STCg" name="FTP_PASSWORD" ref="#_kMLeOqEnEd6X2-yiU0STCg" type="String"/>
+      <parameter id="_P7YrMKE3Ed6X2-yiU0STCg" name="FTP_REMOTE_PATH" ref="#_kMLePaEnEd6X2-yiU0STCg" type="String"/>
+      <parameter id="_P7YrMaE3Ed6X2-yiU0STCg" name="FTP_REMOTE_FILENAME" type="String" value="%x{$REF/tech:sourceRef()/tech:physicalName()}x%"/>
+      <parameter id="_P7icMKE3Ed6X2-yiU0STCg" name="FTP_LOCAL_PATH" type="String" value="%x{$REF/tech:sourceRef()/tech:directoryRef()/tech:path()}x%"/>
+      <parameter id="_XtO24KE3Ed6X2-yiU0STCg" name="FTP_PORT" ref="#_kMLePKEnEd6X2-yiU0STCg" type="Integer"/>
+    </actionCode>
+    <templateType>L-TP.RDBMS.LOADING</templateType>
+    <xslVariable id="_cWbcYOrMEeGZj7rqc2dSow" code="%xsl{&#xD;&#xA;&lt;xsl:variable name=&quot;cols&quot; select=&quot;$REF/ref:columns()&quot;/>&#xD;&#xA;&lt;xsl:variable name=&quot;srcCols&quot; select=&quot;$cols[1]/ref:sources()[1]/../ref:fields()&quot;/>&#xD;&#xA;&lt;xsl:for-each select=&quot;$srcCols&quot;>&lt;xsl:sort select=&quot;number(@position)&quot; data-type=&quot;number&quot;/>&#xD;&#xA;&#x9;&lt;col>&#xD;&#xA;&#x9;&#x9;&lt;xsl:variable name=&quot;map&quot; select=&quot;$cols[ref:sources()[1]/@id=current()/@id]&quot;/>&#xD;&#xA;&#x9;&#x9;&lt;xsl:choose>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:when test=&quot;exists($map)&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;xsl:attribute name=&quot;workName&quot;>&lt;xsl:value-of select=&quot;$map/tech:workName()&quot;/>&lt;/xsl:attribute>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;/xsl:when>&#xD;&#xA;&#x9;&#x9;&lt;/xsl:choose>&#xD;&#xA;&#x9;&lt;/col>&#xD;&#xA;&lt;/xsl:for-each>&#xD;&#xA;}%" name="cols" type="xsl"/>
+  </subProcess>
+  <subProcess id="_8fa24535-b67f-4d00-aca7-ac642ec8ff0f_AFTER" name="Clean">
+    <actionCode id="_8fa24535-b67f-4d00-aca7-ac642ec8ff0f_111" generationCondition="'${cleanTemporaryObjects}$'='true'" isBeginAction="false" name="Drop of load table" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter id="_QDBr457oEd6kL_K3nJkXcQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_QDBr5J7oEd6kL_K3nJkXcQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_QDBr5Z7oEd6kL_K3nJkXcQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_AllSMOiIEeGCDfZuhYd9mg" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <code>drop table %x{md:physicalPath($REF,'workName')}x%</code>
+    </actionCode>
+    <templateType>L-TP.RDBMS.CLEANING</templateType>
+  </subProcess>
+  <templateType>L-TP.RDBMS</templateType>
+</proc:process>

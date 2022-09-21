@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_I8bKoXOoEeez_eOltEJXTA" description="L'objectif de ce composant est d'effectuer des contrôles avant de pouvoir exécuter l'autre composant TOOL_Load_CEA afin d'éviter de ne pas perdre des informations lors de ce chargement. Un fichier csv est constitué pour lister le status des contrôles effectués si un répertoire est déposé sur le composant. Si ce n'est pas le cas, une table est créée/utilisée dans le schéma cible.&#xD;&#xA;Cette table prend pour nom le nom du paramètre RESULT_CHECK_TABLE_NAME.&#xD;&#xA;&#xD;&#xA;Pour fonctionner, il faut drag &amp; dropper 2 schémas et optionnellement un répertoire sur ce composant :&#xD;&#xA;- le premier contient les tables sources %_TMP_% et doit être renommé SOURCE_TABLE&#xD;&#xA;- le deuxième contient les tables cibles %_CEA et doit être renommé TARGET_TABLE&#xD;&#xA;- le répertoire va héberger un fichier de contrôle avant chargement&#xD;&#xA;- S'il n'y a pas de répertoire, une table est créée dans le schéma cible.&#xD;&#xA;&#xD;&#xA;Comme le nombre de sites varie en fonction des environnements (DEV, REC, PROD), le paramètre SITE_LIST permet d'indiquer la liste des codes sites (sur deux positions) séparés par des virgules à prendre en compte en source.&#xD;&#xA;&#xD;&#xA;3 contrôles différents sont effectués :&#xD;&#xA;&#xD;&#xA;- La table source contient plus de colonnes que la table cible : il s'agit d'une erreur et le composant TOOL_Load_CEA ne doit pas être lancé, car il y aurait perte d'information lors du chargement des tables CEA&#xD;&#xA;- Les colonnes de la table source et de la table cible ne sont pas identiques : il s'agit d'une erreur et le composant TOOL_Load_CEA ne doit pas être lancé, car il y aurait une erreur lors de l'exécution de l'INSERT ... SELECT&#xD;&#xA;- La table cible possède des colonnes supplémentaires par rapport à la table source : il s'agit d'un warning car cela veut dire qu'un site a fait évoluer la table cible, mais que tous les sites sources n'ont pas encore ces nouvelles colonnes&#xD;&#xA;&#xD;&#xA;">
+  <parameter id="_I8bKonOoEeez_eOltEJXTA" name="SITE_LIST" type="String" value="HI,KF"/>
+  <parameter id="_I8bKo3OoEeez_eOltEJXTA" name="RESULT_CHECK_TABLE_NAME" type="String" value="CHECK_RESULT"/>
+  <actionCode id="_I8bKpHOoEeez_eOltEJXTA" isBeginAction="false" name="WriteTxtFile" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+    <link id="_I8bKpXOoEeez_eOltEJXTA" executionType="OK" generationType="OK_KO" mandatory="0" targetId="_I8bKrnOoEeez_eOltEJXTA?fileId=_tpm6EmyeEeeUmqR6oEMD9Q$type=proc$name=Check%20of%20a%20source%20and%20a%20target%20tables%20before%20load?"/>
+    <parameter id="_I8bKpnOoEeez_eOltEJXTA" name="TXT_WRITE_FILENAME" type="String" value="%x{$targetFolder/tech:path()}x%/Check_Report_PreLoad_CEA_%x{md:formatDate(&quot;yyyyMMdd&quot;)}x%.csv"/>
+    <code>SOURCE;TARGET;STATUS;DESCRIPTION</code>
+  </actionCode>
+  <actionCode id="_I8bKp3OoEeez_eOltEJXTA" isBeginAction="false" name="Start" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_I8bKqHOoEeez_eOltEJXTA" generationCondition="exists($SOURCE_SCHEMA) and exists($TARGET_SCHEMA) and  exists($targetFolder) " executionType="OK" generationType="OK_KO" mandatory="1" targetId="_I8bKpHOoEeez_eOltEJXTA"/>
+    <link id="_I8bKqXOoEeez_eOltEJXTA" generationCondition="exists($SOURCE_SCHEMA) and exists($TARGET_SCHEMA) and  not(exists($targetFolder) )" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_I8bKqnOoEeez_eOltEJXTA"/>
+  </actionCode>
+  <actionCode id="_I8bKqnOoEeez_eOltEJXTA" isBeginAction="false" name="SqlOperation CREATE CHECK_RESULT table" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_I8bKq3OoEeez_eOltEJXTA" executionType="OK" generationType="OK_KO" mandatory="0" targetId="_I8bKrnOoEeez_eOltEJXTA?fileId=_tpm6EmyeEeeUmqR6oEMD9Q$type=proc$name=Check%20of%20a%20source%20and%20a%20target%20tables%20before%20load?"/>
+    <parameter id="_I8bKrHOoEeez_eOltEJXTA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_I8bKrXOoEeez_eOltEJXTA" name="SQL_CONNECTION" type="String" value="%targetConnection{$TARGET_SCHEMA}%"/>
+    <code>CREATE      TABLE %x{md:objectPath($TARGET_SCHEMA/ref:schema(), md:paramValue($this,'RESULT_CHECK_TABLE_NAME'))}x% (&#xD;
+CHECK_DATE  %x{$TARGET_SCHEMA/tech:varcharDdl(8)}x%, &#xD;
+SOURCE      %x{$TARGET_SCHEMA/tech:varcharDdl(100)}x%,&#xD;
+TARGET      %x{$TARGET_SCHEMA/tech:varcharDdl(100)}x%,&#xD;
+STATUS      %x{$TARGET_SCHEMA/tech:varcharDdl(20)}x%,&#xD;
+DESCRIPTION %x{$TARGET_SCHEMA/tech:varcharDdl(200)}x%)&#xD;
+&#xD;
+</code>
+  </actionCode>
+  <subProcess id="_I8bKrnOoEeez_eOltEJXTA" isBeginAction="false" name="Check of a source and a target tables before load" nbCycles="-1" repetitionQuery="$sourceTables/table" repetitionVariableName="CUR_TABLE" toleratedError="false">
+    <actionCode id="_I8bKr3OoEeez_eOltEJXTA" isBeginAction="false" name="WriteTxtFile" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+      <parameter id="_I8bKsHOoEeez_eOltEJXTA" name="TXT_WRITE_FILENAME" type="String" value="%x{$targetFolder/tech:path()}x%/Check_Report_PreLoad_CEA_%x{md:formatDate(&quot;yyyyMMdd&quot;)}x%.csv"/>
+      <parameter id="_I8bKsXOoEeez_eOltEJXTA" name="TXT_WRITE_APPEND" type="String" value="after"/>
+      <code>%x{concat($SOURCE_TABLE/tech:name(),';',$TARGET_TABLE/tech:name(),';')}x%%x{if (distinct-values($SOURCE_TABLE/column/last())&amp;gt;distinct-values($TARGET_TABLE/column/last())) then &#xD;
+            concat('Ko;Table source contient plus de colonnes (',distinct-values($SOURCE_TABLE/column/last()),') que la cible (',distinct-values($TARGET_TABLE/column/last()),')') else&#xD;
+            if (md:list($SOURCE_TABLE/column/tech:name(),',')!=md:list($TARGET_TABLE/column/tech:name(),',') and contains(md:list($TARGET_TABLE/column/tech:name(),','),md:list($SOURCE_TABLE/column/tech:name(),','))) then 'Warning;Table cible possède des colonnes supplémentaires par rapport à table source' else  &#xD;
+            if (md:list($SOURCE_TABLE/column/tech:name(),',')!=md:list($TARGET_TABLE/column/tech:name(),',')) then 'Ko;Colonnes différentes entre la source et la cible' else 'Ok;'}x% </code>
+    </actionCode>
+    <actionCode id="_I8bKsnOoEeez_eOltEJXTA" isBeginAction="false" name="Start a check" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+      <link id="_I8bKs3OoEeez_eOltEJXTA" generationCondition="exists($SOURCE_SCHEMA) and exists($TARGET_SCHEMA) and  exists($targetFolder) " executionType="OK" generationType="OK_KO" mandatory="1" targetId="_I8bKr3OoEeez_eOltEJXTA"/>
+      <link id="_I8bKtHOoEeez_eOltEJXTA" generationCondition="exists($SOURCE_SCHEMA) and exists($TARGET_SCHEMA) and  not(exists($targetFolder) )" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_I8bKuHOoEeez_eOltEJXTA"/>
+    </actionCode>
+    <actionCode id="_I8bKtXOoEeez_eOltEJXTA" isBeginAction="false" name="SqlOperation INSERT INTO CHECK_RESULT" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter id="_I8bKtnOoEeez_eOltEJXTA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_I8bKt3OoEeez_eOltEJXTA" name="SQL_CONNECTION" type="String" value="%targetConnection{$TARGET_SCHEMA}%"/>
+      <code>INSERT INTO %x{md:objectPath($TARGET_SCHEMA/ref:schema(), md:paramValue($this,'RESULT_CHECK_TABLE_NAME'))}x%&#xD;
+VALUES ('%x{md:formatDate(&quot;yyyyMMdd&quot;)}x%','%x{concat($SOURCE_TABLE/tech:name(),&quot;','&quot;,$TARGET_TABLE/tech:name(),&quot;','&quot;)}x%%x{if (distinct-values($SOURCE_TABLE/column/last())&amp;gt;distinct-values($TARGET_TABLE/column/last())) then &#xD;
+            concat(&quot;Ko','Table source contient plus de colonnes (&quot;,distinct-values($SOURCE_TABLE/column/last()),&quot;) que la cible (&quot;,distinct-values($TARGET_TABLE/column/last()),&quot;)&quot;) else&#xD;
+            if (md:list($SOURCE_TABLE/column/tech:name(),&quot;,&quot;)!=md:list($TARGET_TABLE/column/tech:name(),&quot;,&quot;) and contains(md:list($TARGET_TABLE/column/tech:name(),&quot;,&quot;),md:list($SOURCE_TABLE/column/tech:name(),&quot;,&quot;))) then &quot;Warning','Table cible possède des colonnes supplémentaires par rapport à table source&quot; else  &#xD;
+            if (md:list($SOURCE_TABLE/column/tech:name(),&quot;,&quot;)!=md:list($TARGET_TABLE/column/tech:name(),&quot;,&quot;)) then &quot;Ko','Colonnes différentes entre la source et la cible&quot; else &quot;Ok','&quot;}x%') </code>
+    </actionCode>
+    <actionCode id="_I8bKuHOoEeez_eOltEJXTA" isBeginAction="false" name="SqlOperation DELETE CHECK_RESULT for current day and tables" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_I8bKuXOoEeez_eOltEJXTA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_I8bKtXOoEeez_eOltEJXTA"/>
+      <parameter id="_I8bKunOoEeez_eOltEJXTA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_I8bKu3OoEeez_eOltEJXTA" name="SQL_CONNECTION" type="String" value="%targetConnection{$TARGET_SCHEMA}%"/>
+      <code>DELETE FROM %x{md:objectPath($TARGET_SCHEMA/ref:schema(), md:paramValue($this,'RESULT_CHECK_TABLE_NAME'))}x% &#xD;
+WHERE  CHECK_DATE='%x{md:formatDate(&quot;yyyyMMdd&quot;)}x%'&#xD;
+AND    SOURCE='%x{$SOURCE_TABLE/tech:name()}x%'&#xD;
+AND    TARGET='%x{$TARGET_TABLE/tech:name()}x%'&#xD;
+&#xD;
+</code>
+    </actionCode>
+    <xslVariable id="_I8bKvHOoEeez_eOltEJXTA" code="$SOURCE_SCHEMA/datastore[@id=$CUR_TABLE/@sourceId]" name="SOURCE_TABLE" type="xpath"/>
+    <xslVariable id="_I8bKvXOoEeez_eOltEJXTA" code="$TARGET_SCHEMA/datastore[@id=$CUR_TABLE/@targetId]" name="TARGET_TABLE" type="xpath"/>
+  </subProcess>
+  <xslVariable id="_I8bKvnOoEeez_eOltEJXTA" code="%xsl{&#xD;&#xA;&#x9;&lt;xsl:for-each select=&quot;$TARGET_SCHEMA/datastore[ends-with(./tech:name(),'_CEA')]&quot;>&#xD;&#xA;&#x9;&#x9;&lt;xsl:variable name=&quot;TARGET_TABLE&quot; select=&quot;.&quot;/>&#xD;&#xA;&#x9;&#x9;&lt;xsl:variable name=&quot;curPrefix&quot; select=&quot;replace($TARGET_TABLE/tech:name(),'(.*)_CEA', '$1')&quot;/>&#xD;&#xA;&#x9;&#x9;&lt;xsl:for-each select=&quot;tokenize(md:paramValue($this,'SITE_LIST'),',')&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;curSite&quot; select=&quot;.&quot;/>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:for-each select=&quot;$SOURCE_SCHEMA/datastore[starts-with(tech:name(),$curPrefix) and ends-with(tech:name(),$curSite)]&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;SOURCE_TABLE&quot; select=&quot;.&quot;/>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;table &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;sourceId=&quot;{$SOURCE_TABLE/@id}&quot; &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;targetId=&quot;{$TARGET_TABLE/@id}&quot; &#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;name=&quot;{$SOURCE_TABLE/tech:name()}-->{$TARGET_TABLE/tech:name()}&quot;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;/>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;/xsl:for-each>&#xD;&#xA;&#x9;&#x9;&lt;/xsl:for-each>&#xD;&#xA;&#x9;&lt;/xsl:for-each>&#xD;&#xA;}xsl%" name="sourceTables" type="xsl"/>
+  <xslVariable id="_I8bKv3OoEeez_eOltEJXTA" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='directory'][1]" name="targetFolder" type="xpath"/>
+</proc:process>

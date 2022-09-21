@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ref:mapRef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:ref="http://www.indy.com/v2/ref" id="_969HxjTDEe2K1spis4bODw">
+  <dataModel>_K7BJIJiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map$name=Load%20dim_geography%20with%20xml?</dataModel>
+  <containerRef xsi:type="ref:RDatastore" id="_96_kADTDEe2K1spis4bODw" countShownFields="8" hierarchical="true">
+    <dataModel>_MDyvEJiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_96_kATTDEe2K1spis4bODw" type="string" mandatory="true" position="21">
+      <dataModel>_MD2ZdZiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map$name=cityName?</dataModel>
+      <usage>_97KjITTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_97FqoDTDEe2K1spis4bODw" type="state" mandatory="true" position="6">
+      <dataModel>_MD2ZcJiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map$name=state?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_97GRsDTDEe2K1spis4bODw" type="city" mandatory="true" position="18">
+      <dataModel>_MD2ZdJiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map$name=city?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_97GRsTTDEe2K1spis4bODw" type="integer" mandatory="true" position="24">
+      <dataModel>_MD2ZdpiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map$name=zipCode?</dataModel>
+      <usage>_97Hf0jTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_97GRsjTDEe2K1spis4bODw" type="geo:geography" mandatory="true" position="3">
+      <dataModel>_MD1yYZiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map$name=geography?</dataModel>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_97GRszTDEe2K1spis4bODw" type="string" mandatory="true" position="12">
+      <dataModel>_MD2ZcpiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map$name=stateName?</dataModel>
+      <usage>_97Hf0zTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_97GRtDTDEe2K1spis4bODw" type="string" mandatory="true" position="9">
+      <dataModel>_MD2ZcZiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map$name=code?</dataModel>
+      <usage>_97Hf0TTDEe2K1spis4bODw</usage>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_97GRtTTDEe2K1spis4bODw" type="string" mandatory="true" position="15">
+      <dataModel>_MD2Zc5iiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map$name=upperCaseName?</dataModel>
+    </fieldRef>
+  </containerRef>
+  <containerRef xsi:type="ref:RDatastore" id="_97G4wDTDEe2K1spis4bODw" countShownFields="5" hierarchical="false">
+    <dataModel>_OurA8JiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map?</dataModel>
+    <fieldRef xsi:type="ref:RField" id="_97G4wTTDEe2K1spis4bODw" precision="0" size="10" type="numeric" mandatory="true" position="3">
+      <dataModel>_OuroAJiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map$name=geo_key_id?</dataModel>
+      <expressionRef id="_97KjIDTDEe2K1spis4bODw" internalExpression="nextval('hotel_datamart.seq_geo_key_id')">
+        <dataModel>_QTNV0ZiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map?</dataModel>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_97G4wjTDEe2K1spis4bODw" precision="0" size="6" type="varchar" position="6">
+      <dataModel>_OuroAZiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map$name=geo_zip_code?</dataModel>
+      <expressionRef id="_97Hf0jTDEe2K1spis4bODw" internalExpression="${geography.geography/state/city/@zipCode}$">
+        <dataModel>_QTMuwZiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map?</dataModel>
+        <sourceRef>_97GRsTTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_97G4wzTDEe2K1spis4bODw" precision="0" size="50" type="varchar" position="9">
+      <dataModel>_OusPEJiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map$name=geo_city?</dataModel>
+      <expressionRef id="_97KjITTDEe2K1spis4bODw" internalExpression="${geography.geography/state/city/@cityName}$">
+        <dataModel>_QTNV0piiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map?</dataModel>
+        <sourceRef>_96_kATTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_97G4xDTDEe2K1spis4bODw" precision="0" size="3" type="varchar" position="12">
+      <dataModel>_OusPEZiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map$name=geo_state_code?</dataModel>
+      <expressionRef id="_97Hf0TTDEe2K1spis4bODw" internalExpression="${geography.geography/state/@code}$">
+        <dataModel>_QTMuwJiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map?</dataModel>
+        <sourceRef>_97GRtDTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <fieldRef xsi:type="ref:RField" id="_97G4xTTDEe2K1spis4bODw" precision="0" size="50" type="varchar" position="15">
+      <dataModel>_OusPEpiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map$name=geo_state?</dataModel>
+      <expressionRef id="_97Hf0zTDEe2K1spis4bODw" internalExpression="${geography.geography/state/@stateName}$">
+        <dataModel>_QTNV0JiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map?</dataModel>
+        <sourceRef>_97GRszTDEe2K1spis4bODw</sourceRef>
+      </expressionRef>
+    </fieldRef>
+    <constraintRef id="_97YlkDTDEe2K1spis4bODw" type="pk">
+      <dataModel>_OusPE5iiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map$name=pk_dim_geography?</dataModel>
+    </constraintRef>
+  </containerRef>
+  <targetSetRef id="_97M_aDTDEe2K1spis4bODw" sourceSet="_97M_ZzTDEe2K1spis4bODw">
+    <container>_97G4wDTDEe2K1spis4bODw</container>
+  </targetSetRef>
+  <sourceSetRef id="_97M_ZzTDEe2K1spis4bODw" targetSet="_97M_aDTDEe2K1spis4bODw">
+    <dataSet xsi:type="map:DataSet">#_MD9HIJiiEeyJYM9CAJZuPA</dataSet>
+  </sourceSetRef>
+  <templateRef id="_97KjJzTDEe2K1spis4bODw" description="Integration : dim_geography" nodeCode="com.stambia.flow.step" templateCriteria="type=I-TP;trgProduct=POSTGRESSQL;trgPath=server:datamart/schema:datamart.hotel_datamart/datastore:dim_geography;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProductList=XML">
+    <dataModel>_QTPyEJiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map$name=I_dim_geography?</dataModel>
+    <problem id="_97ZMoTTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <targetRef>_OurA8JiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map?</targetRef>
+  </templateRef>
+  <templateRef id="_97M_YDTDEe2K1spis4bODw" description="Load : geography" nodeCode="com.stambia.flow.step" templateCriteria="type=L-TP;trgProduct=POSTGRESSQL;trgPath=server:datamart/schema:datamart.hotel_datamart/datastore:dim_geography;trgWorkspaceCapability=true;trgMapCapability=true;trgFilterCapability=true;trgJoinCapability=true;srcProduct=XML;srcPath=xsd:geography/element:geography;srcWorkspaceCapability=false;srcMapCapability=false;srcFilterCapability=false;srcJoinCapability=false">
+    <dataModel>_QT6gcJiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map$name=L1_dim_geography?</dataModel>
+    <problem id="_97ZMoDTDEe2K1spis4bODw" code="WARNING_TEMPLATE_USING_UNPROVIDED_PROCESS" message=""/>
+    <load>_97KjJDTDEe2K1spis4bODw</load>
+    <targetRef>_OurA8JiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map?</targetRef>
+  </templateRef>
+  <loadSet id="_97KjJjTDEe2K1spis4bODw">
+    <container>_OurA8JiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map?</container>
+  </loadSet>
+  <loadSet id="_97KjJDTDEe2K1spis4bODw">
+    <container>_MDyvEJiiEeyJYM9CAJZuPA?fileId=_K7BJIJiiEeyJYM9CAJZuPA$type=map?</container>
+  </loadSet>
+</ref:mapRef>

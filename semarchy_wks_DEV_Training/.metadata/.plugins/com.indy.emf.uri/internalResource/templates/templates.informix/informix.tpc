@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tpc:conf xmlns:tpc="http://www.stambia.com/tpc" id="_tInDcFE4Ed-SQuyZS8LpiA">
+  <case name="L-TP">
+    <propertyState name="TYPE" value="L-TP"/>
+    <case name="TRG_RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="TRG_INFORMIX">
+        <propertyState name="trgProduct" value="INFORMIX"/>
+        <case name="SRC INFORMIX">
+          <propertyState name="srcProduct" value="INFORMIX"/>
+          <template id="_t8OuwcxoEeiiHcERelnphQ" ref="LOAD%20Rdbms%20to%20Informix.tp.proc#_pI3i5sxnEeiiHcERelnphQ?fileId=_pI3i5sxnEeiiHcERelnphQ$type=proc$name=LOAD%20Rdbms%20to%20Informix.tp?"/>
+          <template id="_tIpfs1E4Ed-SQuyZS8LpiA" ref="LOAD%20Informix%20to%20Informix%20with%20remote%20database.proc#_82ff1f99-0731-4b68-8fa2-4e846ae1743b?fileId=_82ff1f99-0731-4b68-8fa2-4e846ae1743b$type=proc$name=LOAD%20Informix%20to%20Informix%20with%20remote%20database?"/>
+        </case>
+        <case name="SRC_RDBMS">
+          <propertyState name="srcTech" value="RDBMS"/>
+          <template id="_vEFuuMxoEeiiHcERelnphQ" ref="LOAD%20Rdbms%20to%20Informix.tp.proc#_pI3i5sxnEeiiHcERelnphQ?fileId=_pI3i5sxnEeiiHcERelnphQ$type=proc$name=LOAD%20Rdbms%20to%20Informix.tp?"/>
+        </case>
+        <case name="SRC_XML">
+          <or>
+            <propertyState name="srcTech" value="XML"/>
+            <propertyState name="srcTech" value="JSON"/>
+            <propertyState name="srcTech" value="BSON"/>
+          </or>
+          <template id="_2puadNE2EeiqadpQbccNDg" ref="LOAD%20Xml%20to%20Informix.proc#_dpMKodE1EeiqadpQbccNDg?fileId=_dpMKodE1EeiqadpQbccNDg$type=proc$name=LOAD%20Xml%20to%20Informix?"/>
+        </case>
+        <case name="SRC_FILE">
+          <propertyState name="srcTech" value="FILE"/>
+          <template id="_JxsJ1NE3EeiqadpQbccNDg" ref="LOAD%20File%20to%20Informix.tp.proc#_SeiaptE2EeiqadpQbccNDg?fileId=_SeiaptE2EeiqadpQbccNDg$type=proc$name=LOAD%20File%20to%20Informix.tp?"/>
+        </case>
+      </case>
+    </case>
+  </case>
+  <case name="I-TP">
+    <propertyState name="TYPE" value="I-TP"/>
+    <case name="TRG_RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="TRG INFORMIX">
+        <propertyState name="trgProduct" value="INFORMIX"/>
+        <template id="_Ax4_MW_mEeCn5oAD2BvLqg" ref="INTEGRATION%20Informix.tp.proc#_xDQOAW_jEeCn5oAD2BvLqg?fileId=_xDQOAW_jEeCn5oAD2BvLqg$type=proc$name=INTEGRATION%20Informix?"/>
+      </case>
+    </case>
+  </case>
+  <case name="C-TP">
+    <propertyState name="TYPE" value="C-TP"/>
+    <case name="RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="TRG INFORMIX">
+        <propertyState name="trgProduct" value="INFORMIX"/>
+        <template id="_ldENRMxsEeiiHcERelnphQ" ref="REJECT%20Informix.tp.proc#_JwLPdsxsEeiiHcERelnphQ?fileId=_JwLPdsxsEeiiHcERelnphQ$type=proc$name=REJECT%20Informix.tp?"/>
+      </case>
+    </case>
+  </case>
+</tpc:conf>

@@ -1,0 +1,39 @@
+*** Step 2 ***
+**************
+
+Name of the parameters   Type   Default value
+----------------------   ------ -------------
+PREFIX_PARAMETER         String P_GEN_
+DEFAULT_PARAMETER_VALUE  String XXX
+
+Expression Editor of the SQL Operation action
+---------------------------------------------
+SELECT COALESCE(PARAM_REQ_NAME,PARAM_ALL_NAME) PARAM_NAME,
+       COALESCE(PARAM_REQ_VALUE,PARAM_ALL_VALUE) PARAM_VALUE
+FROM   (SELECT DISTINCT PARAM_NAME PARAM_ALL_NAME,
+               '%x{md:paramValue($this,'PREFIX_PARAMETER')}x%' PARAM_ALL_VALUE 
+        FROM   PARAM.LST_PARAM) 
+LEFT   OUTER JOIN 
+       (SELECT PARAM_NAME PARAM_REQ_NAME,
+               PARAM_VALUE PARAM_REQ_VALUE
+        FROM   %x{$LST_PARAM/tech:physicalPath()}x%
+        WHERE  (   PROCESS_INCLUSION='ALL' 
+                OR PROCESS_INCLUSION LIKE '%${/CORE_SESSION_NAME}$%')
+        AND    (   PROCESS_EXCLUSION IS NULL 
+                OR PROCESS_EXCLUSION NOT LIKE '%${/CORE_SESSION_NAME}$%')
+        AND    (   CONFIG='ALL' 
+                OR CONFIG='${/CORE_SESSION_CONFIGURATION}$')) 
+       ON PARAM_ALL_NAME=PARAM_REQ_NAME
+              
+*** Step 3 ***
+**************
+
+Expression Editor of the Java Scripting Action
+----------------------------------------------
+var prefix="~/%x{md:paramValue($this,'PREFIX_PARAMETER')}x%"
+var nomParam=prefix+':{PARAM_NAME}:';
+if (  nomParam!=prefix ){
+__ctx__.publishVariable(nomParam,':{PARAM_VALUE}:');
+}
+
+       

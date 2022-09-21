@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:UUID="java.util.UUID" xmlns:common="http://exslt.org/common" xmlns:mdj="java:com.indy.xsl.global.Functions" xmlns:proc="http://www.example.org/proc" xmlns:saxon="http://saxon.sf.net/" description="This template is used to load flat files with the FileExport utility&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;29/09/2020  Add default numeric format&#xD;&#xA;16/06/2020&#x9;New Parameters 'Unlock Cdc Table' and 'Lock Cdc Table'&#xD;&#xA;05/01/2020&#x9;'generateHeader' parameter will now accept 'always' value&#xD;&#xA;17/04/2018&#x9;'Maximum File Size' parameter will now be displayed as 'Split File By Size' for clarity&#xD;&#xA;12/04/2018  New 'Maximum File Size' parameter&#xD;&#xA;16/03/2017&#x9;New 'Cdc Subscriber'parameter&#xD;&#xA;16/03/2017&#x9;Fix incorrect CDC filter part&#xD;&#xA;16/03/2017  Initialize template history" id="_8V1w55CAEd6u7uzLmVWZbw" metaInf="&lt;template-feature-support name=&quot;stagingArea&quot; enable=&quot;true&quot; evaluation=&quot;NATIVE&quot;/>" isBeginAction="true" name="INTEGRATION File (FileExport)" nbCycles="-1" toleratedError="false">
+  <parameter description="Specifies if source data should be inserted into the target file." id="_8V1w6JCAEd6u7uzLmVWZbw" name="doInsert" type="Boolean" value="true"/>
+  <parameter description="If true, a DISTINCT statement will be added on the query retrieving source data.&#xD;&#xA;This is used to avoid having duplicates in the target table." id="_8V1w6ZCAEd6u7uzLmVWZbw" name="useDistinct" type="Boolean" value="false"/>
+  <parameter description="Defines if the file should be written even if there is no source data.&#xD;&#xA;&#xD;&#xA;- true: the file is always written, even when the source doesn't return data&#xD;&#xA;- false: the file is written only if the source returns data" id="_aSNDYN2jEd6IN6o7L7Uzcg" name="generateIfEmpty" type="Boolean" value="false"/>
+  <parameter description="Defines the type of file to be created.&#xD;&#xA;&#xD;&#xA;- DELIMITED: produce a file where fields are delimited with a separator&#xD;&#xA;- POSITIONAL: produce a file where the fields are structured with positions&#xD;&#xA;&#xD;&#xA;" id="_tIOibePyEd6vj4wjgOF05A" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;DELIMITED&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;POSITIONAL&quot;/>" name="fileFormat" type="String" value=""/>
+  <parameter description="Defines the encoding to use for the exported file." id="_9WYJhCSuEeGUpvAJTRmPvA" name="fileEncoding" type="String" value=""/>
+  <parameter description="ASCII field separator used to separate the fields in the exported file." id="_tIOibuPyEd6vj4wjgOF05A" name="fieldSeparator" type="String" value=""/>
+  <parameter description="Character used to separate rows in the target file (line separator)" id="_tIOib-PyEd6vj4wjgOF05A" name="rowSeparator" type="String" value=""/>
+  <parameter description="Specifies if a header line containing the columns' name should be generated and written in the target file&#xD;&#xA;&#xD;&#xA;- true: the header is and written before data rows&#xD;&#xA;- false: the header is not generated, data is appended directly to the file&#xD;&#xA;- always: the header is  generated, no matter we are in append mode or not&#xD;&#xA;" id="_tIOicOPyEd6vj4wjgOF05A" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;true&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;false&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;always&quot;/>" name="generateHeader" type="String" value=""/>
+  <parameter description="Format used for Date columns." id="_tIOicePyEd6vj4wjgOF05A" name="dateFormat" type="String" value="yyyy/MM/dd HH:mm:ss.SSS"/>
+  <parameter description="Defines the numeric format to be used when writing numeric columns.&#xD;&#xA;It should match the java decimal format syntax, which can be found at the following url:&#xD;&#xA;&#xD;&#xA;https://docs.oracle.com/javase/7/docs/api/java/text/DecimalFormat.html&#xD;&#xA;&#xD;&#xA;&#xA;&#xA;Example: ###.###&#xD;&#xA;With this format, it  will give numeric values such as 123.456&#xD;&#xA;" id="f52b7168-a575-431c-8de0-f1a1c2993369" metaInf="" name="numericFormat" type="String" value=""/>
+  <parameter description="Character to be used as string delimiter to surround text columns&#xD;&#xA;&#xD;&#xA;Example: &quot;&#xD;&#xA;&#xD;&#xA;Note that only one of the &quot;String Delimter (hexa)&quot; and &quot;String Delimiter&quot; parameters should be used at once.&#xD;&#xA;They are only different ways to represent the character to use." id="50cd29a8-8ed7-4624-8c1a-aff5c583f671" label="String Delimiter" name="stringDelimiterChar" type="String" value=""/>
+  <parameter description="Hexadecimal value of the character to use as string delimiter.&#xD;&#xA;This character will be used to surround text columns.&#xD;&#xA;&#xD;&#xA;Example: 22&#xD;&#xA;&#xD;&#xA;Note that only one of the &quot;String Delimter (hexa)&quot; and &quot;String Delimiter&quot; parameters should be used at once.&#xD;&#xA;They are only different ways to represent the character to use." id="_tIOicuPyEd6vj4wjgOF05A" label="String Delimiter (hexa)" name="stringDelimiter" type="String" value=""/>
+  <parameter description="Decimal Symbol used in the exported file." id="_JyYpQHRoEeOZtOkWj_N7kw" name="decimalSeparator" type="String" value=""/>
+  <parameter description="Set to true to append the result of the query to an existing file.&#xD;&#xA;Otherwise, overwrite the existing file. " id="_7UdDkOQKEd6UpZZxlsxbjA" name="fileAppendMode" type="Boolean" value="false"/>
+  <parameter description="If set to true, a row separator is added after the last row. " id="_ETdNMHJyEeC_o6J6uo-DgQ" name="rowSepOnLastRow" type="Boolean" value="false"/>
+  <parameter description="JDBC Fetch size (number of lines) used when querying the source database.&#xD;&#xA;Larger values provide better performance but consume more memory in the Runtime as the data is stored in the Memory before being sent." id="_tIOic-PyEd6vj4wjgOF05A" name="sqlFetchSize" type="String" value="3000"/>
+  <parameter description="This parameter can be used to split data into multiple target files based on a file size.&#xD;&#xA;&#xD;&#xA;After writing each row, a check will be performed to see if the file size reached the specified size.&#xD;&#xA;If it is the case, this will automatically create a new file in which next rows will be inserted.&#xD;&#xA;The file name corresponds to the Metadata file's name, suffixed with an increment starting with 001.&#xD;&#xA;&#xD;&#xA;This size is expressed by default in octets but can also be expressed in other units: for example, 64K, 5M, 1G.&#xD;&#xA;&#xD;&#xA;If this parameter is not set, all data is written into one unique file." id="_M3NacD4lEeikYrnlcavFvQ" label="Split File By Size" name="maximumFileSize" type="String"/>
+  <parameter description="Used to specify an order by expression to be added to the query retrieving source data.&#xD;&#xA;This can help to order the data in the target file.&#xD;&#xA;&#xD;&#xA;E.g.&#xD;&#xA;T_CUSTOMER.CUS_ID DESC" id="_w4LWcFZqEeKrHaC_6Nt5ag" name="orderByExpression" type="String" value=""/>
+  <parameter description="Offers the possibility to override the expression generated in the query selecting source data for each mapped column in the target file.&#xD;&#xA;&#xD;&#xA;Note:&#xD;&#xA;- the syntax to use is XPath and the [expression] keyword can be used as a replacement for the mapping value.&#xD;&#xA;- this will impact all columns mapped in the target file.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;For instance:&#xD;&#xA;In the mapping, you have two fields that are mapped on the target file with the following expressions:&#xD;&#xA;- T_CUSTOMER.CUS_FIRST_NAME&#xD;&#xA;- T_CUSTOMER.CUS_LAST_NAME&#xD;&#xA;&#xD;&#xA;Then, this parameter is configured with the following value:&#xD;&#xA;LOWER([expression])&#xD;&#xA;&#xD;&#xA;At generation, the select query retrieving source data will looks like this:&#xD;&#xA;select (LOWER(T_CUSTOMER.CUS_FIRST_NAME), LOWER(T_CUSTOMER.CUS_LAST_NAME)) from [...]&#xD;&#xA;Note that the [expression] is automatically substituted with the mapping expression" id="_6Oj_YHutEeSn2vl5G3tDbw" name="expression" type="String"/>
+  <parameter description="CDC Subscriber to use when CDC has been enabled on a source table." id="_sZsoEApLEeeAC4zIM1Voag" name="cdcSubscriber" type="String"/>
+  <parameter description="When a source table is used as CDC a lock is performed on it. It makes the changed data available in the Mapping.&#xD;&#xA;If set to false, the Lock must have been performed as part of a previous Mapping." id="_thUFoK_UEeqGH6AaH3PDiA" name="lockCdcTable" type="Boolean" value="true"/>
+  <parameter description="When a source table is used as CDC an unlock is performed on it after processing. It marks the changed data as consumed.&#xD;&#xA;If set to false, the Unlock must be performed as part of an upcoming Mapping." id="_thUFoa_UEeqGH6AaH3PDiA" name="unlockCdcTable" type="Boolean" value="true"/>
+  <subProcess id="_8V1w7ZCAEd6u7uzLmVWZbw" name="INTEGRATION">
+    <parameter id="_8V1w7pCAEd6u7uzLmVWZbw" name="TPL_STEP" type="String" value="Integration.AfterControl"/>
+    <actionCode id="__fmXIJCAEd6u7uzLmVWZbw" generationCondition="" isBeginAction="false" name="SQLFileExport" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SqlFileExportActionCodeI">
+      <link id="_1LHkYN2UEd6IN6o7L7Uzcg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_zdchvt2UEd6IN6o7L7Uzcg"/>
+      <parameter id="__fmXIZCAEd6u7uzLmVWZbw" name="SQL_EXP_FILENAME" type="String" value="%x{$REF/ref:target()/tech:filePath()}x%"/>
+      <parameter id="_HuXIUJCBEd6u7uzLmVWZbw" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_UbXmdJCBEd6u7uzLmVWZbw" name="SQL_EXP_FILE_FORMAT" type="String" value="variable"/>
+      <parameter id="_UbXmeJCBEd6u7uzLmVWZbw" name="SQL_EXP_GENERATE_IF_EMPTY" ref="#_aSNDYN2jEd6IN6o7L7Uzcg" type="Boolean" value=""/>
+      <parameter id="_UbXmeZCBEd6u7uzLmVWZbw" name="SQL_EXP_GENERATE_HEADER" type="String" value="%x{$xslGenerateHeader}x%"/>
+      <parameter id="_UbXmepCBEd6u7uzLmVWZbw" name="SQL_EXP_FETCH_SIZE" type="Integer" value="%x{md:paramValue($this,'sqlFetchSize')}x%"/>
+      <parameter id="_UbXme5CBEd6u7uzLmVWZbw" name="SQL_EXP_DATE_FORMAT" type="String" value="%x{md:paramValue($this,'dateFormat')}x%"/>
+      <parameter id="_MvRbcJCXEd6VMfctxadL_w" name="SQL_EXP_XFIELD_SEP" type="String" value="%x{$xslFieldSeparator}x%"/>
+      <parameter id="_MvRbcZCXEd6VMfctxadL_w" name="SQL_EXP_XROW_SEP" type="String" value="%x{$xslRowSeparator}x%"/>
+      <parameter id="_ohAF4JCrEd6VMfctxadL_w" name="SQL_EXP_XSTRING_DELIMITER" type="String" value="%x{$xslStringDelimiter}x%"/>
+      <parameter id="_4Ajp4OQKEd6UpZZxlsxbjA" name="SQL_EXP_FILE_APPEND" ref="#_7UdDkOQKEd6UpZZxlsxbjA" type="Boolean"/>
+      <parameter id="_vwrFoHJxEeC_o6J6uo-DgQ" name="SQL_EXP_ROW_SEP_ON_LAST_ROW" type="String" value="%x{$xslRowSepOnLastRow}x%"/>
+      <parameter id="_uEDEYCStEeGUpvAJTRmPvA" name="SQL_EXP_FILE_ENCODING" type="String" value="%x{$xslFileEncoding}x%"/>
+      <parameter id="_UmwKwHRoEeOZtOkWj_N7kw" name="SQL_EXP_NUMERIC_SEPARATOR_CHAR" type="String" value="%x{$xslDecimalSeparator}x%"/>
+      <parameter id="_dAhnYD4lEeikYrnlcavFvQ" name="SQL_EXP_MAX_FILE_SIZE" ref="#_M3NacD4lEeikYrnlcavFvQ" type="String"/>
+      <parameter id="695f97fa-d9c2-445f-9fad-34e311ce8a1c" name="SQL_EXP_NUMERIC_FORMAT" type="String" value="%x{$xslNumericFormat}x%"/>
+      <parameter id="ce4b3b24-46d2-4751-b5f3-01dc791ff67a" name="SQL_EXP_STRING_DELIMITER" type="String" value="%x{$xslStringDelimiterChar}x%"/>
+      <code>%xsl{&#xD;
+&lt;xsl:variable name=&quot;cols&quot;>&#xD;
+	&lt;xsl:for-each select=&quot;$REF/ref:target()/ref:columns()&quot;>&#xD;
+		&lt;xsl:sort select=&quot;tech:fieldPosition()&quot; data-type=&quot;number&quot;/>&#xD;
+		&lt;xsl:variable name=&quot;field&quot; select=&quot;$REF/ref:columns()[ref:target()/@id=current()/@id]&quot;/>&#xD;
+		&lt;xsl:choose>	&#xD;
+			&lt;xsl:when test=&quot;$field&quot;>&#xD;
+				&lt;xsl:variable name=&quot;exp&quot; select=&quot;concat(md:ifEmpty(md:paramValue($this,'expression'),'[expression]'),' [columnAliasWord] [name]')&quot;/>	&#xD;
+				&lt;col>&lt;xsl:value-of select=&quot;$field/mdj:pattern($exp)&quot;/>&lt;/col>&#xD;
+			&lt;/xsl:when>	&#xD;
+			&lt;xsl:when test=&quot;$REF/ref:target()/tech:type()='D'&quot;>&#xD;
+				&lt;col>'' &lt;xsl:value-of select=&quot;@name&quot;/>&lt;/col>&#xD;
+			&lt;/xsl:when>	&#xD;
+		&lt;/xsl:choose>	&#xD;
+	&lt;/xsl:for-each>&#xD;
+&lt;/xsl:variable>&#xD;
+}xsl%select		%x{if (md:paramValue($this,'useDistinct')='true') then 'DISTINCT' else ''}x%&#xD;
+&#xD;
+			%x{md:list($cols/col, ',\n\t\t\t')}x%&#xD;
+from	%x{$REF/tech:fromPart()}x%&#xD;
+where	(1=1)&#xD;
+%xsl{&#xD;
+%x{$REF/tech:joinPart()}x%&#xD;
+%x{$REF/tech:filterPart()}x%&#xD;
+%x{$REF/ref:from()/tech:cdcFilterPart($this)}x%&#xD;
+%x{$REF/tech:groupByPart()}x%&#xD;
+%x{$REF/tech:havingPart()}x%}xsl%&#xD;
+%x{if (md:paramValue($this,'orderByExpression')!='') then concat('order by ',md:paramValue($this,'orderByExpression')) else ''}x%&#xD;
+</code>
+    </actionCode>
+    <actionCode description="" id="_tAUf8JCiEd6VMfctxadL_w" enable="false" isBeginAction="false" name="Init Export Connection" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_zug2QJCiEd6VMfctxadL_w" executionType="OK" generationType="OK" mandatory="1" targetId="__fmXIJCAEd6u7uzLmVWZbw"/>
+      <parameter id="_tAUf8ZCiEd6VMfctxadL_w" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_tAUf8pCiEd6VMfctxadL_w" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+    </actionCode>
+    <actionCode id="_zdchud2UEd6IN6o7L7Uzcg" generationCondition="not(md:paramValue($this, 'lockCdcTable')='false')" isBeginAction="false" name="Lock of CDC table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="mdj:xpath($REF,'FROM_REF')[mdj:xpath(.,'IS_CDC')]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_0yrPMN2UEd6IN6o7L7Uzcg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_tAUf8JCiEd6VMfctxadL_w"/>
+      <parameter id="_zdchu92UEd6IN6o7L7Uzcg" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_zdchvN2UEd6IN6o7L7Uzcg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_zdchvd2UEd6IN6o7L7Uzcg" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>update 	%x{md:physicalPath($CDC,'cdcTableName')}x%
+set 	CDC_CONSUMMATION = '1'
+where	(1=1)
+%x{$CDC/tech:cdcFilterPart($this)}x%</code>
+    </actionCode>
+    <actionCode id="_zdchvt2UEd6IN6o7L7Uzcg" generationCondition="not(md:paramValue($this, 'unlockCdcTable')='false')" isBeginAction="false" name="Unlock of CDC table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="mdj:xpath($REF,'FROM_REF')[mdj:xpath(.,'IS_CDC')]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter id="_zdchv92UEd6IN6o7L7Uzcg" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_zdchwN2UEd6IN6o7L7Uzcg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_zdchwd2UEd6IN6o7L7Uzcg" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>Delete 	from 	%x{md:physicalPath($CDC,'cdcTableName')}x%
+Where	CDC_CONSUMMATION = '1'
+%x{$CDC/tech:cdcFilterPart($this)}x%</code>
+    </actionCode>
+    <templateType>I-TP.RDBMS.INTEGRATING</templateType>
+    <xslVariable id="_8lEGEN2XEd6IN6o7L7Uzcg" code="%x{&#xD;&#xA;if (md:paramValue($this,'fileFormat')!='')&#xD;&#xA;then &#xD;&#xA;&#x9;if (md:paramValue($this,'fileFormat')='DELIMITED') then 'variable' else 'fixed' &#xD;&#xA;else &#xD;&#xA;&#x9;if($REF/ref:target()/@type='DELIMITED') then 'variable' else 'fixed'}x%" name="xslFileFormat" type="xsl"/>
+    <xslVariable description="" id="_T44f8N2aEd6IN6o7L7Uzcg" code="%x{&#xD;&#xA;if (md:paramValue($this,'fieldSeparator')!='')&#xD;&#xA;then &#xD;&#xA;&#x9;md:paramValue($this,'fieldSeparator')&#xD;&#xA;else &#xD;&#xA;&#x9;$REF/ref:target()/@fieldSeparator&#xD;&#xA;}x%" name="xslFieldSeparator" type="xsl"/>
+    <xslVariable id="_xLTRIN2aEd6IN6o7L7Uzcg" code="%x{&#xD;&#xA;if (md:paramValue($this,'rowSeparator')!='')&#xD;&#xA;then &#xD;&#xA;&#x9;md:paramValue($this,'rowSeparator')&#xD;&#xA;else &#xD;&#xA;&#x9;$REF/ref:target()/@lineSeparator&#xD;&#xA;}x%" name="xslRowSeparator" type="xsl"/>
+    <xslVariable description="" id="_Jc5MwN2bEd6IN6o7L7Uzcg" code="%x{&#xD;&#xA;if (md:paramValue($this,'generateHeader')!='')&#xD;&#xA;then &#xD;&#xA;&#x9;if (md:paramValue($this,'generateHeader') = 'true') then 'true'&#xD;&#xA;&#x9;else &#xD;&#xA;&#x9;   if (md:paramValue($this,'generateHeader') = 'always')then 'always' else 'false'&#xD;&#xA;else &#xD;&#xA;&#x9;if($REF/ref:target()/@header!=0) then 'true' else 'false'&#xD;&#xA;}x%&#xD;&#xA;%message{md:paramValue($this,'generateHeader')}%" name="xslGenerateHeader" type="xsl"/>
+    <xslVariable description="" id="_MERCMN2cEd6IN6o7L7Uzcg" code="%x{&#xD;&#xA;if (md:paramValue($this,'stringDelimiter')!='')&#xD;&#xA;then &#xD;&#xA;&#x9;md:paramValue($this,'stringDelimiter')&#xD;&#xA;else &#xD;&#xA;&#x9;$REF/ref:target()/@stringDelimiter&#xD;&#xA;}x%" name="xslStringDelimiter" type="xsl"/>
+    <xslVariable description="" id="_0JRdkHJxEeC_o6J6uo-DgQ" code="%x{&#xD;&#xA;if (md:paramValue($this,'rowSepOnLastRow')!='')&#xD;&#xA;then &#xD;&#xA;&#x9;if (md:paramValue($this,'rowSepOnLastRow') = 'true') then 'true' else 'false'&#xD;&#xA;else &#xD;&#xA;&#x9;'false'&#xD;&#xA;}x%&#xD;&#xA;" name="xslRowSepOnLastRow" type="xsl"/>
+    <xslVariable description="" id="_xyr5VSStEeGUpvAJTRmPvA" code="%x{&#xD;&#xA;if (md:paramValue($this,'fileEncoding')!='')&#xD;&#xA;then &#xD;&#xA;&#x9;md:paramValue($this,'fileEncoding')&#xD;&#xA;else &#xD;&#xA;&#x9;$REF/ref:target()/@charsetName&#xD;&#xA;}x%" name="xslFileEncoding" type="xsl"/>
+    <xslVariable description="" id="_YADo4HRoEeOZtOkWj_N7kw" code="%x{&#xD;&#xA;if (md:paramValue($this,'decimalSeparator')!='')&#xD;&#xA;then &#xD;&#xA;&#x9;md:paramValue($this,'decimalSeparator')&#xD;&#xA;else &#xD;&#xA;&#x9;$REF/ref:target()/tech:asciiDecimalSeparator()&#xD;&#xA;}x%" name="xslDecimalSeparator" type="xsl"/>
+    <xslVariable description="" id="f25581b4-11b0-4999-843a-4a467ac200c5" code="%x{&#xD;&#xA;if (md:paramValue($this,'numericFormat')!='')&#xD;&#xA;then &#xD;&#xA;&#x9;md:paramValue($this,'numericFormat')&#xD;&#xA;else &#xD;&#xA;&#x9;$REF/ref:target()/@defaultNumericFormat&#xD;&#xA;}x%" name="xslNumericFormat" type="xsl"/>
+    <xslVariable description="" id="7b4e2062-892f-44fd-9cd9-1682e50104c2" code="%x{&#xD;&#xA;if (md:paramValue($this,'stringDelimiterChar')!='')&#xD;&#xA;then &#xD;&#xA;&#x9;md:paramValue($this,'stringDelimiterChar')&#xD;&#xA;else if (md:paramValue($this,'stringDelimiter')!='')&#xD;&#xA;then &#xD;&#xA;&#x9;mds:decodeHexString(md:paramValue($this,'stringDelimiter'))&#xD;&#xA;else &#xD;&#xA;&#x9;mds:decodeHexString($REF/ref:target()/@stringDelimiter)&#xD;&#xA;}x%" name="xslStringDelimiterChar" type="xsl"/>
+  </subProcess>
+  <templateType>I-TP.RDBMS</templateType>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.2/notation#/?fileId=_8V1w55CAEd6u7uzLmVWZbw?">
+  <notation:Diagram xmi:id="_85mlQJCAEd6u7uzLmVWZbw" type="Proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_9TFcQJCAEd6u7uzLmVWZbw" type="2004">
+      <children xmi:type="notation:Node" xmi:id="_9TFcRJCAEd6u7uzLmVWZbw" type="5004"/>
+      <children xmi:type="notation:Node" xmi:id="_9TFcRZCAEd6u7uzLmVWZbw" type="7005">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_9TFcRpCAEd6u7uzLmVWZbw"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_9TFcR5CAEd6u7uzLmVWZbw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_9TFcSJCAEd6u7uzLmVWZbw"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_9TOmMJCAEd6u7uzLmVWZbw" type="7006">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_9TOmMZCAEd6u7uzLmVWZbw"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_9TOmMpCAEd6u7uzLmVWZbw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_9TOmM5CAEd6u7uzLmVWZbw"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_9TFcQZCAEd6u7uzLmVWZbw"/>
+      <styles xmi:type="notation:HintedDiagramLinkStyle" xmi:id="_9TFcQpCAEd6u7uzLmVWZbw" diagramLink="_-BuD4JCAEd6u7uzLmVWZbw"/>
+      <element xmi:type="proc:SubActionProcess" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_8V1w7ZCAEd6u7uzLmVWZbw?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=INTEGRATION?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_9TFcQ5CAEd6u7uzLmVWZbw" x="30" y="65"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_9TOmNJCAEd6u7uzLmVWZbw" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_9TOmN5CAEd6u7uzLmVWZbw" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_9TOmNZCAEd6u7uzLmVWZbw"/>
+      <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_8V1w6JCAEd6u7uzLmVWZbw?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=doInsert?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_9TOmNpCAEd6u7uzLmVWZbw" x="235" y="110"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_9TOmOJCAEd6u7uzLmVWZbw" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_9TOmO5CAEd6u7uzLmVWZbw" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_9TOmOZCAEd6u7uzLmVWZbw"/>
+      <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_8V1w6ZCAEd6u7uzLmVWZbw?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=useDistinct?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_9TOmOpCAEd6u7uzLmVWZbw" x="235" y="595"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_aSWNUN2jEd6IN6o7L7Uzcg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_aSWNU92jEd6IN6o7L7Uzcg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_aSWNUd2jEd6IN6o7L7Uzcg"/>
+      <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_aSNDYN2jEd6IN6o7L7Uzcg?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=generateIfEmpty?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_aSWNUt2jEd6IN6o7L7Uzcg" x="235" y="300"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_tIOiUePyEd6vj4wjgOF05A" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_tIOiUuPyEd6vj4wjgOF05A" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_tIOiU-PyEd6vj4wjgOF05A"/>
+      <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_tIOibePyEd6vj4wjgOF05A?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=fileFormat?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_tIOiVOPyEd6vj4wjgOF05A" x="235" y="245" width="106"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_tIOiVePyEd6vj4wjgOF05A" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_tIOiVuPyEd6vj4wjgOF05A" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_tIOiV-PyEd6vj4wjgOF05A"/>
+      <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_9WYJhCSuEeGUpvAJTRmPvA?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=fileEncoding?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_tIOiWOPyEd6vj4wjgOF05A" x="235" y="220"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_tIOiWePyEd6vj4wjgOF05A" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_tIOiWuPyEd6vj4wjgOF05A" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_tIOiW-PyEd6vj4wjgOF05A"/>
+      <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_tIOibuPyEd6vj4wjgOF05A?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=fieldSeparator?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_tIOiXOPyEd6vj4wjgOF05A" x="235" y="165"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_tIOiXePyEd6vj4wjgOF05A" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_tIOiXuPyEd6vj4wjgOF05A" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_tIOiX-PyEd6vj4wjgOF05A"/>
+      <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_tIOib-PyEd6vj4wjgOF05A?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=rowSeparator?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_tIOiYOPyEd6vj4wjgOF05A" x="235" y="460"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_tIOiYePyEd6vj4wjgOF05A" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_tIOiYuPyEd6vj4wjgOF05A" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_tIOiY-PyEd6vj4wjgOF05A"/>
+      <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_tIOicOPyEd6vj4wjgOF05A?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=generateHeader?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_tIOiZOPyEd6vj4wjgOF05A" x="235" y="275"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_tIOiZePyEd6vj4wjgOF05A" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_tIOiZuPyEd6vj4wjgOF05A" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_tIOiZ-PyEd6vj4wjgOF05A"/>
+      <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_tIOicePyEd6vj4wjgOF05A?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=dateFormat?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_tIOiaOPyEd6vj4wjgOF05A" x="235" y="55"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_tIOiaePyEd6vj4wjgOF05A" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_tIOiauPyEd6vj4wjgOF05A" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_tIOia-PyEd6vj4wjgOF05A"/>
+      <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_tIOicuPyEd6vj4wjgOF05A?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=stringDelimiter?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_tIOibOPyEd6vj4wjgOF05A" x="235" y="515"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_7atckOQKEd6UpZZxlsxbjA" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_7atck-QKEd6UpZZxlsxbjA" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_7atckeQKEd6UpZZxlsxbjA"/>
+      <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_JyYpQHRoEeOZtOkWj_N7kw?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=decimalSeparator?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_7atckuQKEd6UpZZxlsxbjA" x="235" y="85"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Btz5QiSuEeGUpvAJTRmPvA" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_Btz5RSSuEeGUpvAJTRmPvA" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_Btz5QySuEeGUpvAJTRmPvA" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_7UdDkOQKEd6UpZZxlsxbjA?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=fileAppendMode?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Btz5RCSuEeGUpvAJTRmPvA" x="235" y="190"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_9WYJgCSuEeGUpvAJTRmPvA" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_9WYJgSSuEeGUpvAJTRmPvA" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_9WYJgiSuEeGUpvAJTRmPvA" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_ETdNMHJyEeC_o6J6uo-DgQ?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=rowSepOnLastRow?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_9WYJgySuEeGUpvAJTRmPvA" x="235" y="435"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_w5EHQFZqEeKrHaC_6Nt5ag" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_w5N4QFZqEeKrHaC_6Nt5ag" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_w5EHQVZqEeKrHaC_6Nt5ag" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_tIOic-PyEd6vj4wjgOF05A?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=sqlFetchSize?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_w5EHQlZqEeKrHaC_6Nt5ag" x="235" y="490"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CQp6gH-0EeSOhYqckp1RwQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_CQp6g3-0EeSOhYqckp1RwQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_CQp6gX-0EeSOhYqckp1RwQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_M3NacD4lEeikYrnlcavFvQ?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=maximumFileSize?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CQp6gn-0EeSOhYqckp1RwQ" x="235" y="355"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_CQp6hH-0EeSOhYqckp1RwQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_CQqhkH-0EeSOhYqckp1RwQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_CQp6hX-0EeSOhYqckp1RwQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_w4LWcFZqEeKrHaC_6Nt5ag?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=orderByExpression?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_CQp6hn-0EeSOhYqckp1RwQ" x="235" y="410"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_sZ1yAApLEeeAC4zIM1Voag" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_sZ2ZEApLEeeAC4zIM1Voag" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_sZ1yAQpLEeeAC4zIM1Voag" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_6Oj_YHutEeSn2vl5G3tDbw?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=expression?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_sZ1yAgpLEeeAC4zIM1Voag" x="235" y="140"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_3UbzoD8jEeinXJSw3mULTQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_3UdBwD8jEeinXJSw3mULTQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_3UbzoT8jEeinXJSw3mULTQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_sZsoEApLEeeAC4zIM1Voag?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=cdcSubscriber?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_3Ubzoj8jEeinXJSw3mULTQ" x="235" y="30"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_IhSTgAJdEeucf9D0N4anrg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_IhS6kAJdEeucf9D0N4anrg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_IhSTgQJdEeucf9D0N4anrg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#f52b7168-a575-431c-8de0-f1a1c2993369?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=numericFormat?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_IhSTggJdEeucf9D0N4anrg" x="235" y="380" width="131"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_r6IeAAPqEeujnYGvy-OpSg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_r6IeAwPqEeujnYGvy-OpSg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_r6IeAQPqEeujnYGvy-OpSg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#50cd29a8-8ed7-4624-8c1a-aff5c583f671?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=stringDelimiterChar?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_r6IeAgPqEeujnYGvy-OpSg" x="235" y="545"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_wPlawFGbEeu989erRzHslg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_wPlaw1GbEeu989erRzHslg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_wPlawVGbEeu989erRzHslg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_thUFoK_UEeqGH6AaH3PDiA?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=lockCdcTable?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_wPlawlGbEeu989erRzHslg" x="235" y="325"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_wPlaxFGbEeu989erRzHslg" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_wPlax1GbEeu989erRzHslg" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_wPlaxVGbEeu989erRzHslg" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_thUFoa_UEeqGH6AaH3PDiA?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=unlockCdcTable?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_wPlaxlGbEeu989erRzHslg" x="235" y="570"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_85mlQZCAEd6u7uzLmVWZbw"/>
+    <element xmi:type="proc:ActionProcess" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_8V1w55CAEd6u7uzLmVWZbw?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=INTEGRATION%20File%20(FileExport)?"/>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_-BuD4JCAEd6u7uzLmVWZbw" type="Proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_-DEH1JCAEd6u7uzLmVWZbw" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_-DEH15CAEd6u7uzLmVWZbw" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_-DEH1ZCAEd6u7uzLmVWZbw"/>
+      <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_8V1w7pCAEd6u7uzLmVWZbw?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=TPL_STEP?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_-DEH1pCAEd6u7uzLmVWZbw" x="370" y="30"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="__kqdUJCAEd6u7uzLmVWZbw" type="2001">
+      <children xmi:type="notation:Node" xmi:id="__kqdU5CAEd6u7uzLmVWZbw" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="__kqdVJCAEd6u7uzLmVWZbw" type="7001">
+        <children xmi:type="notation:Node" xmi:id="_OgCrAJCWEd6VMfctxadL_w" type="3001">
+          <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#__fmXIZCAEd6u7uzLmVWZbw?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=SQL_EXP_FILENAME?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_OgCrAZCWEd6VMfctxadL_w"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_OgCrApCWEd6VMfctxadL_w" type="3001">
+          <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_HuXIUJCBEd6u7uzLmVWZbw?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=SQL_CONNECTION?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_OgCrA5CWEd6VMfctxadL_w"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_OgCrBJCWEd6VMfctxadL_w" type="3001">
+          <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_UbXmdJCBEd6u7uzLmVWZbw?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=SQL_EXP_FILE_FORMAT?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_OgCrBZCWEd6VMfctxadL_w"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_OgCrDJCWEd6VMfctxadL_w" type="3001">
+          <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_UbXmeJCBEd6u7uzLmVWZbw?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=SQL_EXP_GENERATE_IF_EMPTY?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_OgCrDZCWEd6VMfctxadL_w"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_OgCrDpCWEd6VMfctxadL_w" type="3001">
+          <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_UbXmeZCBEd6u7uzLmVWZbw?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=SQL_EXP_GENERATE_HEADER?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_OgCrD5CWEd6VMfctxadL_w"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_OgCrEJCWEd6VMfctxadL_w" type="3001">
+          <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_UbXmepCBEd6u7uzLmVWZbw?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=SQL_EXP_FETCH_SIZE?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_OgCrEZCWEd6VMfctxadL_w"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_OgCrEpCWEd6VMfctxadL_w" type="3001">
+          <element xmi:type="proc:Parameter" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_UbXme5CBEd6u7uzLmVWZbw?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=SQL_EXP_DATE_FORMAT?"/>
+          <layoutConstraint xmi:type="notation:Location" xmi:id="_OgCrE5CWEd6VMfctxadL_w"/>
+        </children>
+        <styles xmi:type="notation:DrawerStyle" xmi:id="__kqdVZCAEd6u7uzLmVWZbw"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="__kqdVpCAEd6u7uzLmVWZbw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="__kqdV5CAEd6u7uzLmVWZbw"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__kqdWJCAEd6u7uzLmVWZbw" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="__kqdWZCAEd6u7uzLmVWZbw"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="__kqdWpCAEd6u7uzLmVWZbw"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="__kqdW5CAEd6u7uzLmVWZbw"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="__kqdUZCAEd6u7uzLmVWZbw"/>
+      <element xmi:type="proc:ActionCode" href="../../INTEGRATION%20File%20(FileExport).tp.proc#__fmXIJCAEd6u7uzLmVWZbw?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=SQLFileExport?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="__kqdUpCAEd6u7uzLmVWZbw" x="30" y="375" width="326"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_tAUf85CiEd6VMfctxadL_w" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_tAUf9pCiEd6VMfctxadL_w" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_tAUf95CiEd6VMfctxadL_w" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_tAUf-JCiEd6VMfctxadL_w"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_tAUf-ZCiEd6VMfctxadL_w"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_tAUf-pCiEd6VMfctxadL_w"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_tAUf-5CiEd6VMfctxadL_w" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_tAUf_JCiEd6VMfctxadL_w"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_tAUf_ZCiEd6VMfctxadL_w"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_tAUf_pCiEd6VMfctxadL_w"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_tAUf9JCiEd6VMfctxadL_w"/>
+      <element xmi:type="proc:ActionCode" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_tAUf8JCiEd6VMfctxadL_w?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=Init%20Export%20Connection?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_tAUf9ZCiEd6VMfctxadL_w" x="55" y="240"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_zdchod2UEd6IN6o7L7Uzcg" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_zdchot2UEd6IN6o7L7Uzcg" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_zdcho92UEd6IN6o7L7Uzcg" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_zdchpN2UEd6IN6o7L7Uzcg"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_zdchpd2UEd6IN6o7L7Uzcg"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_zdchpt2UEd6IN6o7L7Uzcg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_zdchp92UEd6IN6o7L7Uzcg" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_zdchqN2UEd6IN6o7L7Uzcg"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_zdchqd2UEd6IN6o7L7Uzcg"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_zdchqt2UEd6IN6o7L7Uzcg"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_zdchq92UEd6IN6o7L7Uzcg"/>
+      <element xmi:type="proc:ActionCode" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_zdchud2UEd6IN6o7L7Uzcg?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=Lock%20of%20CDC%20table?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_zdchrN2UEd6IN6o7L7Uzcg" x="50" y="80"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_zdchrd2UEd6IN6o7L7Uzcg" type="2001">
+      <children xmi:type="notation:Node" xmi:id="_zdchrt2UEd6IN6o7L7Uzcg" type="5001"/>
+      <children xmi:type="notation:Node" xmi:id="_zdchr92UEd6IN6o7L7Uzcg" type="7001">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_zdchsN2UEd6IN6o7L7Uzcg"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_zdchsd2UEd6IN6o7L7Uzcg"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_zdchst2UEd6IN6o7L7Uzcg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_zdchs92UEd6IN6o7L7Uzcg" type="7002">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_zdchtN2UEd6IN6o7L7Uzcg"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_zdchtd2UEd6IN6o7L7Uzcg"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_zdchtt2UEd6IN6o7L7Uzcg"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_zdcht92UEd6IN6o7L7Uzcg"/>
+      <element xmi:type="proc:ActionCode" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_zdchvt2UEd6IN6o7L7Uzcg?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=Unlock%20of%20CDC%20table?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_zdchuN2UEd6IN6o7L7Uzcg" x="50" y="705"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_8lN3EN2XEd6IN6o7L7Uzcg" type="2007">
+      <children xmi:type="notation:Node" xmi:id="_8lN3E92XEd6IN6o7L7Uzcg" type="5007"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_8lN3Ed2XEd6IN6o7L7Uzcg"/>
+      <element xmi:type="proc:XslVariable" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_8lEGEN2XEd6IN6o7L7Uzcg?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_8lN3Et2XEd6IN6o7L7Uzcg" x="610" y="105"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_T5CQ8N2aEd6IN6o7L7Uzcg" type="2007">
+      <children xmi:type="notation:Node" xmi:id="_T5CQ892aEd6IN6o7L7Uzcg" type="5007"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_T5CQ8d2aEd6IN6o7L7Uzcg"/>
+      <element xmi:type="proc:XslVariable" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_T44f8N2aEd6IN6o7L7Uzcg?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_T5CQ8t2aEd6IN6o7L7Uzcg" x="610" y="55"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_xLTRId2aEd6IN6o7L7Uzcg" type="2007">
+      <children xmi:type="notation:Node" xmi:id="_xLTRJN2aEd6IN6o7L7Uzcg" type="5007"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_xLTRIt2aEd6IN6o7L7Uzcg"/>
+      <element xmi:type="proc:XslVariable" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_xLTRIN2aEd6IN6o7L7Uzcg?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_xLTRI92aEd6IN6o7L7Uzcg" x="610" y="180"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Jc5Mwd2bEd6IN6o7L7Uzcg" type="2007">
+      <children xmi:type="notation:Node" xmi:id="_Jc5MxN2bEd6IN6o7L7Uzcg" type="5007"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_Jc5Mwt2bEd6IN6o7L7Uzcg"/>
+      <element xmi:type="proc:XslVariable" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_Jc5MwN2bEd6IN6o7L7Uzcg?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Jc5Mw92bEd6IN6o7L7Uzcg" x="610" y="130"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_MERCMd2cEd6IN6o7L7Uzcg" type="2007">
+      <children xmi:type="notation:Node" xmi:id="_MERCNN2cEd6IN6o7L7Uzcg" type="5007"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_MERCMt2cEd6IN6o7L7Uzcg"/>
+      <element xmi:type="proc:XslVariable" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_MERCMN2cEd6IN6o7L7Uzcg?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_MERCM92cEd6IN6o7L7Uzcg" x="610" y="205"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_xyr5USStEeGUpvAJTRmPvA" type="2007">
+      <children xmi:type="notation:Node" xmi:id="_xyr5UiStEeGUpvAJTRmPvA" type="5007"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_xyr5UyStEeGUpvAJTRmPvA"/>
+      <element xmi:type="proc:XslVariable" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_xyr5VSStEeGUpvAJTRmPvA?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_xyr5VCStEeGUpvAJTRmPvA" x="610" y="80"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_LbeMCkHnEeGft5oi3q2bLQ" type="2007">
+      <children xmi:type="notation:Node" xmi:id="_LbeMDUHnEeGft5oi3q2bLQ" type="5007"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_LbeMC0HnEeGft5oi3q2bLQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:XslVariable" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_0JRdkHJxEeC_o6J6uo-DgQ?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_LbeMDEHnEeGft5oi3q2bLQ" x="610" y="155"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_tCz2gApLEeeAC4zIM1Voag" type="2007">
+      <children xmi:type="notation:Node" xmi:id="_tC1EoApLEeeAC4zIM1Voag" type="5007"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_tCz2gQpLEeeAC4zIM1Voag" fontName="Segoe UI"/>
+      <element xmi:type="proc:XslVariable" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_YADo4HRoEeOZtOkWj_N7kw?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_tCz2ggpLEeeAC4zIM1Voag" x="610" y="30"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_cTfdQAJeEeucf9D0N4anrg" type="2007">
+      <children xmi:type="notation:Node" xmi:id="_cTjHoAJeEeucf9D0N4anrg" type="5007"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_cTfdQQJeEeucf9D0N4anrg" fontName="Segoe UI"/>
+      <element xmi:type="proc:XslVariable" href="../../INTEGRATION%20File%20(FileExport).tp.proc#f25581b4-11b0-4999-843a-4a467ac200c5?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_cTfdQgJeEeucf9D0N4anrg" x="615" y="230"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_RHzKUAPyEeujnYGvy-OpSg" type="2007">
+      <children xmi:type="notation:Node" xmi:id="_RHzKUwPyEeujnYGvy-OpSg" type="5007"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_RHzKUQPyEeujnYGvy-OpSg" fontName="Segoe UI"/>
+      <element xmi:type="proc:XslVariable" href="../../INTEGRATION%20File%20(FileExport).tp.proc#7b4e2062-892f-44fd-9cd9-1682e50104c2?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_RHzKUgPyEeujnYGvy-OpSg" x="790" y="205"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_-BuD4ZCAEd6u7uzLmVWZbw"/>
+    <element xmi:type="proc:SubActionProcess" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_8V1w7ZCAEd6u7uzLmVWZbw?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc$name=INTEGRATION?"/>
+    <edges xmi:type="notation:Edge" xmi:id="_zug2QZCiEd6VMfctxadL_w" type="4001" source="_tAUf85CiEd6VMfctxadL_w" target="__kqdUJCAEd6u7uzLmVWZbw">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_zug2QpCiEd6VMfctxadL_w"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_zug2Q5CiEd6VMfctxadL_w"/>
+      <element xmi:type="proc:Link" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_zug2QJCiEd6VMfctxadL_w?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_zug2RJCiEd6VMfctxadL_w" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_y49KgApLEeeAC4zIM1Voag" id="(0.4982078853046595,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_y49KgQpLEeeAC4zIM1Voag" id="(0.5,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_0yrPMd2UEd6IN6o7L7Uzcg" type="4001" source="_zdchod2UEd6IN6o7L7Uzcg" target="_tAUf85CiEd6VMfctxadL_w">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_0yrPMt2UEd6IN6o7L7Uzcg"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_0yrPM92UEd6IN6o7L7Uzcg"/>
+      <element xmi:type="proc:Link" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_0yrPMN2UEd6IN6o7L7Uzcg?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_0yrPNN2UEd6IN6o7L7Uzcg" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_y4-YoApLEeeAC4zIM1Voag" id="(0.4982698961937716,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_y4-YoQpLEeeAC4zIM1Voag" id="(0.4982078853046595,0.0)"/>
+    </edges>
+    <edges xmi:type="notation:Edge" xmi:id="_1LHkYd2UEd6IN6o7L7Uzcg" type="4001" source="__kqdUJCAEd6u7uzLmVWZbw" target="_zdchrd2UEd6IN6o7L7Uzcg">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_1LHkYt2UEd6IN6o7L7Uzcg"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_1LHkY92UEd6IN6o7L7Uzcg"/>
+      <element xmi:type="proc:Link" href="../../INTEGRATION%20File%20(FileExport).tp.proc#_1LHkYN2UEd6IN6o7L7Uzcg?fileId=_8V1w55CAEd6u7uzLmVWZbw$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_1LHkZN2UEd6IN6o7L7Uzcg" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_1LHkZd2UEd6IN6o7L7Uzcg" id="(0.5,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_y48jcApLEeeAC4zIM1Voag" id="(0.4982698961937716,0.0)"/>
+    </edges>
+  </notation:Diagram>
+</xmi:XMI>
+]]></diagram>
+</proc:process>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map:map xmlns:map="http://www.indy.com/v2/map" id="_mcd7IB23EeuD985QaHlOAw" internalVersion="8" tech="resource.tech#_waYSMH8VEd2__Mzb_dB76A?fileId=_waYSMH8VEd2__Mzb_dB76A$type=tech$name=flow?">
+  <datastore id="_mcd7IR23EeuD985QaHlOAw" alias="SRC_CUSTOMER" dataset="_mceiQh23EeuD985QaHlOAw" ref="resource.md#_mccvTx23EeuD985QaHlOAw?fileId=_mccF8B23EeuD985QaHlOAw$type=md$name=SRC_CUSTOMER?">
+    <field id="_mcd7Ih23EeuD985QaHlOAw" fullAlias="CUS_ADDRESS" name="CUS_ADDRESS" ref="resource.md#_mccvYR23EeuD985QaHlOAw?fileId=_mccF8B23EeuD985QaHlOAw$type=md$name=CUS_ADDRESS?"/>
+    <field id="_mcd7Ix23EeuD985QaHlOAw" fullAlias="CUS_NAME" name="CUS_NAME" ref="resource.md#_mccvWh23EeuD985QaHlOAw?fileId=_mccF8B23EeuD985QaHlOAw$type=md$name=CUS_NAME?"/>
+    <field id="_mcd7JB23EeuD985QaHlOAw" fullAlias="CUS_COMMENT" name="CUS_COMMENT" ref="resource.md#_mccvaB23EeuD985QaHlOAw?fileId=_mccF8B23EeuD985QaHlOAw$type=md$name=CUS_COMMENT?"/>
+    <field id="_mcd7JR23EeuD985QaHlOAw" fullAlias="CUS_ID" name="CUS_ID" ref="resource.md#_mccvUh23EeuD985QaHlOAw?fileId=_mccF8B23EeuD985QaHlOAw$type=md$name=CUS_ID?" updateKey="true"/>
+    <constraint id="_mcd7Jh23EeuD985QaHlOAw" name="PK_SRC_CUSTOMER" ref="resource.md#_mccvbx23EeuD985QaHlOAw?fileId=_mccF8B23EeuD985QaHlOAw$type=md$name=PK_SRC_CUSTOMER?" reject="true"/>
+  </datastore>
+  <datastore id="_mcd7Jx23EeuD985QaHlOAw" alias="HST_CUSTOMER" dataset="_mceiQx23EeuD985QaHlOAw" ref="resource.md#_mccvEh23EeuD985QaHlOAw?fileId=_mccF8B23EeuD985QaHlOAw$type=md$name=HST_CUSTOMER?" subExpression="[A]">
+    <field id="_mceiMB23EeuD985QaHlOAw" enable="true" insert="true" name="CUS_NAME" ref="resource.md#_mccvHh23EeuD985QaHlOAw?fileId=_mccF8B23EeuD985QaHlOAw$type=md$name=CUS_NAME?" update="true">
+      <expression id="_mceiMR23EeuD985QaHlOAw" setDescriptorRef="_mceiPh23EeuD985QaHlOAw">
+        <expression>SRC_CUSTOMER.CUS_NAME</expression>
+      </expression>
+    </field>
+    <field id="_mceiMh23EeuD985QaHlOAw" enable="true" insert="true" name="CUS_ADDRESS" ref="resource.md#_mccvJh23EeuD985QaHlOAw?fileId=_mccF8B23EeuD985QaHlOAw$type=md$name=CUS_ADDRESS?" update="true">
+      <expression id="_mceiMx23EeuD985QaHlOAw" setDescriptorRef="_mceiPh23EeuD985QaHlOAw">
+        <expression>SRC_CUSTOMER.CUS_ADDRESS</expression>
+      </expression>
+    </field>
+    <field id="_mceiNB23EeuD985QaHlOAw" enable="true" insert="true" name="CUS_ID" ref="resource.md#_mccvFR23EeuD985QaHlOAw?fileId=_mccF8B23EeuD985QaHlOAw$type=md$name=CUS_ID?" update="true" updateKey="true">
+      <expression id="_mceiNR23EeuD985QaHlOAw" setDescriptorRef="_mceiPh23EeuD985QaHlOAw">
+        <expression>SRC_CUSTOMER.CUS_ID</expression>
+      </expression>
+    </field>
+    <field id="_mceiNh23EeuD985QaHlOAw" enable="true" insert="true" name="VALID_FROM" ref="resource.md#_mccvNh23EeuD985QaHlOAw?fileId=_mccF8B23EeuD985QaHlOAw$type=md$name=VALID_FROM?" update="true">
+      <expression id="_mceiNx23EeuD985QaHlOAw" setDescriptorRef="_mceiPh23EeuD985QaHlOAw">
+        <expression>current_timestamp</expression>
+      </expression>
+    </field>
+    <field id="_mceiOB23EeuD985QaHlOAw" name="VALID_TO" ref="resource.md#_mccvPh23EeuD985QaHlOAw?fileId=_mccF8B23EeuD985QaHlOAw$type=md$name=VALID_TO?">
+      <expression id="_mceiOR23EeuD985QaHlOAw" setDescriptorRef="_mceiPh23EeuD985QaHlOAw">
+        <expression></expression>
+      </expression>
+    </field>
+    <field id="_mceiOh23EeuD985QaHlOAw" name="IS_VALID_VERSION" ref="resource.md#_mccvRh23EeuD985QaHlOAw?fileId=_mccF8B23EeuD985QaHlOAw$type=md$name=IS_VALID_VERSION?">
+      <expression id="_mceiOx23EeuD985QaHlOAw" setDescriptorRef="_mceiPh23EeuD985QaHlOAw">
+        <expression></expression>
+      </expression>
+    </field>
+    <field id="_mceiPB23EeuD985QaHlOAw" enable="true" insert="true" name="CUS_COMMENT" ref="resource.md#_mccvLh23EeuD985QaHlOAw?fileId=_mccF8B23EeuD985QaHlOAw$type=md$name=CUS_COMMENT?" update="true">
+      <expression id="_mceiPR23EeuD985QaHlOAw" setDescriptorRef="_mceiPh23EeuD985QaHlOAw">
+        <expression>SRC_CUSTOMER.CUS_COMMENT</expression>
+      </expression>
+    </field>
+    <setDescriptor id="_mceiPh23EeuD985QaHlOAw" label="A"/>
+  </datastore>
+  <template id="_mceiPx23EeuD985QaHlOAw" name="I_HST_CUSTOMER" process="resource.proc#_HFOfdjEZEd-WZe6cNi2k2w?fileId=_HFOfdjEZEd-WZe6cNi2k2w$type=proc$name=INTEGRATION%20Hsql?" targetId="_mcd7Jx23EeuD985QaHlOAw">
+    <parameter id="_mceiQB23EeuD985QaHlOAw" name="scdDefaultEndDate" value="NULL"/>
+    <parameter id="_mceiQR23EeuD985QaHlOAw" name="cleanTemporaryObjects " value="false"/>
+  </template>
+  <dataSet id="_mceiQh23EeuD985QaHlOAw">
+    <container>_mcd7IR23EeuD985QaHlOAw</container>
+  </dataSet>
+  <dataSet id="_mceiQx23EeuD985QaHlOAw">
+    <container>_mcd7Jx23EeuD985QaHlOAw</container>
+  </dataSet>
+  <hint>
+    <usedField>#_mcd7Ih23EeuD985QaHlOAw</usedField>
+    <usedField>#_mcd7Ix23EeuD985QaHlOAw</usedField>
+    <usedField>#_mcd7JB23EeuD985QaHlOAw</usedField>
+    <usedField>#_mcd7JR23EeuD985QaHlOAw</usedField>
+  </hint>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmi:id="a2d6bec2-42df-4b89-b6fd-85170110dc93" type="Map" measurementUnit="Pixel">
+  <children xmi:type="notation:Shape" xmi:id="7f07bb5c-d767-47fd-9059-33192755aed0" type="2004" fontName="Segoe UI">
+    <children xmi:type="notation:DecorationNode" xmi:id="cbbc1c10-97e7-4056-96d3-4e1173f8c4bd" type="5005"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="be454022-773a-4aa7-bd98-42218cb46318" type="5007"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="2d38f0d0-5ae0-4fc2-a67f-b6aed5b51c2f" type="7003"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="af6243a0-cd0b-42c7-b9b3-dadaa9919d02" type="7009"/>
+    <children xmi:type="notation:BasicCompartment" xmi:id="6ffe90aa-7b11-4867-b00d-10e5251b75e0" type="7004">
+      <styles xmi:type="notation:SortingStyle" xmi:id="d265a7ed-9970-4863-be3f-05a78b3dabc4"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="37e22627-3c2e-498c-9957-c1e6ad78ec77"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" xmi:id="6e4264fa-9a64-4a28-898f-2b2b8cecda10" type="5009">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="d0c4164e-ec38-43b9-bc7d-9e4d28b2141d"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" xmi:id="b502f8b8-0dda-488f-a711-7628ba852d53" type="7005">
+      <styles xmi:type="notation:SortingStyle" xmi:id="6f87b421-29ce-43e6-90f8-51bc8688a99e"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="3187af0d-4524-4e9c-b5ce-b45587714b21"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="bf589b96-f567-4d61-91e1-5ca6bc00cdd6" type="7007"/>
+    <element xmi:type="map:Datastore" href="../../LOAD%20HST_CUSTOMER.map#_mcd7IR23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="92095577-14a4-474f-b38d-9f1301320d51" x="30" y="60"/>
+  </children>
+  <children xmi:type="notation:Shape" xmi:id="cd5b2c07-2f46-4a19-925e-e6c2c89723f4" type="2004" fontName="Segoe UI">
+    <children xmi:type="notation:DecorationNode" xmi:id="e1d8677b-bc44-435a-855f-d1e6f2f7aa09" type="5005"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="0d405f55-591e-42f5-a8a5-55d38fd6d373" type="5007"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="ac56619b-be90-46d4-bed1-f165aa9c545e" type="7003"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="8b656921-9969-407e-aba1-4da1612af5dc" type="7009"/>
+    <children xmi:type="notation:BasicCompartment" xmi:id="cf15d4d0-4b75-4825-8932-b665b286ce63" type="7004">
+      <styles xmi:type="notation:SortingStyle" xmi:id="3ec8ef95-4658-4f77-98ad-9d84a7d4c3eb"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="857656b3-e219-45a0-84ab-47ae44f6ce43"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" xmi:id="e599bc93-201c-44e3-ab5b-5547d5bd2f5b" type="5009">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="cd3f982c-674e-45f8-80cc-5bc1b1b6d158"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" xmi:id="fbbc09d6-5673-46ba-ab58-c601cac1c550" type="7005">
+      <styles xmi:type="notation:SortingStyle" xmi:id="bbbd91db-c3bf-4fa9-8860-82644a255feb"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="822cb31e-39a0-4b04-8565-c85bb713f5b7"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="c85e18d0-d509-4232-aff4-348bc61c33d8" type="7007"/>
+    <element xmi:type="map:Datastore" href="../../LOAD%20HST_CUSTOMER.map#_mcd7Jx23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="fdc0b590-6b03-4a32-8318-efa865786627" x="285" y="30"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="1e077118-3f84-4bb4-82d0-c96652377c99"/>
+  <element xmi:type="map:Map" href="../../LOAD%20HST_CUSTOMER.map#_mcd7IB23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map$name=LOAD%20HST_CUSTOMER?"/>
+  <edges xmi:type="notation:Edge" xmi:id="61cac6a8-80ab-4cef-8ccc-24c11ab36519" type="targetLink" source="cd5b2c07-2f46-4a19-925e-e6c2c89723f4" target="7f07bb5c-d767-47fd-9059-33192755aed0">
+    <element xsi:nil="true"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="48cdc937-c9f9-45aa-b97e-2a8224811456" points="[0, 0, 60, 0]$[-60, 0, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="7fa3dbb2-694c-49fc-bb45-2f3a279116ae" id="(0.0,0.4972677595628415)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="dd04fcc9-c846-4a2f-8b35-ae683af66340" id="(1.0,0.4959349593495935)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="b8e2e0a2-bd10-4e18-a7f4-8d9a7bfd3455" type="targetDataSetLink" source="cd5b2c07-2f46-4a19-925e-e6c2c89723f4" target="cd5b2c07-2f46-4a19-925e-e6c2c89723f4">
+    <element xmi:type="map:DataSet" href="../../LOAD%20HST_CUSTOMER.map#_mceiQh23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="8819381c-a0f5-4cc0-a312-5a53aa3df113" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="597afad0-a518-4fdd-ba4e-2f49667cede2" type="targetSetLink" source="cd5b2c07-2f46-4a19-925e-e6c2c89723f4" target="cd5b2c07-2f46-4a19-925e-e6c2c89723f4">
+    <element xmi:type="map:SetDescriptor" href="../../LOAD%20HST_CUSTOMER.map#_mceiPh23EeuD985QaHlOAw?fileId=_mcd7IB23EeuD985QaHlOAw$type=map?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="b98763e2-f703-49fa-88eb-d1c2c9c42958" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+</notation:Diagram>
+]]></diagram>
+</map:map>

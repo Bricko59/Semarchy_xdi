@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_sknoQ6x2Ed6xTOAeaNjskA" description="This template is a tool that can be used to perform some operations on a database, such as dropping or re-creating its tables, constraints, primary keys, truncating tables' data, ...&#xD;&#xA;&#xD;&#xA;All of the operations will be performed based on the Metadata of the database, to know the structures of the tables&#xD;&#xA;Therefore, make sure it is up to date if you plan to drop and re-create everything for instance.&#xD;&#xA;&#xD;&#xA;To use it:&#xD;&#xA;1. Create a Process&#xD;&#xA;2. Drag and drop this template in the Process&#xD;&#xA;3. Then, drag and drop the database Metadata node on which you want to operate, such as a schema or a table.&#xD;&#xA;4. Rename the Metadata Link created to 'SOURCE'&#xD;&#xA;5. Finally, configure the replicator parameters accordingly to your requirements&#xD;&#xA;&#xD;&#xA;Note:&#xD;&#xA;Depending on the type of node dropped on the tool (database, schema, table), you'll have to modify the 'Query' parameter that is used to define the path to access the tables from this node.&#xD;&#xA;&#xD;&#xA;Refer to the description of each Parameter for more information.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;22/08/2018&#x9;Reorganize the parameters display order&#xD;&#xA;21/09/2017&#x9;Source database Metadata Link is not retrieved correctly when it is not a schema&#xD;&#xA;21/09/2017  Initialize template history" name="AUTOMATION Rdbms Operations.tp">
+  <parameter id="_sknoRax2Ed6xTOAeaNjskA" description="If true, performs a create table statement for each table, based on the Metadata information" name="createTables" type="Boolean" value="false"/>
+  <parameter id="_sknoRKx2Ed6xTOAeaNjskA" description="If true, performs a drop table statement to drop each table, based on the Metadata information" name="dropTables" type="Boolean" value="false"/>
+  <parameter id="_sknoTKx2Ed6xTOAeaNjskA" description="If true, performs a statement to create the primary keys of the tables based on the Metadata information" name="createPk" type="Boolean" value="false"/>
+  <parameter id="_sknoS6x2Ed6xTOAeaNjskA" description="If true, performs a statement to drop the primary keys of the tables based on the Metadata information" name="dropPk" type="Boolean" value="false"/>
+  <parameter id="_sknoTax2Ed6xTOAeaNjskA" description="If true, performs a statement to create the foreign key of the tables based on the Metadata information" name="createFk" type="Boolean" value="false"/>
+  <parameter id="_sknoTqx2Ed6xTOAeaNjskA" description="If true, performs a statement to drop the foreign keys of the tables based on the Metadata information" name="dropFk" type="Boolean" value="false"/>
+  <parameter id="_sknoSax2Ed6xTOAeaNjskA" description="If true, performs a statement to create the indexes of the tables based on the Metadata information" name="createIndexes" type="Boolean" value="false"/>
+  <parameter id="_sknoSqx2Ed6xTOAeaNjskA" description="If true, performs a statement to drop the indexes of the tables based on the Metadata information" name="dropIndexes" type="Boolean" value="false"/>
+  <parameter id="_sknoSKx2Ed6xTOAeaNjskA" description="If true, enables the constraints of the tables based on the Metadata information&#xD;&#xA;This will enable the primary and foreign keys." name="enableConstraints" type="Boolean" value="false"/>
+  <parameter id="_qfWbwB5UEeWs_I9OYnp_cg" description="If true, performs a truncate statement on the tables to remove all data from it" name="truncateTables" type="Boolean" value="false"/>
+  <parameter id="_sknoR6x2Ed6xTOAeaNjskA" description="If true, performs a statement to disable the constraints of the tables based on the Metadata information.&#xD;&#xA;This will disable the primary and foreign keys." name="disableConstraints" type="Boolean" value="false"/>
+  <parameter id="_sknoUax2Ed6xTOAeaNjskA" description="If true, performs a delete statement on the tables to remove all data from it.&#xD;&#xA;When supported by the database, prefer using the 'Truncate Table' option that generally provides better performances." name="deleteTables" type="Boolean" value="false"/>
+  <parameter id="_sknoUKx2Ed6xTOAeaNjskA" description="Path to the datastores from the source Metadata dropped on the template.&#xD;&#xA;This will depend on the type of node chosen by the user.&#xD;&#xA;The syntax to use is xpath.&#xD;&#xA;&#xD;&#xA;Below are some examples for the most commonly used types of nodes:&#xD;&#xA;- If it is a database node:&#xD;&#xA;$SOURCE/schema/datastore&#xD;&#xA;&#xD;&#xA;- If it is a schema node (default value):&#xD;&#xA;$SOURCE/datastore&#xD;&#xA;&#xD;&#xA;- If it is a table node:&#xD;&#xA;$SOURCE&#xD;&#xA;&#xD;&#xA;Note:&#xD;&#xA;$SOURCE correspond to the Metadata Link dropped on the template." name="query" type="String" value="$SOURCE/datastore"/>
+  <subProcess id="_sknofax2Ed6xTOAeaNjskA" generationCondition="'${dropTables}$'='true'" isBeginAction="false" name="Drop tables" nbCycles="-1" repetitionMode="" repetitionQuery="" repetitionVariableName="" toleratedError="false">
+    <link id="_sknofqx2Ed6xTOAeaNjskA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_sknogqx2Ed6xTOAeaNjskA?fileId=_sknoQ6x2Ed6xTOAeaNjskA$type=proc$name=Create%20tables?"/>
+    <actionCode id="_sknof6x2Ed6xTOAeaNjskA" generationCondition="'${dropTables}$'='true'" isBeginAction="false" name="Drop table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$ " repetitionVariableName="SOURCE" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter id="_sknogKx2Ed6xTOAeaNjskA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_sknogax2Ed6xTOAeaNjskA" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+      <code>%x{$SOURCE/tech:dropDdl()}x%</code>
+    </actionCode>
+  </subProcess>
+  <subProcess id="_sknogqx2Ed6xTOAeaNjskA" generationCondition="'${createTables}$'='true'" isBeginAction="false" name="Create tables" nbCycles="-1" toleratedError="false">
+    <link id="_sknog6x2Ed6xTOAeaNjskA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_sknojax2Ed6xTOAeaNjskA?fileId=_sknoQ6x2Ed6xTOAeaNjskA$type=proc$name=Disable%20FK?"/>
+    <actionCode id="_sknohKx2Ed6xTOAeaNjskA" description="" generationCondition="'${createTables}$'='true'" isBeginAction="false" name="Create table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$" repetitionVariableName="SOURCE" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter id="_sknohax2Ed6xTOAeaNjskA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_sknohqx2Ed6xTOAeaNjskA" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+      <code>%x{$SOURCE/tech:creationDdl(.,false(),false())}x%</code>
+    </actionCode>
+  </subProcess>
+  <subProcess id="_sknoh6x2Ed6xTOAeaNjskA" generationCondition="'${disableConstraints}$'='true'" isBeginAction="false" name="Disable PK" nbCycles="-1" toleratedError="false">
+    <link id="_sknoiKx2Ed6xTOAeaNjskA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_sknoq6x2Ed6xTOAeaNjskA?fileId=_sknoQ6x2Ed6xTOAeaNjskA$type=proc$name=Drop%20Indexes?"/>
+    <subProcess id="_sknoiax2Ed6xTOAeaNjskA" isBeginAction="false" name="Pk for table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$[exists(pk)]" repetitionVariableName="SOURCE" toleratedError="false">
+      <actionCode id="_sknoiqx2Ed6xTOAeaNjskA" generationCondition="'${disableConstraints}$'='true'" isBeginAction="false" name="Disable PK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$SOURCE/pk" repetitionVariableName="CONSTRAINT" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+        <parameter id="_sknoi6x2Ed6xTOAeaNjskA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+        <parameter id="_sknojKx2Ed6xTOAeaNjskA" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+        <code>%x{$CONSTRAINT/tech:disableDdl()}x%</code>
+      </actionCode>
+    </subProcess>
+  </subProcess>
+  <subProcess id="_sknojax2Ed6xTOAeaNjskA" generationCondition="'${disableConstraints}$'='true' and exists(${query}$[exists(fk)])" isBeginAction="false" name="Disable FK" nbCycles="-1" repetitionQuery="" toleratedError="false">
+    <link id="_sknojqx2Ed6xTOAeaNjskA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_sknoh6x2Ed6xTOAeaNjskA?fileId=_sknoQ6x2Ed6xTOAeaNjskA$type=proc$name=Disable%20PK?"/>
+    <subProcess id="_sknoj6x2Ed6xTOAeaNjskA" isBeginAction="false" name="Fk for table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$[exists(fk)]" repetitionVariableName="SOURCE" toleratedError="false">
+      <actionCode id="_sknokKx2Ed6xTOAeaNjskA" generationCondition="'${disableConstraints}$'='true'" isBeginAction="false" name="Disable FK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$SOURCE/fk" repetitionVariableName="CONSTRAINT" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+        <parameter id="_sknokax2Ed6xTOAeaNjskA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+        <parameter id="_sknokqx2Ed6xTOAeaNjskA" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+        <code>%x{$CONSTRAINT/tech:disableDdl()}x%</code>
+      </actionCode>
+    </subProcess>
+  </subProcess>
+  <subProcess id="_sknok6x2Ed6xTOAeaNjskA" generationCondition="'${dropFk}$'='true'" isBeginAction="false" name="Drop FK" nbCycles="-1" toleratedError="false">
+    <link id="_sknolKx2Ed6xTOAeaNjskA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_sknomax2Ed6xTOAeaNjskA?fileId=_sknoQ6x2Ed6xTOAeaNjskA$type=proc$name=Drop%20PK?"/>
+    <subProcess id="_sknolax2Ed6xTOAeaNjskA" isBeginAction="false" name="Fk for table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$[exists(fk)]" repetitionVariableName="SOURCE" toleratedError="false">
+      <actionCode id="_sknolqx2Ed6xTOAeaNjskA" description="" generationCondition="'${dropFk}$'='true'" isBeginAction="false" name="Drop FK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$SOURCE/fk" repetitionVariableName="CONSTRAINT" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+        <parameter id="_sknol6x2Ed6xTOAeaNjskA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+        <parameter id="_sknomKx2Ed6xTOAeaNjskA" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+        <code>%x{$CONSTRAINT/tech:dropDdl()}x%</code>
+      </actionCode>
+    </subProcess>
+  </subProcess>
+  <subProcess id="_sknomax2Ed6xTOAeaNjskA" generationCondition="'${dropPk}$'='true'" isBeginAction="false" name="Drop PK" nbCycles="-1" toleratedError="false">
+    <link id="_sknomqx2Ed6xTOAeaNjskA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_sknofax2Ed6xTOAeaNjskA?fileId=_sknoQ6x2Ed6xTOAeaNjskA$type=proc$name=Drop%20tables?"/>
+    <subProcess id="_sknom6x2Ed6xTOAeaNjskA" isBeginAction="false" name="Pk for table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$[exists(pk)]" repetitionVariableName="SOURCE" toleratedError="false">
+      <actionCode id="_sknonKx2Ed6xTOAeaNjskA" generationCondition="'${dropPk}$'='true'" isBeginAction="false" name="Drop PK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$SOURCE/pk" repetitionVariableName="CONSTRAINT" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+        <parameter id="_sknonax2Ed6xTOAeaNjskA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+        <parameter id="_sknonqx2Ed6xTOAeaNjskA" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+        <code>%x{$CONSTRAINT/tech:dropDdl()}x%</code>
+      </actionCode>
+    </subProcess>
+  </subProcess>
+  <subProcess id="_sknon6x2Ed6xTOAeaNjskA" generationCondition="'${createPk}$'='true'" isBeginAction="false" name="Create PK" nbCycles="-1" toleratedError="false">
+    <link id="_sknooKx2Ed6xTOAeaNjskA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_sknopax2Ed6xTOAeaNjskA?fileId=_sknoQ6x2Ed6xTOAeaNjskA$type=proc$name=Create%20FK?"/>
+    <subProcess id="_sknooax2Ed6xTOAeaNjskA" isBeginAction="false" name="PK for table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$[exists(pk)]" repetitionVariableName="SOURCE" toleratedError="false">
+      <actionCode id="_sknooqx2Ed6xTOAeaNjskA" description="" generationCondition="'${createPk}$'='true'" enable="true" isBeginAction="false" name="Create PK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$SOURCE/pk" repetitionVariableName="CONSTRAINT" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+        <parameter id="_sknoo6x2Ed6xTOAeaNjskA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+        <parameter id="_sknopKx2Ed6xTOAeaNjskA" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+        <code>%x{$CONSTRAINT/tech:addDdl()}x%</code>
+      </actionCode>
+    </subProcess>
+  </subProcess>
+  <subProcess id="_sknopax2Ed6xTOAeaNjskA" generationCondition="'${createFk}$'='true'" isBeginAction="false" name="Create FK" nbCycles="-1" toleratedError="false">
+    <link id="_sknopqx2Ed6xTOAeaNjskA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_sknosax2Ed6xTOAeaNjskA?fileId=_sknoQ6x2Ed6xTOAeaNjskA$type=proc$name=Create%20Indexes?"/>
+    <subProcess id="_sknop6x2Ed6xTOAeaNjskA" isBeginAction="false" name="Fk for table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$[exists(fk)]" repetitionVariableName="SOURCE" toleratedError="false">
+      <actionCode id="_sknoqKx2Ed6xTOAeaNjskA" description="" generationCondition="'${createFk}$'='true'" isBeginAction="false" name="Create FK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$SOURCE/fk" repetitionVariableName="CONSTRAINT" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+        <parameter id="_sknoqax2Ed6xTOAeaNjskA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+        <parameter id="_sknoqqx2Ed6xTOAeaNjskA" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+        <code>%x{$CONSTRAINT/tech:addDdl()}x%</code>
+      </actionCode>
+    </subProcess>
+  </subProcess>
+  <subProcess id="_sknoq6x2Ed6xTOAeaNjskA" generationCondition="'${dropIndexes}$'='true'" isBeginAction="false" name="Drop Indexes" nbCycles="-1" toleratedError="false">
+    <link id="_sknorKx2Ed6xTOAeaNjskA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_ltnyIB5UEeWs_I9OYnp_cg?fileId=_sknoQ6x2Ed6xTOAeaNjskA$type=proc$name=Truncate%20tables?"/>
+    <subProcess id="_sknorax2Ed6xTOAeaNjskA" isBeginAction="false" name="Indexes for table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$[exists(index)]" repetitionVariableName="SOURCE" toleratedError="false">
+      <actionCode id="_sknorqx2Ed6xTOAeaNjskA" generationCondition="'${dropIndexes}$'='true'" isBeginAction="false" name="Drop Indexes" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$SOURCE/index" repetitionVariableName="CONSTRAINT" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+        <parameter id="_sknor6x2Ed6xTOAeaNjskA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+        <parameter id="_sknosKx2Ed6xTOAeaNjskA" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+        <code>%x{$CONSTRAINT/tech:dropDdl()}x%</code>
+      </actionCode>
+    </subProcess>
+  </subProcess>
+  <subProcess id="_sknosax2Ed6xTOAeaNjskA" generationCondition="'${createIndexes}$'='true'" isBeginAction="false" name="Create Indexes" nbCycles="-1" toleratedError="false">
+    <link id="_jMVvQMSpEd6cXtTihBV92g" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_QSEdusSpEd6cXtTihBV92g?fileId=_sknoQ6x2Ed6xTOAeaNjskA$type=proc$name=Enable%20PK?"/>
+    <subProcess id="_sknos6x2Ed6xTOAeaNjskA" isBeginAction="false" name="Index for table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$[exists(index)]" repetitionVariableName="SOURCE" toleratedError="false">
+      <actionCode id="_sknotKx2Ed6xTOAeaNjskA" generationCondition="'${createIndexes}$'='true'" isBeginAction="false" name="Create Indexes" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$SOURCE/index" repetitionVariableName="CONSTRAINT" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+        <parameter id="_sknotax2Ed6xTOAeaNjskA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+        <parameter id="_sknotqx2Ed6xTOAeaNjskA" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+        <code>%x{$CONSTRAINT/tech:creationDdl()}x%</code>
+      </actionCode>
+    </subProcess>
+  </subProcess>
+  <subProcess id="_sknov6x2Ed6xTOAeaNjskA" generationCondition="'${deleteTables}$'='true'" isBeginAction="false" name="Delete tables" nbCycles="-1" repetitionMode="" repetitionQuery="" repetitionVariableName="" toleratedError="false">
+    <link id="_UNkS8Kx4Ed6xTOAeaNjskA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_sknon6x2Ed6xTOAeaNjskA?fileId=_sknoQ6x2Ed6xTOAeaNjskA$type=proc$name=Create%20PK?"/>
+    <actionCode id="_sknowax2Ed6xTOAeaNjskA" generationCondition="'${deleteTables}$'='true'" isBeginAction="false" name="Delete table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$ " repetitionVariableName="SOURCE" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter id="_sknowqx2Ed6xTOAeaNjskA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_sknow6x2Ed6xTOAeaNjskA" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+      <parameter id="_HJyyMLcOEd6VWIGwdzZxRQ" description="" name="SQL_ACTION_TYPE_STAT" type="String" value="DELETE"/>
+      <code>%x{$SOURCE/tech:deleteDdl()}x%</code>
+    </actionCode>
+  </subProcess>
+  <subProcess id="_QSEdusSpEd6cXtTihBV92g" generationCondition="'${enableConstraints}$'='true'" isBeginAction="false" name="Enable PK" nbCycles="-1" toleratedError="false">
+    <link id="_jjJFsMSpEd6cXtTihBV92g" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_QSEdwMSpEd6cXtTihBV92g?fileId=_sknoQ6x2Ed6xTOAeaNjskA$type=proc$name=Enable%20FK?"/>
+    <subProcess id="_QSEdvMSpEd6cXtTihBV92g" isBeginAction="false" name="Pk for table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$[exists(pk)]" repetitionVariableName="SOURCE" toleratedError="false">
+      <actionCode id="_QSEdvcSpEd6cXtTihBV92g" generationCondition="'${enableConstraints}$'='true'" isBeginAction="false" name="Enable PK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$SOURCE/pk" repetitionVariableName="CONSTRAINT" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+        <parameter id="_QSEdvsSpEd6cXtTihBV92g" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+        <parameter id="_QSEdv8SpEd6cXtTihBV92g" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+        <code>%x{$CONSTRAINT/tech:enableDdl()}x%</code>
+      </actionCode>
+    </subProcess>
+  </subProcess>
+  <subProcess id="_QSEdwMSpEd6cXtTihBV92g" generationCondition="'${enableConstraints}$'='true'" isBeginAction="false" name="Enable FK" nbCycles="-1" repetitionQuery="" toleratedError="false">
+    <subProcess id="_QSEdwsSpEd6cXtTihBV92g" isBeginAction="false" name="Fk for table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$[exists(fk)]" repetitionVariableName="SOURCE" toleratedError="false">
+      <actionCode id="_QSEdw8SpEd6cXtTihBV92g" generationCondition="'${enableConstraints}$'='true'" isBeginAction="false" name="Enable FK" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$SOURCE/fk" repetitionVariableName="CONSTRAINT" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+        <parameter id="_QSEdxMSpEd6cXtTihBV92g" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+        <parameter id="_QSEdxcSpEd6cXtTihBV92g" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+        <code>%x{$CONSTRAINT/tech:enableDdl()}x%</code>
+      </actionCode>
+    </subProcess>
+  </subProcess>
+  <subProcess id="_ltnyIB5UEeWs_I9OYnp_cg" generationCondition="'${truncateTables}$'='true'" isBeginAction="false" name="Truncate tables" nbCycles="-1" repetitionMode="" repetitionQuery="" repetitionVariableName="" toleratedError="false">
+    <link id="_ltnyIR5UEeWs_I9OYnp_cg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_sknov6x2Ed6xTOAeaNjskA?fileId=_sknoQ6x2Ed6xTOAeaNjskA$type=proc$name=Delete%20tables?"/>
+    <actionCode id="_ltnyIh5UEeWs_I9OYnp_cg" generationCondition="" isBeginAction="false" name="Truncate table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="${query}$ " repetitionVariableName="SOURCE" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter id="_ltnyIx5UEeWs_I9OYnp_cg" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_ltnyJB5UEeWs_I9OYnp_cg" name="SQL_CONNECTION" type="String" value="%connection{$SOURCE}%"/>
+      <code>truncate table %x{$SOURCE/tech:physicalPath()}x%</code>
+    </actionCode>
+  </subProcess>
+  <xslVariable id="_VrEi4ML9EeKj6KUTv-Ts9Q" code="$this/metaDataLink/mdj:getMetaDataRef(.)[@defType='com.stambia.rdbms.schema'][1]" name="_SOURCE" type="xpath"/>
+  <xslVariable id="_rDshIB5jEeW7La0KCmPcjg" code="if (exists($_SOURCE)) then $_SOURCE else $__SOURCE" name="SOURCE" order="1" type="xpath"/>
+  <xslVariable id="_cdv68ETwEeWwC8ncINvSmg" code="$this/ancestor-or-self::*/metaDataLink[@name='SOURCE']/mdj:getMetaDataRef(.)" name="__SOURCE" type="xpath"/>
+</proc:process>

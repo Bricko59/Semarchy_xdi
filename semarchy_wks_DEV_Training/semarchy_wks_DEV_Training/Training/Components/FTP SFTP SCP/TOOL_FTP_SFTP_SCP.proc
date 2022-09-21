@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_K5A8YeVlEeeDz-I9ArifCA">
+  <parameter id="_SNsq8eVlEeeDz-I9ArifCA" description="Activate Report steps" label="Update Report" name="v_Report" type="Boolean" value="true"/>
+  <parameter id="_3H6XIOVpEeeDz-I9ArifCA" description="Server Name as is &quot;NAME&quot; column into FTP Params" label="Server Name" name="v_FTPServer" type="String" value=""/>
+  <parameter id="_3H8zYOVpEeeDz-I9ArifCA" description="Filename or Filemask to handle" label="Filename" name="v_file" type="String" value=""/>
+  <parameter id="_BbSzAOWMEeeDz-I9ArifCA" metaInf="&lt;xslVariableName>v_action&lt;/xslVariableName>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;Get&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;Put&quot;/>&#xD;&#xA;" label="Action" name="v_action" type="String" value="Get"/>
+  <subProcess id="_QCjpGeVlEeeDz-I9ArifCA" generationCondition="" isBeginAction="false" name="Perform FTP,SFTP or SCP" nbCycles="-1" toleratedError="false">
+    <actionCode id="_8Ga74OWSEeeDz-I9ArifCA" enable="true" isBeginAction="false" name="Search Connectivity Params" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <bindLink id="_8f_5gOWSEeeDz-I9ArifCA" bindType="DirectBind" executionCondition="%b(rhino){ ':{TYPE}:' != 'FTP' }b(rhino)%" targetId="_Xao7AOWTEeeDz-I9ArifCA"/>
+      <bindLink id="_81gPcOWSEeeDz-I9ArifCA" bindType="DirectBind" targetId="_8Ga75OWSEeeDz-I9ArifCA"/>
+      <bindLink id="_9F6C8OWSEeeDz-I9ArifCA" bindType="DirectBind" executionCondition="%b(rhino){ ':{TYPE}:' == 'FTP' }b(rhino)%" targetId="_DpERIOWXEeeDz-I9ArifCA"/>
+      <bindLink id="_vbKzcOWhEeeDz-I9ArifCA" bindType="DirectBind" executionCondition="%b(rhino){ ':{TYPE}:' != 'FTP' }b(rhino)%" targetId="_uTHmQOWhEeeDz-I9ArifCA"/>
+      <bindLink id="_xoeYgOWhEeeDz-I9ArifCA" bindType="DirectBind" executionCondition="%b(rhino){ ':{TYPE}:' == 'FTP' }b(rhino)%" targetId="_uTG_MOWhEeeDz-I9ArifCA"/>
+      <parameter id="_8Ga74uWSEeeDz-I9ArifCA" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+      <parameter id="_8Ga74-WSEeeDz-I9ArifCA" name="SQL_CONNECTION" type="String" value="%connection{$PARAMS_TABLE}%"/>
+      <code>SELECT * from %x{$PARAMS_TABLE/tech:physicalPath()}x% &#xD;
+WHERE ACTIVE = 'Y'&#xD;
+	AND NAME = '%x{md:paramValue($this,'v_FTPServer')}x%' &#xD;
+	AND CONTEXT = '${/CORE_SESSION_CONFIGURATION}$'</code>
+    </actionCode>
+    <actionCode id="_8Ga75OWSEeeDz-I9ArifCA" generationCondition="'${v_Report}$'='true'" enable="true" isBeginAction="false" name="Report Perform Action" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+      <parameter id="_8Ga75eWSEeeDz-I9ArifCA" name="TXT_WRITE_FILENAME" type="String" value="${~/v_ReportFilename}$"/>
+      <parameter id="_8Ga75uWSEeeDz-I9ArifCA" name="TXT_WRITE_APPEND" type="String" value="after"/>
+      <code>					--------------------------	&#xD;
+%x{md:paramValue($this,'v_action')}x%  : &quot;%x{md:paramValue($this,'v_file')}x%&quot;&#xD;
+%x{if(md:paramValue($this,'v_action')='Get') then concat(&quot;From : &quot;,&quot;:{DIR_OUT}:&quot;) else concat(&quot;From : &quot;,$LOCAL_DIRECTORY/tech:path())}x%&#xD;
+%x{if(md:paramValue($this,'v_action')='Get') then concat(&quot;To   : &quot;,$LOCAL_DIRECTORY/tech:path()) else concat(&quot;To   : &quot;,&quot;:{DIR_IN}:&quot;)}x%&#xD;
+&#xD;
+Server :&#xD;
+	NAME 		: :{NAME}: - :{CONTEXT}:&#xD;
+	PROTOCOL	: :{TYPE}: (:{PORT}:)&#xD;
+	HOST 		: :{HOST}: &#xD;
+	USERNAME 	: :{USERNAME}: / :{PASSWORD}:&#xD;
+	</code>
+    </actionCode>
+    <actionCode id="_Xao7AOWTEeeDz-I9ArifCA" generationCondition="md:paramValue($this,'v_action')='Put' " enable="true" isBeginAction="false" name="PUT_SCP-SFTP" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScpPutActionCodeI">
+      <link id="_y4OFsOY8Eeey--_1YV_B1w" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_cc0kwOY-Eeey--_1YV_B1w"/>
+      <parameter id="_XatzgOWTEeeDz-I9ArifCA" name="SSH_HOST" type="String" value=":{HOST}:"/>
+      <parameter id="_XatzgeWTEeeDz-I9ArifCA" name="SSH_USER" type="String" value=":{USERNAME}:"/>
+      <parameter id="_XatzguWTEeeDz-I9ArifCA" name="SCP_REMOTE_DIR" type="String" value=":{DIR_IN}:"/>
+      <parameter id="_gNwWcOWTEeeDz-I9ArifCA" name="SSH_UNCRYPTED_PASSWORD" type="String" value=":{PASSWORD}:"/>
+      <parameter id="_hz08YOWTEeeDz-I9ArifCA" name="SSH_PORT" type="Integer" value=":{PORT}:"/>
+      <parameter id="_n6AQcOWTEeeDz-I9ArifCA" name="SCP_LOCAL_FILE" type="String" value=""/>
+      <parameter id="_pe81AOWTEeeDz-I9ArifCA" name="SCP_LOCAL_DIR" type="String" value="%x{$LOCAL_DIRECTORY/tech:path()}x%"/>
+      <parameter id="_BsBLEOWWEeeDz-I9ArifCA" name="SCP_USE_SFTP" type="Boolean" value="%b(rhino){ &#xD;&#xA;if(':{TYPE}:' == 'SFTP')&#xD;&#xA;&#x9;{  &#xD;&#xA;&#x9;&#x9;__ctx__.retValue = 'true';&#xD;&#xA;&#x9;}else{&#xD;&#xA;&#x9;&#x9;__ctx__.retValue = 'false';&#x9;&#xD;&#xA;&#x9;}&#xD;&#xA;}b(rhino)%  "/>
+      <parameter id="_mNvbkOWWEeeDz-I9ArifCA" name="SCP_FILE_INCLUDES" type="String" value="%x{md:paramValue($this,'v_file')}x%"/>
+    </actionCode>
+    <actionCode id="_DpERIOWXEeeDz-I9ArifCA" generationCondition="md:paramValue($this,'v_action')='Put' " enable="true" isBeginAction="false" name="PUT_FTP" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FtpPutActionCodeI">
+      <link id="_0QQ2sOY8Eeey--_1YV_B1w" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_cc0kwOY-Eeey--_1YV_B1w"/>
+      <parameter id="_DpJJoOWXEeeDz-I9ArifCA" name="FTP_HOSTNAME" type="String" value=":{HOST}:"/>
+      <parameter id="_DpJJoeWXEeeDz-I9ArifCA" name="FTP_USER" type="String" value=":{USERNAME}:"/>
+      <parameter id="_VlgBgOWXEeeDz-I9ArifCA" name="FTP_PORT" type="Integer" value=":{PORT}:"/>
+      <parameter id="_YR26EOWXEeeDz-I9ArifCA" name="FTP_UNCRYPTED_PASSWORD" type="String" value=":{PASSWORD}:"/>
+      <parameter id="_bFYKkOWXEeeDz-I9ArifCA" name="FTP_REMOTE_PATH" type="String" value=":{DIR_IN}:"/>
+      <parameter id="_nFbcEOWXEeeDz-I9ArifCA" name="FTP_LOCAL_PATH" type="String" value="%x{$LOCAL_DIRECTORY/tech:path()}x%"/>
+      <parameter id="_ncZKkOWXEeeDz-I9ArifCA" name="FTP_LOCAL_FILENAME" type="String" value="%x{md:paramValue($this,'v_file')}x%"/>
+      <parameter id="_rCpfkOWXEeeDz-I9ArifCA" name="FTP_FILE_MODE" type="String" value="binary"/>
+      <parameter id="_ibNsQOYyEeey--_1YV_B1w" name="FTP_PASSIVE_MODE" type="Boolean" value="%b(rhino){ &#xD;&#xA;if(':{FTP_PASSIVE}:' == 'Y')&#xD;&#xA;&#x9;{  &#xD;&#xA;&#x9;&#x9;__ctx__.retValue = 'true';&#xD;&#xA;&#x9;}else{&#xD;&#xA;&#x9;&#x9;__ctx__.retValue = 'false';&#x9;&#xD;&#xA;&#x9;}&#xD;&#xA;}b(rhino)%  "/>
+      <code>'${v_action}$'='Put' </code>
+    </actionCode>
+    <actionCode id="_uTG_MOWhEeeDz-I9ArifCA" generationCondition="md:paramValue($this,'v_action')='Get' " enable="true" isBeginAction="false" name="GET_FTP" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FtpGetActionCodeI">
+      <link id="_zc_msOY8Eeey--_1YV_B1w" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_xNx9IOY8Eeey--_1YV_B1w"/>
+      <parameter id="_uTG_MeWhEeeDz-I9ArifCA" name="FTP_HOSTNAME" type="String" value=":{HOST}:"/>
+      <parameter id="_uTG_MuWhEeeDz-I9ArifCA" name="FTP_USER" type="String" value=":{USERNAME}:"/>
+      <parameter id="_uTG_M-WhEeeDz-I9ArifCA" name="FTP_UNCRYPTED_PASSWORD" type="String" value=":{PASSWORD}:"/>
+      <parameter id="_uTG_NOWhEeeDz-I9ArifCA" name="FTP_REMOTE_PATH" type="String" value=":{DIR_OUT}:"/>
+      <parameter id="_uTG_NeWhEeeDz-I9ArifCA" name="FTP_LOCAL_PATH" type="String" value="%x{$LOCAL_DIRECTORY/tech:path()}x%"/>
+      <parameter id="_uTG_NuWhEeeDz-I9ArifCA" name="FTP_REMOTE_FILENAME" type="String" value="%x{md:paramValue($this,'v_file')}x%"/>
+      <parameter id="_uTG_N-WhEeeDz-I9ArifCA" name="FTP_PORT" type="Integer" value=":{PORT}:"/>
+      <parameter id="_uTG_OOWhEeeDz-I9ArifCA" name="FTP_FILE_MODE" type="String" value="binary"/>
+      <parameter id="_G0ExIOYyEeey--_1YV_B1w" name="FTP_PASSIVE_MODE" type="Boolean" value="%b(rhino){ &#xD;&#xA;if(':{FTP_PASSIVE}:' == 'Y')&#xD;&#xA;&#x9;{  &#xD;&#xA;&#x9;&#x9;__ctx__.retValue = 'true';&#xD;&#xA;&#x9;}else{&#xD;&#xA;&#x9;&#x9;__ctx__.retValue = 'false';&#x9;&#xD;&#xA;&#x9;}&#xD;&#xA;}b(rhino)%  "/>
+    </actionCode>
+    <actionCode id="_uTHmQOWhEeeDz-I9ArifCA" generationCondition="md:paramValue($this,'v_action')='Get' " enable="true" isBeginAction="false" name="GET_SCP-SFTP" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScpGetActionCodeI">
+      <link id="_zPCDMOY8Eeey--_1YV_B1w" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_xNx9IOY8Eeey--_1YV_B1w"/>
+      <parameter id="_uTHmQeWhEeeDz-I9ArifCA" name="SCP_REMOTE_FILE" type="String" value="%x{concat(':{DIR_OUT}:',md:paramValue($this,'v_file'))}x%"/>
+      <parameter id="_uTHmQuWhEeeDz-I9ArifCA" name="SSH_USER" type="String" value=":{USERNAME}:"/>
+      <parameter id="_uTHmQ-WhEeeDz-I9ArifCA" name="SSH_HOST" type="String" value=":{HOST}:"/>
+      <parameter id="_uTHmROWhEeeDz-I9ArifCA" name="SSH_UNCRYPTED_PASSWORD" type="String" value=":{PASSWORD}:"/>
+      <parameter id="_uTHmReWhEeeDz-I9ArifCA" name="SCP_LOCAL_DIR" type="String" value="%x{$LOCAL_DIRECTORY/tech:path()}x%"/>
+      <parameter id="_uTHmRuWhEeeDz-I9ArifCA" name="SCP_USE_SFTP" type="Boolean" value="%b(rhino){ &#xD;&#xA;if(':{TYPE}:' == 'SFTP')&#xD;&#xA;&#x9;{  &#xD;&#xA;&#x9;&#x9;__ctx__.retValue = 'true';&#xD;&#xA;&#x9;}else{&#xD;&#xA;&#x9;&#x9;__ctx__.retValue = 'false';&#x9;&#xD;&#xA;&#x9;}&#xD;&#xA;}b(rhino)%  "/>
+      <parameter id="_uTHmR-WhEeeDz-I9ArifCA" name="SSH_PORT" type="Integer" value=":{PORT}:"/>
+      <code></code>
+    </actionCode>
+    <actionCode id="_xNx9IOY8Eeey--_1YV_B1w" generationCondition="md:paramValue($this,'v_action')='Get' " isBeginAction="false" name="Throw GET no active config" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+      <parameter id="_xNzLQOY8Eeey--_1YV_B1w" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+      <code>if((${../GET_SCP-SFTP/CORE_BIND_ITERATIONS}$ + ${../GET_FTP/CORE_BIND_ITERATIONS}$) == 0)&#xD;
+{throw (&quot;No active connection found&quot;)};</code>
+    </actionCode>
+    <actionCode id="_cc0kwOY-Eeey--_1YV_B1w" generationCondition="md:paramValue($this,'v_action')='Put' " isBeginAction="false" name="Throw PUT no active config" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+      <parameter id="_cc0kweY-Eeey--_1YV_B1w" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+      <code>if((${../PUT_SCP-SFTP/CORE_BIND_ITERATIONS}$ + ${../PUT_FTP/CORE_BIND_ITERATIONS}$) == 0)&#xD;
+{throw (&quot;No active connection found&quot;)};</code>
+    </actionCode>
+  </subProcess>
+  <xslVariable id="_hlQyYOWHEeeDz-I9ArifCA" code="$this/metaDataLink/mdj:getMetaDataRef(.)[@defType='com.stambia.file.directory'][1]" name="LOCAL_DIRECTORY" type="xpath"/>
+  <xslVariable id="_HDpbAOYuEeey--_1YV_B1w" code="$this/metaDataLink/mdj:getMetaDataRef(.)[@defType='com.stambia.rdbms.datastore'][1]" name="PARAMS_TABLE" type="xpath"/>
+</proc:process>

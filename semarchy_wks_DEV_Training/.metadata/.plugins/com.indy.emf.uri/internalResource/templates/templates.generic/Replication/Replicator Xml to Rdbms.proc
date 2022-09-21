@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_q6sWcbCJEeGN2O7RfcfrYw" description="This template is used to replicate XML files into a database.&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;22/05/2020 Varchar columns were created without size on AS/400&#xD;&#xA;01/07/2019 PK_ column is created with NOT NULL word&#xD;&#xA;01/03/2019 New parameter 'Load Method'&#xD;&#xA;01/03/2019 Ability to use technology specific loaders&#xD;&#xA;01/03/2019 Initialize template history" name="Replicator Xml to Rdbms">
+  <parameter id="_nddAoDwKEem1RKlAT_Ffew" description="Defines how data will be loaded in target database.&#xD;&#xA;&#xD;&#xA;- generic: default mode which is loading data directly in target database.&#xD;&#xA;&#xD;&#xA;- specific: data is loaded into target database using technology specific loaders to improve performances&#xD;&#xA;For now, specific mode is implemented for Oracle databases only, and the replicator will fall back to generic mode for any other database provider.&#xD;&#xA;&#xD;&#xA;Prerequisite for specific method: Designer S19.0.18 or higher" metaInf="&lt;metaInf id=&quot;value&quot; value=&quot;generic&quot; />&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;specific&quot; />&#xD;&#xA;&lt;xslVariableName>loadMethodParameterValue&lt;/xslVariableName>" name="loadMethod" type="String" value="generic"/>
+  <parameter id="_L5JygMBXEeGnwLIuUUwfIw" name="tablePrefix" type="String" value="PRE_"/>
+  <parameter id="_s_MBcMBmEeG2xteZxBGOrA" name="columnLevelSeparator" type="String" value="\$"/>
+  <parameter id="_KdYWEMBtEeG2xteZxBGOrA" name="filter" type="String" value="1=1"/>
+  <parameter id="_I3HesMB0EeG2xteZxBGOrA" name="merge" type="Boolean" value="true"/>
+  <parameter id="_RVCnEsCREeG2xteZxBGOrA" name="datastoreLevelSeparator" type="String" value="\$"/>
+  <parameter id="_CHxKcNZwEeGKVYWU35iNtg" name="dropTables" type="Boolean" value="false"/>
+  <parameter id="_EqK1wNZwEeGKVYWU35iNtg" name="createTables" type="Boolean" value="false"/>
+  <parameter id="_HkpC0NZwEeGKVYWU35iNtg" name="loadData" type="Boolean" value="false"/>
+  <parameter id="_NmxzYOIAEeGz3tzk7S9UUw" name="shortName" type="Boolean" value="true"/>
+  <parameter id="_QVMkpOIEEeGz3tzk7S9UUw" name="createFk" type="Boolean" value="false"/>
+  <parameter id="_p5_tNOIHEeGz3tzk7S9UUw" name="createPk" type="Boolean" value="false"/>
+  <parameter id="_gHmMwOIMEeGz3tzk7S9UUw" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;lower&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;upper&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;none&quot;/>" name="objectCase" type="String" value="none"/>
+  <parameter id="_nu8YkOLQEeGz3tzk7S9UUw" name="fkName" type="String" value="stb_fk"/>
+  <parameter id="_wG_opeLQEeGz3tzk7S9UUw" name="pkName" type="String" value="stb_pk"/>
+  <parameter id="_zgL8IOqeEeGZj7rqc2dSow" name="deleteTables" type="Boolean" value="false"/>
+  <parameter id="_2-aWgOqeEeGZj7rqc2dSow" name="truncateTables" type="Boolean" value="false"/>
+  <parameter id="_E7kN4OqfEeGZj7rqc2dSow" name="useCascadeOnDeletions" type="Boolean" value="false"/>
+  <parameter id="_dAPb8OqsEeGZj7rqc2dSow" name="disableConstraints" type="Boolean" value="false"/>
+  <parameter id="_qtuZcOrJEeGZj7rqc2dSow" name="inFileName" type="String"/>
+  <parameter id="_i8TnUO4FEeGSnNF3Y842ew" name="enableConstraints" type="Boolean" value="false"/>
+  <parameter id="_b63yID_ZEeK4MMLG2fnbFA" name="columnPrefix" type="String" value=""/>
+  <parameter id="_unxb8F8vEeKXu-6BzzZ69g" name="failsIfNoFile" type="Boolean" value="true"/>
+  <parameter id="_CzBrgF-4EeKpj71XJ0dYvg" name="createTableSyntax" type="String" value="Create table"/>
+  <parameter id="_Y0juoM96EeKMH8oDW3Xy3w" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;true&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;false&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;timestamp&quot;/>&#xD;&#xA;" name="addSessionId" type="String" value="false"/>
+  <parameter id="__n_q8L_sEeOwaOO-NGs0mA" name="disableDatastoreField" type="Boolean" value="false"/>
+  <parameter id="_brDBkMV1EeOdHpcXdVT1Rg" name="datastoreNameTruncationSize" type="Integer"/>
+  <parameter id="_dO1IgMV1EeOdHpcXdVT1Rg" name="columnNameTruncationSize" type="Integer"/>
+  <parameter id="_BOpIQNddEeOtVdH4UyLUuw" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;true&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;false&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;timestamp&quot;/>&#xD;&#xA;" name="addPkAndFkFields" type="Boolean" value="true"/>
+  <parameter id="_Sb7ToNddEeOtVdH4UyLUuw" name="pKSelector" type="String" value="1=2"/>
+  <parameter id="_uNUhAOJgEeOCSobNLd9nag" name="batchSize" type="Integer" value="1"/>
+  <parameter id="_cMCTMAHYEeSfwfNTIU_jeg" name="inFileEncoding" type="String" value=""/>
+  <parameter id="_yEQC4APBEeWQ0e9tOoPGdA" name="ignoreUntypedElements" type="Boolean" value="false"/>
+  <parameter id="_fNhegAOmEempVot545nw-w" name="realPathOnServer" type="String" value="%x{ &#xD;&#xA;if (not(exists($xslTargetFtp) and md:paramValue($this,'enableFileTransport')='true'))&#xD;&#xA;&#x9;then md:paramValue($this,'workFolder')&#xD;&#xA; &#x9;else md:ifEmpty(md:paramValue($this,'pathOnServer'),$xslTargetFtp/tech:systemPath())&#xD;&#xA;}x%"/>
+  <parameter id="_QDInEDwREem1RKlAT_Ffew" name="cleanTemporaryObjects" type="Boolean" value="true"/>
+  <parameter id="_T43eUDwYEem1RKlAT_Ffew" description="Directory in which the temporary files generated during the load are stored.&#xD;&#xA;Note that the Runtime must have access to it." name="workFolder" type="String" value="${/CORE_JAVA_TEMPORARY_FOLDER}$"/>
+  <actionCode id="_ug-goLCJEeGN2O7RfcfrYw" generationCondition="'${createTables}$'='true'" enable="true" isBeginAction="false" name="Create Table" nbCycles="-1" repetitionMode="Sequential" repetitionPublishParameters="true" repetitionQuery="$fields//datastore[count(field)>0]" repetitionVariableName="datastore" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_zKck4OIHEeGz3tzk7S9UUw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_alb1IOqmEeGZj7rqc2dSow"/>
+    <parameter id="_ug-gorCJEeGN2O7RfcfrYw" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_ug-go7CJEeGN2O7RfcfrYw" name="SQL_CONNECTION" type="String" value="%connection{$TARGET}%"/>
+    <parameter id="_ug-gpLCJEeGN2O7RfcfrYw" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+    <code>%x{md:paramValue($this,'createTableSyntax')}x% %x{@physicalName}x%&#xD;
+%xsl{(&#xD;
+	%x{md:patternList(field,'{workName}\t{targetWritableType} {targetNullWord}',',\n\t')}%&#xD;
+	&lt;xsl:if test=&quot;md:paramValue($this,'addSessionId')='true'&quot;>&#xD;
+	, stb_session_id %x{$TARGET/tech:varcharDDL(50)}%&#xD;
+	&lt;/xsl:if>&#xD;
+	&lt;xsl:if test=&quot;md:paramValue($this,'addSessionId')='timestamp'&quot;>&#xD;
+	, stb_session_timestamp %x{$TARGET/tech:numericDDL(13)}%&#xD;
+	&lt;/xsl:if>&#xD;
+	&lt;xsl:if test=&quot;md:paramValue($this,'createPk')='true'&quot;>&#xD;
+	, CONSTRAINT %x{$datastore/@pkName}x% PRIMARY KEY (%x{$_pkName}x%%x{$addSessionId}x%)&#xD;
+	&lt;/xsl:if>	&#xD;
+&#xD;
+	&#xD;
+	&#xD;
+)&#xD;
+}%&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_ug-gpbCJEeGN2O7RfcfrYw" generationCondition="'${dropTables}$'='true'" enable="true" isBeginAction="false" name="Drop Table" nbCycles="-1" repetitionMode="Sequential" repetitionPublishParameters="true" repetitionQuery="$inverseDatastore/datastore" repetitionVariableName="datastore" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_ug-gprCJEeGN2O7RfcfrYw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_ug-goLCJEeGN2O7RfcfrYw"/>
+    <parameter id="_ug-gp7CJEeGN2O7RfcfrYw" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_ug-gqLCJEeGN2O7RfcfrYw" name="SQL_CONNECTION" type="String" value="%connection{$TARGET}%"/>
+    <parameter id="_ug-gqbCJEeGN2O7RfcfrYw" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+    <code>%xsl{&#xD;
+&lt;xsl:variable name=&quot;physicalName&quot; select=&quot;@physicalName&quot;/>&#xD;
+%x{$TARGET/tech:dropTableIfExists($physicalName)}x% %x{if (md:paramValue($this,'useCascadeOnDeletions')='true') then 'cascade' else ''}x%&#xD;
+}xsl%</code>
+  </actionCode>
+  <actionCode id="_ug-gqrCJEeGN2O7RfcfrYw" generationCondition="'${loadData}$'='true'" enable="true" isBeginAction="false" name="Load Tables" nbCycles="-1" repetitionQuery="" toleratedError="false" technology="com.indy.engine.actionCodes.XmlToJdbcActionCodeI">
+    <link id="_iC89sPcqEeGtdOWxXS8NeA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_ndaEEOIJEeGz3tzk7S9UUw"/>
+    <parameter id="_ug-grLCJEeGN2O7RfcfrYw" name="SQL_CONNECTION" type="String" value="%connection{$TARGET}%"/>
+    <parameter id="_ug-grbCJEeGN2O7RfcfrYw" name="IN_FILE_NAME" type="String" value="%x{$fileName}x%"/>
+    <parameter id="_ug-gsLCJEeGN2O7RfcfrYw" name="SQL_BATCH_SIZE" type="String" value="%x{md:paramValue($this,'batchSize')}x%"/>
+    <parameter id="_ug-gsbCJEeGN2O7RfcfrYw" name="SQL_ACTION_TYPE_STAT" type="String" value="LOAD"/>
+    <parameter id="_HK4g0NY1EeGXG_nj4nmxCg" name="SUPER_ROOT_NAME" type="String" value="%x{md:ifEmpty(md:paramValue($this/..,'SUPER_ROOT_NAME'),$SOURCE/tech:xmlRootName())}x%"/>
+    <parameter id="_ThLYMNZuEeGxUufApwSKYA" name="DATA_TYPE_PROVIDER" type="String" value="%x{$SOURCE/tech:dataTypeConverter()}x%"/>
+    <parameter id="_nv3wAF8vEeKXu-6BzzZ69g" name="FAILS_IF_NO_FILE" type="Boolean" value="%x{md:paramValue($this,'failsIfNoFile')}x%"/>
+    <parameter id="_pRv4YAEsEeSfwfNTIU_jeg" name="USE_JSON_FORMAT" type="String" value="%x{$SOURCE/tech:useJsonFormat()}x%"/>
+    <parameter id="_aSmFUAHYEeSfwfNTIU_jeg" name="IN_FILE_ENCODING" type="String" value="%x{md:ifEmpty(md:paramValue($this,'inFileEncoding'),$SOURCE/tech:xmlFileEncoding())}x%"/>
+    <parameter id="_JufoEFOhEeS7NpFLtAl8JQ" name="XML_READER_CLASS" type="String" value="%x{$SOURCE/tech:xmlReaderClass()}x%"/>
+    <parameter id="_u-FNQALiEempVot545nw-w" name="SPLIT_PATH" type="String" value="%x{md:paramValue($this,'splitPath')}x%"/>
+    <parameter id="_xiaLMALiEempVot545nw-w" name="SPLIT_NB_ELEMENT" type="String" value="%x{md:paramValue($this,'splitNbElement')}x%"/>
+    <parameter id="_0HqWMALiEempVot545nw-w" name="NB_WRITER" type="String" value="%x{md:paramValue($this,'nbWriter')}x%"/>
+    <code>%xsl{&#xD;
+&lt;xsl:variable name=&quot;md&quot;>&#xD;
+&lt;root>&#xD;
+	&lt;xsl:copy-of select=&quot;$SOURCE/(@prefixForAttribute | @prefixForElement | @targetNamespace)&quot;/>&#xD;
+	&lt;xsl:copy-of select=&quot;$SOURCE/namespace&quot;/>&#xD;
+	&lt;xsl:copy-of select=&quot;$context&quot;/>&#xD;
+	&lt;xsl:for-each select=&quot;$fields/datastore&quot;>&#xD;
+		&lt;xsl:choose>&#xD;
+			&lt;xsl:when test=&quot;md:paramValue($this,'addSessionId')='true'&quot;>&#xD;
+				&lt;insert datastore=&quot;{@fullPath}&quot;>insert into %x{@physicalName}% (%x{md:list(field/workName,',')}%,stb_session_id) VALUES (%x{md:list(field/concat(':{',@fullPath,'}:'),',')}%,'${/CORE_SESSION_ID}$')&lt;/insert>			&#xD;
+			&lt;/xsl:when>&#xD;
+			&lt;xsl:when test=&quot;md:paramValue($this,'addSessionId')='timestamp'&quot;>&#xD;
+				&lt;insert datastore=&quot;{@fullPath}&quot;>insert into %x{@physicalName}% (%x{md:list(field/workName,',')}%,stb_session_timestamp) VALUES (%x{md:list(field/concat(':{',@fullPath,'}:'),',')}%,${/CORE_SESSION_TIMESTAMP}$)&lt;/insert>			&#xD;
+			&lt;/xsl:when>&#xD;
+			&lt;xsl:otherwise>&#xD;
+				&lt;insert datastore=&quot;{@fullPath}&quot;>insert into %x{@physicalName}% (%x{md:list(field/workName,',')}%) VALUES (%x{md:list(field/concat(':{',@fullPath,'}:'),',')}%)&lt;/insert>&#xD;
+			&lt;/xsl:otherwise>&#xD;
+		&lt;/xsl:choose>&#xD;
+	&lt;/xsl:for-each>&#xD;
+	&lt;xsl:for-each select=&quot;$fields/datastore[count(field)=0]&quot;>&#xD;
+		&lt;insert datastore=&quot;{@fullPath}&quot;>NO_FIELD&lt;/insert>&#xD;
+	&lt;/xsl:for-each>&#xD;
+&lt;/root>&#xD;
+&lt;/xsl:variable>&#xD;
+&#xD;
+%xmlToText{$md}%&#xD;
+&#xD;
+}% </code>
+  </actionCode>
+  <actionCode id="_ndaEEOIJEeGz3tzk7S9UUw" generationCondition="'${createFk}$'='true'" enable="true" isBeginAction="false" name="Create Fk" nbCycles="-1" repetitionMode="Sequential" repetitionPublishParameters="true" repetitionQuery="$fields//datastore[@parentId!='']" repetitionVariableName="datastore" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_iiDUgPcqEeGtdOWxXS8NeA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_N3BaEOqsEeGZj7rqc2dSow"/>
+    <parameter id="_ndaEEuIJEeGz3tzk7S9UUw" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_ndaEE-IJEeGz3tzk7S9UUw" name="SQL_CONNECTION" type="String" value="%connection{$TARGET}%"/>
+    <parameter id="_ndaEFOIJEeGz3tzk7S9UUw" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+    <code>ALTER TABLE %x{@physicalName}x%&#xD;
+ADD CONSTRAINT  %x{$datastore/@fkName}x%&#xD;
+  FOREIGN KEY (%x{$_fkName}x%%x{$addSessionId}x%)&#xD;
+  REFERENCES  %x{$fields//datastore[@id=$datastore/@parentId]/@physicalName}x% (%x{$_pkName}x%%x{$addSessionId}x%)&#xD;
+&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_-D1hEOqeEeGZj7rqc2dSow" generationCondition="'${truncateTables}$'='true'" enable="true" isBeginAction="false" name="Truncate Table" nbCycles="-1" repetitionMode="Sequential" repetitionPublishParameters="true" repetitionQuery="$inverseDatastore/datastore" repetitionVariableName="datastore" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_-D1hEeqeEeGZj7rqc2dSow" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_BP2iYOqlEeGZj7rqc2dSow"/>
+    <parameter id="_-D1hEuqeEeGZj7rqc2dSow" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_-D1hE-qeEeGZj7rqc2dSow" name="SQL_CONNECTION" type="String" value="%connection{$TARGET}%"/>
+    <parameter id="_-D1hFOqeEeGZj7rqc2dSow" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+    <code>truncate table %x{@physicalName}x%&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_BP2iYOqlEeGZj7rqc2dSow" generationCondition="'${deleteTables}$'='true'" enable="true" isBeginAction="false" name="Delete Table" nbCycles="-1" repetitionMode="Sequential" repetitionPublishParameters="true" repetitionQuery="$inverseDatastore/datastore" repetitionVariableName="datastore" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_r04dkF8vEeKXu-6BzzZ69g" generationCondition="$loadMethod='generic'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__k8g4DwREem1RKlAT_Ffew"/>
+    <link id="_5PKpIAH-EempVot545nw-w" generationCondition="$loadMethod='specific'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_ALAbUDwSEem1RKlAT_Ffew"/>
+    <parameter id="_BP2iYuqlEeGZj7rqc2dSow" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_BP2iY-qlEeGZj7rqc2dSow" name="SQL_CONNECTION" type="String" value="%connection{$TARGET}%"/>
+    <parameter id="_BP2iZOqlEeGZj7rqc2dSow" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+    <code>delete from %x{@physicalName}x% %x{if (md:paramValue($this,'useCascadeOnDeletions')='true') then 'cascade' else ''}x%&#xD;
+%xsl{&#xD;
+&lt;xsl:if test=&quot;md:paramValue($this,'addSessionId')='true'&quot;>&#xD;
+where	 stb_session_id = '${/CORE_SESSION_ID}$'&#xD;
+	&lt;/xsl:if>&#xD;
+}xsl%</code>
+  </actionCode>
+  <actionCode id="_alb1IOqmEeGZj7rqc2dSow" generationCondition="'${disableConstraints}$'='true' and $TARGET/tech:productCode()='POSTGRESSQL'" enable="true" isBeginAction="false" name="Disable Constraints" nbCycles="-1" repetitionMode="Sequential" repetitionPublishParameters="true" repetitionQuery="$inverseDatastore/datastore" repetitionVariableName="datastore" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_alb1IeqmEeGZj7rqc2dSow" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_-D1hEOqeEeGZj7rqc2dSow"/>
+    <parameter id="_alb1IuqmEeGZj7rqc2dSow" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_alb1I-qmEeGZj7rqc2dSow" name="SQL_CONNECTION" type="String" value="%connection{$TARGET}%"/>
+    <parameter id="_alb1JOqmEeGZj7rqc2dSow" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+    <code>ALTER TABLE %x{@physicalName}x% DISABLE TRIGGER ALL</code>
+  </actionCode>
+  <actionCode id="_N3BaEOqsEeGZj7rqc2dSow" generationCondition="'${enableConstraints}$'='true' and $TARGET/tech:productCode()='POSTGRESSQL'" enable="true" isBeginAction="false" name="Enable Constraints" nbCycles="-1" repetitionMode="Sequential" repetitionPublishParameters="true" repetitionQuery="$inverseDatastore/datastore" repetitionVariableName="datastore" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <parameter id="_N3BaEuqsEeGZj7rqc2dSow" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <parameter id="_N3BaE-qsEeGZj7rqc2dSow" name="SQL_CONNECTION" type="String" value="%connection{$TARGET}%"/>
+    <parameter id="_N3BaFOqsEeGZj7rqc2dSow" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+    <code>ALTER TABLE %x{@physicalName}x% ENABLE TRIGGER ALL</code>
+  </actionCode>
+  <actionCode id="_rN678AH-EempVot545nw-w" enable="true" isBeginAction="false" name="Unload Xml To files" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.XmlToJdbcActionCodeI">
+    <link id="_X9fXoAH_EempVot545nw-w" generationCondition="$TARGET/tech:productCode()='ORACLE'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_XEesAAH_EempVot545nw-w?fileId=_q6sWcbCJEeGN2O7RfcfrYw$type=proc$name=Load%20to%20Oracle?"/>
+    <parameter id="_rN678gH-EempVot545nw-w" name="SQL_CONNECTION" type="String" value="%connection{$TARGET}%"/>
+    <parameter id="_rN678wH-EempVot545nw-w" name="IN_FILE_NAME" type="String" value="%x{$fileName}%"/>
+    <parameter id="_rN679AH-EempVot545nw-w" name="SUPER_ROOT_NAME" type="String" value="%x{md:ifEmpty(md:paramValue($this,'superRootName'),$SOURCE/tech:xmlRootName())}x%"/>
+    <parameter id="_rN679QH-EempVot545nw-w" name="EMPTY_ELEMENT_AS_NULL" ref="../Xml/LOAD%20Xml%20to%20Rdbms.proc#_a9pnINoCEeCi_78PNYk6Cg" type="Boolean" value=""/>
+    <parameter id="_rN679gH-EempVot545nw-w" name="SQL_BATCH_SIZE" type="String" value="%x{md:paramValue($this,'batchSize')}x%"/>
+    <parameter id="_rN679wH-EempVot545nw-w" name="SQL_ACTION_TYPE_STAT" type="String" value="LOAD"/>
+    <parameter id="_rN67-AH-EempVot545nw-w" name="ERROR_DIR" type="String" value="%x{md:paramValue($this/..,'errorDir')}x%"/>
+    <parameter id="_rN67-QH-EempVot545nw-w" name="DATA_TYPE_PROVIDER" type="String" value="%x{$SOURCE/tech:dataTypeConverter()}x%"/>
+    <parameter id="_rN67-gH-EempVot545nw-w" name="USE_JSON_FORMAT" type="String" value="%x{$SOURCE/tech:useJsonFormat()}x%"/>
+    <parameter id="_rN67-wH-EempVot545nw-w" name="BASE_64_BINARIES_EXTRACT_DIRECTORY" type="String" value="%x{if (md:paramValue($this,'extractBase64BinaryToFile')='true') &#xD;&#xA;&#x9;then md:ifEmpty(md:paramValue($this/..,'base64BinariesExtractDirectory'),concat('xmlBase64Binaries/',$TARGET/@id)) &#xD;&#xA;&#x9;else ''}x%"/>
+    <parameter id="_rN67_AH-EempVot545nw-w" name="XML_READER_CLASS" type="String" value="%x{$SOURCE/tech:xmlReaderClass()}x%"/>
+    <parameter id="_rN67_QH-EempVot545nw-w" name="IN_FILE_ENCODING" type="String" value="%x{md:ifEmpty(md:paramValue($this/..,'inFileEncoding'),$SOURCE/tech:xmlFileEncoding())}x%"/>
+    <parameter id="_rN67_gH-EempVot545nw-w" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+    <parameter id="_rN67_wH-EempVot545nw-w" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+    <parameter id="_rN68AAH-EempVot545nw-w" name="FILE_EXPORT_PROPERTIES" type="String" value="enable=true&#xD;&#xA;fileMask=${/CORE_JAVA_TEMPORARY_FOLDER}$/data_[objectName]/[threadId].dat&#xD;&#xA;fileFormat=delimited&#xD;&#xA;timestampFormat=yyyy/MM/dd HH:mm:ss.SSS&#xD;&#xA;dateFormat=yyyy/MM/dd HH:mm:ss.SSS&#xD;&#xA;#TODO&#xD;&#xA;#timeFormat=&#xD;&#xA;booleanAsNumeric=true&#xD;&#xA;#addRecordNumber=false&#xD;&#xA;#TODO: support ASCII delimiters in order to specify 0x07 and 0x08 to have bullet-proof delimiters on any technology&#xD;&#xA;fieldSeparator=%x{if (md:paramValue($this,'fieldSeparator')='') then '~' else md:paramValue($this,'fieldSeparator')}x%&#xD;&#xA;nullValueReplacement=%x{md:paramValue($this,'nullValueReplacement')}x%&#xD;&#xA;numericDecimalSeparator=.&#xD;&#xA;rowSep=%x{md:ifEmpty(md:paramValue($this,'recordSeparator'),'\n')}x%&#xD;&#xA;#localeLanguage=&#xD;&#xA;#numericPadChar=&#xD;&#xA;numericGroupingSeparator=&#xD;&#xA;#stringPadChar=&#xD;&#xA;stringDelimiter=%x{md:paramValue($this,'stringDelimiter')}x%&#xD;&#xA;#stringDelimiterReplacement&#xD;&#xA;fileEncoding=UTF-8"/>
+    <parameter id="_rN68AQH-EempVot545nw-w" name="SPLIT_PATH" type="String" value="%x{md:paramValue($this,'splitPath')}x%"/>
+    <parameter id="_rN68AgH-EempVot545nw-w" name="SPLIT_NB_ELEMENT" type="Integer" value="%x{md:paramValue($this,'splitNbElement')}x%"/>
+    <parameter id="_rN68AwH-EempVot545nw-w" name="NB_WRITER" type="Integer" value="%x{md:paramValue($this,'nbWriter')}x%"/>
+    <code>%xsl{&#xD;
+&lt;xsl:variable name=&quot;md&quot;>&#xD;
+&lt;root>&#xD;
+	&lt;xsl:copy-of select=&quot;$SOURCE/(@prefixForAttribute | @prefixForElement | @targetNamespace)&quot;/>&#xD;
+	&lt;xsl:copy-of select=&quot;$SOURCE/namespace&quot;/>&#xD;
+	&lt;xsl:copy-of select=&quot;$context&quot;/>&#xD;
+	&lt;xsl:for-each select=&quot;$fields/datastore[count(field)>0]&quot;>&#xD;
+		&lt;insert datastore=&quot;{@fullPath}&quot;>insert into %x{@physicalName}% (%x{md:list(field/workName,',')}%) values(%x{md:list(field/concat(':{',@fullPath,'}:'),',')}%)&lt;/insert>&#xD;
+	&lt;/xsl:for-each>&#xD;
+	&lt;xsl:for-each select=&quot;$fields/datastore[count(field)=0]&quot;>&#xD;
+		&lt;insert datastore=&quot;{@fullPath}&quot;>NO_FIELD&lt;/insert>&#xD;
+	&lt;/xsl:for-each>&#xD;
+&lt;/root>&#xD;
+&lt;/xsl:variable>&#xD;
+&#xD;
+%xmlToText{$md}%&#xD;
+&#xD;
+}% &#xD;
+&#xD;
+&#xD;
+</code>
+  </actionCode>
+  <actionCode id="__k8g4DwREem1RKlAT_Ffew" isBeginAction="false" name="generic load" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_B3hAcDwSEem1RKlAT_Ffew" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_ug-gqrCJEeGN2O7RfcfrYw"/>
+  </actionCode>
+  <actionCode id="_ALAbUDwSEem1RKlAT_Ffew" isBeginAction="false" name="specific load" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_C2Jy8DwSEem1RKlAT_Ffew" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_sdFXMARCEempVot545nw-w?fileId=_q6sWcbCJEeGN2O7RfcfrYw$type=proc$name=Clean%20previous%20temporary%20files?"/>
+  </actionCode>
+  <subProcess id="_XEesAAH_EempVot545nw-w" enable="true" isBeginAction="false" name="Load to Oracle" nbCycles="-1" repetitionMode="Parallelize" repetitionQuery="$fields//datastore[count(field)>0]" repetitionVariableName="datastore" toleratedError="false">
+    <link id="_8UFfADwPEem1RKlAT_Ffew" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_713R8DwPEem1RKlAT_Ffew?fileId=_q6sWcbCJEeGN2O7RfcfrYw$type=proc$name=Clean%20temporary%20files?"/>
+    <actionCode id="_XEesAQH_EempVot545nw-w" enable="true" isBeginAction="false" name="FileWait" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileWaitActionCodeI">
+      <bindLink id="_XEesAgH_EempVot545nw-w" bindType="DirectBind" targetId="_XEesDgH_EempVot545nw-w"/>
+      <parameter id="_XEesAwH_EempVot545nw-w" name="WAIT_FILE_DIR" type="String" value="${../../realPathOnServer}$/data_%x{$datastore/@name}x%"/>
+      <parameter id="_XEesBAH_EempVot545nw-w" name="WAIT_FILE_INCLUDES" type="String" value="*.dat"/>
+      <parameter id="_XEesBQH_EempVot545nw-w" name="WAIT_FILE_NB_FILES" type="Integer" value="%x{md:paramValue($this,'nbWriter')}x%"/>
+      <parameter id="_XEesBgH_EempVot545nw-w" name="WAIT_FILE_TIMEOUT" type="Integer" value="2"/>
+      <parameter id="_XEesBwH_EempVot545nw-w" name="WAIT_FILE_POLLINT" type="Integer" value="1"/>
+    </actionCode>
+    <actionCode id="_XEesCAH_EempVot545nw-w" enable="true" isBeginAction="false" name="SQL Loader call" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+      <parameter id="_XEesCQH_EempVot545nw-w" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+      <parameter id="_XEesCgH_EempVot545nw-w" name="SCRIPTING_CONNECTION" type="String" value="%x{$this/../@id}x%_%x{$datastore/@name}x%"/>
+      <code>importPackage(java.lang);&#xD;
+importPackage(java.io);&#xD;
+&#xD;
+command =&quot;sqlldr control='&quot;+ __ctx__.getVariableValue(&quot;../../realPathOnServer&quot;)  + &quot;/data_%x{$datastore/@name}x%.ctl' log='&quot;+ __ctx__.getVariableValue(&quot;../../realPathOnServer&quot;)  + &quot;/data_%x{$datastore/@name}x%.log' userid=%x{$TARGET/tech:jdbcUser()}x%/%x{$TARGET/tech:jdbcPassword()}x%@%x{$TARGET/ref:target()/tech:serverName()}x%&quot;;&#xD;
+command =  command.replace(&quot;/\\/g&quot;,&quot;/&quot;);&#xD;
+//__ctx__.publishVariable(&quot;../SQLLoader Command&quot;, command);&#xD;
+	&#xD;
+try {&#xD;
+	var env = java.lang.System.getenv();&#xD;
+	envs = [];&#xD;
+	var i = 0;&#xD;
+	keyArray = env.keySet().toArray();&#xD;
+	for(i=0, l = keyArray.length; i &lt; l; i++){&#xD;
+			var key = keyArray[i]; &#xD;
+			var value = env.get(key);&#xD;
+			envs[i]=key + &quot;=&quot; + value;&#xD;
+	}&#xD;
+	envs[i] =&quot;NLS_NUMERIC_CHARACTERS=. &quot;;&#xD;
+	osRuntime = Runtime.getRuntime();&#xD;
+	osProc = osRuntime.exec(command,envs);&#xD;
+	&#xD;
+	&#xD;
+	&#xD;
+	_in = new java.lang.StringBuffer();&#xD;
+	_err = new java.lang.StringBuffer();&#xD;
+&#xD;
+	psr=com.indy.engine.common.tools.ProcessWrapper.wrap(osProc);&#xD;
+	psr.setInputStringBuffer(_in,-1);&#xD;
+	psr.setErrorStringBuffer(_err,-1);&#xD;
+	ret=psr.waitFor();&#xD;
+		&#xD;
+	if(ret != 0){&#xD;
+		throw new Exception(&quot;Error when calling SQL*Loader.  See log '&quot;+ __ctx__.getVariableValue(&quot;../realPathOnServer&quot;).replaceAll(&quot;\\\\&quot;,&quot;/&quot;)  + &quot;/data_%x{$datastore/@name}x%.log' for more details...&quot;);&#xD;
+	}&#xD;
+&#xD;
+}&#xD;
+&#xD;
+catch(e){&#xD;
+	throw e;&#xD;
+}&#xD;
+finally{&#xD;
+	if (typeof psr !== 'undefined') {&#xD;
+		if (psr != null){&#xD;
+			psr.destroy();&#xD;
+		}&#xD;
+	}&#xD;
+}&#xD;
+&#xD;
+</code>
+    </actionCode>
+    <actionCode id="_XEesCwH_EempVot545nw-w" generationCondition="" enable="true" isBeginAction="false" name="Generation of the CTL file" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+      <link id="_XEesDAH_EempVot545nw-w" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_XEesCAH_EempVot545nw-w"/>
+      <parameter id="_XEesDQH_EempVot545nw-w" name="TXT_WRITE_FILENAME" type="String" value="${../../realPathOnServer}$/data_%x{$datastore/@name}x%.ctl"/>
+      <code>OPTIONS (&#xD;
+	SKIP			=0,&#xD;
+	ERRORS			=%x{if (md:paramValue($this,'errorsOption')!='') then md:paramValue($this,'errorsOption') else '0'}x%,&#xD;
+	DIRECT			=TRUE,&#xD;
+	PARALLEL		=TRUE&#xD;
+	)&#xD;
+LOAD DATA&#xD;
+CHARACTERSET UTF8&#xD;
+%comment{it's not necessary to set characterset because the source file is utf8 (default for oracle)}comment%&#xD;
+${../listFile}$&#xD;
+DISCARDMAX		%x{if (md:paramValue($this,'discardmax')!='') then md:paramValue($this,'discardmax') else '1'}x%&#xD;
+APPEND&#xD;
+INTO TABLE %x{$datastore/@physicalName}x%&#xD;
+FIELDS TERMINATED BY '%x{if (md:paramValue($this,'fieldSeparator')='') then '~' else md:paramValue($this,'fieldSeparator')}x%' %x{if (md:paramValue($this,'stringDelimiter')!='') then concat('OPTIONALLY ENCLOSED BY ''',md:paramValue($this,'stringDelimiter'),'''') else '' }x%&#xD;
+TRAILING NULLCOLS&#xD;
+(&#xD;
+%x{md:list($datastore/field/concat(workName, if(targetWritableType='DATE') then concat('	DATE ''',$TARGET/tech:convertJavaTimestamp('yyyy-MM-dd HH:mm:ss.S'),'''') &#xD;
+else if(starts-with(targetWritableType,'TIMESTAMP')) then concat('	TIMESTAMP ''',$TARGET/tech:convertJavaTimestamp('yyyy-MM-dd HH:mm:ss.SSS'),'''') &#xD;
+else if (md:ifEmpty(byteLength, '0')>255) then concat(' CHAR(',byteLength,')') &#xD;
+else ''),',\n\t')}x%&#xD;
+)&#xD;
+&#xD;
+&#xD;
+&#xD;
+</code>
+    </actionCode>
+    <actionCode id="_XEesDgH_EempVot545nw-w" isBeginAction="false" name="File listfiles" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+      <link id="_XEesDwH_EempVot545nw-w" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_XEesFgH_EempVot545nw-w"/>
+      <parameter id="_XEesEAH_EempVot545nw-w" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+      <parameter id="_XEesEQH_EempVot545nw-w" name="SCRIPTING_CONNECTION" type="String" value="%x{$this/../@id}x%_%x{$datastore/@name}x%"/>
+      <code>FileDir = &quot;%b(rhino){var pattern = /\\/g;String(__ctx__.getSourceResultSet().getString('FILE_DIR')).replace(pattern,'/')}b%&quot;;&#xD;
+FileName = &quot;:{FILE_NAME}:&quot;;&#xD;
+listFile+=&quot;INFILE \&quot;&quot; +FileDir + &quot;/&quot; + FileName + &quot;\&quot;\n&quot;;&#xD;
+listFile+=&quot;BADFILE \&quot;&quot; +FileDir + &quot;/&quot; + FileName + &quot;.bad\&quot;\n&quot;;&#xD;
+listFile+=&quot;DISCARDFILE \&quot;&quot; + FileDir + &quot;/&quot; +FileName+ &quot;.dsc\&quot;\n&quot;;</code>
+    </actionCode>
+    <actionCode id="_XEesEgH_EempVot545nw-w" isBeginAction="false" name="init listFiles" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+      <link id="_XEesEwH_EempVot545nw-w" executionCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_XEesDgH_EempVot545nw-w"/>
+      <parameter id="_XEesFAH_EempVot545nw-w" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+      <parameter id="_XEesFQH_EempVot545nw-w" name="SCRIPTING_CONNECTION" type="String" value="%x{$this/../@id}x%_%x{$datastore/@name}x%"/>
+      <code>var listFile=&quot;&quot;;</code>
+    </actionCode>
+    <actionCode id="_XEesFgH_EempVot545nw-w" isBeginAction="false" name="Publish listFiles" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+      <link id="_XEesFwH_EempVot545nw-w" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_XEesCwH_EempVot545nw-w"/>
+      <parameter id="_XEesGAH_EempVot545nw-w" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+      <parameter id="_XEesGQH_EempVot545nw-w" name="SCRIPTING_CONNECTION" type="String" value="%x{$this/../@id}x%_%x{$datastore/@name}x%"/>
+      <code>__ctx__.publishVariable(&quot;../listFile&quot;,listFile);</code>
+    </actionCode>
+  </subProcess>
+  <subProcess id="_sdFXMARCEempVot545nw-w" enable="true" isBeginAction="false" name="Clean previous temporary files" nbCycles="-1" repetitionQuery="$fields//datastore[count(field)>0]" repetitionVariableName="datastore" toleratedError="false">
+    <link id="_xv57sARCEempVot545nw-w" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_rN678AH-EempVot545nw-w"/>
+    <actionCode id="_52C8ZARCEempVot545nw-w" isBeginAction="false" name="MkDir" nbCycles="-1" repetitionQuery="" repetitionVariableName="" toleratedError="false" technology="com.indy.engine.actionCodes.MkDirActionCodeI">
+      <parameter id="_52C8ZQRCEempVot545nw-w" name="FILE_DIR" type="String" value="${../../realPathOnServer}$/data_%x{$datastore/@name}x%"/>
+    </actionCode>
+    <actionCode id="_zOaegDwQEem1RKlAT_Ffew" isBeginAction="false" name="Delete data dir" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+      <link id="_zOaegTwQEem1RKlAT_Ffew" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_zOqWIDwQEem1RKlAT_Ffew"/>
+      <parameter id="_zOaegjwQEem1RKlAT_Ffew" name="DEL_DIR" type="String" value="${../../realPathOnServer}$/data_%x{$datastore/@name}x%"/>
+      <parameter id="_zOaegzwQEem1RKlAT_Ffew" name="DEL_INCLUDES" type="String" value="**"/>
+      <parameter id="_zOaehDwQEem1RKlAT_Ffew" name="DEL_INCLUDE_EMPTY_DIRS" type="Boolean" value="true"/>
+    </actionCode>
+    <actionCode id="_zOqWIDwQEem1RKlAT_Ffew" isBeginAction="false" name="Delete temporary sql loader ctl and log files" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+      <link id="_zkL6MDwQEem1RKlAT_Ffew" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_52C8ZARCEempVot545nw-w"/>
+      <parameter id="_zOqWITwQEem1RKlAT_Ffew" name="DEL_DIR" type="String" value="${../../realPathOnServer}$"/>
+      <parameter id="_zOqWIjwQEem1RKlAT_Ffew" name="DEL_INCLUDES" type="String" value="data_%x{$datastore/@name}x%.ctl;data_%x{$datastore/@name}x%.log"/>
+    </actionCode>
+  </subProcess>
+  <subProcess id="_713R8DwPEem1RKlAT_Ffew" generationCondition="'${cleanTemporaryObjects}$' != 'false'" enable="true" isBeginAction="false" name="Clean temporary files" nbCycles="-1" repetitionQuery="$fields//datastore[count(field)>0]" repetitionVariableName="datastore" toleratedError="false">
+    <actionCode id="_NETT4DwQEem1RKlAT_Ffew" isBeginAction="false" name="Delete data dir" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+      <link id="_ZlEs0DwQEem1RKlAT_Ffew" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_Y3OIUDwQEem1RKlAT_Ffew"/>
+      <parameter id="_Ol8s0DwQEem1RKlAT_Ffew" name="DEL_DIR" type="String" value="${../../realPathOnServer}$/data_%x{$datastore/@name}x%"/>
+      <parameter id="_PTyqQDwQEem1RKlAT_Ffew" name="DEL_INCLUDES" type="String" value="**"/>
+      <parameter id="_PY5zwDwQEem1RKlAT_Ffew" name="DEL_INCLUDE_EMPTY_DIRS" type="Boolean" value="true"/>
+    </actionCode>
+    <actionCode id="_Y3OIUDwQEem1RKlAT_Ffew" isBeginAction="false" name="Delete temporary sql loader ctl and log files" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+      <parameter id="_Y3OIUjwQEem1RKlAT_Ffew" name="DEL_DIR" type="String" value="${../../realPathOnServer}$"/>
+      <parameter id="_Y3OIUzwQEem1RKlAT_Ffew" name="DEL_INCLUDES" type="String" value="data_%x{$datastore/@name}x%.ctl;data_%x{$datastore/@name}x%.log"/>
+    </actionCode>
+  </subProcess>
+  <xslVariable id="_ug-gsrCJEeGN2O7RfcfrYw" code="%xsl{&#xD;&#xA;&lt;xsl:apply-templates select=&quot;$SOURCE&quot; mode=&quot;analyzeDatastore&quot;>&#xD;&#xA;&lt;xsl:with-param name=&quot;filters&quot; select=&quot;$SOURCE//*[saxon:evaluate(md:paramValue($this,'filter'))]/@id&quot; tunnel=&quot;yes&quot;/>&#xD;&#xA;&lt;xsl:with-param name=&quot;activeFilters&quot; select=&quot;true()&quot; tunnel=&quot;yes&quot;/>&#xD;&#xA;&lt;xsl:with-param name=&quot;datastorePrefix&quot; select=&quot;'PREC_'&quot; tunnel=&quot;yes&quot;/>&#xD;&#xA;&lt;xsl:with-param name=&quot;datastoreLogicalPrefix&quot; select=&quot;'PREC_'&quot; tunnel=&quot;yes&quot;/>&#xD;&#xA;&lt;xsl:with-param name=&quot;disableDatastoreField&quot; select=&quot;$disableDatastoreField&quot; tunnel=&quot;yes&quot;/>&#xD;&#xA;&lt;xsl:with-param name=&quot;resetPosition&quot; select=&quot;true()&quot;/>&#xD;&#xA;&lt;xsl:with-param name=&quot;datastoreXpathName&quot; select=&quot;concat('concat(''',md:paramValue($this,'tablePrefix'),''',@name)')&quot; tunnel=&quot;yes&quot;/>&#xD;&#xA;&lt;xsl:with-param name=&quot;disableMerge&quot; select=&quot;md:paramValue($this,'merge')='false'&quot; tunnel=&quot;yes&quot;/>&#xD;&#xA;&lt;xsl:with-param name=&quot;columnNameTruncationSize&quot; select=&quot;md:paramValue($this,'columnNameTruncationSize')&quot; tunnel=&quot;yes&quot;/>&#xD;&#xA;&lt;xsl:with-param name=&quot;datastoreNameTruncationSize&quot; select=&quot;md:paramValue($this,'datastoreNameTruncationSize')&quot; tunnel=&quot;yes&quot;/>&#xD;&#xA;&lt;/xsl:apply-templates>&#xD;&#xA;}xsl%&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;" name="context" order="3" type="xsl"/>
+  <xslVariable id="_ug-gs7CJEeGN2O7RfcfrYw" code="%xsl{&#xD;&#xA;&lt;xsl:variable name=&quot;targetNullWOrd&quot; select=&quot;$TARGET/tech:nullWord()&quot;/>&#xD;&#xA;&lt;xsl:variable name=&quot;targetNotNullWOrd&quot; select=&quot;md:ifEmpty($TARGET/tech:notNullWord(),$targetNullWOrd)&quot;/>&#xD;&#xA;&lt;xsl:for-each select=&quot;$context//datastore&quot;>&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;position&quot; select=&quot;if (md:paramValue($this,'shortName')='true') then $context//datastore[@sourceName=current()/@sourceName and @id!=current()/@id] else $context//datastore[@fullPath=current()/@fullPath and @id!=current()/@id]&quot;/>&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;position&quot; select=&quot;if ($position) then concat('_',position()) else ''&quot;/>&#x9;&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;name&quot; select=&quot;concat(md:paramValue($this,'tablePrefix'),replace(replace(@fullPath,'/',md:paramValue($this,'datastoreLevelSeparator')),'\.','_'))&quot;/>&#xD;&#xA;&#x9;&lt;!--&lt;xsl:variable name=&quot;name&quot; select=&quot;if (md:paramValue($this,'addPosition')='true') then concat($name,'_',position()) else $name&quot;/>-->&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;name&quot; select=&quot;if (md:paramValue($this,'shortName')='true') then concat(md:paramValue($this,'tablePrefix'),replace(@sourceName,'\.','_')) else $name&quot;/>&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;name&quot; select=&quot;concat($name,$position)&quot;/>&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;name&quot; select=&quot;if ($objectCase='lower') then lower-case($name) else if ($objectCase='upper') then upper-case($name) else $name&quot;/>&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;fkName&quot; select=&quot;$TARGET/tech:addDelimiter(concat($name,'_fk'))&quot;/>&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;fkName&quot; select=&quot;if ($objectCase='lower') then lower-case($fkName) else if ($objectCase='upper') then upper-case($fkName) else $fkName&quot;/>&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;pkName&quot; select=&quot;$TARGET/tech:addDelimiter(concat($name,'_pk'))&quot;/>&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;pkName&quot; select=&quot;if ($objectCase='lower') then lower-case($pkName) else if ($objectCase='upper') then upper-case($pkName) else $pkName&quot;/>&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;name&quot; select=&quot;$TARGET/tech:addDelimiter($name)&quot;/>&#xD;&#xA;&#x9;&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;name2&quot; select=&quot;if (md:paramValue($this,'shortName')='true') then concat(md:paramValue($this,'tablePrefix'),'2',replace(@sourceName,'\.','_')) else $name&quot;/>&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;name2&quot; select=&quot;concat($name2,$position)&quot;/>&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;name2&quot; select=&quot;if ($objectCase='lower') then lower-case($name2) else if ($objectCase='upper') then upper-case($name2) else $name2&quot;/>&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;name2&quot; select=&quot;$TARGET/tech:addDelimiter($name2)&quot;/>&#xD;&#xA;&#x9;&lt;xsl:variable name=&quot;datastore&quot; select=&quot;.&quot;/>&#xD;&#xA;&#x9;&lt;datastore name=&quot;{$name}&quot; fullPath=&quot;{@fullPath}&quot; physicalName=&quot;{md:objectPath($TARGET,$name)}&quot; physicalName2=&quot;{md:objectPath($TARGET,$name2)}&quot; parentId=&quot;{../@id}&quot; fkName=&quot;{$fkName}&quot; pkName=&quot;{$pkName}&quot; id=&quot;{@id}&quot;>&#xD;&#xA;&#x9;&#x9;&lt;xsl:if test=&quot;md:paramValue($this,'addPkAndFkFields')='true'&quot;>&#xD;&#xA;&#x9;&#x9;&lt;xsl:if test=&quot;position()>1&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;field id=&quot;{@id}&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;targetWritableType>%x{$TARGET/tech:numericDDL(10)}%&lt;/targetWritableType>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;targetNullWord>%x{$targetNullWOrd}%&lt;/targetNullWord>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;workName>&lt;xsl:value-of select=&quot;$_fkName&quot;/>&lt;/workName>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;/field>&#xD;&#xA;&#x9;&#x9;&lt;/xsl:if>&#xD;&#xA;&#x9;&#x9;&lt;field id=&quot;{@id}&quot; isPk=&quot;true&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;targetWritableType>%x{$TARGET/tech:numericDDL(10)}%&lt;/targetWritableType>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;targetNullWord>%x{$targetNotNullWOrd}%&lt;/targetNullWord>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;workName>&lt;xsl:value-of select=&quot;$_pkName&quot;/>&lt;/workName>&#xD;&#xA;&#x9;&#x9;&lt;/field>&#xD;&#xA;&#x9;&#x9;&lt;/xsl:if>&#xD;&#xA;&#x9;&#x9;&lt;xsl:variable name=&quot;fields&quot; select=&quot;field[@type!='' or not(md:paramValue($this,'ignoreUntypedElements')='true')]&quot;/>&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&lt;xsl:for-each select=&quot;$fields&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;current&quot; select=&quot;.&quot;/>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;position&quot; select=&quot;if (md:paramValue($this,'shortName')='true') then $fields[lower-case(@sourceName)=current()/lower-case(@sourceName) and @id!=current()/@id] else $fields[@fullPath=current()/@fullPath and @id!=current()/@id]&quot;/>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;test&quot; select=&quot;$fields[@fullPath=current()/@fullPath and @id!=current()/@id]&quot;/>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;position&quot; select=&quot;if ($position) then concat('_',position()) else ''&quot;/>&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;id&quot; select=&quot;@id&quot;/>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;xsl:for-each select=&quot;$SOURCE//*[@id=current()/@id]&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;field id=&quot;{$id}&quot; fullPath=&quot;{$current/@fullPath}&quot; isPk=&quot;{mdj:evaluate(.,md:paramValue($this,'pKSelector'))}&quot;>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;targetWritableType>%x{md:convertDataType(.,$TARGET, 'write')}%&lt;/targetWritableType>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;targetNullWord>%x{$targetNullWOrd}%&lt;/targetNullWord>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;size>%x{tech:size()}x%&lt;/size>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;byteLength>%x{./@byteLength}x%&lt;/byteLength>&#x9;&#x9;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;wName&quot; select=&quot;substring($current/@fullPath,string-length($datastore/@fullPath)+2)&quot;/>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;wName&quot; select=&quot;if ($wName ='') then @name else $wName&quot;/>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;wName&quot; select=&quot;replace(replace(replace($wName,'\.','_'),'/',md:paramValue($this,'columnLevelSeparator')),'@','')&quot;/>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;wName&quot; select=&quot;if (md:paramValue($this,'shortName')='true') then $current/@sourceName else $wName&quot;/>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;wName&quot; select=&quot;concat($wName,$position)&quot;/>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;wName&quot; select=&quot;concat(md:paramValue($this,'columnPrefix'),$wName)&quot;/>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;wName&quot; select=&quot;if ($objectCase='lower') then lower-case($wName) else if ($objectCase='upper') then upper-case($wName) else $wName&quot;/>&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;wName&quot; select=&quot;$TARGET/tech:addDelimiter($wName,false(),'column')&quot;/>&#xD;&#xA;&lt;!--&#x9;&#x9;&#x9;&#x9;&#x9;&lt;xsl:variable name=&quot;wName&quot; select=&quot;if (md:paramValue($this,'addPosition')='true') then concat($wName,'_',position()) else $wName&quot;/>-->&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;&lt;workName>%x{replace($wName,'\.','_')}%&lt;/workName>&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;&#x9;&lt;/field>&#xD;&#xA;&#x9;&#x9;&#x9;&lt;/xsl:for-each>&#xD;&#xA;&#x9;&#x9;&lt;/xsl:for-each>&#xD;&#xA;&#x9;&lt;/datastore>&#xD;&#xA;&lt;/xsl:for-each>&#xD;&#xA;}%&#xD;&#xA;" name="fields" order="4" type="xsl"/>
+  <xslVariable id="_ug_uwLCJEeGN2O7RfcfrYw" code="md:ifEmpty(if (md:paramValue($this,'inFileName')!='') then '${../inFileName}$' else '',&#xD;&#xA;&#x9;$SOURCE/tech:xmlInFilePath(),&#xD;&#xA;&#x9;$SOURCE/tech:xmlFilePath(),&#xD;&#xA;&#x9;concat('${/CORE_JAVA_TEMPORARY_FOLDER}$/',$SOURCE/@id,'.xml')&#xD;&#xA;&#x9;)&#xD;&#xA;" name="fileName" order="4" type="xpath"/>
+  <xslVariable id="_-xKJUOIHEeGz3tzk7S9UUw" code="%xsl{&lt;xsl:for-each select=&quot;$fields//datastore[count(field)>0]&quot;>&#xD;&#xA;&lt;xsl:sort select=&quot;position()&quot; order=&quot;descending&quot; data-type=&quot;number&quot;/>&#xD;&#xA;&lt;datastore  physicalName=&quot;{@physicalName}&quot;/>&#xD;&#xA;&lt;/xsl:for-each>}xsl%" name="inverseDatastore" order="5" type="xsl"/>
+  <xslVariable id="_Pon40OLQEeGz3tzk7S9UUw" code="md:paramValue($this,'objectCase')" name="objectCase" order="-2" type="xpath"/>
+  <xslVariable id="_08ew4OLQEeGz3tzk7S9UUw" code="if ($objectCase='lower') then lower-case(md:paramValue($this,'fkName')) else if ($objectCase='upper') then upper-case(md:paramValue($this,'fkName')) else md:paramValue($this,'fkName')" name="_fkName" order="-1" type="xpath"/>
+  <xslVariable id="_EprplOLREeGz3tzk7S9UUw" code="if ($objectCase='lower') then lower-case(md:paramValue($this,'pkName')) else if ($objectCase='upper') then upper-case(md:paramValue($this,'pkName')) else md:paramValue($this,'pkName')" name="_pkName" order="-1" type="xpath"/>
+  <xslVariable id="_39S8sM-EEeKMH8oDW3Xy3w" code="if (md:paramValue($this,'addSessionId')='true') then ',stb_session_id' else &#xD;&#xA;if (md:paramValue($this,'addSessionId')='timestamp') then ',stb_session_timestamp' else ''&#xD;&#xA;" name="addSessionId" type="xpath"/>
+  <xslVariable id="_bVoMcNf6EeKSCt1bEdTmUA" code="if (exists($_SOURCE)) then $_SOURCE else $SOURCE" name="SOURCE" order="1" type="xpath"/>
+  <xslVariable id="_9iGc0Nf6EeKSCt1bEdTmUA" code="if (exists($_TARGET)) then $_TARGET else $TARGET" name="TARGET" order="1" type="xpath"/>
+  <xslVariable id="_2hPz4MDTEeOTSNkjQ9vmZw" code="$this/metaDataLink/mdj:getMetaDataRef(.)[@defType='com.stambia.rdbms.schema'][1]" name="_TARGET" type="xpath"/>
+  <xslVariable id="_2hXvsMDTEeOTSNkjQ9vmZw" code="$this/metaDataLink/mdj:getMetaDataRef(.)[@defType='com.stambia.xml.root'][1]" name="_SOURCE" type="xpath"/>
+  <xslVariable id="_YjDHYAOiEempVot545nw-w" code="$TARGET/mdj:xpath('$TARGET_FTP')" name="xslTargetFtp" type="xpath"/>
+  <xslVariable id="_oQ7sADwKEem1RKlAT_Ffew" code="if (not($TARGET/tech:productCode()='ORACLE'))&#xD;&#xA;&#x9;then 'generic'&#xD;&#xA;else&#xD;&#xA;&#x9;md:ifEmpty($loadMethodParameterValue,'generic')" name="loadMethod" order="1" type="xpath"/>
+  <xslVariable id="_ovUxADwyEem1RKlAT_Ffew" code="if($loadMethod='specific')&#xD;&#xA;&#x9;then true()&#xD;&#xA;else&#xD;&#xA;&#x9;md:paramValue($this,'disableDatastoreField')='true'" name="disableDatastoreField" order="2" type="xpath"/>
+</proc:process>

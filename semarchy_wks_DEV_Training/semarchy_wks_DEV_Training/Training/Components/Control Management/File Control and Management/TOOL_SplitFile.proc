@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_dvCjceAQEeeUVJ4oNl6vpw">
+  <parameter id="_Tejc8ODSEeeUVJ4oNl6vpw" description="XPath Expression that specifies the path to the target file&#xD;&#xA;If specified, this expression will have precedence on any Metadata Link specifying the target file as well as the option Work File&#xD;&#xA;&#xD;&#xA;Example:&#xD;&#xA;$data/tech:path()" metaInf="" name="XPathExpressionForFilePath" type="String" value=""/>
+  <parameter id="_lLrmAODSEeeUVJ4oNl6vpw" description="File to split&#xD;&#xA;This expression is used if no Metadata Link specifying the target file can be found and if XPath Expression For Work file is empty" metaInf="" name="FilePath" type="String" value=""/>
+  <parameter id="_dpxZsOPFEeebpNpIPWPqBg" name="HeaderLinePosition" type="String"/>
+  <parameter id="_5Ko7cOPKEeebpNpIPWPqBg" name="LineToSkip" type="String"/>
+  <parameter id="_If1j0ePLEeebpNpIPWPqBg" name="LastLineToSkip" type="String"/>
+  <actionCode id="_XGz1gOCwEeeUVJ4oNl6vpw" enable="true" isBeginAction="false" name="Scripting Jyton to count nb_rows" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <parameter id="_XGz1geCwEeeUVJ4oNl6vpw" name="SCRIPTING_LANGUAGE" type="String" value="jython"/>
+    <code>import os&#xD;
+cur_file = '%x{$SPLIT_FILE_PATH}x%'&#xD;
+file_without_extention,file_extention = os.path.splitext(cur_file)&#xD;
+header_line = %x{$HEADER_LINE_POSITION}x%&#xD;
+begin_line_to_skip = %x{$LINE_TO_SKIP}x%&#xD;
+end_line_to_skip = %x{$LAST_LINE_TO_SKIP}x% &#xD;
+&#xD;
+# Count number of rows&#xD;
+my_file = open(cur_file)&#xD;
+try:&#xD;
+     nb_lines = 0&#xD;
+     buf_size = 1024 * 1024&#xD;
+     read_f = my_file.read # loop optimization&#xD;
+     buf = read_f(buf_size)&#xD;
+&#xD;
+     # Empty file&#xD;
+     if not buf:&#xD;
+        nb_lines = 0&#xD;
+&#xD;
+     while buf:&#xD;
+           nb_lines += buf.count('\n')&#xD;
+           buf = read_f(buf_size)&#xD;
+&#xD;
+finally:&#xD;
+     my_file.close()&#xD;
+     &#xD;
+if header_line == 0:&#xD;
+   if begin_line_to_skip == 0:&#xD;
+      begin_line = 1&#xD;
+   else:&#xD;
+      begin_line = header_line_to_skip + 1&#xD;
+else:&#xD;
+   begin_line = header_line&#xD;
+end_line = nb_lines - end_line_to_skip&#xD;
+&#xD;
+middle_line = (end_line - begin_line)/2 + begin_line&#xD;
+&#xD;
+# Split one file in two     &#xD;
+my_file = open(cur_file) &#xD;
+my_new_file1 = open(file_without_extention+'_1'+file_extention, 'w')&#xD;
+my_new_file2 = open(file_without_extention+'_2'+file_extention, 'w') &#xD;
+&#xD;
+try:&#xD;
+	lines = my_file.readlines()&#xD;
+	for i, line in enumerate(lines):&#xD;
+	    if  i+1 > middle_line:&#xD;
+	        if  i+1 &lt;= end_line:&#xD;
+	            my_new_file2.write(line)&#xD;
+	    else:&#xD;
+	        my_new_file1.write(line)&#xD;
+            if  i+1 == header_line and header_line != 0:&#xD;
+                my_new_file2.write(line)&#xD;
+              &#xD;
+finally:&#xD;
+	my_file.close()&#xD;
+	my_new_file1.close()&#xD;
+	my_new_file2.close()&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_mZgOkODTEeeUVJ4oNl6vpw" isBeginAction="false" name="Start" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_mt4jIODTEeeUVJ4oNl6vpw" generationCondition="exists($SPLIT_FILE_PATH)" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_XGz1gOCwEeeUVJ4oNl6vpw"/>
+  </actionCode>
+  <xslVariable id="_pB8-4ODQEeeUVJ4oNl6vpw" code="replace(md:ifEmpty(&#xD;&#xA;       mdj:evaluate($this,md:paramValue($this,'XPathExpressionForFilePath')),&#xD;&#xA;       $this/metaDataLink/mdj:getMetaDataRef(.)[name()='file'][1]/tech:filePath(),&#xD;&#xA;       md:paramValue($this,'FilePath')&#xD;&#xA;),'\\','/')&#xD;&#xA;" name="SPLIT_FILE_PATH" type="xpath"/>
+  <xslVariable id="_r9fW8OPFEeebpNpIPWPqBg" code="md:ifEmpty(&#xD;&#xA;       $this/metaDataLink/mdj:getMetaDataRef(.)[name()='file'][1]/tech:header(),&#xD;&#xA;       md:paramValue($this,'HeaderLinePosition')&#xD;&#xA;)&#xD;&#xA;" name="HEADER_LINE_POSITION" type="xpath"/>
+  <xslVariable id="_wPlsAOPKEeebpNpIPWPqBg" code="md:ifEmpty(&#xD;&#xA;       $this/metaDataLink/mdj:getMetaDataRef(.)[name()='file'][1]/@lineToSkip,&#xD;&#xA;       md:paramValue($this,'LineToSkip')&#xD;&#xA;)&#xD;&#xA;" name="LINE_TO_SKIP" type="xpath"/>
+  <xslVariable id="_D0PXYOPLEeebpNpIPWPqBg" code="md:ifEmpty(&#xD;&#xA;       $this/metaDataLink/mdj:getMetaDataRef(.)[name()='file'][1]/@lastLineToSkip,&#xD;&#xA;       md:paramValue($this,'LastLineToSkip')&#xD;&#xA;)&#xD;&#xA;" name="LAST_LINE_TO_SKIP" type="xpath"/>
+</proc:process>

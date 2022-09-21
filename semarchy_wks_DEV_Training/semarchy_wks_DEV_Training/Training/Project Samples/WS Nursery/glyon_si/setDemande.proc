@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_9JMJERd4Eeag17CW0UpctQ">
+  <parameter id="_BkczcBd5Eeag17CW0UpctQ" input="true" name="nom_demandeur" type="String" value="Dupond"/>
+  <parameter id="_B5MUYBd5Eeag17CW0UpctQ" input="true" name="prenom_demandeur" type="String" value="Jean"/>
+  <parameter id="_CEkd8Bd5Eeag17CW0UpctQ" input="true" name="prenom_enfant" type="String" value="Juliette"/>
+  <parameter id="_CS504Bd5Eeag17CW0UpctQ" input="true" name="date_naissance_enfant" type="String" value="2015-05-11"/>
+  <parameter id="_ChPy4Bd5Eeag17CW0UpctQ" input="true" name="priorite1_demande" type="String" value="villeurbanne"/>
+  <parameter id="_CzojYBd5Eeag17CW0UpctQ" input="true" name="priorite2_demande" type="String" value="tassin"/>
+  <parameter id="_c3TrMBd6Eeag17CW0UpctQ" input="true" name="email_demandeur" type="String" value="jm.souchard@gmail.com"/>
+  <parameter id="_lnwNIBd6Eeag17CW0UpctQ" output="true" name="id_demande" type="Integer" value="1"/>
+  <parameter id="_sjFnkBd6Eeag17CW0UpctQ" output="true" name="date_demande" type="String" value="2016-05-11 11:43:27.644000"/>
+  <parameter id="_bBYO0Bg_EeaikNW2PU8LmQ" output="true" name="est_inscrit" type="Boolean" value="false"/>
+  <parameter id="_bWp7QBg_EeaikNW2PU8LmQ" output="true" name="ville_inscription" type="String" value="tassin"/>
+  <parameter id="_0-lUcBtwEeaSVI_PvVjHMg" output="true" name="niveau_confirmation" type="Integer" value="1"/>
+  <actionCode id="_IGgD0Bd8Eeag17CW0UpctQ" enable="true" isBeginAction="false" name="SqlToParam id_demande" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+    <link id="_heWMwBwlEeaSVI_PvVjHMg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_Yz4XABwlEeaSVI_PvVjHMg"/>
+    <metaDataLink id="_N4xSgBd-Eeag17CW0UpctQ" name="DEMANDE" target="../00_Metadata/HSQL_Creche.md#_Iud_kRd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=DEMANDE?"/>
+    <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;~/id_demande&quot; type=&quot;Integer&quot;>&#xD;
+SELECT id_demande FROM GLYON.DEMANDE&#xD;
+WHERE nom_demandeur='${~/nom_demandeur}$'&#xD;
+AND prenom_demandeur='${~/prenom_demandeur}$'&#xD;
+AND prenom_enfant='${~/prenom_enfant}$'&#xD;
+AND date_naissance_enfant='${~/date_naissance_enfant}$'&#xD;
+AND email_demandeur='${~/email_demandeur}$'&#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters> </code>
+  </actionCode>
+  <actionCode id="_I0TPoBgZEeapFfTHA28Ggw" enable="true" isBeginAction="false" name="Sql To Param est_inscrit priorité1" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+    <link id="_oFAScBgZEeapFfTHA28Ggw" executionCondition="%e(rhino){ ('${~/est_inscrit}$' == 'false') }e(rhino)% " executionType="OK" generationType="OK_KO" mandatory="1" targetId="_UpLL4BgZEeapFfTHA28Ggw"/>
+    <link id="_7OXTsBg_EeaikNW2PU8LmQ" executionCondition="%e(rhino){ ('${~/est_inscrit}$' == 'true') }e(rhino)% " executionType="OK" generationType="OK_KO" mandatory="1" targetId="_6QCDMBg_EeaikNW2PU8LmQ"/>
+    <metaDataLink id="_I0TPohgZEeapFfTHA28Ggw" name="DEMANDE" target="../00_Metadata/HSQL_Creche.md#_Iud_kRd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=DEMANDE?"/>
+    <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;~/est_inscrit&quot; type=&quot;Boolean&quot;>&#xD;
+SELECT CASE WHEN id_inscription_creche IS NOT NULL THEN 'true' ELSE 'false' END AS est_inscrit FROM GLYON.DEMANDE&#xD;
+WHERE id_demande=${~/id_demande}$&#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters> </code>
+  </actionCode>
+  <actionCode id="_UpLL4BgZEeapFfTHA28Ggw" enable="true" isBeginAction="false" name="Sql To Param priorite2Demande" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+    <link id="_3lVz0BgZEeapFfTHA28Ggw" executionCondition="%e(rhino){ ('${~/priorite_demande}$' == 'villeurbanne') }e(rhino)% " executionType="OK" generationType="OK_KO" mandatory="1" targetId="_0O41YhgZEeapFfTHA28Ggw"/>
+    <link id="_37Q4IBgnEeapFfTHA28Ggw" executionCondition="%e(rhino){ ('${~/priorite_demande}$' == 'tassin') }e(rhino)% " executionType="OK" generationType="OK_KO" mandatory="1" targetId="_1uFO4BgnEeapFfTHA28Ggw"/>
+    <metaDataLink id="_UpLL4RgZEeapFfTHA28Ggw" name="DEMANDE" target="../00_Metadata/HSQL_Creche.md#_Iud_kRd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=DEMANDE?"/>
+    <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;~/priorite_demande&quot; type=&quot;String&quot;>&#xD;
+SELECT priorite2_demande AS priorite_demande FROM GLYON.DEMANDE&#xD;
+WHERE id_demande=${~/id_demande}$&#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters> </code>
+  </actionCode>
+  <actionCode id="_uEbpABg_EeaikNW2PU8LmQ" enable="true" isBeginAction="false" name="Sql To Param est_inscrit priorité2" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+    <link id="_J0HcIBhAEeaikNW2PU8LmQ" executionCondition="%e(rhino){ ('${~/est_inscrit}$' == 'true') }e(rhino)% " executionType="OK" generationType="OK_KO" mandatory="1" targetId="_H2w-oBhAEeaikNW2PU8LmQ"/>
+    <metaDataLink id="_uEbpAhg_EeaikNW2PU8LmQ" name="DEMANDE" target="../00_Metadata/HSQL_Creche.md#_Iud_kRd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=DEMANDE?"/>
+    <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;~/est_inscrit&quot; type=&quot;Boolean&quot;>&#xD;
+SELECT CASE WHEN id_inscription_creche IS NOT NULL THEN 'true' ELSE 'false' END AS est_inscrit FROM GLYON.DEMANDE&#xD;
+WHERE id_demande=${~/id_demande}$&#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters> </code>
+  </actionCode>
+  <actionCode id="_6QCDMBg_EeaikNW2PU8LmQ" enable="true" isBeginAction="false" name="Sql To Param ville_inscription priorité1" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+    <metaDataLink id="_6QCDMhg_EeaikNW2PU8LmQ" name="DEMANDE" target="../00_Metadata/HSQL_Creche.md#_Iud_kRd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=DEMANDE?"/>
+    <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;~/ville_inscription&quot; type=&quot;String&quot;>&#xD;
+SELECT ville_confirmation FROM GLYON.DEMANDE&#xD;
+WHERE id_demande=${~/id_demande}$&#xD;
+&lt;/parameter>&#xD;
+&lt;parameter name=&quot;~/niveau_confirmation&quot; type=&quot;String&quot;>&#xD;
+SELECT niveau_confirmation FROM GLYON.DEMANDE&#xD;
+WHERE id_demande=${~/id_demande}$&#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters> </code>
+  </actionCode>
+  <actionCode id="_H2w-oBhAEeaikNW2PU8LmQ" enable="true" isBeginAction="false" name="Sql To Param ville_inscription priorité2" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+    <metaDataLink id="_H2w-oRhAEeaikNW2PU8LmQ" name="DEMANDE" target="../00_Metadata/HSQL_Creche.md#_Iud_kRd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=DEMANDE?"/>
+    <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;~/ville_inscription&quot; type=&quot;String&quot;>&#xD;
+SELECT ville_confirmation FROM GLYON.DEMANDE&#xD;
+WHERE id_demande=${~/id_demande}$&#xD;
+&lt;/parameter>&#xD;
+&lt;parameter name=&quot;~/niveau_confirmation&quot; type=&quot;String&quot;>&#xD;
+SELECT niveau_confirmation FROM GLYON.DEMANDE&#xD;
+WHERE id_demande=${~/id_demande}$&#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters> </code>
+  </actionCode>
+  <actionCode id="_Yz4XABwlEeaSVI_PvVjHMg" enable="true" isBeginAction="false" name="SqlToParam date_demande" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+    <link id="_i0aAwBwlEeaSVI_PvVjHMg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_azeQMBwlEeaSVI_PvVjHMg"/>
+    <metaDataLink id="_Yz4XAxwlEeaSVI_PvVjHMg" name="DEMANDE" target="../00_Metadata/HSQL_Creche.md#_Iud_kRd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=DEMANDE?"/>
+    <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;~/date_demande&quot; type=&quot;String&quot;>&#xD;
+SELECT date_demande FROM GLYON.DEMANDE&#xD;
+WHERE nom_demandeur='${~/nom_demandeur}$'&#xD;
+AND prenom_demandeur='${~/prenom_demandeur}$'&#xD;
+AND prenom_enfant='${~/prenom_enfant}$'&#xD;
+AND date_naissance_enfant='${~/date_naissance_enfant}$'&#xD;
+AND email_demandeur='${~/email_demandeur}$'&#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters> </code>
+  </actionCode>
+  <actionCode id="_azeQMBwlEeaSVI_PvVjHMg" enable="true" isBeginAction="false" name="SqlToParam priorite1_demande" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+    <link id="_azeQMRwlEeaSVI_PvVjHMg" executionCondition="%e(rhino){ ('${~/priorite_demande}$' == 'villeurbanne') }e(rhino)% " executionType="OK" generationType="OK_KO" mandatory="1" targetId="_P0F2EBeGEeag17CW0UpctQ"/>
+    <link id="_azeQMhwlEeaSVI_PvVjHMg" executionCondition="%e(rhino){ ('${~/priorite_demande}$' == 'tassin') }e(rhino)% " executionType="OK" generationType="OK_KO" mandatory="1" targetId="_xicU4BgnEeapFfTHA28Ggw"/>
+    <metaDataLink id="_azeQMxwlEeaSVI_PvVjHMg" name="DEMANDE" target="../00_Metadata/HSQL_Creche.md#_Iud_kRd4Eeag17CW0UpctQ?fileId=_JZOm4BdDEeasp6ebq_qPSQ$type=md$name=DEMANDE?"/>
+    <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;~/priorite_demande&quot; type=&quot;String&quot;>&#xD;
+SELECT priorite1_demande AS priorite_demande FROM GLYON.DEMANDE&#xD;
+WHERE nom_demandeur='${~/nom_demandeur}$'&#xD;
+AND prenom_demandeur='${~/prenom_demandeur}$'&#xD;
+AND prenom_enfant='${~/prenom_enfant}$'&#xD;
+AND date_naissance_enfant='${~/date_naissance_enfant}$'&#xD;
+AND email_demandeur='${~/email_demandeur}$'&#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters> </code>
+  </actionCode>
+  <actionProcessRef id="_niMEEBd7Eeag17CW0UpctQ" isBeginAction="false" name="Load demande in DB" nbCycles="-1" toleratedError="false" processMap="true" targetName="Load%20demande%20in%20DB.map#_4z-KYBd6Eeag17CW0UpctQ?fileId=_4z-KYBd6Eeag17CW0UpctQ$name=Load%20demande%20in%20DB$type=map?">
+    <link id="_9LPasBd8Eeag17CW0UpctQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_IGgD0Bd8Eeag17CW0UpctQ"/>
+  </actionProcessRef>
+  <actionProcessRef id="_P0F2EBeGEeag17CW0UpctQ" isBeginAction="false" name="Tentative_inscription_Villeurbanne priorité1" nbCycles="-1" toleratedError="false" processMap="true" targetName="Tentative_inscription_Villeurbanne.map#_F4DDsBeGEeag17CW0UpctQ?fileId=_F4DDsBeGEeag17CW0UpctQ$type=map?">
+    <link id="_LyZYcBgZEeapFfTHA28Ggw" executionType="OK" generationType="OK_KO" mandatory="0" targetId="_I0TPoBgZEeapFfTHA28Ggw"/>
+    <parameter id="_bilY8BwlEeaSVI_PvVjHMg" type="String"/>
+  </actionProcessRef>
+  <actionProcessRef id="_0O41YhgZEeapFfTHA28Ggw" isBeginAction="false" name="Tentative_inscription_Villeurbanne priorité2" nbCycles="-1" toleratedError="false" processMap="true" targetName="Tentative_inscription_Villeurbanne.map#_F4DDsBeGEeag17CW0UpctQ?fileId=_F4DDsBeGEeag17CW0UpctQ$type=map?">
+    <link id="_veaTsBg_EeaikNW2PU8LmQ" executionType="OK" generationType="OK_KO" mandatory="0" targetId="_uEbpABg_EeaikNW2PU8LmQ"/>
+  </actionProcessRef>
+  <actionProcessRef id="_xicU4BgnEeapFfTHA28Ggw" isBeginAction="false" name="Tentative_inscription_Tassin priorité1" nbCycles="-1" toleratedError="false" processMap="true" targetName="Tentative_inscription_Tassin.map#_nYgF4BgmEeapFfTHA28Ggw?fileId=_nYgF4BgmEeapFfTHA28Ggw$name=Tentative_inscription_Tassin$type=map?">
+    <link id="_1MUloBgnEeapFfTHA28Ggw" executionType="OK" generationType="OK_KO" mandatory="0" targetId="_I0TPoBgZEeapFfTHA28Ggw"/>
+  </actionProcessRef>
+  <actionProcessRef id="_1uFO4BgnEeapFfTHA28Ggw" isBeginAction="false" name="Tentative_inscription_Tassin Priorité2" nbCycles="-1" toleratedError="false" processMap="true" targetName="Tentative_inscription_Tassin.map#_nYgF4BgmEeapFfTHA28Ggw?fileId=_nYgF4BgmEeapFfTHA28Ggw$name=Tentative_inscription_Tassin$type=map?">
+    <link id="_vEeJsBg_EeaikNW2PU8LmQ" executionType="OK" generationType="OK_KO" mandatory="0" targetId="_uEbpABg_EeaikNW2PU8LmQ"/>
+  </actionProcessRef>
+</proc:process>

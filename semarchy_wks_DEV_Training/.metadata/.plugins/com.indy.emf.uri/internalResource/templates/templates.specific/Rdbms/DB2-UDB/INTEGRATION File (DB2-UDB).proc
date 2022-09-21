@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_C8FhwfOxEeKdwf4YQ4TajQ" description="This template is used to load data from DB2-UDB into a file.&#xD;&#xA;&#xD;&#xA;Refer to the description of each Parameter for more information.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;16/06/2020&#x9;Bug fix: the 'Cdc Subscriber' parameter is ignored when querying the source data&#xD;&#xA;16/06/2020&#x9;Bug fix: the 'Cdc Subscriber' parameter is ignored on Lock/Unlock CDC steps&#xD;&#xA;16/06/2020&#x9;New Parameters 'Unlock Cdc Table' and 'Lock Cdc Table'&#xD;&#xA;16/06/2020&#x9;New Parameter 'Cdc Subscriber'&#xD;&#xA;04/12/2018&#x9;Reorganize the parameters display order&#xD;&#xA;20/09/2017  Initialize template history" name="INTEGRATION File (DB2-UDB)">
+  <parameter id="_bQYWoPOyEeKdwf4YQ4TajQ" description="If true, the target file is sent through a target FTP server after being generated.&#xD;&#xA;For this, a FTP folder Metadata Link must be added on the DB2-UDB source table's Metadata.&#xD;&#xA;The link must be named 'TARGET_FTP'.&#xD;&#xA;&#xD;&#xA;This can be useful if the Runtime is not located on the same machine as the target DB2-UDB server." metaInf="" name="enableFileTransport" type="Boolean" value="false"/>
+  <parameter id="_9ebrYPRiEeKK-ZtmK8lmCQ" description="If true, the temporary objects created during integration are removed at the end of the process." name="cleanTemporaryObjects" type="Boolean" value="true"/>
+  <parameter id="_uJLeEPOxEeKdwf4YQ4TajQ" description="If true, rows are inserted in the target file." name="doInsert" type="Boolean" value="true"/>
+  <parameter id="__hBowPOzEeKdwf4YQ4TajQ" description="If set to true, positive decimal values will be prefixed with a plus sign character" metaInf="" name="writePlusSign" type="Boolean" value="false"/>
+  <parameter id="_Oh9b4PO1EeKdwf4YQ4TajQ" description="If true, a DISTINCT statement will be added on the query selecting DB2-UDB data.&#xD;&#xA;This is used to avoid having duplicates in the target file." name="useDistinct" type="Boolean" value="false"/>
+  <parameter id="_aSYYsPQzEeK-QvgFymvBsg" description="Specifies which method should be used to unload data from DB2-UDB into the target file.&#xD;&#xA;&#xD;&#xA;- JDBC: the file is unloaded with the 'EXPORT' DB2-UDB command through the JDBC driver&#xD;&#xA;&#xD;&#xA;- Command Line: the file is unloaded with the 'db2' command line utility, that should consequently be available at the place where the Runtime is located." metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;JDBC&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;Command Line&quot;/>" name="unloadExecutionMode" type="String" value="JDBC"/>
+  <parameter id="_1hytkPO1EeKdwf4YQ4TajQ" description="FTP transfer mode to use when sending the file through FTP (when 'Enable File Transport' is set to true)" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;binary&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;ascii&quot;/>" name="ftpMode" type="String" value="binary"/>
+  <parameter id="_QGaRMPO1EeKdwf4YQ4TajQ" description="Specifies an order by expression to be used when extracting data from DB2-UDB" name="orderByExpression" type="String" value=""/>
+  <parameter id="_rw87EPO0EeKdwf4YQ4TajQ" description="Format used for Timestamp columns." name="timestampFormat" type="String" value="yyyyDDDHHmmssSSS"/>
+  <parameter id="_krg-4POzEeKdwf4YQ4TajQ" description="Codepage to be used by the DB2 EXPORT utility.&#xD;&#xA;&#xD;&#xA;Please refer to the DB2 EXPORT Command documentation for more information on this.&#xD;&#xA;" name="codepage" type="String" value=""/>
+  <parameter id="_eVwzMPOyEeKdwf4YQ4TajQ" description="Absolute path to the folder where the file is generated, when 'Enable File Transport' is set to true" name="workFolder" type="String" value="${/CORE_TEMPORARY_FOLDER}$"/>
+  <parameter id="_hMuZQPOyEeKdwf4YQ4TajQ" description="Absolute path to the folder where the file is generated, when 'Enable File Transport' is set to false" name="pathOnServer" type="String"/>
+  <parameter id="_h_tHsLFVEeqAJL64qj9Gxw" description="When a source table is used as CDC a lock is performed on it. It makes the changed data available in the Mapping.&#xD;&#xA;If set to false, the Lock must have been performed as part of a previous Mapping." name="lockCdcTable" type="Boolean" value="true"/>
+  <parameter id="_h_z1YLFVEeqAJL64qj9Gxw" description="When a source table is used as CDC an unlock is performed on it after processing. It marks the changed data as consumed.&#xD;&#xA;If set to false, the Unlock must be performed as part of an upcoming Mapping." name="unlockCdcTable" type="Boolean" value="true"/>
+  <parameter id="_h_z1YbFVEeqAJL64qj9Gxw" description="CDC Subscriber to use when CDC has been enabled on a source table." name="cdcSubscriber" type="String"/>
+  <subProcess id="_kkKEkPOxEeKdwf4YQ4TajQ" isBeginAction="false" name="INTEGRATION" nbCycles="-1" toleratedError="false">
+    <parameter id="_Sc8LEPOyEeKdwf4YQ4TajQ" name="realPathOnServer" type="String" value="%x{ &#xD;&#xA;if (not(exists($xslTargetFtp) and md:paramValue($this,'enableFileTransport')='true'))&#xD;&#xA;&#x9;then md:paramValue($this,'workFolder')&#xD;&#xA; &#x9;else md:ifEmpty(md:paramValue($this,'pathOnServer'),$xslTargetFtp/tech:systemPath())&#xD;&#xA;}x%"/>
+    <actionCode id="_ngbocPOxEeKdwf4YQ4TajQ" generationCondition="not(md:paramValue($this, 'unlockCdcTable')='false')" isBeginAction="false" name="Unlock of CDC table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="mdj:xpath($REF,'FROM_REF')[mdj:xpath(.,'IS_CDC')]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <parameter id="_ngbocfOxEeKdwf4YQ4TajQ" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_ngbocvOxEeKdwf4YQ4TajQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_ngboc_OxEeKdwf4YQ4TajQ" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>Delete 	from 	%x{md:physicalPath($CDC,'cdcTableName')}x%
+Where	CDC_CONSUMMATION = '1'
+%x{$CDC/tech:cdcFilterPart2($this)}x%</code>
+    </actionCode>
+    <actionCode id="_ngocwPOxEeKdwf4YQ4TajQ" generationCondition="not(md:paramValue($this, 'lockCdcTable')='false')" isBeginAction="false" name="Lock of CDC table" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="mdj:xpath($REF,'FROM_REF')[mdj:xpath(.,'IS_CDC')]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_omuiIPOxEeKdwf4YQ4TajQ" generationCondition="'${unloadExecutionMode}$'='Command Line'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_zxQg4POxEeKdwf4YQ4TajQ"/>
+      <link id="_1jprkPOxEeKdwf4YQ4TajQ" generationCondition="'${unloadExecutionMode}$'='JDBC'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_zxRH8_OxEeKdwf4YQ4TajQ"/>
+      <parameter id="_ngocwfOxEeKdwf4YQ4TajQ" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_ngocwvOxEeKdwf4YQ4TajQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_ngocw_OxEeKdwf4YQ4TajQ" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>update 	%x{md:physicalPath($CDC,'cdcTableName')}x%
+set 	CDC_CONSUMMATION = '1'
+where	(1=1)
+%x{$CDC/tech:cdcFilterPart2($this)}x%</code>
+    </actionCode>
+    <actionCode id="_zxJzMPOxEeKdwf4YQ4TajQ" generationCondition="'${doInsert}$'='true'" isBeginAction="false" name="Scripting" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+      <link id="_3C3bkPOxEeKdwf4YQ4TajQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_l5imUPO1EeKdwf4YQ4TajQ"/>
+      <parameter id="_zxJzMvOxEeKdwf4YQ4TajQ" description="Scripting language (Rhino, Jython, etc.)" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+      <code>__ctx__.publishVariable(&quot;./SQL_NB_ROWS&quot;, &quot;:{ROWS_EXPORTED}:&quot;, &quot;Integer&quot;);</code>
+    </actionCode>
+    <actionCode id="_zxQg4POxEeKdwf4YQ4TajQ" isBeginAction="false" name="CommandLine" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+      <link id="_zxQg4fOxEeKdwf4YQ4TajQ" generationCondition="$REF/ref:target()/tech:type() = 'P'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_MqBa4PRaEeKK-ZtmK8lmCQ"/>
+      <link id="_TO75YPRaEeKK-ZtmK8lmCQ" generationCondition="$REF/ref:target()/tech:type() = 'D'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_M_hw0PRaEeKK-ZtmK8lmCQ"/>
+    </actionCode>
+    <actionCode id="_zxQg5POxEeKdwf4YQ4TajQ" enable="true" isBeginAction="false" name="execute LOAD script" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+      <link id="_gOBMsPRfEeKK-ZtmK8lmCQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_l5imUPO1EeKdwf4YQ4TajQ"/>
+      <parameter id="_zxQg5vOxEeKdwf4YQ4TajQ" description="Scripting language (Rhino, Jython, etc.)" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+      <code>importPackage(java.lang);&#xD;
+importPackage(java.io);&#xD;
+&#xD;
+tempFolder = &quot;${/CORE_JAVA_TEMPORARY_FOLDER}$&quot;;&#xD;
+loadFileName = &quot;${../realPathOnServer}$/data_%x{$REF/tech:workName()}x%.clp&quot;;&#xD;
+&#xD;
+args=new Array();&#xD;
+args[0]=&quot;db2&quot;;&#xD;
+args[1]=&quot;-f&quot;;&#xD;
+args[2]=loadFileName;&#xD;
+args[3]=&quot;-c&quot;;&#xD;
+args[4]=&quot;-t&quot;;&#xD;
+&#xD;
+/* envp = new Array();&#xD;
+envp[0] = &quot;PATH=&quot; + System.getProperty(&quot;java.library.path&quot;); */&#xD;
+&#xD;
+__ctx__.publishVariable(&quot;./DB2LOAD_COMMAND&quot;,args, true);&#xD;
+&#xD;
+osRuntime = Runtime.getRuntime();&#xD;
+osProc=osRuntime.exec(args, null, new File(tempFolder));&#xD;
+&#xD;
+&#xD;
+_in = new java.lang.StringBuffer();&#xD;
+_err = new java.lang.StringBuffer();&#xD;
+&#xD;
+psr=com.indy.engine.common.tools.ProcessWrapper.wrap(osProc);&#xD;
+psr.setInputStringBuffer(_in,-1);&#xD;
+psr.setErrorStringBuffer(_err,-1);&#xD;
+ret=psr.waitFor();&#xD;
+&#xD;
+if (_err.length()>0){&#xD;
+ __ctx__.publishVariable(&quot;./DB2LOAD_ERROR&quot;,_err.toString(), true);&#xD;
+}&#xD;
+&#xD;
+&#xD;
+if (_in.length()>0){&#xD;
+ __ctx__.publishVariable(&quot;./DB2LOAD_STDOUT&quot;,_in.toString(), true);&#xD;
+}&#xD;
+&#xD;
+if (ret!= 0  || _err.length()>0) {&#xD;
+	throw &quot;The dB2 LOAD command raised an error.&quot;;&#xD;
+}</code>
+    </actionCode>
+    <actionCode id="_zxQg5_OxEeKdwf4YQ4TajQ" generationCondition="'${doInsert}$'='true'" isBeginAction="false" name="Call the EXPORT utility for Delimited file" nbCycles="-1" repetitionQuery="" repetitionVariableName="" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <bindLink id="_zxQg6POxEeKdwf4YQ4TajQ" bindType="DirectBind" targetId="_zxJzMPOxEeKdwf4YQ4TajQ"/>
+      <parameter id="_zxQg6fOxEeKdwf4YQ4TajQ" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_zxQg6vOxEeKdwf4YQ4TajQ" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+      <parameter id="_zxQg6_OxEeKdwf4YQ4TajQ" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_zxQg7POxEeKdwf4YQ4TajQ" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <code>CALL SYSPROC.ADMIN_CMD ('EXPORT TO &quot;${../realPathOnServer}$/%x{$REF/ref:target()/tech:physicalName()}x%&quot; OF DEL&#xD;
+MODIFIED BY %x{if (exists($REF/ref:target()/tech:asciiStringDelimiter())) then concat('chardel',if ($REF/ref:target()/tech:asciiStringDelimiter()='&quot;') then '&quot;&quot;' else if ($REF/ref:target()/tech:asciiStringDelimiter()='''') then '''''' else $REF/ref:target()/tech:asciiStringDelimiter()) else 'nochardel'}x% %x{if (md:paramValue($this,'codepage')='') then '' else concat('codepage=', md:paramValue($this,'codepage'))}x% %x{if (exists($REF/ref:target()/tech:asciiFieldSeparator())) then concat('coldel',$REF/ref:target()/tech:asciiFieldSeparator()) else ''}x% %x{if (md:paramValue($this,'writePlusSign')='false') then 'decplusblank' else ''}x% %x{if(exists($REF/ref:target()/tech:asciiDecimalSeparator())) then concat ('decpt', $REF/ref:target()/tech:asciiDecimalSeparator()) else ''}x% striplzeros timestampformat=&quot;%x{$exportTimestampFormat}x%&quot;&#xD;
+select		%x{if (md:paramValue($this,'useDistinct')='true') then 'DISTINCT' else ''}x%&#xD;
+			%x{replace(md:patternList($REF/ref:columns(),'[expression] [columnAliasWord] [name]', ',\n\t\t\t'), '''', '''''')}x%&#xD;
+from	%x{replace($REF/tech:fromPart(), '''', '''''')}x%&#xD;
+where	(1=1)&#xD;
+%x{replace($REF/tech:joinPart(), '''', '''''')}x%&#xD;
+%x{replace($REF/tech:filterPart(), '''', '''''')}x%&#xD;
+%x{replace($REF/tech:cdcFilterPart2($this), '''', '''''')}x%&#xD;
+%x{replace($REF/tech:groupByPart(), '''', '''''')}x%&#xD;
+%x{replace($REF/tech:havingPart(), '''', '''''')}x%&#xD;
+%x{if (md:paramValue($this,'orderByExpression')!='') then replace(concat('order by ',md:paramValue($this,'orderByExpression')), '''', '''''') else ''}x%')</code>
+    </actionCode>
+    <actionCode id="_zxRH8POxEeKdwf4YQ4TajQ" generationCondition="" enable="true" isBeginAction="false" name="Generation of EXPORT script for Delimited file" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+      <link id="_zxRH8fOxEeKdwf4YQ4TajQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_zxQg5POxEeKdwf4YQ4TajQ"/>
+      <parameter id="_zxRH8vOxEeKdwf4YQ4TajQ" name="TXT_WRITE_FILENAME" type="String" value="${../realPathOnServer}$/data_%x{$REF/tech:workName()}x%.clp"/>
+      <code>CONNECT TO %x{replace(replace(replace($REF/ref:source()/tech:jdbcUrl(),'^jdbc:db2://',''),'\?.*$',''),'[^/]*/','')}x% USER %x{$REF/ref:source()/tech:jdbcUser()}x% USING %x{$REF/ref:source()/tech:jdbcPassword()}x%;&#xD;
+&#xD;
+EXPORT TO &quot;${../realPathOnServer}$/%x{$REF/ref:target()/tech:physicalName()}x%&quot; OF DEL&#xD;
+MODIFIED BY %x{if (exists($REF/ref:target()/tech:asciiStringDelimiter())) then concat('chardel',if ($REF/ref:target()/tech:asciiStringDelimiter()='&quot;') then '&quot;&quot;' else if ($REF/ref:target()/tech:asciiStringDelimiter()='''') then '''''' else $REF/ref:target()/tech:asciiStringDelimiter()) else 'nochardel'}x% %x{if (md:paramValue($this,'codepage')='') then '' else concat('codepage=', md:paramValue($this,'codepage'))}x% %x{if (exists($REF/ref:target()/tech:asciiFieldSeparator())) then concat('coldel',$REF/ref:target()/tech:asciiFieldSeparator()) else ''}x% %x{if (md:paramValue($this,'writePlusSign')='false') then 'decplusblank' else ''}x% %x{if(exists($REF/ref:target()/tech:asciiDecimalSeparator())) then concat ('decpt', $REF/ref:target()/tech:asciiDecimalSeparator()) else ''}x% striplzeros timestampformat=&quot;%x{$exportTimestampFormat}x%&quot;&#xD;
+select		%x{if (md:paramValue($this,'useDistinct')='true') then 'DISTINCT' else ''}x%&#xD;
+			%x{md:patternList($REF/ref:columns(),'[expression] [columnAliasWord] [name]', ',\n\t\t\t')}x%&#xD;
+from	%x{$REF/tech:fromPart()}x%&#xD;
+where	(1=1)&#xD;
+%x{$REF/tech:joinPart()}x%&#xD;
+%x{$REF/tech:filterPart()}x%&#xD;
+%x{$REF/tech:cdcFilterPart2($this)}x%&#xD;
+%x{$REF/tech:groupByPart()}x%&#xD;
+%x{$REF/tech:havingPart()}x%&#xD;
+%x{if (md:paramValue($this,'orderByExpression')!='') then concat('order by ',md:paramValue($this,'orderByExpression')) else ''}x%;&#xD;
+</code>
+    </actionCode>
+    <actionCode id="_zxRH8_OxEeKdwf4YQ4TajQ" isBeginAction="false" name="JDBC" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+      <link id="_zwbRoPQ5EeK-QvgFymvBsg" generationCondition="$REF/ref:target()/tech:type() = 'D'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_xq6WoPQ5EeK-QvgFymvBsg"/>
+      <link id="__e_xkPQ5EeK-QvgFymvBsg" generationCondition="$REF/ref:target()/tech:type() = 'P'" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_2DeSUPQ5EeK-QvgFymvBsg"/>
+    </actionCode>
+    <actionCode id="_l5imUPO1EeKdwf4YQ4TajQ" generationCondition="'${enableFileTransport}$'!='false' and exists($xslTargetFtp)" isBeginAction="false" name="Get file from source server" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FtpGetActionCodeI">
+      <link id="_vi1TMPRiEeKK-ZtmK8lmCQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_uS1D4PRiEeKK-ZtmK8lmCQ"/>
+      <parameter id="_l5jNYPO1EeKdwf4YQ4TajQ" description="Host name or tcp/ip adress" name="FTP_HOSTNAME" type="String" value="%x{$xslTargetFtp/tech:host()}x%"/>
+      <parameter id="_l5jNYfO1EeKdwf4YQ4TajQ" description="Name of the user in order to connect" name="FTP_USER" type="String" value="%x{$xslTargetFtp/tech:user()}x%"/>
+      <parameter id="_u5eVwPO1EeKdwf4YQ4TajQ" name="FTP_PORT" type="String" value="%x{$xslTargetFtp/tech:port()}x%"/>
+      <parameter id="_xofgwPO1EeKdwf4YQ4TajQ" name="FTP_PASSWORD" type="String" value="%x{$xslTargetFtp/tech:password()}x%"/>
+      <parameter id="_zEbTQPO1EeKdwf4YQ4TajQ" name="FTP_FILE_MODE" type="String" value="%x{md:paramValue($this,'ftpMode')}x%"/>
+      <parameter id="_4cu0sPO1EeKdwf4YQ4TajQ" name="FTP_REMOTE_PATH" type="String" value="%x{$xslTargetFtp/tech:path()}x%"/>
+      <parameter id="_7KYGsPO1EeKdwf4YQ4TajQ" name="FTP_REMOTE_FILENAME" type="String" value="%x{$REF/ref:target()/tech:name()}x%"/>
+      <parameter id="__rI8IPO1EeKdwf4YQ4TajQ" name="FTP_LOCAL_PATH" type="String" value="%x{$REF/ref:target()/tech:directoryRef()/tech:path()}x%"/>
+      <parameter id="_DZ33sPO2EeKdwf4YQ4TajQ" name="PROXY_HOST" type="String" value="%x{$xslTargetFtp/tech:proxyHost()}x%"/>
+      <parameter id="_E1kZoPO2EeKdwf4YQ4TajQ" name="PROXY_PORT" type="String" value="%x{$xslTargetFtp/tech:proxyPort()}x%"/>
+      <parameter id="_HJfkEPO2EeKdwf4YQ4TajQ" name="PROXY_USER" type="String" value="%x{$xslTargetFtp/tech:proxyUser()}x%"/>
+      <parameter id="_Jesg4PO2EeKdwf4YQ4TajQ" name="PROXY_PASSWORD" type="String" value="%x{$xslTargetFtp/tech:proxyPassword()}x%"/>
+    </actionCode>
+    <actionCode id="_xq6WoPQ5EeK-QvgFymvBsg" isBeginAction="false" name="JDBC for Delimited file" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+      <link id="_zxRH9POxEeKdwf4YQ4TajQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_zxQg5_OxEeKdwf4YQ4TajQ"/>
+    </actionCode>
+    <actionCode id="_2DeSUPQ5EeK-QvgFymvBsg" isBeginAction="false" name="JDBC for Positional file" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+      <link id="_2DeSUfQ5EeK-QvgFymvBsg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_BaiRMPQ6EeK-QvgFymvBsg"/>
+    </actionCode>
+    <actionCode id="_BaiRMPQ6EeK-QvgFymvBsg" generationCondition="'${doInsert}$'='true'" isBeginAction="false" name="Call the EXPORT utility for Positional file" nbCycles="-1" repetitionQuery="" repetitionVariableName="" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <bindLink id="_BaiRMfQ6EeK-QvgFymvBsg" bindType="DirectBind" targetId="_zxJzMPOxEeKdwf4YQ4TajQ"/>
+      <parameter id="_BaiRMvQ6EeK-QvgFymvBsg" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_BaiRM_Q6EeK-QvgFymvBsg" name="SQL_ACTION_TYPE" type="String" value="SELECT"/>
+      <parameter id="_BaiRNPQ6EeK-QvgFymvBsg" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_BaiRNfQ6EeK-QvgFymvBsg" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <code>CALL SYSPROC.ADMIN_CMD ('EXPORT TO &quot;${../realPathOnServer}$/%x{$REF/ref:target()/tech:physicalName()}x%&quot; OF DEL&#xD;
+MODIFIED BY nochardel %x{if (md:paramValue($this,'codepage')='') then '' else concat('codepage=', md:paramValue($this,'codepage'))}x%   striplzeros &#xD;
+select		%x{if (md:paramValue($this,'useDistinct')='true') then 'DISTINCT' else ''}x%&#xD;
+			%x{replace(replace(md:patternList($REF/ref:columns(),'RPAD({&#xD;
+					if (tech:baseType()=''DATE'') then concat(''COALESCE(VARCHAR_FORMAT('', tech:expression(),'', ¤µTimeFormatµ¤), '''' '''')'') else ''''}{&#xD;
+					if (tech:baseType()=''NUMERIC'') then concat(''COALESCE(translate(VARCHAR_FORMAT('', tech:expression(),''), '''''',../ref:target()/tech:asciiDecimalSeparator(),'''''', ''''.''''), '''' '''')'') else ''''}{&#xD;
+					if (tech:baseType()=''TIMESTAMP'') then concat(''COALESCE(VARCHAR_FORMAT('', tech:expression(),'', ¤µTimeFormatµ¤), '''' '''')'') else ''''}{&#xD;
+					if (not(tech:baseType()=''DATE'') and not(tech:baseType()=''NUMERIC'') and not(tech:baseType()=''TIMESTAMP'')) then concat(''COALESCE('', tech:expression(), '', '''' '''')'') else ''''},[size])', ' ||\n\t\t\t'), '¤µTimeFormatµ¤', concat('''', $db2TimestampFormat, '''')), '''', '''''')}x%&#xD;
+from	%x{replace($REF/tech:fromPart(), '''', '''''')}x%&#xD;
+where	(1=1)&#xD;
+%x{replace($REF/tech:joinPart(), '''', '''''')}x%&#xD;
+%x{replace($REF/tech:filterPart(), '''', '''''')}x%&#xD;
+%x{replace($REF/tech:cdcFilterPart2($this), '''', '''''')}x%&#xD;
+%x{replace($REF/tech:groupByPart(), '''', '''''')}x%&#xD;
+%x{replace($REF/tech:havingPart(), '''', '''''')}x%&#xD;
+%x{if (md:paramValue($this,'orderByExpression')!='') then replace(concat('order by ',md:paramValue($this,'orderByExpression')), '''', '''''') else ''}x%')</code>
+    </actionCode>
+    <actionCode id="_MqBa4PRaEeKK-ZtmK8lmCQ" isBeginAction="false" name="CommandLine for Positional file" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+      <link id="_UFBz4PRaEeKK-ZtmK8lmCQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_ocS1sPRfEeKK-ZtmK8lmCQ"/>
+    </actionCode>
+    <actionCode id="_M_hw0PRaEeKK-ZtmK8lmCQ" isBeginAction="false" name="CommandLine for Delimited file" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+      <link id="_V2LBYPRaEeKK-ZtmK8lmCQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_zxRH8POxEeKdwf4YQ4TajQ"/>
+    </actionCode>
+    <actionCode id="_ocS1sPRfEeKK-ZtmK8lmCQ" generationCondition="" enable="true" isBeginAction="false" name="Generation of EXPORT script for Positional file" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.WriteTxtFileActionCodeI">
+      <link id="_ocS1sfRfEeKK-ZtmK8lmCQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_zxQg5POxEeKdwf4YQ4TajQ"/>
+      <parameter id="_ocS1svRfEeKK-ZtmK8lmCQ" name="TXT_WRITE_FILENAME" type="String" value="${../realPathOnServer}$/data_%x{$REF/tech:workName()}x%.clp"/>
+      <code>CONNECT TO %x{replace(replace(replace($REF/ref:source()/tech:jdbcUrl(),'^jdbc:db2://',''),'\?.*$',''),'[^/]*/','')}x% USER %x{$REF/ref:source()/tech:jdbcUser()}x% USING %x{$REF/ref:source()/tech:jdbcPassword()}x%;&#xD;
+&#xD;
+EXPORT TO &quot;${../realPathOnServer}$/%x{$REF/ref:target()/tech:physicalName()}x%&quot; OF DEL&#xD;
+MODIFIED BY nochardel %x{if (md:paramValue($this,'codepage')='') then '' else concat('codepage=', md:paramValue($this,'codepage'))}x%   striplzeros &#xD;
+select		%x{if (md:paramValue($this,'useDistinct')='true') then 'DISTINCT' else ''}x%&#xD;
+			%x{replace(md:patternList($REF/ref:columns(),'RPAD({&#xD;
+					if (tech:baseType()=''DATE'') then concat(''COALESCE(VARCHAR_FORMAT('', tech:expression(),'', ¤µTimeFormatµ¤), '''' '''')'') else ''''}{&#xD;
+					if (tech:baseType()=''NUMERIC'') then concat(''COALESCE(translate(VARCHAR_FORMAT('', tech:expression(),''), '''''',../ref:target()/tech:asciiDecimalSeparator(),'''''', ''''.''''), '''' '''')'') else ''''}{&#xD;
+					if (tech:baseType()=''TIMESTAMP'') then concat(''COALESCE(VARCHAR_FORMAT('', tech:expression(),'', ¤µTimeFormatµ¤), '''' '''')'') else ''''}{&#xD;
+					if (not(tech:baseType()=''DATE'') and not(tech:baseType()=''NUMERIC'') and not(tech:baseType()=''TIMESTAMP'')) then concat(''COALESCE('', tech:expression(), '', '''' '''')'') else ''''},[size])', ' ||\n\t\t\t'), '¤µTimeFormatµ¤', concat('''', $db2TimestampFormat, ''''))}x%&#xD;
+from	%x{$REF/tech:fromPart()}x%&#xD;
+where	(1=1)&#xD;
+%x{$REF/tech:joinPart()}x%&#xD;
+%x{$REF/tech:filterPart()}x%&#xD;
+%x{$REF/tech:cdcFilterPart2($this)}x%&#xD;
+%x{$REF/tech:groupByPart()}x%&#xD;
+%x{$REF/tech:havingPart()}x%&#xD;
+%x{if (md:paramValue($this,'orderByExpression')!='') then concat('order by ',md:paramValue($this,'orderByExpression')) else ''}x%;&#xD;
+</code>
+    </actionCode>
+    <actionCode id="_uS1D4PRiEeKK-ZtmK8lmCQ" generationCondition="'${cleanTemporaryObjects}$'='true' and '${unloadExecutionMode}$'='Command Line'" isBeginAction="false" name="Delete LOAD script" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+      <link id="_gFdu4PO1EeKdwf4YQ4TajQ" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_ngbocPOxEeKdwf4YQ4TajQ"/>
+      <parameter id="_uS1D4fRiEeKK-ZtmK8lmCQ" name="DEL_FILE" type="String" value="${../realPathOnServer}$/data_%x{$REF/tech:workName()}x%.clp"/>
+    </actionCode>
+    <templateType>I-TP.RDBMS.INTEGRATING</templateType>
+    <xslVariable id="_U03rwPOyEeKdwf4YQ4TajQ" code="$REF/ref:source()/mdj:xpath('$TARGET_FTP')" name="xslTargetFtp" type="xpath"/>
+    <xslVariable id="_ygq7YPO0EeKdwf4YQ4TajQ" description="This variable is used to convert Java-like timestamp patterns into DB2-like patterns and avoind having to maintain both patterns manually in the Mapping" code="translate(md:paramValue($this,'timestampFormat'),'ydsaS', 'YDSTU')" name="exportTimestampFormat" type="xpath"/>
+    <xslVariable id="_npk8IPRbEeKK-ZtmK8lmCQ" description="This variable is used to convert Java-like timestamp patterns into DB2-like patterns and avoind having to maintain both patterns manually in the Mapping" code="replace(translate(replace(md:paramValue($this,'timestampFormat'),'mm', 'MI'),'ydsaS', 'YDST'),'S+', concat('FF', string-length(replace(md:paramValue($this,'timestampFormat'), '([^S]*)(S+)([^S]*)', '$2'))))" name="db2TimestampFormat" type="xpath"/>
+  </subProcess>
+  <templateType>I-TP.RDBMS</templateType>
+</proc:process>

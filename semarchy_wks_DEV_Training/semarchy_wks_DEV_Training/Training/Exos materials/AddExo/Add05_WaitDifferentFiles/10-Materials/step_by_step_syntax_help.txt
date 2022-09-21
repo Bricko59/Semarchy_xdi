@@ -1,0 +1,96 @@
+*** Step 5 ***
+**************
+WAIT_FILE_INCLUDE of FileWait
+-----------------------------
+        *.BIL;*.LIN;*.LOG
+
+*** Step 6 ***
+**************
+EXPRESSION EDITOR of SqlOperation
+---------------------------------
+	SELECT LEFT(FILE_NAME,6) AS FILE_PREFIX
+	FROM   %x{$IND_SESSION_FILE_OP_LST/tech:physicalPath()}x%
+	WHERE  RIGHT(FILE_NAME,3) IN ('BIL','LIN','LOG')
+	AND    SESS_ID='${/CORE_SESSION_ID}$'
+	GROUP  BY LEFT(FILE_NAME,6)
+	HAVING COUNT(*)=3
+	
+*** Step 7 ***
+**************
+DELIV_NAME of ExecuteDelivery
+-----------------------------
+	Load a billing in DB
+	
+DELIV_SESSION_NAME of ExecuteDelivery
+-------------------------------------
+	Treatment of files with prefix :{FILE_PREFIX}:	
+	
+p_file_prefix parameter of ExecuteDelivery
+------------------------------------------
+	:{FILE_PREFIX}:
+	
+*** Step 8 ***
+**************
+
+PHYSICAL_NAME of billing_file
+-----------------------------
+	${~/p_file_prefix}$.BIL
+
+PHYSICAL_NAME of billing_line_file
+----------------------------------
+	${~/p_file_prefix}$.LIN
+
+PHYSICAL_NAME of billing_log_file
+---------------------------------
+	${~/p_file_prefix}$.LOG
+	
+*** Step 9 ***
+**************
+
+Mapping billing_line_file --> BILLING_LINE
+------------------------------------------
+	Field          Mapping                         Key	Location
+    -------------- ------------------------------- -------- --------
+	BILLING_ID     billing_line_file.BILLING_ID    Y        SOURCE
+	BILLING_LINE   billing_line_file.BILLING_LINE  Y        SOURCE
+	PRODUCT_ID     billing_line_file.PRODUCT_ID    N	    SOURCE
+	BILLING_QTY    billing_line_file.BILLING_QTY   N	    SOURCE
+
+Mapping billing_file,billing_log_file,BILLING_LINE --> BILLING
+--------------------------------------------------------------
+        The joins between the different sources are on BILLING_ID each time
+
+	Field                     Mapping                              Key	Location  AGGREGATE
+    ------------------------- ------------------------------------ ---- --------- ---------
+	BILLING_ID                billing_file.BILLING_ID              Y    STAGING   N
+	BILLING_CREATION_DATE     billing_file.BILLING_DATE            N    SOURCE    N
+	CUSTOMER_ID               billing_file.CUSTOMER_ID             N	SOURCE    N
+	BILLING_STATUS            billing_log_file.BILLING_STATUS      N	SOURCE    N
+    BILLING_LINES_NUMBER_SENT COUNT(BILLING_LINE.BILLING_LINE)     N    STAGING   Y
+    BILLING_LINES_NUMBER_LOG  billing_log_file.BILLING_LINE_NUMBER N    SOURCE    N 
+	
+*** Step 10 ***
+**************
+NAME of Condition on BILLING TABLE
+----------------------------------
+	CK_BILLING
+
+Sql Condition of Condition on BILLING TABLE
+-------------------------------------------
+	BILLING.BILLING_LINES_NUMBER_SENT=BILLING.BILLING_LINES_NUMBER_LOG
+
+User Message of Condition on BILLING TABLE
+------------------------------------------
+	Sent problem
+
+Reject Code of Condition on BILLING TABLE
+-----------------------------------------
+	BIL_001
+
+Description of Condition on BILLING TABLE
+-----------------------------------------
+        There is a sent problem as the number of lines received is not the same as the number of lines planed
+
+Severity Level of Condition on BILLING TABLE
+--------------------------------------------
+        Reject

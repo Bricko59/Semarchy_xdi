@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="UUID_TECH_JSON1" name="json" ref="resource.tech#UUID_DEF_TECH_JSON1?fileId=UUID_DEF_TECH_JSON1$type=tech$name=json?">
+  <level icon="icons/full/custom/json.schema.png" xmlName="schema" xpathDisplayName="" code="com.stambia.json.schema" displayName="Schema" hasName="true" isFile="true" wizardBundleName="com.indy.addons" wizardClass="com.indy.addons.json.wizard.JSonSchemaWizard"/>
+  <level code="com.stambia.json.rootArray" override="true">
+    <attribute xpathCondition="1=1" code="filePath"/>
+    <parent>com.stambia.json.schema</parent>
+  </level>
+  <level code="com.stambia.json.rootObject" override="true">
+    <attribute xpathCondition="1=1" code="filePath"/>
+    <parent>com.stambia.json.schema</parent>
+  </level>
+  <level code="com.stambia.json.rootValue" override="true" positionReverseCode="">
+    <attribute xpathCondition="1=1" code="filePath"/>
+    <parent>com.stambia.json.schema</parent>
+  </level>
+  <action bundleName="com.indy.addons" className="com.indy.file.TextEditorAction" code="open_with_texteditor" displayName="Open with TextEditor">
+    <executableLevel>#com.stambia.json.rootArray</executableLevel>
+    <executableLevel>#com.stambia.json.rootObject</executableLevel>
+    <executableLevel>#com.stambia.json.rootValue</executableLevel>
+    <parameter name="filePath" type="XPath" value="@filePath"/>
+  </action>
+  <xPathExpression expression="'JSON'">
+    <code>INTERN_PRODUCT_CODE_GUI</code>
+    <code>PRODUCT_CODE</code>
+    <code>TECH_CODE</code>
+  </xPathExpression>
+  <xPathExpression expression="false()">
+    <code>HAS_WORKSPACE_CAPABILITY_GUI</code>
+  </xPathExpression>
+  <xPathExpression expression="'com.indy.runtime.json.impl.JsonXmlReaderV1'">
+    <code>XML_READER_CLASS</code>
+  </xPathExpression>
+  <xPathExpression expression="'[^a-zA-Z0-9_@/]'">
+    <code>INTERNAL_OBJECT_DELIMITER_REGEXP</code>
+  </xPathExpression>
+  <xPathExpression expression="'&quot;[OBJECT]&quot;'">
+    <code>INTERNAL_OBJECT_DELIMITER_MASK</code>
+  </xPathExpression>
+  <xPathExpression expression="true()">
+    <code>INTERNAL_IS_CASE_SENSITIVE</code>
+  </xPathExpression>
+  <xPathExpression expression="md:ifEmpty(@filePath,concat('${/CORE_JAVA_TEMPORARY_FOLDER}$/',@id,'.json'))">
+    <code>XML_FILE_PATH</code>
+    <code>IO_META_DATA_RESOURCE</code>
+  </xPathExpression>
+  <xPathExpression expression="'com.indy.runtime.json.impl.JsonXmlOutputFactoryV1'">
+    <code>XML_OUTPUT_FACTORY_CLASS</code>
+  </xPathExpression>
+  <xPathExpression expression="'com.indy.runtime.json.impl.JsonXmlInputFactoryV1'">
+    <code>XML_INPUT_FACTORY_CLASS</code>
+  </xPathExpression>
+  <xPathExpression expression="'XML'">
+    <code>DATATYPE_PRODUCT_CODE</code>
+    <code>DATATYPE_TECH_CODE</code>
+  </xPathExpression>
+  <xPathExpression expression="@encoding">
+    <code>XML_FILE_ENCODING</code>
+  </xPathExpression>
+  <xPathExpression expression="'json'">
+    <code>IO_META_DATA_TYPE</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::*[..[name()='schema']]/@name">
+    <code>IO_META_DATA_NAME</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::*[..[name()='schema']]/@id">
+    <code>IO_META_DATA_ID</code>
+  </xPathExpression>
+  <xPathExpression expression="'application/json'">
+    <code>IO_META_DATA_INTERNET_MEDIA_TYPE</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::*[name()='object' or name()='array' or name()='value'][last()]">
+    <code>JSON_ROOT_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="md:mdToJsonSchema(ref:jsonRoot())">
+    <code>TO_JSON_SCHEMA</code>
+    <code>IO_META_DATA</code>
+  </xPathExpression>
+</tech:tech>

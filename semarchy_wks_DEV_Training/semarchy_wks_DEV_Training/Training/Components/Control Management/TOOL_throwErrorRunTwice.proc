@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_NZTN4d7LEeWTiMoUK1ajNg" repetitionMode="Sequential" repetitionQuery="" repetitionVariableName="">
+  <parameter id="_NZTN4t7LEeWTiMoUK1ajNg" metaInf="&lt;xslVariableName>sessionName&lt;/xslVariableName>" name="sessionName" type="String" value="${/CORE_SESSION_NAME}$"/>
+  <actionCode id="_NZTN497LEeWTiMoUK1ajNg" isBeginAction="false" name="Bean Scripting" nbCycles="-1" repetitionMode="Sequential" repetitionQuery="$RUNTIME_LIST//ref:element('Runtime')|$RUNTIME_LIST[@type='Runtime']" repetitionVariableName="RUNTIME" toleratedError="false" technology="com.indy.engine.actionCodes.BeanScriptingActionCodeI">
+    <parameter id="_NZTN5N7LEeWTiMoUK1ajNg" name="SCRIPTING_LANGUAGE" type="String" value="beanshell"/>
+    <code>String[] list=__ctx__.executeRemoteCommand(&quot;%x{$RUNTIME/tech:value(&quot;host&quot;)}x%&quot;, %x{$RUNTIME/tech:value(&quot;port&quot;)}x%, &quot;get sessions name '%x{$sessionName}x%' status RUNNING&quot;).split(&quot;\n&quot;);&#xD;
+&#xD;
+for(int i=0;i&lt;list.length;i++){&#xD;
+	if(list[i].contains(&quot;RUNNING&quot;)) {&#xD;
+		if(! list[i].contains(&quot;${/CORE_SESSION_ID}$&quot;)) {&#xD;
+			throw new Exception(&quot;There is already a running session named %x{md:paramValue($this,'Scenario')}x%&quot;);&#xD;
+		}&#xD;
+	}&#xD;
+}&#xD;
+</code>
+  </actionCode>
+  <xslVariable id="_NZTN5d7LEeWTiMoUK1ajNg" description="How to use it ?&#xD;&#xA;----------------&#xD;&#xA;1-Drag &amp; Drop this template at the top (main) level of a process&#xD;&#xA;2-Drag &amp; Drop a RDBMS schema in this template&#xD;&#xA;3-Link the end of the process to this template with a &quot;Unsuccessful Link&quot;&#xD;&#xA;4-Define the properties of the template&#xD;&#xA;&#xD;&#xA;What will be done ?&#xD;&#xA;---------------------&#xD;&#xA;The template will try to CREATE the STB_ERROR_LOG table in the schema &#xD;&#xA;The template will INSERT error properties in the STB_ERROR_LOG table , one record per error&#xD;&#xA;At the end, an error is generated to keep the process in error&#xD;&#xA;&#xD;&#xA;What are your options ?&#xD;&#xA;-------------------------&#xD;&#xA;You can add a process reference/code, different to the process name. It will work even if there is no value&#xD;&#xA;You can choose to drop the STB_ERROR_LOG table at the begin of the template&#xD;&#xA;You can choose to insert also the TOLERATED errors in the table&#xD;&#xA;&#xD;&#xA;mdj:getMetaDataRef($this/metaDataLink[1])" code="$this/metaDataLink/mdj:getMetaDataRef(.)[name()='element'][1]" name="RUNTIME_LIST" type="xpath"/>
+</proc:process>

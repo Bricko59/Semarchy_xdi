@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="UUID_TECH_XML2" name="xml" ref="resource.md#UUID_MD_SUPER_TYPE?fileId=UUID_MD_SUPER_TYPE$type=md$name=super?">
+  <level icon="icons/full/custom/xml.element" xmlName="element" code="com.stambia.xml.element" displayName="Element" isFile="false" position="1">
+    <attribute xmlName="type" code="type" defaultValue="" displayName="Type" editable="true" mdXpathAccess="ancestor::product[1]/datatype/@name" type="list">
+      <mappingInfo>Type</mappingInfo>
+    </attribute>
+    <attribute xmlName="minOccurs" code="minOccurs" defaultValue="1" displayName="MinOccurs" mdXpathAccess="'0','1'" type="list"/>
+    <attribute xmlName="maxOccurs" code="maxOccurs" defaultValue="1" displayName="MaxOccurs" mdXpathAccess="'0','1','-1'" type="list"/>
+    <attribute xmlName="namespace" code="namespace" displayName="Namespace" type="string"/>
+    <attribute xmlName="cdata" code="cdata" displayName="Use CDATA Section" mdXpathAccess="" type="boolean"/>
+    <attribute xmlName="prefixQualification" code="prefixQualification" defaultValue="" displayName="Prefix" mdXpathAccess="tokenize('force disable',' ') " type="list"/>
+    <attribute xmlName="size" xpathCondition="" code="size" displayName="Size" type="integer"/>
+    <attribute xmlName="precision" xpathCondition="" code="precision" displayName="Precision" type="integer"/>
+    <attribute xmlName="originalType" code="originalType" defaultValue="" displayName="Original Type" editable="false" mdXpathAccess="ancestor::product[1]/datatype/@name" type="string">
+      <mappingInfo>Type</mappingInfo>
+    </attribute>
+    <attribute xmlName="isNillable" code="isNillable" defaultValue="" displayName="Is Nillable" type="boolean"/>
+    <attribute xmlName="alternateName" category="" code="alternateName" displayName="Alternate Name"/>
+    <attribute xmlName="regexpSelector" code="regexpSelector" displayName="Name Selection Pattern"/>
+    <parent>com.stambia.xml.choice</parent>
+    <parent>com.stambia.xml.sequence</parent>
+    <parent>com.stambia.xml.all</parent>
+    <xPathExpression expression="@name">
+      <code>NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="@maxOccurs='-1'">
+      <code>INTERNAL_USE_AS_KEY</code>
+    </xPathExpression>
+    <xPathExpression expression="@type">
+      <code>TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="@size">
+      <code>SIZE</code>
+    </xPathExpression>
+    <xPathExpression expression="@precision">
+      <code>DECIMAL</code>
+      <code>PRECISION</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@regexpSelector!='') then concat('regexp:',@regexpSelector) else ''">
+      <code>XML_SELECTOR</code>
+    </xPathExpression>
+    <xPathExpression expression=" if (@regexpSelector!='') then '-1' else @maxOccurs">
+      <code>XML_MAX_OCCURS</code>
+    </xPathExpression>
+    <xPathExpression expression="ancestor-or-self::product[1]/propertyField[tag='basic_element' or tag='xml_element']">
+      <code>INTERNAL_EXTRA_FIELDS</code>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/com.stambia.xml.root.png" xmlName="element" code="com.stambia.xml.root" displayName="Root" isFile="false" position="1" wizardClass="">
+    <attribute xmlName="xmlPath" xpathCondition="" code="xmlPath" displayName="Xml Path" externalize="true"/>
+    <attribute xmlName="type" code="type" defaultValue="" displayName="Type" editable="true" mdXpathAccess="ancestor::product[1]/datatype/@name" type="list">
+      <mappingInfo>Type</mappingInfo>
+    </attribute>
+    <attribute xmlName="cdata" code="cdata" displayName="Use CDATA Section" mdXpathAccess="" type="boolean"/>
+    <attribute xmlName="prefixQualification" code="prefixQualification" defaultValue="" displayName="Prefix" mdXpathAccess="tokenize('force disable',' ') " type="list"/>
+    <attribute xmlName="size" xpathCondition="" code="size" displayName="Size" type="integer"/>
+    <attribute xmlName="precision" xpathCondition="" code="precision" displayName="Precision" type="integer"/>
+    <attribute xmlName="originalType" code="originalType" defaultValue="" displayName="Original Type" editable="false" mdXpathAccess="ancestor::product[1]/datatype/@name" type="string">
+      <mappingInfo>Type</mappingInfo>
+    </attribute>
+    <attribute xmlName="alternateName" category="" code="alternateName" displayName="Alternate Name"/>
+    <attribute xmlName="useJsonFormat" code="useJsonFormat" displayName="Use Json Format" type="boolean"/>
+    <attribute xmlName="regexpSelector" code="regexpSelector" defaultValue="" displayName="Name Selection Pattern"/>
+    <parent>com.stambia.xml.xsd</parent>
+    <xPathExpression expression="@name">
+      <code>NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="true()">
+      <code>INTERNAL_USE_AS_KEY</code>
+    </xPathExpression>
+    <xPathExpression expression="md:ifEmpty(@xmlPath,../@xmlPath,concat('${/CORE_TEMPORARY_FOLDER}$/',@id,'.xml'))">
+      <code>XML_FILE_PATH</code>
+      <code>IO_META_DATA_RESOURCE</code>
+    </xPathExpression>
+    <xPathExpression expression="@type">
+      <code>TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="@size">
+      <code>SIZE</code>
+    </xPathExpression>
+    <xPathExpression expression="@precision">
+      <code>DECIMAL</code>
+      <code>PRECISION</code>
+    </xPathExpression>
+    <xPathExpression expression="@name">
+      <code>IO_META_DATA_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="'xsd'">
+      <code>IO_META_DATA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="md:ifEmpty(@useJsonFormat,../@useJsonFormat)">
+      <code>USE_JSON_FORMAT</code>
+    </xPathExpression>
+    <xPathExpression expression="ancestor-or-self::product[1]/propertyField[tag='root_element' or tag='xml_element' or tag='basic_element']">
+      <code>INTERNAL_EXTRA_FIELDS</code>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+    <mappingType>Target</mappingType>
+    <mappingType>Source</mappingType>
+  </level>
+  <level icon="icons/full/custom/xml.attribute" xmlName="attribute" code="com.stambia.xml.attribute" displayName="Attribute" position="0">
+    <attribute xmlName="type" code="type" defaultValue="" displayName="Type" editable="true" mdXpathAccess="ancestor::product[1]/datatype/@name" type="list">
+      <mappingInfo>Type</mappingInfo>
+    </attribute>
+    <attribute xmlName="use" code="use" defaultValue="" displayName="Use" editable="false" mdXpathAccess="'optional','prohibited','required'" type="list"/>
+    <attribute xmlName="namespace" code="namespace" displayName="Namespace" type="string"/>
+    <attribute xmlName="prefixQualification" code="prefixQualification" defaultValue="" displayName="Prefix" mdXpathAccess="tokenize('force disable',' ') " type="list"/>
+    <attribute xmlName="size" xpathCondition="" code="size" displayName="Size" type="integer"/>
+    <attribute xmlName="precision" xpathCondition="" code="precision" displayName="Precision" type="integer"/>
+    <attribute xmlName="originalType" code="originalType" defaultValue="" displayName="Original Type" editable="false" mdXpathAccess="ancestor::product[1]/datatype/@name" type="string">
+      <mappingInfo>Type</mappingInfo>
+    </attribute>
+    <attribute xmlName="alternateName" category="" code="alternateName" displayName="Alternate Name"/>
+    <attribute xmlName="dynamicValue" category="Advanced" code="dynamicValue" displayName="Dynamic Value" mdXpathAccess="tokenize('getFileName getFilePath getFileParent getFileParentPath getFileAbsolutePath getFileCanonicalPath getFileTotalSpace',' ')" type="list"/>
+    <parent>com.stambia.xml.element</parent>
+    <parent>com.stambia.xml.root</parent>
+    <xPathExpression expression="@name">
+      <code>NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="'@[OBJECT]'">
+      <code>INTERNAL_OBJECT_MASK</code>
+    </xPathExpression>
+    <xPathExpression expression="md:convertDataType(.,$p1)">
+      <code>CREATION_DDL</code>
+      <xPathParameter defaultValue="."/>
+    </xPathExpression>
+    <xPathExpression expression="@type">
+      <code>TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="@size">
+      <code>SIZE</code>
+    </xPathExpression>
+    <xPathExpression expression="@precision">
+      <code>DECIMAL</code>
+      <code>PRECISION</code>
+    </xPathExpression>
+    <xPathExpression expression="if (ancestor::root[1]/@useJsonFormat='true') then 'element' else 'attribute'">
+      <code>XML_FORM</code>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/xml.sequence" xmlName="sequence" xpathCondition="" code="com.stambia.xml.sequence" displayName="Sequence" position="1" unique="false">
+    <attribute xmlName="minOccurs" code="minOccurs" defaultValue="1" displayName="MinOccurs" mdXpathAccess="'0','1'" type="list"/>
+    <attribute xmlName="maxOccurs" code="maxOccurs" defaultValue="1" displayName="MaxOccurs" mdXpathAccess="'0','1','unbounded'" type="list"/>
+    <parent>com.stambia.xml.choice</parent>
+    <parent>com.stambia.xml.element</parent>
+    <parent>com.stambia.xml.sequence</parent>
+    <parent>com.stambia.xml.root</parent>
+    <parent>com.stambia.xml.all</parent>
+    <changeTo>com.stambia.xml.all</changeTo>
+    <changeTo>com.stambia.xml.choice</changeTo>
+  </level>
+  <level icon="icons/full/custom/xml.choice" xmlName="choice" code="com.stambia.xml.choice" displayName="Choice" position="1" unique="false">
+    <attribute xmlName="minOccurs" code="minOccurs" defaultValue="1" displayName="MinOccurs" mdXpathAccess="'0','1'" type="list"/>
+    <attribute xmlName="maxOccurs" code="maxOccurs" defaultValue="1" displayName="MaxOccurs" mdXpathAccess="'0','1','unbouded'" type="list"/>
+    <parent>com.stambia.xml.choice</parent>
+    <parent>com.stambia.xml.element</parent>
+    <parent>com.stambia.xml.sequence</parent>
+    <parent>com.stambia.xml.all</parent>
+    <parent>com.stambia.xml.root</parent>
+    <changeTo>com.stambia.xml.sequence</changeTo>
+    <changeTo>com.stambia.xml.all</changeTo>
+  </level>
+  <level icon="icons/full/custom/xsd.schema.gif" xmlName="xsd" code="com.stambia.xml.xsd" connection="true" displayName="Schema" isFile="true" wizardBundleName="com.indy.addons" wizardClass="com.indy.addons.xml.wizard.XmlWizard">
+    <attribute xmlName="xmlPath" xpathCondition="" code="xmlPath" displayName="Default Xml Path" externalize="true" type="file">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.fileditor.extensions" value="*.xml"/>
+    </attribute>
+    <attribute xmlName="xsdPath" code="xsdPath" displayName="Xsd Path" externalize="false" type="file">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.fileditor.extensions" value="*.xsd"/>
+    </attribute>
+    <attribute xmlName="prefixForElement" code="prefixForElement" displayName="Prefix For Element" mdXpathAccess="tokenize('qualified unqualified',' ')" type="list"/>
+    <attribute xmlName="prefixForAttribute" xpathCondition="" code="prefixForAttribute" displayName="Prefix For Attribute" mdXpathAccess="tokenize('qualified unqualified',' ')" type="list"/>
+    <attribute xmlName="targetNamespace" code="targetNamespace" displayName="Target Namespace"/>
+    <attribute xmlName="useJsonFormat" code="useJsonFormat" displayName="Use Json Format" type="boolean"/>
+    <attribute metaInf="" xmlName="xsdReverseVersion" code="xsdReverseVersion" configurable="false" displayName="XSD Reverse Version" mdXpathAccess="tokenize('1', ' ')" reverseUpdateXpathQuery="" toolTip="Version 1 includes most notably a fix for the reverse of sequences from complex types that inherit from other types, which were not reversed in the correct order. Note that if you are reversing with version 1 on a Metadata that has already been reversed without a reverse version, sequence children will so be duplicated. (You'll have both the old with incorrect order and new ones. You can then choose the ones to keep and remove the others.)" type="list">
+      <hint key="com.stambia.md.presentation.custom.newMdWizard.attributeInitialisationValue" value="1"/>
+    </attribute>
+    <parent>com.stambia.xml.product</parent>
+    <xPathExpression expression="@xmlPath">
+      <code>XML_FILE_PATH</code>
+    </xPathExpression>
+    <xPathExpression expression="@useJsonFormat">
+      <code>USE_JSON_FORMAT</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/xml.choice" xmlName="all" xpathCondition="" code="com.stambia.xml.all" displayName="All" position="1" unique="false">
+    <attribute xmlName="minOccurs" code="minOccurs" defaultValue="1" displayName="MinOccurs" mdXpathAccess="'0','1'" type="list"/>
+    <attribute xmlName="maxOccurs" code="maxOccurs" defaultValue="1" displayName="MaxOccurs" mdXpathAccess="'0','1','unbouded'" type="list"/>
+    <parent>com.stambia.xml.choice</parent>
+    <parent>com.stambia.xml.element</parent>
+    <parent>com.stambia.xml.sequence</parent>
+    <parent>com.stambia.xml.all</parent>
+    <parent>com.stambia.xml.root</parent>
+    <changeTo>com.stambia.xml.choice</changeTo>
+    <changeTo>com.stambia.xml.sequence</changeTo>
+  </level>
+  <level xmlName="product" code="com.stambia.xml.product" displayName="Xml Product" isFile="advanced"/>
+  <level icon="icons/full/custom/rdbms.column" xmlName="datatype" code="com.stambia.xml.datatype" displayName="DataType">
+    <parent>com.stambia.xml.product</parent>
+    <xPathExpression expression="if (@name='int') then 'integer' else @name">
+      <code>SUPER_TYPE_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="true()">
+      <code>IS_DEFAULT</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/com.stambia.xml.namespace.png" xmlName="namespace" xpathDisplayName="if (@prefix!='') then concat(@prefix,'=',@name) else @name" code="com.stambia.xml.namespace" displayName="Namespace" position="10">
+    <attribute xmlName="prefix" code="prefix" displayName="Prefix"/>
+    <parent>com.stambia.xml.xsd</parent>
+  </level>
+  <level icon="icons/full/custom/xml.documentation.gif" xmlName="documentation" xpathDisplayName="substring(@text,1,100)" xpathIcon="" autoDelete="false" code="com.stambia.xml.documentation" displayName="Documentation" hasName="false" position="-1" positionReverseCode="" wizardClass="">
+    <attribute xmlName="text" code="text" displayName="Text" multiLine="true"/>
+    <attribute xmlName="source" code="source" displayName="Source"/>
+    <attribute xmlName="lang" code="lang" displayName="Lang"/>
+    <parent>com.stambia.xml.attribute</parent>
+    <parent>com.stambia.xml.element</parent>
+    <parent>com.stambia.xml.root</parent>
+  </level>
+  <level icon="" xmlName="appinfo" xpathDisplayName="substring(@text,1,100)" xpathIcon="" code="com.stambia.xml.appinfo" displayName="Appinfo" hasName="false" position="-1" wizardClass="">
+    <attribute xmlName="text" code="text" displayName="Text" multiLine="true"/>
+    <attribute xmlName="source" code="source" displayName="Source"/>
+    <parent>com.stambia.xml.attribute</parent>
+    <parent>com.stambia.xml.element</parent>
+    <parent>com.stambia.xml.root</parent>
+  </level>
+  <level icon="icons/full/custom/rdbms.property.gif" xmlName="propertyField" xpathDisplayName="concat(@name, if  (@property!=@name) then concat(' (',@property,')') else '')" code="com.stambia.xml.propertyField" displayName="Property Field" hasName="true" orderType="Name" position="-1">
+    <attribute xmlName="property" xpathCondition="" code="property" displayName="Property" mdXpathAccess="if (../@defType='com.stambia.xml.root') then tokenize('nodeName nodePrefix nodeURI nodeLocalName nodeUUID nodeAbsolutePosition fileName filePath fileParentName fileParentPath fileAbsolutePath fileCanonicalPath fileTotalSpace fileSequenceNumber',' ') else tokenize('nodeName nodePrefix nodeURI nodeLocalName nodeLocalPosition nodeUUID nodeAbsolutePosition nodePath sortKey',' ')" reverseCode="" type="list"/>
+    <attribute xmlName="tag" xpathCondition="../name()='product'" code="tag" displayName="Tags" unbounded="true"/>
+    <parent>com.stambia.xml.element</parent>
+    <parent>com.stambia.xml.root</parent>
+    <parent>com.stambia.xml.product</parent>
+    <xPathExpression expression="concat('internalProperty:',md:ifEmpty(@property,@name))">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="'attribute'">
+      <code>XML_FORM</code>
+    </xPathExpression>
+    <xPathExpression expression="'String'">
+      <code>XML_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="'@[OBJECT]'">
+      <code>INTERNAL_OBJECT_MASK</code>
+    </xPathExpression>
+    <xPathExpression expression="if (&#xD;&#xA;@property='nodeLocalName'  or&#xD;&#xA;@property='nodeURI'  or&#xD;&#xA;@property='nodePrefix') then 'MAPPING' else if (@property='nodeName' or @property='sortKey' ) then 'TARGET_MAPPING' else 'SOURCE_MAPPING'">
+      <code>INTERNAL_MAPPING_TYPE</code>
+    </xPathExpression>
+    <mappingType>SourceMapping</mappingType>
+    <mappingType>TargetMapping</mappingType>
+  </level>
+  <action bundleName="com.indy.addons" className="com.indy.file.xml.XmlEditorAction" code="open_xml_editor" description="Open node in Xml Editor" displayName="Open Xml Editor" xpathContext="" xpathExpression="">
+    <executableLevel>#com.stambia.xml.root</executableLevel>
+    <executableLevel>#com.stambia.xml.element</executableLevel>
+    <executableLevel>#com.stambia.xml.xsd</executableLevel>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.file.xml.XsdEditorAction" code="open_xsd_editor" description="Open node in Xsd Editor" displayName="Open Xsd Editor" xpathContext="" xpathExpression="">
+    <executableLevel>#com.stambia.xml.root</executableLevel>
+    <executableLevel>#com.stambia.xml.element</executableLevel>
+    <executableLevel>#com.stambia.xml.xsd</executableLevel>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.addons.xml.wizard.XsdGenerationAction" code="xsd_generation_tool" description="Generate a XSD from an XML File" displayName="XSD Generation Tool" xpathContext="" xpathExpression="">
+    <executableLevel>#com.stambia.xml.xsd</executableLevel>
+  </action>
+  <xPathExpression expression="false()">
+    <code>HAS_WORKSPACE_CAPABILITY_GUI</code>
+  </xPathExpression>
+  <xPathExpression expression="'XML'">
+    <code>INTERN_PRODUCT_CODE_GUI</code>
+    <code>PRODUCT_CODE</code>
+  </xPathExpression>
+  <xPathExpression expression="'XML'">
+    <code>TECH_CODE</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:product()/datatype[upper-case(@name)=upper-case($p1) or $p1='']">
+    <code>DATA_TYPE_REF</code>
+    <xPathParameter defaultValue="''"/>
+  </xPathExpression>
+  <xPathExpression expression="if (ancestor-or-self::product[1]) then ancestor-or-self::product[1] else mdj:getRef(@md:ref)">
+    <code>PRODUCT_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:xsd()/namespace">
+    <code>NAMESPACE_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::xsd[1]">
+    <code>XSD_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="true()">
+    <code>INTERNAL_IS_CASE_SENSITIVE</code>
+  </xPathExpression>
+  <xPathExpression expression="md:xmlToText(md:xmlToXsd(ref:xsd()))">
+    <code>TO_XSD</code>
+  </xPathExpression>
+  <xPathExpression expression="md:xmlToText(md:mdToXsd(ref:xsd()))">
+    <code>IO_META_DATA</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:xsd()/@id">
+    <code>IO_META_DATA_ID</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:dataType()[@name='string']">
+    <code>DEFAULT_DATA_TYPE_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="if ($FilePath!='') then mdj:getFileInfo($FilePath,'parent') else ''">
+    <code>XML_FOLDER_PATH</code>
+    <xPathVariable expression="tech:xmlFilePath()" name="FilePath"/>
+  </xPathExpression>
+  <xPathExpression expression="'[^a-zA-Z0-9_@/]'">
+    <code>INTERNAL_OBJECT_DELIMITER_REGEXP</code>
+  </xPathExpression>
+  <xPathExpression expression="'&quot;[OBJECT]&quot;'">
+    <code>INTERNAL_OBJECT_DELIMITER_MASK</code>
+  </xPathExpression>
+  <xPathExpression expression="'text/xml'">
+    <code>IO_META_DATA_INTERNET_MEDIA_TYPE</code>
+  </xPathExpression>
+  <xPathExpression expression="1=0">
+    <code>INTERNAL_SUPPORT_MANUAL_HIERARCHY</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::element[@defType='com.stambia.xml.root']">
+    <code>INTERNAL_MD_CONTAINER_NODE_DATASTORE</code>
+  </xPathExpression>
+  <xPathExpression>
+    <code>INTERNAL_MD_CONTAINER_NODE_SCHEMA</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::xsd[1]">
+    <code>INTERNAL_MD_CONTAINER_NODE_SERVER</code>
+  </xPathExpression>
+  <xPathExpression>
+    <code>INTERNAL_MD_CONTAINER_NODE_PHYSICALSERVER</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::xsd[1]/@xsdReverseVersion">
+    <code>INTERNAL_XSD_REVERSE_VERSION</code>
+  </xPathExpression>
+  <xPathExpression expression="true()">
+    <code>INTERNAL_SHOW_ERROR_WHEN_DISJOINTED_SRC_HAVE_COMMON_MAPPED_ANCESTOR</code>
+  </xPathExpression>
+  <xPathExpression description="" expression="ref:product()/propertyField">
+    <code>ALL_EXTRA_FIELDS_REF</code>
+  </xPathExpression>
+</tech:tech>

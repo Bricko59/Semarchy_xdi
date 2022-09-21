@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="UUID_STAMBIA_TECH_FTP" name="Ftp" ref="resource.md#UUID_MD_SUPER_TYPE?fileId=UUID_MD_SUPER_TYPE$type=md$name=super?">
+  <level icon="icons/full/custom/ftp.server.png" xmlName="server" code="com.stambia.ftp.server" displayName="FTP Server" isFile="true" subMetaDataFileCapability="true">
+    <attribute xmlName="host" code="host" displayName="Host" externalize="true"/>
+    <attribute xmlName="port" code="port" displayName="Port" externalize="true"/>
+    <attribute xmlName="user" category="" code="user" displayName="User" externalize="true" type="string"/>
+    <attribute xmlName="password" code="password" displayName="Password" externalize="true" type="password"/>
+    <attribute xmlName="proxyHost" category="Standard:Proxy Server" code="proxyHost" displayName="Host"/>
+    <attribute xmlName="proxyPort" category="Standard:Proxy Server" code="proxyPort" displayName="Port"/>
+    <attribute xmlName="proxyUser" category="Standard:Proxy Server" code="proxyUser" displayName="User"/>
+    <attribute xmlName="proxyPassword" category="Standard:Proxy Server" code="proxyPassword" displayName="Password" type="password"/>
+  </level>
+  <level icon="icons/full/custom/file.folder.png" xmlName="directory" code="com.stambia.ftp.directory" displayName="Remote directory">
+    <attribute xmlName="path" code="path" displayName="Path" externalize="true"/>
+    <attribute xmlName="systemPath" category="" code="systemPath" defaultValue="" displayName="System Absolut Path"/>
+    <parent>com.stambia.ftp.server</parent>
+    <xPathExpression expression="@path">
+      <code>PATH</code>
+    </xPathExpression>
+    <xPathExpression expression="@systemPath">
+      <code>SYSTEM_PATH</code>
+    </xPathExpression>
+  </level>
+  <xPathExpression expression="ancestor-or-self::server[1]">
+    <code>SERVER_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="'FTP'">
+    <code>PRODUCT_CODE</code>
+  </xPathExpression>
+  <xPathExpression expression="'FTP'">
+    <code>TECH_CODE</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@host">
+    <code>HOST</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@port">
+    <code>PORT</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@user">
+    <code>USER</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@password">
+    <code>PASSWORD</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@proxyUser">
+    <code>PROXY_USER</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@proxyPassword">
+    <code>PROXY_PASSWORD</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@proxyHost">
+    <code>PROXY_HOST</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:server()/@proxyPort">
+    <code>PROXY_PORT</code>
+  </xPathExpression>
+  <metaDataLinkType createAction="false" name="FtpConnection">
+    <parameter name="FTP_HOSTNAME" value="ref:server()/@host"/>
+    <parameter name="FTP_USER" value="ref:server()/@user"/>
+    <parameter name="FTP_PASSWORD" value="ref:server()/@password"/>
+    <parameter name="FTP_PORT" value="ref:server()/@port"/>
+    <parameter name="PROXY_HOST" value="ref:server()/@proxyHost"/>
+    <parameter name="PROXY_PORT" value="ref:server()/@proxyPort"/>
+    <parameter name="PROXY_USER" value="ref:server()/@proxyUser"/>
+    <parameter name="PROXY_PASSWORD" value="ref:server()/@proxyPassword"/>
+    <technology>com.indy.engine.actionCodes.FtpPutActionCodeI</technology>
+    <technology>com.indy.engine.actionCodes.FtpGetActionCodeI</technology>
+    <technology>com.indy.engine.actionCodes.FtpExecActionCodeI</technology>
+    <technology>com.indy.engine.actionCodes.FtpExecActionCodeCommandI</technology>
+    <level>#com.stambia.ftp.server</level>
+    <level>#com.stambia.ftp.directory</level>
+  </metaDataLinkType>
+  <metaDataLinkType createAction="false" name="FtpDirectory">
+    <parameter name="FTP_REMOTE_PATH" value="@path"/>
+    <technology>com.indy.engine.actionCodes.FtpGetActionCodeI</technology>
+    <technology>com.indy.engine.actionCodes.FtpPutActionCodeI</technology>
+    <level>#com.stambia.ftp.directory</level>
+  </metaDataLinkType>
+</tech:tech>

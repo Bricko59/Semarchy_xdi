@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map:map xmlns:map="http://www.indy.com/v2/map" id="_AxcOEIC0EeaWqIy4qrYByg" internalVersion="8" name="Load BILLING file per color" tech="resource.tech#_waYSMH8VEd2__Mzb_dB76A?fileId=_waYSMH8VEd2__Mzb_dB76A$type=tech$name=flow?">
+  <datastore id="_E4rJMIC0EeaWqIy4qrYByg" alias="flat_file_to_generate" dataset="_E439gIC0EeaWqIy4qrYByg" ref="resource.md#_gtr9sICzEeaWqIy4qrYByg?fileId=_gqCMwICzEeaWqIy4qrYByg$type=md$name=flat_file_to_generate?" subExpression="[A]">
+    <field id="_E406NIC0EeaWqIy4qrYByg" enable="true" insert="true" name="ORDER_CONFIRMED" parent="_E406MYC0EeaWqIy4qrYByg" ref="resource.md#_o_8HyYCzEeaWqIy4qrYByg?fileId=_gqCMwICzEeaWqIy4qrYByg$type=md$name=ORDER_CONFIRMED?" update="true">
+      <expression id="_HLwmIIC0EeaWqIy4qrYByg" setDescriptorRef="_HLrtoIC0EeaWqIy4qrYByg">
+        <expression>CAST(BILLING.ORDER_CONFIRMED AS VARCHAR)</expression>
+      </expression>
+    </field>
+    <field id="_E406O4C0EeaWqIy4qrYByg" enable="true" insert="true" name="CUSTOMER_ID" parent="_E406MYC0EeaWqIy4qrYByg" ref="resource.md#_o_8H5oCzEeaWqIy4qrYByg?fileId=_gqCMwICzEeaWqIy4qrYByg$type=md$name=CUSTOMER_ID?" update="true">
+      <expression id="_HLxNMIC0EeaWqIy4qrYByg" setDescriptorRef="_HLrtoIC0EeaWqIy4qrYByg">
+        <expression>BILLING.CUSTOMER_ID</expression>
+      </expression>
+    </field>
+    <field id="_E406QYC0EeaWqIy4qrYByg" enable="true" insert="true" name="FRENCH_COMMENT" parent="_E406MYC0EeaWqIy4qrYByg" ref="resource.md#_o_8H_oCzEeaWqIy4qrYByg?fileId=_gqCMwICzEeaWqIy4qrYByg$type=md$name=FRENCH_COMMENT?" update="true">
+      <expression id="_HLx0QIC0EeaWqIy4qrYByg" setDescriptorRef="_HLrtoIC0EeaWqIy4qrYByg">
+        <expression>TRIM(BILLING.FRENCH_COMMENT)</expression>
+      </expression>
+    </field>
+    <field id="_E406N4C0EeaWqIy4qrYByg" enable="true" insert="true" name="BILL_AMOUNT" parent="_E406MYC0EeaWqIy4qrYByg" ref="resource.md#_o_8H1oCzEeaWqIy4qrYByg?fileId=_gqCMwICzEeaWqIy4qrYByg$type=md$name=BILL_AMOUNT?" update="true">
+      <expression id="_HLzCYIC0EeaWqIy4qrYByg" setDescriptorRef="_HLrtoIC0EeaWqIy4qrYByg">
+        <expression>BILLING.BILL_AMOUNT</expression>
+      </expression>
+    </field>
+    <field id="_E406OIC0EeaWqIy4qrYByg" enable="true" insert="true" name="DISCOUNT_PERCENTAGE" parent="_E406MYC0EeaWqIy4qrYByg" ref="resource.md#_o_8H2oCzEeaWqIy4qrYByg?fileId=_gqCMwICzEeaWqIy4qrYByg$type=md$name=DISCOUNT_PERCENTAGE?" update="true">
+      <expression id="_HLzpcIC0EeaWqIy4qrYByg" setDescriptorRef="_HLrtoIC0EeaWqIy4qrYByg">
+        <expression>BILLING.DISCOUNT_PERCENTAGE</expression>
+      </expression>
+    </field>
+    <field id="_E406PYC0EeaWqIy4qrYByg" enable="true" insert="true" name="GET_DISCOUNT" parent="_E406MYC0EeaWqIy4qrYByg" ref="resource.md#_o_8H7oCzEeaWqIy4qrYByg?fileId=_gqCMwICzEeaWqIy4qrYByg$type=md$name=GET_DISCOUNT?" update="true">
+      <expression id="_HL0QgIC0EeaWqIy4qrYByg" setDescriptorRef="_HLrtoIC0EeaWqIy4qrYByg">
+        <expression>CAST(BILLING.GET_DISCOUNT AS VARCHAR)</expression>
+      </expression>
+    </field>
+    <field id="_E406PoC0EeaWqIy4qrYByg" enable="true" insert="true" name="CITY_ID" parent="_E406MYC0EeaWqIy4qrYByg" ref="resource.md#_o_8H8oCzEeaWqIy4qrYByg?fileId=_gqCMwICzEeaWqIy4qrYByg$type=md$name=CITY_ID?" update="true">
+      <expression id="_HL1eoIC0EeaWqIy4qrYByg" setDescriptorRef="_HLrtoIC0EeaWqIy4qrYByg">
+        <expression>BILLING.CITY_ID</expression>
+      </expression>
+    </field>
+    <field id="_E406OYC0EeaWqIy4qrYByg" enable="true" insert="true" name="PRODUCT_QUANTITY" parent="_E406MYC0EeaWqIy4qrYByg" ref="resource.md#_o_8H3oCzEeaWqIy4qrYByg?fileId=_gqCMwICzEeaWqIy4qrYByg$type=md$name=PRODUCT_QUANTITY?" update="true">
+      <expression id="_HL2FsIC0EeaWqIy4qrYByg" setDescriptorRef="_HLrtoIC0EeaWqIy4qrYByg">
+        <expression>BILLING.PRODUCT_QUANTITY</expression>
+      </expression>
+    </field>
+    <field id="_E406OoC0EeaWqIy4qrYByg" enable="true" insert="true" name="PRODUCT_COLOR" parent="_E406MYC0EeaWqIy4qrYByg" ref="resource.md#_o_8H4oCzEeaWqIy4qrYByg?fileId=_gqCMwICzEeaWqIy4qrYByg$type=md$name=PRODUCT_COLOR?" update="true">
+      <tag>COLOR</tag>
+      <expression id="_HL2FsYC0EeaWqIy4qrYByg" setDescriptorRef="_HLrtoIC0EeaWqIy4qrYByg">
+        <expression>TRIM(BILLING.PRODUCT_COLOR)</expression>
+      </expression>
+    </field>
+    <field id="_E406MoC0EeaWqIy4qrYByg" enable="true" insert="true" name="BILL_ID" parent="_E406MYC0EeaWqIy4qrYByg" ref="resource.md#_o_8HwICzEeaWqIy4qrYByg?fileId=_gqCMwICzEeaWqIy4qrYByg$type=md$name=BILL_ID?" update="true">
+      <expression id="_HL2swIC0EeaWqIy4qrYByg" setDescriptorRef="_HLrtoIC0EeaWqIy4qrYByg">
+        <expression>BILLING.BILL_ID</expression>
+      </expression>
+    </field>
+    <field id="_E406P4C0EeaWqIy4qrYByg" enable="true" insert="true" name="COUNTRY_ID" parent="_E406MYC0EeaWqIy4qrYByg" ref="resource.md#_o_8H9oCzEeaWqIy4qrYByg?fileId=_gqCMwICzEeaWqIy4qrYByg$type=md$name=COUNTRY_ID?" update="true">
+      <expression id="_HL3T0IC0EeaWqIy4qrYByg" setDescriptorRef="_HLrtoIC0EeaWqIy4qrYByg">
+        <expression>BILLING.COUNTRY_ID</expression>
+      </expression>
+    </field>
+    <field id="_E406PIC0EeaWqIy4qrYByg" enable="true" insert="true" name="PRODUCT_ID" parent="_E406MYC0EeaWqIy4qrYByg" ref="resource.md#_o_8H6oCzEeaWqIy4qrYByg?fileId=_gqCMwICzEeaWqIy4qrYByg$type=md$name=PRODUCT_ID?" update="true">
+      <expression id="_HL3T0YC0EeaWqIy4qrYByg" setDescriptorRef="_HLrtoIC0EeaWqIy4qrYByg">
+        <expression>BILLING.PRODUCT_ID</expression>
+      </expression>
+    </field>
+    <field id="_E406QIC0EeaWqIy4qrYByg" enable="true" insert="true" name="REQUIRED_CHANGE" parent="_E406MYC0EeaWqIy4qrYByg" ref="resource.md#_o_8H-oCzEeaWqIy4qrYByg?fileId=_gqCMwICzEeaWqIy4qrYByg$type=md$name=REQUIRED_CHANGE?" update="true">
+      <expression id="_HL364IC0EeaWqIy4qrYByg" setDescriptorRef="_HLrtoIC0EeaWqIy4qrYByg">
+        <expression>TRIM(BILLING.REQUIRED_CHANGE)</expression>
+      </expression>
+    </field>
+    <field id="_E406NYC0EeaWqIy4qrYByg" enable="true" insert="true" name="BILL_DATE" parent="_E406MYC0EeaWqIy4qrYByg" ref="resource.md#_o_8HzYCzEeaWqIy4qrYByg?fileId=_gqCMwICzEeaWqIy4qrYByg$type=md$name=BILL_DATE?" update="true">
+      <expression id="_HL364YC0EeaWqIy4qrYByg" setDescriptorRef="_HLrtoIC0EeaWqIy4qrYByg">
+        <expression>BILLING.BILL_DATE</expression>
+      </expression>
+    </field>
+    <field id="_E406NoC0EeaWqIy4qrYByg" enable="true" insert="true" name="PAYMENT_RECEIVED" parent="_E406MYC0EeaWqIy4qrYByg" ref="resource.md#_o_8H0oCzEeaWqIy4qrYByg?fileId=_gqCMwICzEeaWqIy4qrYByg$type=md$name=PAYMENT_RECEIVED?" update="true">
+      <expression id="_HL4h8IC0EeaWqIy4qrYByg" setDescriptorRef="_HLrtoIC0EeaWqIy4qrYByg">
+        <expression>CAST(BILLING.PAYMENT_RECEIVED AS VARCHAR)</expression>
+      </expression>
+    </field>
+    <field id="_E406M4C0EeaWqIy4qrYByg" enable="true" insert="true" name="ORDER_DATE" parent="_E406MYC0EeaWqIy4qrYByg" ref="resource.md#_o_8HxICzEeaWqIy4qrYByg?fileId=_gqCMwICzEeaWqIy4qrYByg$type=md$name=ORDER_DATE?" update="true">
+      <expression id="_HL5JAIC0EeaWqIy4qrYByg" setDescriptorRef="_HLrtoIC0EeaWqIy4qrYByg">
+        <expression>BILLING.ORDER_DATE</expression>
+      </expression>
+    </field>
+    <field id="_E406MIC0EeaWqIy4qrYByg" enable="true" expand="true" insert="true" name="flat_file_to_generate" ref="resource.md#_gtr9sICzEeaWqIy4qrYByg?fileId=_gqCMwICzEeaWqIy4qrYByg$type=md$name=flat_file_to_generate?" update="true" updateKey="true">
+      <expression id="_HL5JAYC0EeaWqIy4qrYByg" setDescriptorRef="_HLrtoIC0EeaWqIy4qrYByg">
+        <expression>BILLING.PRODUCT_COLOR</expression>
+      </expression>
+    </field>
+    <field id="_E406MYC0EeaWqIy4qrYByg" enable="true" expand="true" insert="true" name="FILE_RECORD" parent="_E406MIC0EeaWqIy4qrYByg" ref="resource.md#_z-0QIYCzEeaWqIy4qrYByg?fileId=_gqCMwICzEeaWqIy4qrYByg$type=md$name=FILE_RECORD?" update="true" updateKey="true">
+      <expression id="_HL5wEIC0EeaWqIy4qrYByg" setDescriptorRef="_HLrtoIC0EeaWqIy4qrYByg">
+        <expression>BILLING.PRODUCT_COLOR</expression>
+      </expression>
+    </field>
+    <field id="_fe0TYoFOEean7JATlUQCiw" enable="true" insert="true" name="PRODUCT_PACKAGING" parent="_E406MYC0EeaWqIy4qrYByg" ref="resource.md#_FWgGsIFOEean7JATlUQCiw?fileId=_gqCMwICzEeaWqIy4qrYByg$type=md$name=PRODUCT_PACKAGING?" update="true">
+      <expression id="_fe0TY4FOEean7JATlUQCiw" setDescriptorRef="_HLrtoIC0EeaWqIy4qrYByg">
+        <expression>TRIM(BILLING.PRODUCT_PACKAGING)</expression>
+      </expression>
+    </field>
+    <field id="_fe0TZIFOEean7JATlUQCiw" enable="true" insert="true" name="PRODUCT_DELIVERY_EMERGENCY_LEVEL" parent="_E406MYC0EeaWqIy4qrYByg" ref="resource.md#_Mc794IFOEean7JATlUQCiw?fileId=_gqCMwICzEeaWqIy4qrYByg$type=md$name=PRODUCT_DELIVERY_EMERGENCY_LEVEL?" update="true">
+      <expression id="_fe0TZYFOEean7JATlUQCiw" setDescriptorRef="_HLrtoIC0EeaWqIy4qrYByg">
+        <expression>TRIM(BILLING.PRODUCT_DELIVERY_EMERGENCY_LEVEL)</expression>
+      </expression>
+    </field>
+    <setDescriptor id="_HLrtoIC0EeaWqIy4qrYByg" label="A"/>
+  </datastore>
+  <datastore id="_GoDcIIC0EeaWqIy4qrYByg" alias="BILLING" dataset="_GoKJ0IC0EeaWqIy4qrYByg" ref="resource.md#_BB5hMICOEearIqf8dQo5rQ?fileId=_9gfDUH71Eea6zsl9X76vCw$type=md$name=BILLING?">
+    <field id="_GoFRUoC0EeaWqIy4qrYByg" fullAlias="PAYMENT_RECEIVED" name="PAYMENT_RECEIVED" ref="resource.md#_BCQGgoCOEearIqf8dQo5rQ?fileId=_9gfDUH71Eea6zsl9X76vCw$type=md$name=PAYMENT_RECEIVED?"/>
+    <field id="_GoFRUYC0EeaWqIy4qrYByg" fullAlias="BILL_DATE" name="BILL_DATE" ref="resource.md#_BCPfc4COEearIqf8dQo5rQ?fileId=_9gfDUH71Eea6zsl9X76vCw$type=md$name=BILL_DATE?"/>
+    <field id="_GoF4YoC0EeaWqIy4qrYByg" fullAlias="PRODUCT_COLOR" name="PRODUCT_COLOR" ref="resource.md#_BCSiwICOEearIqf8dQo5rQ?fileId=_9gfDUH71Eea6zsl9X76vCw$type=md$name=PRODUCT_COLOR?"/>
+    <field id="_GoGfcIC0EeaWqIy4qrYByg" fullAlias="PRODUCT_ID" name="PRODUCT_ID" ref="resource.md#_BCTw4ICOEearIqf8dQo5rQ?fileId=_9gfDUH71Eea6zsl9X76vCw$type=md$name=PRODUCT_ID?"/>
+    <field id="_GoFRU4C0EeaWqIy4qrYByg" fullAlias="BILL_AMOUNT" name="BILL_AMOUNT" ref="resource.md#_BCQtkICOEearIqf8dQo5rQ?fileId=_9gfDUH71Eea6zsl9X76vCw$type=md$name=BILL_AMOUNT?"/>
+    <field id="_GoGfcYC0EeaWqIy4qrYByg" fullAlias="GET_DISCOUNT" name="GET_DISCOUNT" ref="resource.md#_BCTw6ICOEearIqf8dQo5rQ?fileId=_9gfDUH71Eea6zsl9X76vCw$type=md$name=GET_DISCOUNT?"/>
+    <field id="_GoF4YYC0EeaWqIy4qrYByg" fullAlias="PRODUCT_QUANTITY" name="PRODUCT_QUANTITY" ref="resource.md#_BCR7sICOEearIqf8dQo5rQ?fileId=_9gfDUH71Eea6zsl9X76vCw$type=md$name=PRODUCT_QUANTITY?"/>
+    <field id="_GoHGgYC0EeaWqIy4qrYByg" fullAlias="FRENCH_COMMENT" name="FRENCH_COMMENT" ref="resource.md#_BCWNIYCOEearIqf8dQo5rQ?fileId=_9gfDUH71Eea6zsl9X76vCw$type=md$name=FRENCH_COMMENT?"/>
+    <field id="_GoGfc4C0EeaWqIy4qrYByg" fullAlias="COUNTRY_ID" name="COUNTRY_ID" ref="resource.md#_BCU_BYCOEearIqf8dQo5rQ?fileId=_9gfDUH71Eea6zsl9X76vCw$type=md$name=COUNTRY_ID?"/>
+    <field id="_GoGfcoC0EeaWqIy4qrYByg" fullAlias="CITY_ID" name="CITY_ID" ref="resource.md#_BCUX9oCOEearIqf8dQo5rQ?fileId=_9gfDUH71Eea6zsl9X76vCw$type=md$name=CITY_ID?"/>
+    <field id="_GoF4YIC0EeaWqIy4qrYByg" fullAlias="DISCOUNT_PERCENTAGE" name="DISCOUNT_PERCENTAGE" ref="resource.md#_BCRUoICOEearIqf8dQo5rQ?fileId=_9gfDUH71Eea6zsl9X76vCw$type=md$name=DISCOUNT_PERCENTAGE?"/>
+    <field id="_GoEqQIC0EeaWqIy4qrYByg" fullAlias="BILL_ID" name="BILL_ID" ref="resource.md#_BCNqQICOEearIqf8dQo5rQ?fileId=_9gfDUH71Eea6zsl9X76vCw$type=md$name=BILL_ID?" updateKey="true"/>
+    <field id="_GoHGgIC0EeaWqIy4qrYByg" fullAlias="REQUIRED_CHANGE" name="REQUIRED_CHANGE" ref="resource.md#_BCVmE4COEearIqf8dQo5rQ?fileId=_9gfDUH71Eea6zsl9X76vCw$type=md$name=REQUIRED_CHANGE?"/>
+    <field id="_GoEqQYC0EeaWqIy4qrYByg" fullAlias="ORDER_DATE" name="ORDER_DATE" ref="resource.md#_BCORVICOEearIqf8dQo5rQ?fileId=_9gfDUH71Eea6zsl9X76vCw$type=md$name=ORDER_DATE?"/>
+    <field id="_GoFRUIC0EeaWqIy4qrYByg" fullAlias="ORDER_CONFIRMED" name="ORDER_CONFIRMED" ref="resource.md#_BCO4ZYCOEearIqf8dQo5rQ?fileId=_9gfDUH71Eea6zsl9X76vCw$type=md$name=ORDER_CONFIRMED?"/>
+    <field id="_GoF4Y4C0EeaWqIy4qrYByg" fullAlias="CUSTOMER_ID" name="CUSTOMER_ID" ref="resource.md#_BCTJ0ICOEearIqf8dQo5rQ?fileId=_9gfDUH71Eea6zsl9X76vCw$type=md$name=CUSTOMER_ID?"/>
+    <field id="_qdFR0IDMEeaWqIy4qrYByg" fullAlias="PRODUCT_PACKAGING" name="PRODUCT_PACKAGING" ref="resource.md#_qM12YYDMEeaWqIy4qrYByg?fileId=_9gfDUH71Eea6zsl9X76vCw$type=md$name=PRODUCT_PACKAGING?"/>
+    <field id="_fe2IloFOEean7JATlUQCiw" fullAlias="PRODUCT_DELIVERY_EMERGENCY_LEVEL" name="PRODUCT_DELIVERY_EMERGENCY_LEVEL" ref="resource.md#_Wr8IgIFOEean7JATlUQCiw?fileId=_9gfDUH71Eea6zsl9X76vCw$type=md$name=PRODUCT_DELIVERY_EMERGENCY_LEVEL?"/>
+    <constraint id="_GoHGgoC0EeaWqIy4qrYByg" name="PK_BILLING" ref="resource.md#_BCYCUICOEearIqf8dQo5rQ?fileId=_9gfDUH71Eea6zsl9X76vCw$type=md$name=PK_BILLING?" reject="true"/>
+  </datastore>
+  <template id="_HL8MUIC0EeaWqIy4qrYByg" name="I_flat_file_to_generate" process="resource.proc#_vMm9AqjeEeKTW_R2FPXghA?fileId=_vMm9AqjeEeKTW_R2FPXghA$type=proc$name=INTEGRATION%20Hierarchical%20File?" targetId="_E4rJMIC0EeaWqIy4qrYByg">
+    <parameter id="_VjikAIC0EeaWqIy4qrYByg" name="OUT_FILE_MASK" value="Csv\${/CORE_SESSION_TIMESTAMP}$\Billing [COLOR].csv"/>
+  </template>
+  <dataSet id="_E439gIC0EeaWqIy4qrYByg">
+    <container>_E4rJMIC0EeaWqIy4qrYByg</container>
+  </dataSet>
+  <dataSet id="_GoKJ0IC0EeaWqIy4qrYByg">
+    <container>_GoDcIIC0EeaWqIy4qrYByg</container>
+  </dataSet>
+  <hint>
+    <usedField>#_GoFRUoC0EeaWqIy4qrYByg</usedField>
+    <usedField>#_GoFRUYC0EeaWqIy4qrYByg</usedField>
+    <usedField>#_GoF4YoC0EeaWqIy4qrYByg</usedField>
+    <usedField>#_GoGfcIC0EeaWqIy4qrYByg</usedField>
+    <usedField>#_GoFRU4C0EeaWqIy4qrYByg</usedField>
+    <usedField>#_GoGfcYC0EeaWqIy4qrYByg</usedField>
+    <usedField>#_GoF4YYC0EeaWqIy4qrYByg</usedField>
+    <usedField>#_GoHGgYC0EeaWqIy4qrYByg</usedField>
+    <usedField>#_GoGfc4C0EeaWqIy4qrYByg</usedField>
+    <usedField>#_GoGfcoC0EeaWqIy4qrYByg</usedField>
+    <usedField>#_GoF4YIC0EeaWqIy4qrYByg</usedField>
+    <usedField>#_GoEqQIC0EeaWqIy4qrYByg</usedField>
+    <usedField>#_GoHGgIC0EeaWqIy4qrYByg</usedField>
+    <usedField>#_GoEqQYC0EeaWqIy4qrYByg</usedField>
+    <usedField>#_GoFRUIC0EeaWqIy4qrYByg</usedField>
+    <usedField>#_GoF4Y4C0EeaWqIy4qrYByg</usedField>
+    <usedField>#_qdFR0IDMEeaWqIy4qrYByg</usedField>
+    <usedField>#_fe2IloFOEean7JATlUQCiw</usedField>
+  </hint>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:map="http://www.indy.com/v2/map" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmi:id="_AyZQUIC0EeaWqIy4qrYByg" type="Map" measurementUnit="Pixel">
+  <children xmi:type="notation:Shape" xmi:id="_GoNNIIC0EeaWqIy4qrYByg" type="2004" fontName="Segoe UI">
+    <children xmi:type="notation:DecorationNode" xmi:id="_GoNNIoC0EeaWqIy4qrYByg" type="5005"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_GoNNI4C0EeaWqIy4qrYByg" type="7003"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_GoNNJIC0EeaWqIy4qrYByg" type="7009"/>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_GoNNJYC0EeaWqIy4qrYByg" type="7004">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_GoNNJoC0EeaWqIy4qrYByg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_GoNNJ4C0EeaWqIy4qrYByg"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" xmi:id="_GoNNKIC0EeaWqIy4qrYByg" type="5009">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_GoN0MIC0EeaWqIy4qrYByg"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" xmi:id="_GoN0MYC0EeaWqIy4qrYByg" type="7005">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_GoN0MoC0EeaWqIy4qrYByg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_GoN0M4C0EeaWqIy4qrYByg"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_GoN0NIC0EeaWqIy4qrYByg" type="7007"/>
+    <element xmi:type="map:Datastore" href="../../Load%20BILLING%20file%20per%20color.map#_GoDcIIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_GoNNIYC0EeaWqIy4qrYByg" x="266" y="81"/>
+  </children>
+  <children xmi:type="notation:Shape" xmi:id="_E46ZwIC0EeaWqIy4qrYByg" type="2004" fontName="Segoe UI">
+    <children xmi:type="notation:DecorationNode" xmi:id="_E46ZwoC0EeaWqIy4qrYByg" type="5005"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_E46Zw4C0EeaWqIy4qrYByg" type="7003"/>
+    <children xmi:type="notation:DecorationNode" xmi:id="_E46ZxIC0EeaWqIy4qrYByg" type="7009"/>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_E46ZxYC0EeaWqIy4qrYByg" type="7004">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_E46ZxoC0EeaWqIy4qrYByg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_E46Zx4C0EeaWqIy4qrYByg"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" xmi:id="_E47A0IC0EeaWqIy4qrYByg" type="5009">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_E47A0YC0EeaWqIy4qrYByg"/>
+    </children>
+    <children xmi:type="notation:DecorationNode" xmi:id="_E47A0oC0EeaWqIy4qrYByg" type="7005">
+      <styles xmi:type="notation:SortingStyle" xmi:id="_E47A04C0EeaWqIy4qrYByg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_E47A1IC0EeaWqIy4qrYByg"/>
+    </children>
+    <children xmi:type="notation:BasicCompartment" xmi:id="_E47A1YC0EeaWqIy4qrYByg" type="7007"/>
+    <element xmi:type="map:Datastore" href="../../Load%20BILLING%20file%20per%20color.map#_E4rJMIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_E46ZwYC0EeaWqIy4qrYByg" x="814" y="62"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_AyZQUYC0EeaWqIy4qrYByg"/>
+  <element xmi:type="map:Map" href="../../Load%20BILLING%20file%20per%20color.map#_AxcOEIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map$name=Load%20BILLING%20file%20per%20color?"/>
+  <edges xmi:type="notation:Edge" xmi:id="_HMV08IC0EeaWqIy4qrYByg" type="targetLink" source="_E46ZwIC0EeaWqIy4qrYByg" target="_GoNNIIC0EeaWqIy4qrYByg">
+    <element xsi:nil="true"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_HMV08YC0EeaWqIy4qrYByg" points="[-124, 6, 568, 0]$[-579, 0, 113, -6]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_HMYRMIC0EeaWqIy4qrYByg" type="targetDataSetLink" source="_E46ZwIC0EeaWqIy4qrYByg" target="_E46ZwIC0EeaWqIy4qrYByg">
+    <element xmi:type="map:DataSet" href="../../Load%20BILLING%20file%20per%20color.map#_GoKJ0IC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_HMYRMYC0EeaWqIy4qrYByg" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_HMY4QIC0EeaWqIy4qrYByg" type="targetSetLink" source="_E46ZwIC0EeaWqIy4qrYByg" target="_E46ZwIC0EeaWqIy4qrYByg">
+    <element xmi:type="map:SetDescriptor" href="../../Load%20BILLING%20file%20per%20color.map#_HLrtoIC0EeaWqIy4qrYByg?fileId=_AxcOEIC0EeaWqIy4qrYByg$type=map?"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_HMY4QYC0EeaWqIy4qrYByg" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+</notation:Diagram>
+]]></diagram>
+</map:map>

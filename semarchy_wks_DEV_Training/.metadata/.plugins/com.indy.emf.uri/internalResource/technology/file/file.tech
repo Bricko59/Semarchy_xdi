@@ -1,0 +1,629 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="UUID_TECH_FILE" name="file" ref="resource.md#UUID_MD_SUPER_TYPE?fileId=UUID_MD_SUPER_TYPE$type=md$name=super?">
+  <level icon="icons/full/custom/file.folder.png" xmlName="directory" code="com.stambia.file.directory" displayName="Directory" isFile="false" mdLinkSupported="true" subMetaDataFileCapability="true" wizardBundleName="com.indy.addons" wizardClass="com.indy.file.wizard.DirectoryWizard">
+    <icons name="Directory" xpath="'icons/full/custom/file.folder.png'"/>
+    <icons name="Tag" xpath="if (boolean(tag) or boolean(userProperties)) then 'icons/full/custom/rdbms.tag.png' else ''"/>
+    <attribute xmlName="path" code="path" defaultValue="" displayName="Path" externalize="true" type="file">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.fileditor.folder" value="true"/>
+    </attribute>
+    <attribute xmlName="comment" code="comment" displayName="Description" multiLine="true"/>
+    <attribute xmlName="workDirectory" code="workDirectory" defaultValue="" displayName="Work Directory" mdXpathAccess="../directory" type="reference"/>
+    <attribute xmlName="logDirectory" code="logDirectory" defaultValue="" displayName="Log Directory" mdXpathAccess="../directory" type="reference"/>
+    <attribute xmlName="rejectDirectory" code="rejectDirectory" defaultValue="" displayName="Reject Directory" mdXpathAccess="../directory" type="reference"/>
+    <attribute xmlName="tag" xpathCondition="" category="Customization" code="tag" displayName="Tags" unbounded="true"/>
+    <attribute xmlName="userProperties" xpathCondition="" category="Customization" code="userProperties" displayName="User Properties" keyValue="true" unbounded="true"/>
+    <parent>com.stambia.file.server</parent>
+    <parent>com.stambia.file.directory</parent>
+    <xPathExpression description="A mettre dans global plutot que sur directory&#xD;&#xA;A continuer typer techno FTP et prendre le premier FTP de la hierarchie&#xD;&#xA;Faire pareil pour le directory (a renommer en path) FTP " expression="metaDataLink/mdj:getMetaDataRef(.)">
+      <code>FTP_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="if (exists($subParent)) then $subParent/tech:path() else &#xD;&#xA;if (../name()='directory') then concat(../tech:path(),'/',@path) else @path">
+      <code>PATH</code>
+      <xPathVariable expression="mdj:getRef(@md:refId)" name="subParent"/>
+    </xPathExpression>
+    <xPathExpression expression="(if (@workDirectory!='') then mdj:getRef(@workDirectory) else  .)">
+      <code>WORK_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@rejectDirectory!='') then mdj:getRef(@rejectDirectory) else  tech:workRef()">
+      <code>REJECT_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@logDirectory!='') then mdj:getRef(@logDirectory) else  tech:workRef()">
+      <code>LOG_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="string-join(ancestor-or-self::directory/string(@path), '/')">
+      <code>INTERNAL_PATH</code>
+    </xPathExpression>
+    <xPathExpression expression="$pp">
+      <code>PATH2</code>
+      <xPathVariable expression="@md:refId" name="parentSubId"/>
+      <xPathVariable expression="../directory[@id=$parentSubId]" name="pp"/>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/file.file.png" xmlName="file" code="com.stambia.file.file" connection="true" connectionClass="" displayName="File" isFile="false" wizardBundleName="com.indy.addons" wizardClass="com.indy.file.wizard.FileWizard">
+    <icons name="File" xpath="'icons/full/custom/file.file.png'"/>
+    <icons name="Tag" xpath="if (boolean(tag) or boolean(userProperties)) then 'icons/full/custom/rdbms.tag.png' else ''"/>
+    <attribute icon="" xmlName="physicalName" code="physicalName" displayName="Physical Name" externalize="false" nullable="false"/>
+    <attribute icon="" xmlName="type" code="type" defaultValue="DELIMITED" displayName="Type" mdXpathAccess="ancestor::product[1]/type/@code" nullable="false" reverseCode="" type="list"/>
+    <attribute xmlName="lineToSkip" code="lineToSkip" defaultValue="0" displayName="Heading Lines To Skip" type="integer"/>
+    <attribute xmlName="lastLineToSkip" category="" code="lastLineToSkip" defaultValue="0" displayName="Ending Lines To Skip" type="integer"/>
+    <attribute xmlName="header" code="header" defaultValue="0" displayName="Header Line Position" type="integer"/>
+    <attribute xmlName="lineSeparator" code="lineSeparator" defaultValue="0D0A" displayName="Line separator" mdXpathAccess="'0A','0D0A'" nullable="false" reverseCode="" type="list"/>
+    <attribute xmlName="fieldSeparator" xpathCondition="@type='DELIMITED'" code="fieldSeparator" defaultValue="2C" displayName="Field separator" mdXpathAccess="'2C','3B','09'" nullable="false" reverseCode="" type="list"/>
+    <attribute xmlName="stringDelimiter" xpathCondition="@type='DELIMITED'" code="stringDelimiter" defaultValue="" displayName="String delimiter" mdXpathAccess="'22','27'"/>
+    <attribute xmlName="decimalSeparator" code="decimalSeparator" defaultValue="2E" displayName="Decimal separator" mdXpathAccess="'2E','2C'"/>
+    <attribute xmlName="escapeChar" code="escapeChar" defaultValue="" displayName="Escape Character" mdXpathAccess="" toolTip="Defines the escape character which is used inside the file to escape data when reading files. This applies only when reading files and on files which does not use string delimiters to surround data, as it is not necessary to escape in this case."/>
+    <attribute xmlName="charsetName" code="charsetName" defaultValue="" displayName="Charset Name" mdXpathAccess="'UTF-8', 'UTF-16', 'UTF-32', 'US-ASCII', 'ISO-8859-1', 'ISO-8859-15', 'Cp1250', 'Cp858', 'Cp437', 'Cp850', 'Cp1252'" type="list"/>
+    <attribute xmlName="fieldErrorRule" category="Reading Behaviour:Field Format Error Behaviour" code="fieldErrorRule" defaultValue="raiseException" displayName="Field Format" mdXpathAccess="'abort','ignoreError','setToNull','setToEmptyValue'" nullable="false" reverseCode="" type="list"/>
+    <attribute xmlName="fieldCheckSizeError" category="Reading Behaviour:Field Format Error Behaviour" code="fieldCheckSizeError" defaultValue="" displayName="Check Fields Size" mdXpathAccess="" nullable="false" type="boolean"/>
+    <attribute xmlName="fieldErrorRedirectToBadFile" category="Reading Behaviour:Field Format Error Behaviour" code="fieldErrorRedirectToBadFile" defaultValue="false" displayName="Trace Error To Bad File" nullable="false" type="boolean"/>
+    <attribute xmlName="fieldCountRule" category="Reading Behaviour:Record Format Error Behaviour" code="fieldCountRule" defaultValue="" displayName="Missing Fields" mdXpathAccess="'abort','ignoreError','rejectRecord'" nullable="false" type="list"/>
+    <attribute xmlName="trailingFieldsRule" category="Reading Behaviour:Record Format Error Behaviour" code="trailingFieldsRule" defaultValue="" displayName="Trailing Fields" mdXpathAccess="'abort','ignoreError','rejectRecord'" nullable="false" type="list"/>
+    <attribute xmlName="fieldCountRedirectToBadFile" category="Reading Behaviour:Record Format Error Behaviour" code="fieldCountRedirectToBadFile" defaultValue="false" displayName="Trace Error To Bad File" nullable="false" type="boolean"/>
+    <attribute iconBundleName="" xmlName="raiseExceptionAt" category="Deprecated" code="raiseExceptionAt" defaultValue="false" displayName="Raise Exception at" mdXpathAccess="'first','end','100'" nullable="true" type="list"/>
+    <attribute xmlName="emptyStringAsNull" xpathCondition="" category="Reading Behaviour:Empty Fields" code="emptyStringAsNull" displayName="Return Null for empty String" type="boolean"/>
+    <attribute iconBundleName="" xmlName="stringDefaultValue" xpathCondition="" category="Reading Behaviour:Empty Fields" code="stringDefaultValue" displayName="Default String Value" mdXpathAccess="" type="string"/>
+    <attribute xmlName="numericDefaultValue" xpathCondition="" category="Reading Behaviour:Empty Fields" code="numericDefaultValue" displayName="Default Numeric Value" mdXpathAccess="'0'" type="list"/>
+    <attribute xmlName="dateDefaultValue" xpathCondition="" category="Reading Behaviour:Empty Fields" code="dateDefaultValue" displayName="Default Date Value" mdXpathAccess="" type="string"/>
+    <attribute xmlName="timestampDefaultValue" xpathCondition="" category="Reading Behaviour:Empty Fields" code="timestampDefaultValue" displayName="Default Timestamp Value" mdXpathAccess="" type="string"/>
+    <attribute xmlName="lineSize" xpathCondition="" category="" code="lineSize" displayName="Line Size" type="integer"/>
+    <attribute icon="" xmlName="nameHelper" category="Reverse Helper" code="nameHelper" defaultValue="" displayName="Name Helper"/>
+    <attribute icon="" xmlName="positionHelper" category="Reverse Helper" code="positionHelper" defaultValue="" displayName="Position Helper"/>
+    <attribute icon="" xmlName="sizeHelper" category="Reverse Helper" code="sizeHelper" defaultValue="" displayName="Size Helper"/>
+    <attribute icon="" xmlName="typeHelper" category="Reverse Helper" code="typeHelper" defaultValue="" displayName="Type Helper"/>
+    <attribute icon="" xmlName="decimalHelper" category="Reverse Helper" code="decimalHelper" defaultValue="" displayName="Decimal Helper"/>
+    <attribute icon="" xmlName="formatHelper" category="Reverse Helper" code="formatHelper" defaultValue="" displayName="Format Helper"/>
+    <attribute xmlName="transformScript" category="Transformation:File" code="transformScript" displayName="Script" multiLine="true"/>
+    <attribute xmlName="transformScriptLanguage" category="Transformation:File" code="transformScriptLanguage" displayName="Language" multiLine="false"/>
+    <attribute xmlName="comment" code="comment" displayName="Description" multiLine="true"/>
+    <attribute xmlName="transformLineScript" category="Transformation:Line" code="transformLineScript" displayName="Script" multiLine="true"/>
+    <attribute xmlName="transformLineScriptLanguage" category="Transformation:Line" code="transformLineScriptLanguage" displayName="Language" multiLine="false"/>
+    <attribute xmlName="byteOrder" code="byteOrder" displayName="Byte Order" mdXpathAccess="tokenize('BIG_ENDIAN LITTLE_ENDIAN',' ')" type="list"/>
+    <attribute xmlName="enableLeftTrimOnString" category="Reading Behaviour:Trim" code="enableLeftTrimOnString" defaultValue="" displayName="Enable Left Trim on String Field" type="boolean"/>
+    <attribute xmlName="disableRightTrimOnString" category="Reading Behaviour:Trim" code="disableRightTrimOnString" defaultValue="" displayName="Disable Right Trim on String Field" type="boolean"/>
+    <attribute xmlName="defaultTimestampFormat" code="defaultTimestampFormat" displayName="Default Timestamp Format"/>
+    <attribute xmlName="defaultDateFormat" code="defaultDateFormat" displayName="Default Date Format"/>
+    <attribute xmlName="defaultNumericFormat" code="defaultNumericFormat" displayName="Default Numeric Format"/>
+    <attribute xmlName="defaultGroupingSeparator" xpathCondition="" code="defaultGroupingSeparator" displayName="Default Grouping Separator"/>
+    <attribute xmlName="numericPaddingChar" code="numericPaddingChar" displayName="Numeric Padding Char"/>
+    <attribute xmlName="propertyFieldPrefix" code="propertyFieldPrefix" defaultValue="" displayName="Property Field Prefix"/>
+    <attribute xmlName="tag" xpathCondition="" category="Customization" code="tag" displayName="Tags" unbounded="true"/>
+    <attribute xmlName="userProperties" xpathCondition="" category="Customization" code="userProperties" displayName="User Properties" keyValue="true" unbounded="true"/>
+    <attribute xmlName="encloseAllWithDelim" category="Writing Behaviour" code="encloseAllWithDelim" default="false" displayName="Enclose all values with String Delimiter" type="boolean"/>
+    <parent>com.stambia.file.directory</parent>
+    <xPathExpression expression="concat('%com.stambia.jdbc.driver.file.md{',md:fileToDriverSchema(.,'name()=''md:ref''&#xA;&#x9;or name()=''url'' &#xA;&#x9;or name()=''driver''&#xA;&#x9;or name()=''defType''&#xA;&#x9;or name()=''comment''&#xA;&#x9;or ends-with(name(),''Helper'')&#xA;&#x9;or ends-with(name(),''Conf'')&#xA;'),'}com.stambia.jdbc.driver.file.md%')&#xA;">
+      <code>AFTER_FROM</code>
+      <code>XML_METADATA</code>
+    </xPathExpression>
+    <xPathExpression expression="field | computedField | propertyField">
+      <code>FIELD_REF</code>
+      <code>FIELDS_REF</code>
+      <code>COLUMNS_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@type='DELIMITED') then 'D' else 'P'">
+      <code>TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="concat(../@path,'/',@physicalName)">
+      <code>WORK_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="field | computedField">
+      <code>WORK_COLUMNS_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="@physicalName">
+      <code>DEFAULT</code>
+      <code>PHYSICAL_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="concat(../tech:path(),'/',@physicalName)">
+      <code>FILE_PATH</code>
+      <code>IO_META_DATA_RESOURCE</code>
+    </xPathExpression>
+    <xPathExpression expression="@fieldSeparator">
+      <code>FIELD_SEPARATOR</code>
+    </xPathExpression>
+    <xPathExpression expression="mds:decodeHexString(@fieldSeparator)">
+      <code>ASCII_FIELD_SEPARATOR</code>
+    </xPathExpression>
+    <xPathExpression expression="..">
+      <code>DIRECTORY_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="@header">
+      <code>HEADER</code>
+    </xPathExpression>
+    <xPathExpression expression="$p1/mdj:xpath(.,'ADD_DELIMITER',$name) ">
+      <code>NAME</code>
+      <xPathParameter defaultValue="."/>
+      <xPathParameter defaultValue="''" name="p2"/>
+      <xPathVariable expression="if ($p2='upper') then upper-case($name2) else if ($p2='lower') then lower-case($name2) else $name2" name="name"/>
+      <xPathVariable expression="md:applyObjectNameMask(@defType,@name)" name="name2"/>
+    </xPathExpression>
+    <xPathExpression expression="concat(@name,'(',@id,')')">
+      <code>CONNECTION_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="mds:decodeHexString(@decimalSeparator)">
+      <code>ASCII_DECIMAL_SEPARATOR</code>
+    </xPathExpression>
+    <xPathExpression expression="@lineSeparator">
+      <code>LINE_SEPARATOR</code>
+      <code>ROW_DELIMITER</code>
+    </xPathExpression>
+    <xPathExpression expression="mds:decodeHexString(@lineSeparator)">
+      <code>ASCII_LINE_SEPARATOR</code>
+      <code>ASCII_ROW_DELIMITER</code>
+    </xPathExpression>
+    <xPathExpression expression="@stringDelimiter">
+      <code>STRING_DELIMITER</code>
+    </xPathExpression>
+    <xPathExpression expression="mds:decodeHexString(@stringDelimiter)">
+      <code>ASCII_STRING_DELIMITER</code>
+    </xPathExpression>
+    <xPathExpression expression="'element'">
+      <code>XML_FORM</code>
+    </xPathExpression>
+    <xPathExpression expression="true()">
+      <code>INTERNAL_USE_AS_KEY</code>
+    </xPathExpression>
+    <xPathExpression expression="@defaultDateFormat">
+      <code>DATE_FORMAT</code>
+    </xPathExpression>
+    <xPathExpression expression="@defaultTimestampFormat">
+      <code>TIMESTAMP_FORMAT</code>
+    </xPathExpression>
+    <xPathExpression expression="if (ancestor-or-self::file/@type='DELIMITED') then 'delimitedFile' else 'positionalFile'">
+      <code>IO_META_DATA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="ancestor-or-self::file/@name">
+      <code>IO_META_DATA_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="ancestor-or-self::file/@id">
+      <code>IO_META_DATA_ID</code>
+    </xPathExpression>
+    <xPathExpression expression="concat(string-join(ancestor-or-self::directory/string(@path), '/'),'/',@physicalName)">
+      <code>INTERNAL_PATH</code>
+    </xPathExpression>
+    <xPathExpression expression="true()">
+      <code>ALTERNATE_PHYSICAL_NAME_SUPPORT</code>
+    </xPathExpression>
+    <xPathExpression expression="@name">
+      <code>ALTERNATE_PHYSICAL_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="1=1">
+      <code>GEN_EXTRACT_CONNECTION</code>
+    </xPathExpression>
+    <xPathExpression expression="ancestor-or-self::product[1]/propertyField">
+      <code>INTERNAL_EXTRA_FIELDS</code>
+    </xPathExpression>
+    <xPathExpression expression="@charsetName">
+      <code>CHARSET_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="@defaultNumericFormat">
+      <code>DEFAULT_NUMERIC_FORMAT</code>
+    </xPathExpression>
+    <mappingType>Source</mappingType>
+    <mappingType>TargetMapping</mappingType>
+    <mappingType>Target</mappingType>
+    <propertyPage bundleName="com.indy.addons" className="com.indy.file.properties.FilePropertiesPage" pageName="Properties"/>
+    <propertyPage bundleName="com.indy.addons" className="com.indy.file.properties.FileLineTransformationPage" pageName="Transformation Line"/>
+    <propertyPage bundleName="com.indy.addons" className="com.indy.file.properties.FileTransformationPage" pageName="Transformation"/>
+    <propertyPage bundleName="com.indy.addons" className="com.indy.file.properties.FileReversePage" pageName="Reverse"/>
+  </level>
+  <level icon="icons/full/custom/file.field.png" xmlName="field" xpathDisplayName="concat(if (exists(@name)) then string(@name) else 'Field', if (exists(@position)) then '' else '(missing position value)')" code="com.stambia.file.field" displayName="Field" orderType="Position" position="10">
+    <icons name="Field" xpath="'icons/full/custom/file.field.png'"/>
+    <icons name="Tag" xpath="if (boolean(tag) or boolean(userProperties)) then 'icons/full/custom/rdbms.tag.png' else ''"/>
+    <icons name="Error" xpath="if (exists(@position)) then '' else 'platform:/plugin/com.indy.md.ui.edit/icons/full/obj16/error_bottom_left_16x16.png'"/>
+    <attribute xmlName="size" code="size" defaultValue="50" displayName="Size" type="integer">
+      <mappingInfo>Size</mappingInfo>
+    </attribute>
+    <attribute xmlName="physicalSize" code="physicalSize" displayName="Physical Size"/>
+    <attribute xmlName="type" code="type" defaultValue="String" displayName="Type" editable="false" mdXpathAccess="ancestor::product[1]/datatype/@name" type="list">
+      <mappingInfo>Type</mappingInfo>
+    </attribute>
+    <attribute xmlName="decimal" code="decimal" displayName="Decimal" type="integer">
+      <mappingInfo>Precision</mappingInfo>
+    </attribute>
+    <attribute xmlName="format" code="format" displayName="Format"/>
+    <attribute xmlName="physicalName" code="physicalName" displayName="Physical Name"/>
+    <attribute xmlName="comment" code="comment" displayName="Description" multiLine="true"/>
+    <attribute xmlName="byteOrder" code="byteOrder" displayName="Byte Order" mdXpathAccess="tokenize('BIG_ENDIAN LITTLE_ENDIAN',' ')" type="list"/>
+    <attribute xmlName="groupingSeparator" xpathCondition="" code="groupingSeparator" displayName="Grouping Separator"/>
+    <attribute xmlName="tag" xpathCondition="" category="Customization" code="tag" displayName="Tags" unbounded="true"/>
+    <attribute xmlName="userProperties" xpathCondition="" category="Customization" code="userProperties" displayName="User Properties" keyValue="true" unbounded="true"/>
+    <parent>com.stambia.file.file</parent>
+    <parent>com.stambia.file.record</parent>
+    <xPathExpression description="Cette fonction est utilisee par le wizard attention de ne pas mettre de mdj:xpath" expression="if (ancestor::file/@type='DELIMITED') then &#xD;&#xA;sum(../field[number(@position)&lt;number($current/@position)]/@size)+1&#xD;&#xA;else @position">
+      <code>FIELD_POSITION</code>
+      <xPathVariable expression="." name="current"/>
+    </xPathExpression>
+    <xPathExpression expression="upper-case(@type)">
+      <code>TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@decimal!='') then @decimal else '0'">
+      <code>DECIMAL</code>
+      <code>PRECISION</code>
+    </xPathExpression>
+    <xPathExpression expression="if (starts-with(@type,'Numeric binary')) &#xD;&#xA;&#x9;then &#xD;&#xA;&#x9;&#x9;if (@size='1') then '3' else&#xD;&#xA;&#x9;&#x9;if (@size='2') then '5' else&#xD;&#xA;&#x9;&#x9;if (@size='3') then '10' else&#xD;&#xA;&#x9;&#x9;if (@size='4') then '10' else '19'&#xD;&#xA;else &#xD;&#xA;if (starts-with(@type,'Numeric packed'))&#xD;&#xA;then string(number(@size)*2 )&#xD;&#xA;else @size">
+      <code>SIZE</code>
+    </xPathExpression>
+    <xPathExpression expression="@physicalName">
+      <code>COLUMN_NAME</code>
+      <code>NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="if (ancestor::file/@type='POSITIONAL') then &#xD;&#xA;&#x9;if (@decimal>0 or @decimal!='')&#xD;&#xA;&#x9;&#x9;then number(@position)+number(@size)&#xD;&#xA;&#x9;else number(@position)+number(@size)-1&#xD;&#xA;else ''&#xD;&#xA;">
+      <code>FIELD_END_POSITION</code>
+    </xPathExpression>
+    <xPathExpression expression="md:convertDataType(.,$p1)">
+      <code>CREATION_DDL</code>
+      <xPathParameter defaultValue="."/>
+    </xPathExpression>
+    <xPathExpression expression="'attribute'">
+      <code>XML_FORM</code>
+    </xPathExpression>
+    <xPathExpression expression="tech:type()">
+      <code>XML_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="@physicalName">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="if (not(empty(@format))) then @format else if(tech:type()='DATE' or tech:type()='TIMESTAMP') then ancestor::file/tech:dateFormat() else ''">
+      <code>FORMAT</code>
+    </xPathExpression>
+    <xPathExpression expression="not(ancestor::file/@type='POSITIONAL')">
+      <code>INTERNAL_MD_MOVE_ALLOWED</code>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+    <changeTo>com.stambia.file.computedField</changeTo>
+  </level>
+  <level icon="icons/full/custom/file.host" xmlName="server" code="com.stambia.file.server" connection="false" displayName="Server" isFile="true" wizardBundleName="com.indy.addons" wizardClass="com.indy.file.wizard.FileServerWizard">
+    <icons name="Server" xpath="'icons/full/custom/file.host'"/>
+    <icons name="Tag" xpath="if (boolean(tag) or boolean(userProperties)) then 'icons/full/custom/rdbms.tag.png' else ''"/>
+    <attribute xmlName="address" code="address" defaultValue="" displayName="Address" mdXpathAccess="" type="string"/>
+    <attribute xmlName="driver" code="driver" displayName="Driver" editable="true" externalize="false" mdXpathAccess="ancestor::product[1]/driver/@class" type="list"/>
+    <attribute xmlName="url" code="url" displayName="Url" editable="true" externalize="false" mdXpathAccess="ancestor::product[1]/driver[@class=$current/@driver][1]/@url" type="list"/>
+    <attribute xmlName="comment" code="comment" displayName="Description" multiLine="true"/>
+    <attribute xmlName="tag" xpathCondition="" category="Customization" code="tag" displayName="Tags" unbounded="true"/>
+    <attribute xmlName="userProperties" xpathCondition="" category="Customization" code="userProperties" displayName="User Properties" keyValue="true" unbounded="true"/>
+    <parent>com.stambia.file.product</parent>
+  </level>
+  <level xmlName="product" code="com.stambia.file.product" displayName="Product" isFile="advanced">
+    <attribute xmlName="connectionDef" code="connectionDef" displayName="ConnectionDefinition" type="reference">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.dnd.emfMetaInf" value="http://www.stambia.com/md;MdNode"/>
+    </attribute>
+  </level>
+  <level icon="icons/full/custom/rdbms.column" xmlName="datatype" code="com.stambia.file.datatype" displayName="DataType" position="2">
+    <attribute xmlName="mask" code="mask" displayName="Mask"/>
+    <attribute xmlName="maxsize" code="maxSize" displayName="Max Size"/>
+    <attribute xmlName="superType" code="superType" displayName="Super Type"/>
+    <parent>com.stambia.file.product</parent>
+    <xPathExpression expression="@maxsize">
+      <code>MAX_SIZE</code>
+    </xPathExpression>
+    <xPathExpression expression="@mask">
+      <code>SQL_MASK</code>
+    </xPathExpression>
+    <xPathExpression expression="@name">
+      <code>SQL_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="upper-case(md:ifEmpty(@superType,@name))">
+      <code>SUPER_TYPE_NAME</code>
+    </xPathExpression>
+  </level>
+  <level xmlName="driver" activeDisplayName="true" code="com.stambia.file.driver" displayName="Driver" position="3">
+    <attribute xmlName="class" code="class" displayName="Class"/>
+    <attribute xmlName="url" code="url" displayName="Url Mask"/>
+    <attribute xmlName="default" xpathCondition="" code="default" displayName="Default" type="boolean"/>
+    <parent>com.stambia.file.product</parent>
+  </level>
+  <level xmlName="type" xpathCondition="" activeDisplayName="true" code="com.stambia.file.type" displayName="Type" position="1">
+    <attribute xmlName="code" code="code" defaultValue="" displayName="Code"/>
+    <parent>com.stambia.file.product</parent>
+  </level>
+  <level icon="icons/full/custom/file.record.png" xmlName="record" code="com.stambia.file.record" connection="true" displayName="Record" position="20">
+    <icons name="Record" xpath="'icons/full/custom/file.record.png'"/>
+    <icons name="Tag" xpath="if (boolean(tag) or boolean(userProperties)) then 'icons/full/custom/rdbms.tag.png' else ''"/>
+    <attribute icon="" xmlName="nameHelper" category="Reverse Helper" code="nameHelper" defaultValue="" displayName="Name Helper"/>
+    <attribute icon="" xmlName="positionHelper" category="Reverse Helper" code="positionHelper" defaultValue="" displayName="Position Helper"/>
+    <attribute icon="" xmlName="sizeHelper" category="Reverse Helper" code="sizeHelper" defaultValue="" displayName="Size Helper"/>
+    <attribute icon="" xmlName="typeHelper" category="Reverse Helper" code="typeHelper" defaultValue="" displayName="Type Helper"/>
+    <attribute icon="" xmlName="decimalHelper" category="Reverse Helper" code="decimalHelper" defaultValue="" displayName="Decimal Helper"/>
+    <attribute icon="" xmlName="formatHelper" category="Reverse Helper" code="formatHelper" defaultValue="" displayName="Format Helper"/>
+    <attribute xmlName="ancestorLevel" category="" code="ancestorLevel" displayName="Ancestor Level Base" type="integer"/>
+    <attribute xmlName="occurenceStart" xpathCondition="" category="Occurence" code="occurenceStart" displayName="Occurence Position Start" type="integer"/>
+    <attribute xmlName="occurenceNumber" xpathCondition="" category="Occurence" code="occurenceNumber" displayName="Max Occurence Number" type="integer"/>
+    <attribute icon="" xmlName="occurenceSize" category="Occurence" code="occurenceSize" displayName="Occurence Size" type="integer"/>
+    <attribute xmlName="comment" code="comment" displayName="Description" multiLine="true"/>
+    <attribute xmlName="tag" xpathCondition="" category="Customization" code="tag" displayName="Tags" unbounded="true"/>
+    <attribute xmlName="userProperties" xpathCondition="" category="Customization" code="userProperties" displayName="User Properties" keyValue="true" unbounded="true"/>
+    <parent>com.stambia.file.file</parent>
+    <parent>com.stambia.file.record</parent>
+    <xPathExpression expression="ancestor::file[1]" isProvider="true">
+      <code>TYPE</code>
+      <code>XML_METADATA</code>
+      <code>TYPE</code>
+      <code>FILE_PATH</code>
+      <code>FIELD_SEPARATOR</code>
+      <code>ASCII_FIELD_SEPARATOR</code>
+      <code>DIRECTORY_REF</code>
+      <code>HEADER</code>
+      <code>CONNECTION_NAME</code>
+      <code>ASCII_DECIMAL_SEPARATOR</code>
+      <code>WORK_NAME</code>
+      <code>PHYSICAL_NAME</code>
+      <code>AFTER_FROM</code>
+    </xPathExpression>
+    <xPathExpression expression="field | computedField | propertyField">
+      <code>FIELD_REF</code>
+      <code>FIELDS_REF</code>
+      <code>COLUMNS_REF</code>
+      <code>WORK_COLUMNS_REF</code>
+    </xPathExpression>
+    <xPathExpression expression="@name">
+      <code>NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="'element'">
+      <code>XML_FORM</code>
+    </xPathExpression>
+    <xPathExpression expression="true()">
+      <code>INTERNAL_USE_AS_KEY</code>
+    </xPathExpression>
+    <xPathExpression expression="1=1">
+      <code>GEN_EXTRACT_CONNECTION</code>
+    </xPathExpression>
+    <xPathExpression expression="ancestor-or-self::product[1]/propertyField">
+      <code>INTERNAL_EXTRA_FIELDS</code>
+    </xPathExpression>
+    <mappingType>TargetMapping</mappingType>
+    <mappingType>Source</mappingType>
+    <propertyPage bundleName="com.indy.addons" className="com.indy.file.properties.FileReversePage" pageName="Reverse"/>
+  </level>
+  <level icon="icons/full/custom/file.filter.png" iconBundleName="" xmlName="filter" code="com.stambia.file.filter" displayName="Filter" position="5">
+    <icons name="Filter" xpath="'icons/full/custom/file.filter.png'"/>
+    <icons name="Tag" xpath="if (boolean(tag) or boolean(userProperties)) then 'icons/full/custom/rdbms.tag.png' else ''"/>
+    <attribute xmlName="value" category="Standard:Data Criteria" code="value" displayName="Test value"/>
+    <attribute xmlName="start" category="Standard:Data Criteria" code="start" displayName="Starts At" type="integer"/>
+    <attribute xmlName="length" category="Standard:Data Criteria" code="length" defaultValue="" displayName="Length" type="integer"/>
+    <attribute xmlName="not" category="Standard:Data Criteria" code="not" displayName="Not" type="boolean"/>
+    <attribute icon="" iconBundleName="" xmlName="operator" xpathIcon="" category="Standard:Data Criteria" code="operator" defaultValue="equals" displayName="Operator" mdXpathAccess="tokenize('Equals,StartsWith,EndsWith,Matches',',')" type="list" unbounded="false"/>
+    <attribute iconBundleName="" xmlName="ignoreCase" category="Standard:Data Criteria" code="ignoreCase" displayName="Ignore Case" type="boolean"/>
+    <attribute icon="" xmlName="firstLinePosition" category="Standard:Line Range" code="firstLinePosition" defaultValue="" displayName="First Line" type="integer"/>
+    <attribute icon="" xmlName="lastLinePosition" category="Standard:Line Range" code="lastLinePosition" defaultValue="" displayName="Last Line" type="integer"/>
+    <attribute iconBundleName="" xmlName="exclude" code="exclude" displayName="Exclude" type="boolean"/>
+    <attribute xmlName="ancestorLevel" category="" code="ancestorLevel" defaultValue="" displayName="Ancestor Level Context" type="integer"/>
+    <attribute xmlName="comment" code="comment" displayName="Description" multiLine="true"/>
+    <attribute xmlName="tag" xpathCondition="" category="Customization" code="tag" displayName="Tags" unbounded="true"/>
+    <attribute xmlName="userProperties" xpathCondition="" category="Customization" code="userProperties" displayName="User Properties" keyValue="true" unbounded="true"/>
+    <parent>com.stambia.file.file</parent>
+    <parent>com.stambia.file.record</parent>
+  </level>
+  <level icon="icons/full/custom/rdbms.computedField.png" xmlName="computedField" code="com.stambia.file.computedField" displayName="Computed Field" position="7">
+    <icons name="ComputedField" xpath="'icons/full/custom/rdbms.computedField.png'"/>
+    <icons name="Tag" xpath="if (boolean(tag) or boolean(userProperties)) then 'icons/full/custom/rdbms.tag.png' else ''"/>
+    <attribute xmlName="size" code="size" defaultValue="50" displayName="Size" type="integer">
+      <mappingInfo>Size</mappingInfo>
+    </attribute>
+    <attribute xmlName="type" code="type" defaultValue="String" displayName="Type" editable="false" mdXpathAccess="ancestor::product[1]/datatype/@name" type="list">
+      <mappingInfo>Type</mappingInfo>
+    </attribute>
+    <attribute xmlName="decimal" code="decimal" displayName="Decimal" type="integer">
+      <mappingInfo>Precision</mappingInfo>
+    </attribute>
+    <attribute xmlName="physicalName" code="physicalName" displayName="Physical Name"/>
+    <attribute xmlName="ancestorLevel" code="ancestorLevel" displayName="Ancestor Level Base" type="integer"/>
+    <attribute xmlName="expression" code="expression" displayName="Expression" mdXpathAccess="tokenize('localPosition() uuid() id() timestamp()', ' ')" toolTip="Expression can be specified using:&#xA;▪ int localPosition(): occurrence number of the Record (1st customer, 2nd customer, 3rd customer, etc.)&#xA;▪ String uuid(): unique identifier&#xA;▪ String id(): identifier of the line in the file&#xA;▪ String timestamp(): reading timestamp of the file" type="list"/>
+    <attribute xmlName="comment" code="comment" displayName="Description" multiLine="true"/>
+    <attribute xmlName="tag" xpathCondition="" category="Customization" code="tag" displayName="Tags" unbounded="true"/>
+    <attribute xmlName="userProperties" xpathCondition="" category="Customization" code="userProperties" displayName="User Properties" keyValue="true" unbounded="true"/>
+    <parent>com.stambia.file.file</parent>
+    <parent>com.stambia.file.record</parent>
+    <xPathExpression expression="upper-case(@type)">
+      <code>TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@decimal!='') then @decimal else '0'">
+      <code>DECIMAL</code>
+      <code>PRECISION</code>
+    </xPathExpression>
+    <xPathExpression expression="@size">
+      <code>SIZE</code>
+    </xPathExpression>
+    <xPathExpression expression="@physicalName">
+      <code>COLUMN_NAME</code>
+      <code>NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="md:convertDataType(.,$p1)">
+      <code>CREATION_DDL</code>
+      <xPathParameter defaultValue="."/>
+    </xPathExpression>
+    <mappingType>SourceMapping</mappingType>
+    <changeTo>com.stambia.file.field</changeTo>
+  </level>
+  <level icon="icons/full/custom/rdbms.property.gif" xmlName="propertyField" code="com.stambia.file.propertyField" displayName="Property Field" position="-1">
+    <icons name="PropertyField" xpath="'icons/full/custom/rdbms.property.gif'"/>
+    <icons name="Tag" xpath="if (boolean(tag) or boolean(userProperties)) then 'icons/full/custom/rdbms.tag.png' else ''"/>
+    <attribute xmlName="tag" xpathCondition="" category="Customization" code="tag" displayName="Tags" unbounded="true"/>
+    <attribute xmlName="userProperties" xpathCondition="" category="Customization" code="userProperties" displayName="User Properties" keyValue="true" unbounded="true"/>
+    <attribute icon="" xmlName="property" xpathDisplayName="" category="" code="property" displayName="Property" keyValue="false" mdXpathAccess="tokenize('file_number file_name file_absolute_path file_canonical_path file_path file_total_space file_usable_space file_free_space file_can_execute file_can_read file_can_write file_is_absolute file_is_file file_is_directory file_exists file_is_hidden file_length file_last_modified file_parent_path file_parent_absolute_path file_parent_canonical_path file_parent_name file_parent_can_write binary_content string_content sortKey',' ') " type="list"/>
+    <parent>com.stambia.file.file</parent>
+    <parent>com.stambia.file.record</parent>
+    <parent>com.stambia.file.product</parent>
+    <xPathExpression expression="if ($name='file_total_space') then 'NUMERIC' else&#xD;&#xA;if ($name='file_usable_space') then 'NUMERIC' else&#xD;&#xA;if ($name='file_free_space') then 'NUMERIC' else&#xD;&#xA;if ($name='file_length') then 'NUMERIC' else&#xD;&#xA;if ($name='file_number') then 'NUMERIC' else&#xD;&#xA;if ($name='file_last_modified') then 'TIMESTAMP' else&#xD;&#xA;'STRING'&#xD;&#xA;">
+      <code>TYPE</code>
+      <xPathVariable expression="substring-after(md:ifEmpty(@property,@name),../@propertyFieldPrefix)" name="name"/>
+    </xPathExpression>
+    <xPathExpression expression="'0'">
+      <code>DECIMAL</code>
+      <code>PRECISION</code>
+    </xPathExpression>
+    <xPathExpression expression="if (md:ifEmpty(@property,@name)='string_content' or md:ifEmpty(@property,@name)='binary_content') then '' else&#xD;&#xA;if (tech:type()='NUMERIC') then '20' else '255'">
+      <code>SIZE</code>
+    </xPathExpression>
+    <xPathExpression expression="if (@property = 'sortKey' or @name = 'sortKey') then 'TargetMapping' else if (@property ='file_path' or @property ='binary_content' or @property ='string_content' or @name='file_path' or @name='binary_content' or @name='string_content') then 'MAPPING' else 'SourceMapping'">
+      <code>INTERNAL_MAPPING_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="@name">
+      <code>COLUMN_NAME</code>
+      <code>NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="md:convertDataType(.,$p1)">
+      <code>CREATION_DDL</code>
+      <xPathParameter defaultValue="."/>
+    </xPathExpression>
+    <xPathExpression expression="'attribute'">
+      <code>XML_FORM</code>
+    </xPathExpression>
+    <xPathExpression expression="concat('internalProperty:',md:ifEmpty(@property,@name))">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <mappingType>SourceMapping</mappingType>
+    <mappingType>TargetMapping</mappingType>
+  </level>
+  <action bundleName="com.indy.addons" className="com.indy.md.file.JdbcFile" code="consult_data_console" displayName="Consult data (console)" xpathExpression="concat('select * from ',@name,'&#xD;&#xA;',mdj:xpath(.,'AFTER_FROM'))">
+    <executableLevel>#com.stambia.file.file</executableLevel>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditor" code="consult_data" displayName="Consult data" xpathExpression="concat('select * from ',@name,'&#xD;&#xA;',mdj:xpath(.,'XML_METADATA'))">
+    <executableLevel>#com.stambia.file.file</executableLevel>
+    <executableLevel>#com.stambia.file.record</executableLevel>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.jdbc.editor.JdbcEditor" code="consult_data_select_columns" displayName="Consult data (select columns)" xpathContext="" xpathExpression="concat('select',md:list((ref:columns() | propertyField)/concat('&#x9;',tech:name()) ,',\n','\n','\n'),' from ',@name,'&#xD;&#xA;',mdj:xpath(.,'XML_METADATA'))">
+    <executableLevel>#com.stambia.file.file</executableLevel>
+    <executableLevel>#com.stambia.file.record</executableLevel>
+  </action>
+  <action bundleName="com.indy.addons" className="com.indy.file.TextEditorAction" code="open_with_texteditor" displayName="Open with TextEditor">
+    <executableLevel>#com.stambia.file.file</executableLevel>
+  </action>
+  <xPathExpression expression="'FILE'">
+    <code>PRODUCT_CODE</code>
+    <code>INTERN_PRODUCT_CODE</code>
+    <code>INTERN_PRODUCT_CODE_GUI</code>
+  </xPathExpression>
+  <xPathExpression expression="''">
+    <code>COLUMN_ALIAS_WORD</code>
+  </xPathExpression>
+  <xPathExpression expression="./ancestor-or-self::*[mdj:getLevel(.)/@connection='true'][1]">
+    <code>CONNECTION_REF</code>
+    <code>SOURCE_CONNECTION_REF</code>
+    <code>TARGET_CONNECTION_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="md:ifEmpty(//server/@driver,'com.semarchy.xdi.jdbc.file.FileDriver')">
+    <code>JDBC_DRIVER</code>
+  </xPathExpression>
+  <xPathExpression expression="md:ifEmpty(//server/@url,'jdbc:semarchy:file')">
+    <code>JDBC_URL</code>
+  </xPathExpression>
+  <xPathExpression expression="1=2">
+    <code>HAS_WORKSPACE_CAPABILITY</code>
+    <code>HAS_WORKSPACE_CAPABILITY_GUI</code>
+  </xPathExpression>
+  <xPathExpression expression="'FILE'">
+    <code>TECH_CODE</code>
+  </xPathExpression>
+  <xPathExpression expression="ref:product()/datatype[upper-case(@name)=upper-case($p1) or $p1='']">
+    <code>DATA_TYPE_REF</code>
+    <xPathParameter defaultValue="''"/>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::product[1]">
+    <code>PRODUCT_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="'&quot;[OBJECT]&quot;'">
+    <code>INTERNAL_OBJECT_DELIMITER_MASK</code>
+  </xPathExpression>
+  <xPathExpression expression="'^[^a-zA-Z_].*|[^a-zA-Z0-9-_]'">
+    <code>INTERNAL_OBJECT_DELIMITER_REGEXP</code>
+  </xPathExpression>
+  <xPathExpression expression="1=1">
+    <code>HAS_FILTER_CAPABILITY_GUI</code>
+  </xPathExpression>
+  <xPathExpression expression="1=2">
+    <code>HAS_JOIN_CAPABILITY_GUI</code>
+  </xPathExpression>
+  <xPathExpression expression="1=1">
+    <code>HAS_TRANSFORM_CAPABILITY_GUI</code>
+  </xPathExpression>
+  <xPathExpression expression="'WRK'">
+    <code>DEFAULT_FILTER_LOCATION_GUI</code>
+  </xPathExpression>
+  <xPathExpression expression="1=1">
+    <code>ADD_WARNING_ON_FILTER_GUI</code>
+  </xPathExpression>
+  <xPathExpression expression="1=1">
+    <code>ADD_WARNING_ON_TRANSFORM_GUI</code>
+  </xPathExpression>
+  <xPathExpression expression="if (string-length($p1)=0) then tag else not(empty(tag[.=$p1]))">
+    <code>TAG</code>
+    <xPathParameter defaultValue="''"/>
+  </xPathExpression>
+  <xPathExpression expression="if (string-length($p1)=0) &#xD;&#xA;&#x9;then userProperties&#xD;&#xA;&#x9;else if (string-length($p2)=0) &#xD;&#xA;&#x9;&#x9;then userProperties[@key=$p1]&#xD;&#xA;&#x9;&#x9;else (userProperties[@key=$p1]=$p2)">
+    <code>USER_PROPERTY</code>
+    <xPathParameter defaultValue="''"/>
+    <xPathParameter defaultValue="''" name="p2"/>
+  </xPathExpression>
+  <xPathExpression expression="userProperties/@key">
+    <code>USER_PROPERTY_KEYS</code>
+  </xPathExpression>
+  <xPathExpression expression="if (./name()='product') &#xD;&#xA;then ancestor-or-self::product[1]/driver/concat('libType=driver', '$name=', @name, '$managedDriverClass=', @class,'$managedDriverUrl=',@url,'$managedDriverDefault=',@default,'$eltID=',@id)&#xD;&#xA;else ()">
+    <code>INTERNAL_REQUIRED_LIBRARIES</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::file[1]">
+    <code>INTERNAL_MD_CONTAINER_NODE_DATASTORE</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::product[1]/mdj:getRef(@connectionDef)">
+    <code>GEN_CONNECTION_DEFINITION_REF</code>
+  </xPathExpression>
+  <xPathExpression expression="'internal'">
+    <code>MODULE</code>
+    <code>INTERNAL_MODULE</code>
+    <code>JDBC.MODULE</code>
+  </xPathExpression>
+  <xPathExpression expression="$p1">
+    <code>ADD_DELIMITER</code>
+    <xPathParameter/>
+  </xPathExpression>
+  <xPathExpression expression="true()">
+    <code>INTERNAL_SUPPORT_EXTRA_FIELD_USAGE_ON_WORK</code>
+  </xPathExpression>
+  <metaDataLinkType name="InitLocalPath">
+    <parameter name="FTP_LOCAL_PATH" value="tech:path()"/>
+    <technology>com.indy.engine.actionCodes.FtpGetActionCodeI</technology>
+    <technology>com.indy.engine.actionCodes.FtpPutActionCodeI</technology>
+    <level>#com.stambia.file.directory</level>
+  </metaDataLinkType>
+  <metaDataLinkType name="InitLocalFile">
+    <parameter name="FTP_LOCAL_FILENAME" value="@physicalName"/>
+    <parameter name="FTP_LOCAL_PATH" value="../tech:path()"/>
+    <technology>com.indy.engine.actionCodes.FtpGetActionCodeI</technology>
+    <level>#com.stambia.file.file</level>
+  </metaDataLinkType>
+  <metaDataLinkType name="WAIT_FILE_FOR_DIRECTORY">
+    <parameter name="WAIT_FILE_DIR" value="tech:path()"/>
+    <technology>com.indy.engine.actionCodes.FileWaitActionCodeI</technology>
+    <level>#com.stambia.file.directory</level>
+  </metaDataLinkType>
+  <metaDataLinkType name="WAIT_FILE_FOR_FILE">
+    <parameter name="WAIT_FILE" value="tech:filePath()"/>
+    <technology>com.indy.engine.actionCodes.FileWaitActionCodeI</technology>
+    <level>#com.stambia.file.file</level>
+  </metaDataLinkType>
+  <metaDataLinkType name="DELETE_publish_DEL_FILE">
+    <parameter name="DEL_FILE" value="tech:filePath()"/>
+    <technology>com.indy.engine.actionCodes.FileDeleteActionCodeI</technology>
+    <level>#com.stambia.file.file</level>
+  </metaDataLinkType>
+  <metaDataLinkType name="FTPPut_publish_FTP_LOCAL_FILENAME">
+    <parameter name="FTP_LOCAL_FILENAME" value="@physicalName"/>
+    <parameter name="FTP_LOCAL_PATH" value="../tech:path()"/>
+    <technology>com.indy.engine.actionCodes.FtpPutActionCodeI</technology>
+    <level>#com.stambia.file.file</level>
+  </metaDataLinkType>
+  <metaDataLinkType name="WRITETXTFILE_publish_TXTWRITEFILENAME">
+    <parameter name="TXT_WRITE_FILENAME" value="tech:filePath()"/>
+    <technology>com.indy.engine.actionCodes.WriteTxtFileActionCodeI</technology>
+    <level>#com.stambia.file.file</level>
+  </metaDataLinkType>
+  <metaDataLinkType name="MakeDir">
+    <parameter name="FILE_DIR" value="tech:path()"/>
+    <technology>com.indy.engine.actionCodes.MkDirActionCodeI</technology>
+    <level>#com.stambia.file.directory</level>
+  </metaDataLinkType>
+  <metaDataLinkType name="RdbmsConnection">
+    <parameter name="SQL_CONNECTION" value="ref:connection()"/>
+    <technology>com.indy.engine.actionCodes.SqlFileExportActionCodeI</technology>
+    <level>#com.stambia.file.file</level>
+    <level>#com.stambia.connection</level>
+  </metaDataLinkType>
+</tech:tech>

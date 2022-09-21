@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="UUID_TECH_RDBMS_STORED_PROC" name="Stored Procedures" ref="resource.tech#_kXbWMP_rEeWgopfFW9GC4w?fileId=_kXbWMP_rEeWgopfFW9GC4w$type=tech$name=javadef?">
+  <level icon="icons/full/custom/stproc.function.folder.png" xmlName="procedureSet" xpathCondition="" xpathIcon="" code="com.stambia.rdbms.procedureSet" connection="true" displayName="Stored Procedures" isFile="true">
+    <attribute xmlName="serverRef" code="serverRef" displayName="Schema" type="reference">
+      <hint key="com.indy.ui.custom.out.common.properties.hint.dnd.emfMetaInf" value="http://www.stambia.com/md;MdNode"/>
+    </attribute>
+  </level>
+  <level icon="icons/full/custom/stproc.function.png" xmlName="procedure" xpathIcon="" code="com.stambia.rdbms.procedureSet.procedure" createAction="true" displayName="Stored Procedure" reverseCode="">
+    <attribute xmlName="description" code="description" displayName="Description" multiLine="true"/>
+    <parent>com.stambia.rdbms.procedureSet</parent>
+    <xPathExpression expression="'Map'">
+      <code>JAVA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="true()">
+      <code>INTERNAL_USE_AS_KEY</code>
+    </xPathExpression>
+    <mappingType>Source</mappingType>
+    <mappingType>Target</mappingType>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/stproc.param.input.png" iconBundleName="" xmlName="inputParameter" xpathDisplayName="" xpathIcon="" code="com.stambia.rdbms.procedureSet.procedure.inputParameter" displayName="Input Parameter" hasName="true" orderType="Natural" position="1">
+    <attribute xmlName="type" code="type" displayName="Type" mdXpathAccess="ancestor-or-self::procedureSet[1]/@serverRef/ref:getRef()/ancestor::product/datatype/@name" type="list"/>
+    <parent>com.stambia.rdbms.procedureSet.procedure</parent>
+    <xPathExpression expression="if ($type='VARCHAR') then 'String' else&#xA;if ($type='NVARCHAR') then 'String' else&#xA;if ($type='LONGVARCHAR') then 'String' else&#xA;if ($type='LONGNVARCHAR') then 'String' else&#xA;if ($type='CHAR') then 'String' else&#xA;if ($type='INTEGER') then 'Integer' else&#xA;if ($type='TIMESTAMP') then 'Date' else&#xA;if ($type='DATE') then 'Date' else&#xA;if ($type='TIME') then 'Date' else&#xA;if ($type='DECIMAL') then 'BigDecimal' else&#xA;if ($type='NUMERIC') then 'BigDecimal' else&#xA;if ($type='BIGINT') then 'Integer' else &#xA;'String'&#xA;&#xA;">
+      <code>JAVA_TYPE</code>
+      <xPathVariable expression="ref:sqlDataType()/ref:superType()/@name" name="type"/>
+    </xPathExpression>
+    <xPathExpression expression="ref:server()/ref:dataType($type)">
+      <code>SQL_DATA_TYPE_REF</code>
+      <xPathVariable expression="@type" name="type"/>
+    </xPathExpression>
+    <xPathExpression expression="true()">
+      <code>INTERNAL_MD_MOVE_ALLOWED</code>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/stproc.param.output.png" xmlName="outputParameter" xpathDisplayName="" xpathIcon="" code="com.stambia.rdbms.procedureSet.procedure.outputParameter" displayName="Output parameter" hasName="true" orderType="Natural" position="1">
+    <attribute xmlName="type" code="type" displayName="Type" mdXpathAccess="ancestor-or-self::procedureSet[1]/@serverRef/ref:getRef()/ancestor::product/datatype/@name" type="list"/>
+    <parent>com.stambia.rdbms.procedureSet.procedure</parent>
+    <xPathExpression expression="ref:server()/ref:dataType($type)">
+      <code>SQL_DATA_TYPE_REF</code>
+      <xPathVariable expression="@type" name="type"/>
+    </xPathExpression>
+    <xPathExpression expression="if ($type='VARCHAR') then 'String' else&#xA;if ($type='NVARCHAR') then 'String' else&#xA;if ($type='LONGVARCHAR') then 'String' else&#xA;if ($type='LONGNVARCHAR') then 'String' else&#xA;if ($type='CHAR') then 'String' else&#xA;if ($type='INTEGER') then 'Integer' else&#xA;if ($type='TIMESTAMP') then 'Date' else&#xA;if ($type='DATE') then 'Date' else&#xA;if ($type='TIME') then 'Date' else&#xA;if ($type='DECIMAL') then 'BigDecimal' else&#xA;if ($type='NUMERIC') then 'BigDecimal' else&#xA;if ($type='BIGINT') then 'Integer' else &#xA;'String'&#xA;&#xA;">
+      <code>JAVA_TYPE</code>
+      <xPathVariable expression="ref:sqlDataType()/ref:superType()/@name" name="type"/>
+    </xPathExpression>
+    <xPathExpression expression="true()">
+      <code>INTERNAL_MD_MOVE_ALLOWED</code>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/rdbms.field.png" xmlName="outputColumn" code="com.stambia.rdbms.procedureSet.procedure.outputColumn" displayName="Output Column">
+    <attribute xmlName="type" code="type" displayName="Type" mdXpathAccess="ancestor-or-self::procedureSet[1]/@serverRef/ref:getRef()/ancestor::product/datatype/@name" type="list"/>
+    <parent>com.stambia.rdbms.procedureSet.procedure.outputRow</parent>
+    <xPathExpression expression="ref:server()/ref:dataType($type)">
+      <code>SQL_DATA_TYPE_REF</code>
+      <xPathVariable expression="@type" name="type"/>
+    </xPathExpression>
+    <xPathExpression expression="if ($type='VARCHAR') then 'String' else&#xA;if ($type='NVARCHAR') then 'String' else&#xA;if ($type='LONGVARCHAR') then 'String' else&#xA;if ($type='LONGNVARCHAR') then 'String' else&#xA;if ($type='CHAR') then 'String' else&#xA;if ($type='INTEGER') then 'Integer' else&#xA;if ($type='TIMESTAMP') then 'Date' else&#xA;if ($type='DATE') then 'Date' else&#xA;if ($type='TIME') then 'Date' else&#xA;if ($type='DECIMAL') then 'BigDecimal' else&#xA;if ($type='NUMERIC') then 'BigDecimal' else&#xA;if ($type='BIGINT') then 'Integer' else &#xA;'String'&#xA;&#xA;">
+      <code>JAVA_TYPE</code>
+      <xPathVariable expression="ref:sqlDataType()/ref:superType()/@name" name="type"/>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/stproc.set.png" iconBundleName="" xmlName="outputRow" xpathDisplayName="" xpathIcon="" code="com.stambia.rdbms.procedureSet.procedure.outputRow" displayName="Output Row" hasName="false" unique="true">
+    <parent>com.stambia.rdbms.procedureSet.procedure.outputSet</parent>
+    <xPathExpression expression="'Map'">
+      <code>JAVA_TYPE</code>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <level icon="icons/full/custom/stproc.set.png" xmlName="outputSet" xpathIcon="" code="com.stambia.rdbms.procedureSet.procedure.outputSet" displayName="Output Set" position="2">
+    <parent>com.stambia.rdbms.procedureSet.procedure</parent>
+    <xPathExpression expression="'List'">
+      <code>JAVA_TYPE</code>
+    </xPathExpression>
+    <xPathExpression expression="'outputSet'">
+      <code>XML_NAME</code>
+    </xPathExpression>
+    <mappingType>Mapping</mappingType>
+  </level>
+  <xPathExpression expression="'RDBMS_STORED_PROCEDURE'">
+    <code>INTERN_PRODUCT_CODE_GUI</code>
+    <code>PRODUCT_CODE</code>
+    <code>TECH_CODE</code>
+  </xPathExpression>
+  <xPathExpression expression="ancestor-or-self::procedureSet[1]/mdj:getRef(@serverRef)">
+    <code>SERVER_REF</code>
+  </xPathExpression>
+</tech:tech>

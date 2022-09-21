@@ -1,0 +1,82 @@
+*** Step 1 ***
+**************
+
+Expression Editor of the DROP TABLE SQL Operation
+-------------------------------------------------
+DROP TABLE HOTEL_DATAMART.CUS_SALES_IDENT 
+
+Expression Editor of the CREATE TABLE SQL Operation
+---------------------------------------------------
+CREATE TABLE HOTEL_DATAMART.CUS_SALES_IDENT AS (
+SELECT 1+CAST(rand()*100 AS INTEGER) AS CUS_ID,
+       YEAR(current_date)*100+1+CAST(rand()*12 AS INTEGER) AS CUS_MONTH
+FROM   UNNEST(SEQUENCE_ARRAY(1, 10000, 1)) AS generate_series) WITH DATA
+
+Expression Editor of the SQL To Parameter Action
+-------------------------------------------------
+<sqlToParameters>
+<parameter name="~/yearToTreat" type="Integer" failsIfNoRecord="true">
+SELECT YEAR(current_timestamp) FROM (VALUES(0))
+</parameter>
+</sqlToParameters>  
+
+*** Step 3 ***
+**************
+
+Variable creation in the process
+--------------------------------
+Name  : yearToTreat   
+Type  : Integer 
+Value : 2015
+
+Execution condition between Loop and End actions
+--------------------------------------------------------------
+${Loop/CORE_NB_EXECUTIONS}$ >12
+
+Execution condition between Loop and Scripting actions
+--------------------------------------------------------------
+${Loop/CORE_NB_EXECUTIONS}$ <=12
+
+Expression editor of scripting action
+-------------------------------------
+var selected_year = __ctx__.getVariableValue("../yearToTreat");
+__ctx__.publishVariable("~/p_month","${../Loop/CORE_NB_EXECUTIONS}$");    
+__ctx__.publishVariable("~/p_year",selected_year);   
+__ctx__.publishVariable("~/p_year_month",selected_year*100+${../Loop/CORE_NB_EXECUTIONS}$); 
+	
+*** Step 4 ***
+**************
+
+Expression editor of "DROP TABLE" action
+----------------------------------------
+DROP TABLE %x{md:objectPath($HOTEL_DATAMART,concat("CUS_HISTO", "${~/p_year_month}$"))}x%
+
+Expression editor of "CREATE TABLE" action
+------------------------------------------
+CREATE TABLE %x{md:objectPath($HOTEL_DATAMART,concat("CUS_HISTO", "${~/p_year_month}$"))}x%
+(CUS_ID INTEGER,
+CUS_COUNT_M${~/p_month}$ INTEGER,
+CONSTRAINT PK_CUS_HISTO${~/p_year_month}$ PRIMARY KEY (CUS_ID)
+)
+
+*** Step 5 ***
+**************
+
+Physical Name of CUS_HISTO table
+--------------------------------
+CUS_HISTO${~/p_year_month}$
+
+Physical Name of CUS_COUNT_M column
+-----------------------------------
+CUS_COUNT_M${~/p_month}$
+
+Name of PK_CUS_HISTO primary key
+--------------------------------
+PK_CUS_HISTO${~/p_year_month}$
+
+*** Step 6 ***
+**************
+
+Expression Editor of mapping filter
+-----------------------------------
+CUS_SALES_IDENT.CUS_MONTH = ${~/p_year_month}$

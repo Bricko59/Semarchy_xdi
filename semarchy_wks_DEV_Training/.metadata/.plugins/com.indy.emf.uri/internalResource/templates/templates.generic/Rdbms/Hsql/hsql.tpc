@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tpc:conf xmlns:tpc="http://www.stambia.com/tpc" id="_fCBYsFE3Ed-SQuyZS8LpiA">
+  <case name="I-TP">
+    <propertyState name="TYPE" value="I-TP"/>
+    <case name="RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="TRG HSQL">
+        <propertyState name="trgProduct" value="HYPERSONIC_SQL"/>
+        <template id="_fCCm0VE3Ed-SQuyZS8LpiA" ref="INTEGRATION%20Hsql.tp.proc#_HFOfdjEZEd-WZe6cNi2k2w?fileId=_HFOfdjEZEd-WZe6cNi2k2w$type=proc$name=INTEGRATION%20Hsql?"/>
+      </case>
+    </case>
+  </case>
+  <case name="IS-TP">
+    <propertyState name="TYPE" value="IS-TP"/>
+    <case name="RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="TRG HSQL">
+        <propertyState name="trgProduct" value="HYPERSONIC_SQL"/>
+        <template id="_AvUf5IRwEeS6cbzlvzyJ_Q" ref="../STAGING%20Rdbms%20As%20SubQuery.proc#_v8JEkTNEEeSH5LKy1U4ptg?fileId=_v8JEkTNEEeSH5LKy1U4ptg$type=proc$name=STAGING%20Rdbms%20As%20SubQuery?"/>
+        <template id="_DboVJIRwEeS6cbzlvzyJ_Q" ref="../STAGING%20Rdbms%20As%20View.proc#_8TmCNqkHEeOSSfIO8yxrzw?fileId=_8TmCNqkHEeOSSfIO8yxrzw$type=proc$name=STAGING%20Rdbms%20As%20View?"/>
+        <template id="_j_mHOHbpEeSmycqbr8pr8Q" ref="STAGING%20Hsql%20As%20Table.proc#_Q-nJlnbpEeSmycqbr8pr8Q?fileId=_Q-nJlnbpEeSmycqbr8pr8Q$type=proc$name=STAGING%20Hsql%20As%20Table?"/>
+      </case>
+    </case>
+  </case>
+  <case name="C-TP">
+    <propertyState name="TYPE" value="C-TP"/>
+    <case name="RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="TRG HSQL">
+        <propertyState name="trgProduct" value="HYPERSONIC_SQL"/>
+        <template id="_szd_RGWDEeiky9dcb0jCSA" ref="REJECT%20Hsql.proc#_c_RtwWWDEeiky9dcb0jCSA?fileId=_c_RtwWWDEeiky9dcb0jCSA$type=proc$name=REJECT%20Hsql?"/>
+      </case>
+    </case>
+  </case>
+</tpc:conf>

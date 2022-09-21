@@ -1,0 +1,77 @@
+*** Step 4 ***
+**************
+
+Transformation Line code for FileToSplit_header file
+----------------------------------------------------
+ret=new Array();
+if (__position__==0){
+    ret[0] = __string__;
+}
+ret;
+
+*** Step 7 ***
+**************
+
+Expression editor of the map transformation for COMMAND
+--------------------------------------------------------
+
+COLUMN_NAME				TRANSFORMATION						LOCATION	ENABLE INSERT		ENABLE UPDATE
+-----------				------------------------------		--------	-------------		-------------
+COMMAND_REF				FileToSplit_header.COMMAND_REF		source			Y			Y
+COMPANY         		FileToSplit_header.COMPANY			source			Y			Y
+COMMAND_LINE_NUMBER		FileToSplit_header.LINE_NUMBER		source			Y			Y
+COMMAND_DATE			LastRecord.COMMAND_DATE				source			Y			Y
+TOTAL_PRICE				LastRecord.TOTAL_PRICE				source			Y			Y
+COMPUTED_TOTAL_PRICE	
+COMPUTED_LINE_NUMBER	
+CREATION_DATE			current_timestamp					target			Y			N
+UPDATE_DATE				current_timestamp					target			N			Y
+
+*** Step 8 ***
+**************
+
+Expression editor of the map transformation for COMMAND_BODY
+------------------------------------------------------------
+
+COLUMN_NAME		TRANSFORMATION				
+-----------		------------------------------		
+COMMAND_REF		COMMAND.COMMAND_REF		
+COMPANY         	COMMAND.COMPANY		
+PRODUCT_ID		FileToSplit_lines.PRODUCT_ID		
+QTY			FileToSplit_lines.QTY		
+UNIT_PRICE		FileToSplit_lines.UNIT_PRICE			
+
+*** Step 9 ***
+**************
+
+Expression editor of the map transformation for COMMAND
+--------------------------------------------------------
+
+COLUMN_NAME				TRANSFORMATION									LOCATION	ENABLE INSERT		ENABLE UPDATE		Aggregate
+-----------				----------------------------------------------	--------	-------------		-------------		---------
+COMMAND_REF				COMMAND_BODY.COMMAND_REF						source			Y					Y
+COMPANY         		COMMAND_BODY.COMPANY							source			Y					Y
+COMMAND_LINE_NUMBER		COMMAND_3.COMMAND_LINE_NUMBER					source			Y					Y
+COMMAND_DATE			COMMAND_3.COMMAND_DATE							source			Y					Y
+TOTAL_PRICE				COMMAND_3.TOTAL_PRICE							source			Y					Y
+COMPUTED_TOTAL_PRICE	SUM(COMMAND_BODY.QTY * COMMAND_BODY.UNIT_PRICE)	source			Y					Y		    Y
+COMPUTED_LINE_NUMBER	COUNT(COMMAND_BODY.PRODUCT_ID)					source			Y					Y		    Y
+CREATION_DATE		
+UPDATE_DATE				current_timestamp								target			N					Y
+
+Condition name and properties
+-----------------------------
+
+Condition name		CK_COM_LINE_NUMBER_001
+SQL Condition		COMMAND.COMMAND_LINE_NUMBER=COMMAND.COMPUTED_LINE_NUMBER
+User message		Line number issue
+Reject code			COM_002
+Description			The received line number in header file is not the same than the computed line number
+Severity level		Reject
+
+Condition name		CK_COM_TOTAL_PRICE_001
+SQL Condition		COMMAND.TOTAL_PRICE=COMMAND.COMPUTED_TOTAL_PRICE
+User message		Price issue
+Reject code			COM_001
+Description			The total price received in footer file is not the same than the computed total price
+Severity level		Reject

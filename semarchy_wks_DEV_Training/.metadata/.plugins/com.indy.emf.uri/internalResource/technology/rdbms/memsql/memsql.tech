@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" id="UUID_TECH_RDBMS_MEMSQL" name="MemSQL Technology" ref="resource.md#UUID_MD_RDBMS_DEFAULT?fileId=UUID_MD_RDBMS_DEFAULT$type=md$name=Rdbms%20MetaData?">
+  <level code="com.stambia.rdbms.server" displayName="" override="true" reverseCode="">
+    <attribute xmlName="loaderHome" category="MemSQL loader" code="loaderHome" displayName="MemSql Loader Home"/>
+    <attribute xmlName="loaderTargetHostName" category="MemSQL loader" code="loaderTargetHostName" displayName="MemSql Loader Target Host Name"/>
+    <attribute xmlName="loaderTargetUserHostName" category="MemSQL loader" code="loaderTargetUserHostName" displayName="MemSql Loader Target User Name"/>
+    <attribute xmlName="loaderTargetDBName" category="MemSQL loader" code="loaderTargetDBName" displayName="MemSql Loader Target Database Name"/>
+    <xPathExpression expression="@loaderHome">
+      <code>LOADER_HOME</code>
+    </xPathExpression>
+    <xPathExpression expression="@loaderTargetHostName">
+      <code>LOADER_TARGET_HOSTNAME</code>
+    </xPathExpression>
+    <xPathExpression expression="@loaderTargetUserHostName">
+      <code>LOADER_TARGET_USER_NAME</code>
+    </xPathExpression>
+    <xPathExpression expression="@loaderTargetDBName">
+      <code>LOADER_TARGET_DB_NAME</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/rdbms.table.png" xmlName="datastore" xpathDisplayName="if (@TABLE_NAME!=@name) then concat(@name,' (',@TABLE_NAME,')') else @name" activeDisplayName="false" code="com.stambia.rdbms.datastore" connection="false" displayName="DataStore" override="true" position="1" reverseBundleName="" reverseClass="" reverseCode="TABLE_NAME" wizardClass="">
+    <attribute xmlName="isReference" xpathDisplayName="isReference" code="isReference" defaultValue="" displayName="Is Reference" reverseCode="IS_REFERENCE" type="boolean"/>
+    <parent>com.stambia.rdbms.schema</parent>
+    <xPathExpression expression="@isReference">
+      <code>IS_REFERENCE</code>
+    </xPathExpression>
+    <mappingType>Source</mappingType>
+    <mappingType>Target</mappingType>
+  </level>
+</tech:tech>

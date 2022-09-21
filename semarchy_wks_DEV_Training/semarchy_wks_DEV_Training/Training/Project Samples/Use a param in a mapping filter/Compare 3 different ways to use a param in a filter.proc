@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_eVxOAfbrEeihWtdVUY4U1Q">
+  <parameter id="_fZ8AwPbrEeihWtdVUY4U1Q" metaInf="&lt;xslVariableName>genereFilter&lt;/xslVariableName>" name="genereFilter" type="Boolean" value="true"/>
+  <actionCode id="_NIbAIPcKEeihDLFmfbLxVA" isBeginAction="false" name="Start Load" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+    <link id="_SkEwgPcKEeihDLFmfbLxVA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_SPbWMPcKEeihDLFmfbLxVA"/>
+    <link id="_S1-Y0PcKEeihDLFmfbLxVA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_RVwjQPcKEeihDLFmfbLxVA"/>
+    <link id="_Ty7wUPcKEeihDLFmfbLxVA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_TZbrMPcKEeihDLFmfbLxVA"/>
+  </actionCode>
+  <actionCode id="_RVwjQPcKEeihDLFmfbLxVA" isBeginAction="false" name="SqlOperation INSERT INTO PMT2" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_P86rkPcLEeihDLFmfbLxVA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_PDo6MPcLEeihDLFmfbLxVA"/>
+    <metaDataLink id="_RVyYcPcKEeihDLFmfbLxVA" name="T_PMT2" target="HSQL_Hotel.md#_uWWaEfcJEeihDLFmfbLxVA?fileId=_N9VnAPbrEeihWtdVUY4U1Q$type=md$name=T_PMT2?"/>
+    <parameter id="_RVyYcfcKEeihDLFmfbLxVA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <code>INSERT INTO PMT.T_PMT2&#xD;
+SELECT LPAD(CAST(id_gen AS VARCHAR(8)),7,'0'),'Name_'+LPAD(CAST(id_gen AS VARCHAR(8)),7,'0'),&#xD;
+       CASE CAST(rand()*2 AS INTEGER) WHEN 1 THEN 'Desc_' ELSE NULL END+LPAD(CAST(id_gen AS VARCHAR(8)),7,'0') ,&#xD;
+       CAST(rand()*2 AS INTEGER) &#xD;
+FROM   UNNEST(SEQUENCE_ARRAY(1, 1999999, 1)) AS generate_series(id_gen)&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_SPbWMPcKEeihDLFmfbLxVA" isBeginAction="false" name="SqlOperation INSERT INTO PMT1" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="__1bqoPcKEeihDLFmfbLxVA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="__gJ-MPcKEeihDLFmfbLxVA"/>
+    <metaDataLink id="_SPb9QPcKEeihDLFmfbLxVA" name="T_PMT1" target="HSQL_Hotel.md#_uWj1cfcJEeihDLFmfbLxVA?fileId=_N9VnAPbrEeihWtdVUY4U1Q$type=md$name=T_PMT1?"/>
+    <parameter id="_SPb9QfcKEeihDLFmfbLxVA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <code>INSERT INTO PMT.T_PMT1&#xD;
+SELECT LPAD(CAST(id_gen AS VARCHAR(8)),7,'0'),'Name_'+LPAD(CAST(id_gen AS VARCHAR(8)),7,'0'),&#xD;
+       CASE CAST(rand()*2 AS INTEGER) WHEN 1 THEN 'Desc_' ELSE NULL END+LPAD(CAST(id_gen AS VARCHAR(8)),7,'0') ,&#xD;
+       CAST(rand()*2 AS INTEGER) &#xD;
+FROM   UNNEST(SEQUENCE_ARRAY(1, 1999999, 1)) AS generate_series(id_gen)&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_TZbrMPcKEeihDLFmfbLxVA" isBeginAction="false" name="SqlOperation INSERT INTO PMT3" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+    <link id="_6rfVUPcKEeihDLFmfbLxVA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_6CSAQPcKEeihDLFmfbLxVA"/>
+    <metaDataLink id="_TZc5UPcKEeihDLFmfbLxVA" name="T_PMT3" target="HSQL_Hotel.md#_uV68QfcJEeihDLFmfbLxVA?fileId=_N9VnAPbrEeihWtdVUY4U1Q$type=md$name=T_PMT3?"/>
+    <parameter id="_TZdgYPcKEeihDLFmfbLxVA" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+    <code>INSERT INTO PMT.T_PMT3&#xD;
+SELECT LPAD(CAST(id_gen AS VARCHAR(8)),7,'0'),'Name_'+LPAD(CAST(id_gen AS VARCHAR(8)),7,'0'),&#xD;
+       CASE CAST(rand()*2 AS INTEGER) WHEN 1 THEN 'Desc_' ELSE NULL END+LPAD(CAST(id_gen AS VARCHAR(8)),7,'0') ,&#xD;
+       CAST(rand()*2 AS INTEGER) &#xD;
+FROM   UNNEST(SEQUENCE_ARRAY(1, 1999999, 1)) AS generate_series(id_gen)&#xD;
+</code>
+  </actionCode>
+  <actionCode id="_PDo6MPcLEeihDLFmfbLxVA" isBeginAction="false" name="Scripting" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+    <link id="_uGr7gPcLEeihDLFmfbLxVA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_ts3GQPcLEeihDLFmfbLxVA"/>
+    <parameter id="_PDzSQPcLEeihDLFmfbLxVA" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+    <code>__ctx__.publishVariable(&quot;~/generatedFilter&quot;,&quot;%x{ if ( md:paramValue($this, 'genereFilter')='true') then 'T_PMT2.PMT_DESCRIPTION IS NOT NULL ' else '1=1  '}x%&quot;);&#xD;
+</code>
+  </actionCode>
+  <actionProcessRef id="_E4tzwPcKEeihDLFmfbLxVA" isBeginAction="false" name="TOOL_resetSchema" nbCycles="-1" toleratedError="false" targetName="../../global/components/Training/TOOL_resetSchema.proc#_mbXZ0SCBEeWkpdwlbgb5vw?fileId=_mbXZ0SCBEeWkpdwlbgb5vw$type=proc$name=TOOL_resetSchema?">
+    <link id="_KrQaIPcKEeihDLFmfbLxVA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_NIbAIPcKEeihDLFmfbLxVA"/>
+    <metaDataLink id="_JOwm8PcKEeihDLFmfbLxVA" name="PMT" target="HSQL_Hotel.md#_s0K1oPcJEeihDLFmfbLxVA?fileId=_N9VnAPbrEeihWtdVUY4U1Q$type=md$name=PMT?"/>
+  </actionProcessRef>
+  <actionProcessRef id="_FUfJwPcKEeihDLFmfbLxVA" isBeginAction="false" name="TOOL_resetSchema_2" nbCycles="-1" toleratedError="false" targetName="../../global/components/Training/TOOL_resetSchema.proc#_mbXZ0SCBEeWkpdwlbgb5vw?fileId=_mbXZ0SCBEeWkpdwlbgb5vw$type=proc$name=TOOL_resetSchema?">
+    <link id="_LBMN4PcKEeihDLFmfbLxVA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_NIbAIPcKEeihDLFmfbLxVA"/>
+    <metaDataLink id="_J-tdMPcKEeihDLFmfbLxVA" name="DWH" target="HSQL_Datamart.md#__WIU8PcJEeihDLFmfbLxVA?fileId=_UhZw8PbrEeihWtdVUY4U1Q$type=md$name=DWH?"/>
+  </actionProcessRef>
+  <actionProcessRef id="_6CSAQPcKEeihDLFmfbLxVA" isBeginAction="false" name="Load DIM_PMT3" nbCycles="-1" toleratedError="false" processMap="true" targetName="Load%20DIM_PMT3.map#_nRS-kPbrEeihWtdVUY4U1Q?fileId=_nRS-kPbrEeihWtdVUY4U1Q$type=map$name=Load%20DIM_PMT3?"/>
+  <actionProcessRef id="__gJ-MPcKEeihDLFmfbLxVA" isBeginAction="false" name="Load DIM_PMT1" nbCycles="-1" toleratedError="false" processMap="true" targetName="Load%20DIM_PMT1.map#_-mS-APcKEeihDLFmfbLxVA?fileId=_-mS-APcKEeihDLFmfbLxVA$type=map$name=Load%20DIM_PMT1?"/>
+  <actionProcessRef id="_ts3GQPcLEeihDLFmfbLxVA" isBeginAction="false" name="Load DIM_PMT2" nbCycles="-1" toleratedError="false" processMap="true" targetName="Load%20DIM_PMT2.map#_jEWPh_cLEeihDLFmfbLxVA?fileId=_jEWPh_cLEeihDLFmfbLxVA$type=map$name=Load%20DIM_PMT2?"/>
+</proc:process>

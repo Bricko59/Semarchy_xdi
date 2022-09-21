@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sales="http://stambia.org/samples/salesPerson" targetNamespace="http://stambia.org/samples/salesPerson" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+	<xs:complexType name="Customer">
+		<xs:attribute name="customerId" type="xs:integer"/>
+		<xs:attribute name="customerName" type="xs:string"/>
+		<xs:attribute name="customerTitleCode" type="xs:string"/>
+	</xs:complexType>
+	<xs:complexType name="salesPerson">
+		<xs:sequence>
+			<xs:element name="customer" type="sales:Customer" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="salesId" type="xs:integer"/>
+		<xs:attribute name="salesName" type="xs:string"/>
+		<xs:attribute name="salesGender" type="xs:string"/>
+	</xs:complexType>
+	<xs:element name="salesPerson">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="salesPerson" type="sales:salesPerson" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

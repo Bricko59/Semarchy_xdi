@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" id="_kxpI0pThEd-tv7v5yj0V3Q" description="This template is used to unload data from any database into a file and optionally send it by ftp.&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;18/11/2020&#x9;Bug fix: wrong prefix used in Split mode when source datastore has a different alias&#xD;&#xA;13/11/2020&#x9;Bug fix: bad file name when work table name contains object delimiter characters&#xD;&#xA;16/06/2020&#x9;New Parameter 'Cdc Subscriber'&#xD;&#xA;16/06/2020&#x9;New Parameters 'Unlock Cdc Table' and 'Lock Cdc Table'&#xD;&#xA;16/06/2020&#x9;Bug fix: the 'Cdc Subscriber' parameter is ignored when querying the source data&#xD;&#xA;25/05/2020&#x9;Add support for default storage clauses defined in the Metadata&#xD;&#xA;22/05/2020&#x9;New parameter on Unload Step 'exportBooleanAsNumeric'&#xD;&#xA;19/12/2019&#x9;Default field separator can now be overridden in Hexa &#xD;&#xA;18/12/2019&#x9;Add ftp file transfer management for Split mode&#xD;&#xA;21/11/2019&#x9;Add a Split mode to produce split files when a splitParallelDegree is specified in the parent template&#xD;&#xA;16/01/2019&#x9;Use XPath expression to generate the empty last column dynamically based on product syntax. Note that for the template to use the product syntax, Designer S19.0.15 or higher is required. With prior versions it will continue to use 'NULL' for all technologies.&#xD;&#xA;22/12/2017&#x9;Missing a space character between the 'DISTINCT' keyword and the columns&#xD;&#xA;31/10/2017&#x9;Update the select statement to use the alternate query when available&#xD;&#xA;19/09/2017&#x9;New 'Clean Initial Temporary Objects' parameter to manage the drop statement performed at the template's start&#xD;&#xA;15/02/2017&#x9;Add a generation condition on the step cleaning ftp file to avoid its execution when 'enable File Transport' is set to false&#xD;&#xA;28/10/2016&#x9;Add a generation condition on the step cleaning ftp file to avoid the deletion when 'Clean Temporary Objects' is set to false&#xD;&#xA;24/08/2016&#x9;Add a step to clean the file sent by ftp&#xD;&#xA;24/08/2016&#x9;Add a new parameter to specify the ftp transfer mode: 'Ftp File Mode'&#xD;&#xA;24/08/2016&#x9;Initialize template history&#xD;&#xA;" isBeginAction="false" nbCycles="-1" toleratedError="false">
+  <parameter id="_viIJoZWdEd-WsbbwTwQ1vg" name="cleanTemporaryObjects" type="Boolean" value="true"/>
+  <parameter id="_XzdDIC-4EeCCxPxUwvKjAg" name="rowSepOnLastRow" type="Boolean" value="false"/>
+  <parameter id="_TC2eyeiIEeGCDfZuhYd9mg" name="useTransactionOnWorkTables" type="Boolean" value="false"/>
+  <parameter id="__2LZ0J0SEeekQOSyujLVoQ" name="cleanInitialTemporaryObjects" type="Boolean" value="true"/>
+  <parameter id="_viIJmZWdEd-WsbbwTwQ1vg" name="workFolder" type="String" value="${/CORE_TEMPORARY_FOLDER}$"/>
+  <parameter id="_viIJoJWdEd-WsbbwTwQ1vg" name="pathOnServer" type="String"/>
+  <parameter id="_viIJnZWdEd-WsbbwTwQ1vg" name="fileEncoding" type="String" value=""/>
+  <parameter id="_viIJmpWdEd-WsbbwTwQ1vg" name="dateFormat" type="String" value="yyyy-MM-dd"/>
+  <parameter id="_OJXuEF5jEeOs_tElzd-6Hg" name="timestampFormat" type="String" value="yyyy-MM-dd HH:mm:ss"/>
+  <parameter id="_ksDI4FHCEeObvfUO9VXQFw" name="rowSeparator" type="String"/>
+  <parameter id="_LBoHYOqtEeCJLcwAAekTYg" name="xRowSep" type="String" value="0D0A"/>
+  <parameter id="_viIJm5WdEd-WsbbwTwQ1vg" description="The character or string will be added as a separator between exported fields. &#xD;&#xA;Notes : &#xD;&#xA;- this parameter overrides the XField Sep parameter &#xD;&#xA;- if you need special characters, use the XField Sep (hexadecimal)" name="fieldSeparator" type="String" value=""/>
+  <parameter id="_NQGiICG4Eeqhyvwxe7V5YA" description="Use this to provide a Field separator encoded in Hexadecimal. &#xD;&#xA;The decoded character or string will be added as a separator between exported fields. &#xD;&#xA;Note : this parameter may be overridden by the Field Separator parameter. &#xD;&#xA;&#xD;&#xA;Examples : &#xD;&#xA;- 7E will produce the ~ character&#xD;&#xA;- 09 will produce a TAB&#xD;&#xA;- 0B will produce a Vertical Tab (invisible character)&#xD;&#xA;- 2C will produce the , character (comma)&#xD;&#xA;- 5B235D will produce the string [#] " name="xFieldSep" type="String" value="7E"/>
+  <parameter id="_viIJnJWdEd-WsbbwTwQ1vg" description="This delimiter will be used around string values. &#xD;&#xA;By default there is no delimiter. &#xD;&#xA;The delimiter &quot; is commonly used, especially in CSV format.&#xD;&#xA;&#xD;&#xA;Notes : &#xD;&#xA;- this parameter overrides the XString Delimiter parameter &#xD;&#xA;- if you need special characters, use the XString Delimiter (hexadecimal)" name="stringDelimiter" type="String" value=""/>
+  <parameter id="_896ZsCI-Eeqhyvwxe7V5YA" description="Use this to provide a String Delimiter encoded in Hexadecimal. &#xD;&#xA;This delimiter will be decoded and used around string values. &#xD;&#xA;Note : this parameter may be overridden by the String Delimiter parameter. &#xD;&#xA;&#xD;&#xA;Examples : &#xD;&#xA;- 22 will produce the &quot; character&#xD;&#xA;- 27 will produce the ' character&#xD;&#xA;" name="xStringDelimiter" type="String"/>
+  <parameter id="_viIJn5WdEd-WsbbwTwQ1vg" name="numericSeparator" type="String" value=""/>
+  <parameter id="_viIJnpWdEd-WsbbwTwQ1vg" name="fetchSize" type="String" value="30000"/>
+  <parameter id="_H2Cj0MHqEeCw-Y1GDBou6g" name="selectHint" type="String"/>
+  <parameter id="_TC2eyOiIEeGCDfZuhYd9mg" name="transactionName" type="String" value="T1"/>
+  <parameter id="_4yzFIOf2EeOz-fFslZ_sqw" name="splitFileSize" type="String" value=""/>
+  <parameter id="_l1yRcOgKEeOz-fFslZ_sqw" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;disable&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;gzip&quot;/>&#xD;&#xA;&#xD;&#xA;" name="compressionMode" type="String" value="disable"/>
+  <parameter id="_WKkQUGrSEeaEKKtukPmBeg" metaInf="&lt;metaInf id=&quot;value&quot; value=&quot;binary&quot; />&#xD;&#xA;&lt;metaInf id=&quot;value&quot; value=&quot;ascii&quot; />" name="ftpFileMode" type="String" value="ascii"/>
+  <parameter id="_5K4pQK-yEeqGH6AaH3PDiA" description="When a source table is used as CDC a lock is performed on it. It makes the changed data available in the Mapping.&#xD;&#xA;If set to false, the Lock must have been performed as part of a previous Mapping." name="lockCdcTable" type="Boolean" value="true"/>
+  <parameter id="_5LK9IK-yEeqGH6AaH3PDiA" description="CDC Subscriber to use when CDC has been enabled on a source table." name="cdcSubscriber" type="String"/>
+  <parameter id="_5LK9Ia-yEeqGH6AaH3PDiA" description="When a source table is used as CDC an unlock is performed on it after processing. It marks the changed data as consumed.&#xD;&#xA;If set to false, the Unlock must be performed as part of an upcoming Mapping." name="unlockCdcTable" type="Boolean" value="true"/>
+  <subProcess id="_kxpI3ZThEd-tv7v5yj0V3Q" name="Unload">
+    <link id="_kxpI3pThEd-tv7v5yj0V3Q" executionType="OK" generationType="OK" mandatory="1" targetId="_kxpJFJThEd-tv7v5yj0V3Q?fileId=_kxpI0pThEd-tv7v5yj0V3Q$type=proc$name=Clean?"/>
+    <parameter id="_nVZnkOrEEeC_Q-RMkt9pkA" name="fieldSeparatorAfterLastColumn" type="Boolean" value="false"/>
+    <parameter id="_jJ-VYOIYEeaOmJnbxCbMgw" name="generateIfEmpty" type="Boolean" value="false"/>
+    <parameter id="fef23a98-e1f7-4670-8b85-a15e9833c131" name="exportBooleanAsNumeric" type="Boolean" value="true"/>
+    <actionCode id="_kxpI35ThEd-tv7v5yj0V3Q" generationCondition="not('${disableWorkTableCreation}$' = 'true') and not('${cleanInitialTemporaryObjects}$' = 'false')" enable="true" isBeginAction="false" name="Drop of load table" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_kxpI4JThEd-tv7v5yj0V3Q" executionType="OK" generationType="OK_KO" mandatory="0" targetId="_kxpI5JThEd-tv7v5yj0V3Q"/>
+      <parameter id="_kxpI4ZThEd-tv7v5yj0V3Q" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_kxpI4pThEd-tv7v5yj0V3Q" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_kxpI45ThEd-tv7v5yj0V3Q" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_Vy_rIOiIEeGCDfZuhYd9mg" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <code>%x{$REF/ref:target()/tech:dropTableIfExists()}x% %x{md:physicalPath($REF,'workName')}x%</code>
+    </actionCode>
+    <actionCode id="_kxpI5JThEd-tv7v5yj0V3Q" generationCondition="not('${disableWorkTableCreation}$' = 'true')" isBeginAction="false" name="Creation of load table" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_kxpI5ZThEd-tv7v5yj0V3Q" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_kxpJC5ThEd-tv7v5yj0V3Q"/>
+      <parameter id="_kxpI5pThEd-tv7v5yj0V3Q" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_kxpI55ThEd-tv7v5yj0V3Q" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_kxpI6JThEd-tv7v5yj0V3Q" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_hXj6gOiIEeGCDfZuhYd9mg" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <code>create table %x{md:physicalPath($REF,'workName')}x%&#xD;
+(&#xD;
+	%x{md:patternList($REF/ref:columns(),'[workName]\t[targetWritableType] [targetNullWord]',',\n\t')}x%	&#xD;
+	%x{if ($REF/tech:hasCdc()) then ', CDC_CHANGE_TYPE CHAR(1)' else ''}x%&#xD;
+)&#xD;
+%x{md:ifEmpty(md:paramValue($this,'loadTableOptions'), $REF/ref:target()/ref:schema()/tech:defaultTempTableStorageClause())}x%&#xD;
+</code>
+    </actionCode>
+    <actionCode id="_kxpI7pThEd-tv7v5yj0V3Q" isBeginAction="false" name="Unload of data from source into file" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SqlFileExportActionCodeI">
+      <link id="_kxpI75ThEd-tv7v5yj0V3Q" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_kxpI_pThEd-tv7v5yj0V3Q"/>
+      <parameter id="_kxpI8JThEd-tv7v5yj0V3Q" name="SQL_EXP_FILENAME" type="String" value="%x{md:paramValue($this,'workFolder')}x%/data_%x{$REF/tech:workName('','','false')}x%.dat"/>
+      <parameter id="_kxpI8ZThEd-tv7v5yj0V3Q" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_kxpI8pThEd-tv7v5yj0V3Q" name="SQL_EXP_FILE_FORMAT" type="String" value="variable"/>
+      <parameter id="_kxpI85ThEd-tv7v5yj0V3Q" name="SQL_EXP_DATE_FORMAT" type="String" value="%x{md:ifEmpty(md:paramValue($this,'timestampFormat'),'yyyy-MM-dd HH:mm:ss')}x%"/>
+      <parameter id="_kxpI9JThEd-tv7v5yj0V3Q" name="SQL_EXP_FIELD_SEP" type="String" value="%x{md:paramValue($this,'fieldSeparator')}x%"/>
+      <parameter id="_kxpI9ZThEd-tv7v5yj0V3Q" name="SQL_EXP_FETCH_SIZE" type="Integer" value="%x{md:ifEmpty(md:paramValue($this,'fetchSize'),'3000')}x%"/>
+      <parameter id="_kxpI9pThEd-tv7v5yj0V3Q" name="SQL_EXP_FILE_ENCODING" type="String" value="%x{md:paramValue($this,'fileEncoding')}x%"/>
+      <parameter id="_kxpI95ThEd-tv7v5yj0V3Q" name="SQL_EXP_STRING_DELIMITER" type="String" value="%x{md:paramValue($this,'stringDelimiter')}x%"/>
+      <parameter id="_kxpI-JThEd-tv7v5yj0V3Q" description="" name="SQL_EXP_NUMERIC_SEPARATOR_CHAR" type="String" value="%x{md:ifEmpty(md:paramValue($this,'numericSeparator'),'.')}x%"/>
+      <parameter id="_kxpI-ZThEd-tv7v5yj0V3Q" name="SQL_EXP_XROW_SEP" type="String" value="%x{md:ifEmpty(md:paramValue($this,'xRowSep'),'0D0A')}x%"/>
+      <parameter id="_kxpI-pThEd-tv7v5yj0V3Q" name="SQL_EXP_ROW_SEP_ON_LAST_ROW" type="Boolean" value="%x{md:ifEmpty(md:paramValue($this,'rowSepOnLastRow'),'false')}x%"/>
+      <parameter id="_Hc6AYA4ZEeKs4cfvTuQgCg" name="SQL_EXP_SHORT_DATE_FORMAT" type="String" value="%x{md:ifEmpty(md:paramValue($this,'dateFormat'),'yyyy-MM-dd')}x%"/>
+      <parameter id="_p8IzUFv6EeKER7jdrivIPQ" name="SQL_EXP_NULL_VALUE_REPLACEMENT" type="String" value="%x{md:paramValue($this,'nullValueReplacement')}x%"/>
+      <parameter id="_aWYVkFHCEeObvfUO9VXQFw" name="SQL_EXP_ROW_SEP" type="String" value="%x{md:paramValue($this,'rowSeparator')}x%"/>
+      <parameter id="_fo1pAOf0EeOz-fFslZ_sqw" name="SQL_EXP_MAX_FILE_SIZE" type="String" value="%x{md:paramValue($this,'splitFileSize')}x%"/>
+      <parameter id="_PLq0gOgLEeOz-fFslZ_sqw" name="SQL_EXP_FILE_ZIP_MODE" type="String" value="%x{md:paramValue($this,'compressionMode')}x%"/>
+      <parameter id="_EdMDcHT1EeaAJod-7OfB4w" name="SQL_EXP_TIME_FORMAT" type="String" value="%x{md:paramValue($this,'timeFormat')}x%"/>
+      <parameter id="_EzwaUOIXEeaOmJnbxCbMgw" name="SQL_EXP_GENERATE_IF_EMPTY" type="Boolean" value="%x{md:paramValue($this,'generateIfEmpty')}x%"/>
+      <parameter id="1fc9da10-087d-4d9c-a9bb-ef5240061fd9" name="SQL_EXP_BOOLEAN_AS_NUMERIC" type="Boolean" value="%x{md:ifEmpty(md:paramValue($this,'exportBooleanAsNumeric'), 'true')}x%"/>
+      <code>%x{if($REF/ref:source()/tech:mappingSelectQuerySupport()) &#xD;
+then  $REF/ref:source()/tech:mappingSelectQuery($REF) &#xD;
+else $select }x%</code>
+    </actionCode>
+    <actionCode id="_kxpI-5ThEd-tv7v5yj0V3Q" generationCondition="not(count($REF/ref:sources()/ref:columns()[tech:tag()='SPLIT_BY'])>0 and number(md:ifEmpty(md:paramValue($this,'splitParallelDegree'),'1')) > 1)" enable="true" isBeginAction="false" name="Deletion of temporary file" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+      <link id="_kxpI_JThEd-tv7v5yj0V3Q" executionCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_kxpI35ThEd-tv7v5yj0V3Q"/>
+      <parameter id="_kxpI_ZThEd-tv7v5yj0V3Q" name="DEL_FILE" type="String" value="%x{md:paramValue($this,'workFolder')}x%/data_%x{$REF/tech:workName('','','false')}x%.dat"/>
+    </actionCode>
+    <actionCode id="_kxpI_pThEd-tv7v5yj0V3Q" generationCondition="'${enableFileTransport}$'!='false' and exists($xslTargetFtp)" isBeginAction="false" name="Put file on target server" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FtpPutActionCodeI">
+      <parameter id="_kxpJAJThEd-tv7v5yj0V3Q" name="FTP_HOSTNAME" type="String" value="%x{$xslTargetFtp/tech:host()}x%"/>
+      <parameter id="_kxpJAZThEd-tv7v5yj0V3Q" name="FTP_USER" type="String" value="%x{$xslTargetFtp/tech:user()}x%"/>
+      <parameter id="_kxpJApThEd-tv7v5yj0V3Q" name="FTP_PASSWORD" type="String" value="%x{$xslTargetFtp/tech:password()}x%"/>
+      <parameter id="_kxpJA5ThEd-tv7v5yj0V3Q" name="FTP_REMOTE_PATH" type="String" value="%x{$xslTargetFtp/tech:path()}x%"/>
+      <parameter id="_kxpJBJThEd-tv7v5yj0V3Q" name="FTP_LOCAL_FILENAME" type="String" value="data_%x{$REF/tech:workName('','','false')}x%.dat"/>
+      <parameter id="_kxpJBZThEd-tv7v5yj0V3Q" name="FTP_LOCAL_PATH" type="String" value="%x{md:paramValue($this,'workFolder')}x%"/>
+      <parameter id="_kxpJBpThEd-tv7v5yj0V3Q" name="FTP_PORT" type="Integer" value="%x{$xslTargetFtp/tech:port()}x%"/>
+      <parameter id="_kxpJB5ThEd-tv7v5yj0V3Q" name="PROXY_HOST" type="String" value="%x{$xslTargetFtp/tech:proxyHost()}x%"/>
+      <parameter id="_kxpJCJThEd-tv7v5yj0V3Q" name="PROXY_PORT" type="Integer" value="%x{$xslTargetFtp/tech:proxyPort()}x%"/>
+      <parameter id="_kxpJCZThEd-tv7v5yj0V3Q" name="PROXY_USER" type="String" value="%x{$xslTargetFtp/tech:proxyUser()}x%"/>
+      <parameter id="_kxpJCpThEd-tv7v5yj0V3Q" name="PROXY_PASSWORD" type="String" value="%x{$xslTargetFtp/tech:proxyPassword()}x%"/>
+      <parameter id="_ZBR0MGrREeaEKKtukPmBeg" name="FTP_FILE_MODE" type="String" value="%x{md:ifEmpty(md:paramValue($this,'ftpFileMode'),'ascii')}x%"/>
+    </actionCode>
+    <actionCode id="_kxpJC5ThEd-tv7v5yj0V3Q" generationCondition="" isBeginAction="false" name="Initialization of source connection" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_kxpJDJThEd-tv7v5yj0V3Q" generationCondition="count($split/split) = 1" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_kxpI7pThEd-tv7v5yj0V3Q"/>
+      <link id="_F7BGkAuhEeqZ9Mfh8X8Nmw" generationCondition="count($split/split) > 1" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_B9W-MAuhEeqZ9Mfh8X8Nmw?fileId=_kxpI0pThEd-tv7v5yj0V3Q$type=proc$name=Unload%20of%20data%20-%20split%20mode?"/>
+      <parameter id="_kxpJDZThEd-tv7v5yj0V3Q" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_kxpJDpThEd-tv7v5yj0V3Q" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <code></code>
+    </actionCode>
+    <actionCode id="_kxpJD5ThEd-tv7v5yj0V3Q" generationCondition="not(md:paramValue($this, 'lockCdcTable')='false')" isBeginAction="false" name="Lock of CDC table" nbCycles="-1" repetitionMode="Parallelize" repetitionQuery="mdj:xpath($REF,'FROM_REF')[mdj:xpath(.,'IS_CDC')]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_kxpJEJThEd-tv7v5yj0V3Q" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_kxpI-5ThEd-tv7v5yj0V3Q"/>
+      <parameter id="_kxpJEZThEd-tv7v5yj0V3Q" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_kxpJEpThEd-tv7v5yj0V3Q" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <code>update 	%x{$CDC/ref:target()/tech:cdcTablePath()}x%&#xD;
+set 	CDC_CONSUMMATION = '1'&#xD;
+where	(1=1)&#xD;
+%x{$CDC/tech:cdcFilterPart($this)}x%</code>
+    </actionCode>
+    <actionCode id="_PHToQAunEeqZ9Mfh8X8Nmw" generationCondition="count($split/split)>1" enable="true" isBeginAction="false" name="Deletion of temporary file - split mode" nbCycles="-1" repetitionMode="Parallelize" repetitionQuery="$split/split" repetitionVariableName="CUR_SPLIT" toleratedError="true" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+      <link id="_PHToQQunEeqZ9Mfh8X8Nmw" executionCondition="" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_kxpI35ThEd-tv7v5yj0V3Q"/>
+      <parameter id="_N5ulYAuoEeqZ9Mfh8X8Nmw" name="DEL_FILE" type="String" value="%x{md:paramValue($this,'workFolder')}x%/data_%x{$REF/tech:workName('','','false')}x%_%x{$CUR_SPLIT/@name}x%.dat"/>
+    </actionCode>
+    <subProcess id="_B9W-MAuhEeqZ9Mfh8X8Nmw" isBeginAction="false" name="Unload of data - split mode" nbCycles="-1" toleratedError="false">
+      <actionCode id="_tLACMAujEeqZ9Mfh8X8Nmw" isBeginAction="false" name="getMax" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+        <link id="_tLACMQujEeqZ9Mfh8X8Nmw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_tLDFigujEeqZ9Mfh8X8Nmw"/>
+        <parameter id="_tLACMgujEeqZ9Mfh8X8Nmw" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+        <parameter id="_tLACMwujEeqZ9Mfh8X8Nmw" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+        <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;../MAX_VALUE&quot; type=&quot;String&quot; failsIfNoRecord=&quot;false&quot; defaultValue=&quot;0&quot;>&#xD;
+select	&#xD;
+max(%x{$splitSource/tech:alias()}x%.%x{$splitColumn/tech:name()}x%)&#xD;
+from	%x{$splitSource/tech:from()}x%&#xD;
+where 1=1&#xD;
+%x{replace(replace($REF/tech:filterPart(), codepoints-to-string(60), '&amp;amp;lt;'), codepoints-to-string(62), '&amp;amp;gt;')}x%&#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters></code>
+      </actionCode>
+      <actionCode id="_tLDFgAujEeqZ9Mfh8X8Nmw" isBeginAction="false" name="Format MIN_VALUE" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+        <link id="_tLDFgQujEeqZ9Mfh8X8Nmw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_tLDFjgujEeqZ9Mfh8X8Nmw?fileId=_kxpI0pThEd-tv7v5yj0V3Q$type=proc$name=Load%20Data?"/>
+        <parameter id="_tLDFggujEeqZ9Mfh8X8Nmw" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+        <parameter id="_tLDFgwujEeqZ9Mfh8X8Nmw" name="SCRIPTING_CONNECTION" type="String" value="${CORE_ACTION_ID}$"/>
+        <code>var minValue = new java.lang.String(__ctx__.getVariableValue(&quot;../MIN_VALUE&quot;));&#xD;
+if(!minValue.contains(&quot;.&quot;)) {&#xD;
+	__ctx__.publishVariable(&quot;../MIN_VALUE&quot;,minValue+&quot;.0&quot;);&#xD;
+}&#xD;
+</code>
+      </actionCode>
+      <actionCode id="_tLDFhQujEeqZ9Mfh8X8Nmw" isBeginAction="false" name="getMin" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.sqlToParameters">
+        <link id="_tLDFhgujEeqZ9Mfh8X8Nmw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_tLDFgAujEeqZ9Mfh8X8Nmw"/>
+        <parameter id="_tLDFhwujEeqZ9Mfh8X8Nmw" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+        <parameter id="_tLDFiAujEeqZ9Mfh8X8Nmw" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+        <code>&lt;sqlToParameters>&#xD;
+&lt;parameter name=&quot;../MIN_VALUE&quot; type=&quot;String&quot; failsIfNoRecord=&quot;false&quot; defaultValue=&quot;0&quot;>&#xD;
+select	&#xD;
+min(%x{$splitSource/tech:alias()}x%.%x{$splitColumn/tech:name()}x%)&#xD;
+from	%x{$splitSource/tech:from()}x%&#xD;
+where 1=1&#xD;
+%x{replace(replace($REF/tech:filterPart(), codepoints-to-string(60), '&amp;amp;lt;'), codepoints-to-string(62), '&amp;amp;gt;')}x%&#xD;
+&lt;/parameter>&#xD;
+&lt;/sqlToParameters></code>
+      </actionCode>
+      <actionCode id="_tLDFigujEeqZ9Mfh8X8Nmw" isBeginAction="false" name="Format MAX_VALUE" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+        <link id="_tLDFiwujEeqZ9Mfh8X8Nmw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_tLDFjgujEeqZ9Mfh8X8Nmw?fileId=_kxpI0pThEd-tv7v5yj0V3Q$type=proc$name=Load%20Data?"/>
+        <parameter id="_tLDFjAujEeqZ9Mfh8X8Nmw" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+        <parameter id="_tLDFjQujEeqZ9Mfh8X8Nmw" name="SCRIPTING_CONNECTION" type="String" value="${CORE_ACTION_ID}$"/>
+        <code>var maxValue = new java.lang.String(__ctx__.getVariableValue(&quot;../MAX_VALUE&quot;));&#xD;
+if(!maxValue.contains(&quot;.&quot;)) {&#xD;
+	__ctx__.publishVariable(&quot;../MAX_VALUE&quot;,maxValue+&quot;.0&quot;);&#xD;
+}&#xD;
+</code>
+      </actionCode>
+      <subProcess id="_tLDFjgujEeqZ9Mfh8X8Nmw" isBeginAction="false" name="Load Data" nbCycles="-1" repetitionMode="Parallelize" repetitionQuery="$split/split" repetitionVariableName="CUR_SPLIT" toleratedError="false">
+        <actionCode id="_ACu9MAukEeqZ9Mfh8X8Nmw" isBeginAction="false" name="Unload of data from source into file" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.SqlFileExportActionCodeI">
+          <link id="_BJmj0CGLEeqhyvwxe7V5YA" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_APym8CGLEeqhyvwxe7V5YA"/>
+          <parameter id="_ACu9MgukEeqZ9Mfh8X8Nmw" name="SQL_EXP_FILENAME" type="String" value="%x{md:paramValue($this,'workFolder')}x%/data_%x{$REF/tech:workName('','','false')}x%_%x{$CUR_SPLIT/@name}x%.dat"/>
+          <parameter id="_ACu9MwukEeqZ9Mfh8X8Nmw" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+          <parameter id="_ACu9NAukEeqZ9Mfh8X8Nmw" name="SQL_EXP_FILE_FORMAT" type="String" value="variable"/>
+          <parameter id="_ACu9NQukEeqZ9Mfh8X8Nmw" name="SQL_EXP_DATE_FORMAT" type="String" value="%x{md:ifEmpty(md:paramValue($this,'timestampFormat'),'yyyy-MM-dd HH:mm:ss')}x%"/>
+          <parameter id="_ACu9NgukEeqZ9Mfh8X8Nmw" name="SQL_EXP_FIELD_SEP" type="String" value="%x{md:paramValue($this,'fieldSeparator')}x%"/>
+          <parameter id="_ACu9NwukEeqZ9Mfh8X8Nmw" name="SQL_EXP_FETCH_SIZE" type="Integer" value="%x{md:ifEmpty(md:paramValue($this,'fetchSize'),'3000')}x%"/>
+          <parameter id="_ACu9OAukEeqZ9Mfh8X8Nmw" name="SQL_EXP_FILE_ENCODING" type="String" value="%x{md:paramValue($this,'fileEncoding')}x%"/>
+          <parameter id="_ACu9OQukEeqZ9Mfh8X8Nmw" name="SQL_EXP_STRING_DELIMITER" type="String" value="%x{md:paramValue($this,'stringDelimiter')}x%"/>
+          <parameter id="_ACu9OgukEeqZ9Mfh8X8Nmw" name="SQL_EXP_NUMERIC_SEPARATOR_CHAR" type="String" value="%x{md:ifEmpty(md:paramValue($this,'numericSeparator'),'.')}x%"/>
+          <parameter id="_ACu9OwukEeqZ9Mfh8X8Nmw" name="SQL_EXP_XROW_SEP" type="String" value="%x{md:ifEmpty(md:paramValue($this,'xRowSep'),'0D0A')}x%"/>
+          <parameter id="_ACu9PAukEeqZ9Mfh8X8Nmw" name="SQL_EXP_ROW_SEP_ON_LAST_ROW" type="Boolean" value="%x{md:ifEmpty(md:paramValue($this,'rowSepOnLastRow'),'false')}x%"/>
+          <parameter id="_ACu9PQukEeqZ9Mfh8X8Nmw" name="SQL_EXP_SHORT_DATE_FORMAT" type="String" value="%x{md:ifEmpty(md:paramValue($this,'dateFormat'),'yyyy-MM-dd')}x%"/>
+          <parameter id="_ACu9PgukEeqZ9Mfh8X8Nmw" name="SQL_EXP_NULL_VALUE_REPLACEMENT" type="String" value="%x{md:paramValue($this,'nullValueReplacement')}x%"/>
+          <parameter id="_ACu9PwukEeqZ9Mfh8X8Nmw" name="SQL_EXP_ROW_SEP" type="String" value="%x{md:paramValue($this,'rowSeparator')}x%"/>
+          <parameter id="_ACu9QAukEeqZ9Mfh8X8Nmw" name="SQL_EXP_MAX_FILE_SIZE" type="String" value="%x{md:paramValue($this,'splitFileSize')}x%"/>
+          <parameter id="_ACu9QQukEeqZ9Mfh8X8Nmw" name="SQL_EXP_FILE_ZIP_MODE" type="String" value="%x{md:paramValue($this,'compressionMode')}x%"/>
+          <parameter id="_ACu9QgukEeqZ9Mfh8X8Nmw" name="SQL_EXP_TIME_FORMAT" type="String" value="%x{md:paramValue($this,'timeFormat')}x%"/>
+          <parameter id="_ACu9QwukEeqZ9Mfh8X8Nmw" name="SQL_EXP_GENERATE_IF_EMPTY" type="Boolean" value="%x{md:paramValue($this,'generateIfEmpty')}x%"/>
+          <parameter id="_zup_YCI_Eeqhyvwxe7V5YA" name="SQL_EXP_XFIELD_SEP" type="String" value="%x{md:ifEmpty(md:paramValue($this,'xFieldSep'),'7E')}x%"/>
+          <parameter id="_z2SRYCI_Eeqhyvwxe7V5YA" name="SQL_EXP_XSTRING_DELIMITER" type="String" value="%x{md:paramValue($this,'xStringDelimiter')}x%"/>
+          <parameter id="_9V5AsKv6EeqaLNNRzTD2aw" name="SQL_EXP_BOOLEAN_AS_NUMERIC" type="Boolean" value="%x{md:ifEmpty(md:paramValue($this,'exportBooleanAsNumeric'), 'true')}x%"/>
+          <code>select	%x{md:paramValue($this,'selectHint')}x% %x{if (md:paramValue($this,'useDistinct')='true') then ' DISTINCT ' else ''}x%&#xD;
+		%x{md:patternList($REF/ref:columns(),'[expression] [columnAliasWord] [workName]', ',\n\t')}x%&#xD;
+		%x{if ($REF/tech:hasCdc()) then ', CDC_CHANGE_TYPE ' else '' }x%&#xD;
+		%x{if (md:paramValue($this,'fieldSeparatorAfterLastColumn')='true') then concat(', ', md:ifEmpty($REF/ref:source()/tech:nullSelectKeyword(),'NULL')) else ''}x%&#xD;
+from	%x{$REF/tech:fromPart()}x%&#xD;
+where	(1=1)&#xD;
+and (&#xD;
+%x{if($CUR_SPLIT/@name='1') then '1=1' else concat($splitSource/tech:alias(),'.',$splitColumn/tech:name(),' &amp;gt;  (${../../MIN_VALUE}$) + ((${../../MAX_VALUE}$)-(${../../MIN_VALUE}$))/',md:paramValue($this,'splitParallelDegree'),'*(',$CUR_SPLIT/@name,'-1)')}x% &#xD;
+%x{if($CUR_SPLIT/@name=md:paramValue($this,'splitParallelDegree')) then concat('or ',$splitSource/tech:alias(),'.',$splitColumn/tech:name(),' is null') else concat('and ',$splitSource/tech:alias(),'.',$splitColumn/tech:name(),' &amp;lt;= (${../../MIN_VALUE}$) + ((${../../MAX_VALUE}$)-(${../../MIN_VALUE}$))/',md:paramValue($this,'splitParallelDegree'),'*(',$CUR_SPLIT/@name,'  )')}x%&#xD;
+) &#xD;
+%xsl{&#xD;
+%x{$REF/tech:joinPart()}x%&#xD;
+%x{$REF/tech:filterPart()}x%&#xD;
+%x{$REF/tech:cdcFilterPart2($this)}x%&#xD;
+%x{$REF/tech:groupByPart()}x%&#xD;
+%x{$REF/tech:havingPart()}x%}xsl%</code>
+        </actionCode>
+        <actionCode id="_APym8CGLEeqhyvwxe7V5YA" generationCondition="'${enableFileTransport}$'!='false' and exists($xslTargetFtp)" isBeginAction="false" name="Put file on target server" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FtpPutActionCodeI">
+          <parameter id="_APym8SGLEeqhyvwxe7V5YA" name="FTP_HOSTNAME" type="String" value="%x{$xslTargetFtp/tech:host()}x%"/>
+          <parameter id="_APym8iGLEeqhyvwxe7V5YA" name="FTP_USER" type="String" value="%x{$xslTargetFtp/tech:user()}x%"/>
+          <parameter id="_APym8yGLEeqhyvwxe7V5YA" name="FTP_PASSWORD" type="String" value="%x{$xslTargetFtp/tech:password()}x%"/>
+          <parameter id="_APym9CGLEeqhyvwxe7V5YA" name="FTP_REMOTE_PATH" type="String" value="%x{$xslTargetFtp/tech:path()}x%"/>
+          <parameter id="_APym9SGLEeqhyvwxe7V5YA" name="FTP_LOCAL_FILENAME" type="String" value="data_%x{$REF/tech:workName('','','false')}x%_%x{$CUR_SPLIT/@name}x%.dat"/>
+          <parameter id="_APym9iGLEeqhyvwxe7V5YA" name="FTP_LOCAL_PATH" type="String" value="%x{md:paramValue($this,'workFolder')}x%"/>
+          <parameter id="_APym9yGLEeqhyvwxe7V5YA" name="FTP_PORT" type="Integer" value="%x{$xslTargetFtp/tech:port()}x%"/>
+          <parameter id="_APym-CGLEeqhyvwxe7V5YA" name="PROXY_HOST" type="String" value="%x{$xslTargetFtp/tech:proxyHost()}x%"/>
+          <parameter id="_APym-SGLEeqhyvwxe7V5YA" name="PROXY_PORT" type="Integer" value="%x{$xslTargetFtp/tech:proxyPort()}x%"/>
+          <parameter id="_APym-iGLEeqhyvwxe7V5YA" name="PROXY_USER" type="String" value="%x{$xslTargetFtp/tech:proxyUser()}x%"/>
+          <parameter id="_APym-yGLEeqhyvwxe7V5YA" name="PROXY_PASSWORD" type="String" value="%x{$xslTargetFtp/tech:proxyPassword()}x%"/>
+          <parameter id="_APym_CGLEeqhyvwxe7V5YA" name="FTP_FILE_MODE" type="String" value="%x{md:ifEmpty(md:paramValue($this,'ftpFileMode'),'ascii')}x%"/>
+        </actionCode>
+      </subProcess>
+      <xslVariable id="_NNmRYB_vEeqEeqsChWXq_w" code="($REF/ref:sources()/ref:columns()[tech:tag()='SPLIT_BY'])[1]" name="splitColumn" type="xpath"/>
+      <xslVariable id="_NNyeoB_vEeqEeqsChWXq_w" code="$REF/source[ref:target()/ref:columns()/@id=$splitColumn/@id]" name="splitSource" order="1" type="xpath"/>
+    </subProcess>
+    <templateType>L-TP.RDBMS.LOADING</templateType>
+    <xslVariable id="_T3-f4OcwEeeRC9QIVzDkAA" code="select&#x9;%x{md:paramValue($this,'selectHint')}x% %x{if (md:paramValue($this,'useDistinct')='true') then ' DISTINCT ' else ''}x%&#xD;&#xA;&#x9;&#x9;%x{md:patternList($REF/ref:columns(),'[expression] [columnAliasWord] [workName]', ',\n\t')}x%&#xD;&#xA;&#x9;&#x9;%x{if ($REF/tech:hasCdc()) then ', CDC_CHANGE_TYPE ' else '' }x%&#xD;&#xA;&#x9;&#x9;%x{if (md:paramValue($this,'fieldSeparatorAfterLastColumn')='true') then concat(', ', md:ifEmpty($REF/ref:source()/tech:nullSelectKeyword(),'NULL')) else ''}x%&#xD;&#xA;from&#x9;%x{$REF/tech:fromPart()}x%&#xD;&#xA;where&#x9;(1=1)&#xD;&#xA;%x{$REF/tech:joinPart()}x%&#xD;&#xA;%x{$REF/tech:filterPart()}x%&#xD;&#xA;%x{$REF/tech:cdcFilterPart2($this)}x%&#xD;&#xA;%x{$REF/tech:groupByPart()}x%&#xD;&#xA;%x{$REF/tech:havingPart()}x%" name="select" type="xsl"/>
+    <xslVariable id="_3mlUYB_oEeqEeqsChWXq_w" code="%xsl{&#xD;&#xA;&lt;split name=&quot;1&quot;/> &#xD;&#xA;&lt;xsl:if test=&quot;count($REF/ref:sources()/ref:columns()[tech:tag()='SPLIT_BY'])>0&quot;>&#xD;&#xA;&lt;xsl:for-each select=&quot;2 to md:ifEmpty(md:paramValue($this,'splitParallelDegree'),'4')&quot;>&#xD;&#xA;&lt;split name=&quot;{.}&quot;/>&#xD;&#xA;&lt;/xsl:for-each>&#xD;&#xA;&lt;/xsl:if>&#xD;&#xA;}xsl%" name="split" type="xsl"/>
+  </subProcess>
+  <subProcess id="_kxpJFJThEd-tv7v5yj0V3Q" name="Clean">
+    <actionCode id="_kxpJFZThEd-tv7v5yj0V3Q" generationCondition="'${cleanTemporaryObjects}$'='true' and not('${disableWorkTableCreation}$' = 'true')" isBeginAction="false" name="Drop of load table" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_kxpJFpThEd-tv7v5yj0V3Q" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_kxpJGpThEd-tv7v5yj0V3Q"/>
+      <link id="_sYGnwAx2EeqZ9Mfh8X8Nmw" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_h8RiEAx2EeqZ9Mfh8X8Nmw"/>
+      <parameter id="_kxpJF5ThEd-tv7v5yj0V3Q" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_kxpJGJThEd-tv7v5yj0V3Q" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_kxpJGZThEd-tv7v5yj0V3Q" name="SQL_TRANSACTION_TYPE" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then 'NOCOMMIT' else 'AUTOCOMMIT' }x%"/>
+      <parameter id="_sw4_sOiHEeGCDfZuhYd9mg" name="SQL_TRANSACTION_NAME" type="String" value="%x{if (md:paramValue($this,'useTransactionOnWorkTables')='true') then md:paramValue($this,'transactionName') else '' }x%"/>
+      <code>drop table %x{md:physicalPath($REF,'workName')}x%</code>
+    </actionCode>
+    <actionCode id="_kxpJGpThEd-tv7v5yj0V3Q" generationCondition="'${cleanTemporaryObjects}$'='true' and count($split/split)&lt;=1" isBeginAction="false" name="Deletion of temporary file" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+      <link id="_hq31QH8fEeaNXend0GS2Bg" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_hWLXoH8fEeaNXend0GS2Bg"/>
+      <parameter id="_3X0Z4C4xEeq0iqfJWZJxJA" name="DEL_DIR" type="String" value="%x{md:paramValue($this,'workFolder')}x%/"/>
+      <parameter id="_5ZNC0C4xEeq0iqfJWZJxJA" name="DEL_INCLUDES" type="String" value="data_%x{$REF/tech:workName('','','false')}x%.dat"/>
+    </actionCode>
+    <actionCode id="_kxpJHJThEd-tv7v5yj0V3Q" generationCondition="not(md:paramValue($this, 'unlockCdcTable')='false')" isBeginAction="false" name="Unlock of CDC table" nbCycles="-1" repetitionMode="Parallelize" repetitionQuery="mdj:xpath($REF,'FROM_REF')[mdj:xpath(.,'IS_CDC')]" repetitionVariableName="CDC" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_kxpJHZThEd-tv7v5yj0V3Q" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_kxpJFZThEd-tv7v5yj0V3Q"/>
+      <parameter id="_kxpJHpThEd-tv7v5yj0V3Q" name="SQL_CONNECTION" type="String" value="%sourceConnection{$REF}%"/>
+      <parameter id="_kxpJH5ThEd-tv7v5yj0V3Q" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_sbB08CUCEeKLkbBnXY6L_g" name="SQL_MULTI_QUERYS" type="String" value="true"/>
+      <code>%x{$CDC/ref:target()/tech:cdcDeleteDml()}x%&#xD;
+Where	CDC_CONSUMMATION = '1'&#xD;
+%x{$CDC/tech:cdcFilterPart($this)}x%</code>
+    </actionCode>
+    <actionCode id="_hWLXoH8fEeaNXend0GS2Bg" generationCondition="exists($xslTargetFtp) and '${cleanTemporaryObjects}$'='true' and '${enableFileTransport}$'!='false'" isBeginAction="false" name="FtpCommand" nbCycles="-1" toleratedError="true" technology="com.indy.engine.actionCodes.FtpExecActionCodeI">
+      <parameter id="_hWLXon8fEeaNXend0GS2Bg" name="FTP_HOSTNAME" type="String" value="%x{$xslTargetFtp/tech:host()}x%"/>
+      <parameter id="_hWLXo38fEeaNXend0GS2Bg" name="FTP_USER" type="String" value="%x{$xslTargetFtp/tech:user()}x%"/>
+      <parameter id="_hWLXpH8fEeaNXend0GS2Bg" name="FTP_PORT" type="String" value="%x{$xslTargetFtp/tech:port()}x%"/>
+      <parameter id="_hWLXpX8fEeaNXend0GS2Bg" name="FTP_PASSWORD" type="String" value="%x{$xslTargetFtp/tech:password()}x%"/>
+      <parameter id="_hWLXpn8fEeaNXend0GS2Bg" name="FTP_FILE_MODE" type="String" value="binary"/>
+      <parameter id="_hWLXp38fEeaNXend0GS2Bg" name="FTP_REMOTE_PATH" type="String" value="%x{$xslTargetFtp/tech:systemPath()}x%"/>
+      <code>CWD %x{$xslTargetFtp/tech:systemPath()}x%&#xD;
+DELE data_%x{$REF/tech:workName('','','false')}x%.dat</code>
+    </actionCode>
+    <actionCode id="_h8RiEAx2EeqZ9Mfh8X8Nmw" generationCondition="'${cleanTemporaryObjects}$'='true' and count($split/split)>1" enable="true" isBeginAction="false" name="Deletion of temporary file - split mode" nbCycles="-1" repetitionMode="Parallelize" repetitionQuery="$split/split" repetitionVariableName="CUR_SPLIT" toleratedError="true" technology="com.indy.engine.actionCodes.FileDeleteActionCodeI">
+      <parameter id="_gWzVUC4xEeq0iqfJWZJxJA" name="DEL_DIR" type="String" value="%x{md:paramValue($this,'workFolder')}x%/"/>
+      <parameter id="_qSQ44C4xEeq0iqfJWZJxJA" name="DEL_INCLUDES" type="String" value="data_%x{$REF/tech:workName('','','false')}x%_%x{$CUR_SPLIT/@name}x%.dat"/>
+    </actionCode>
+    <templateType>L-TP.RDBMS.CLEANING</templateType>
+    <xslVariable id="_YKrm0B_rEeqEeqsChWXq_w" code="%xsl{&#xD;&#xA;&lt;xsl:for-each select=&quot;1 to md:ifEmpty(md:paramValue($this,'splitParallelDegree'),'4')&quot;>&#xD;&#xA;&lt;split name=&quot;{.}&quot;/>&#xD;&#xA;&lt;/xsl:for-each>&#xD;&#xA;}xsl%" name="split" type="xsl"/>
+  </subProcess>
+  <templateType>L-TP.RDBMS</templateType>
+</proc:process>

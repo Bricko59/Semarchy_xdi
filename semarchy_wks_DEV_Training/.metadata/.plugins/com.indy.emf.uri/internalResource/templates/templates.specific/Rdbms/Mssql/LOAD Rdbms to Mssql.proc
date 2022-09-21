@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proc:process xmlns:proc="http://www.example.org/proc" description="This template is used to load data from any database into Microsoft SQL Server using the BULK statement or the BCP utility.&#xD;&#xA;Source data is first exported to a file, which is then loaded into SQL Server.&#xD;&#xA;&#xD;&#xA;Refer to the description of each Parameter for more information.&#xD;&#xA;&#xD;&#xA;&#xD;&#xA;History:&#xD;&#xA;02/07/2021&#x9;Genreate list of arguments used by bcp in BCP_ARGUMENTS variable and bcp command in BCP_COMMAND variable&#xD;&#xA;30/06/2021     Add Code Page parameter&#xD;&#xA;13/11/2020&#x9;Bug fix: bad file name when work table name contains object delimiter characters&#xD;&#xA;16/06/2020&#x9;New Parameters 'Unlock Cdc Table' and 'Lock Cdc Table'&#xD;&#xA;20/04/2018&#x9;Rename template&#xD;&#xA;20/04/2018&#x9;New parameters &quot;Record Separator&quot; and &quot;Row Terminator&quot;&#xD;&#xA;20/04/2018&#x9;The record separator is now also added on the last written record, to avoid it not to be loaded&#xD;&#xA;10/04/2018&#x9;Issue &quot;Invalid character...&quot; when using complex separators with BCP fixed&#xD;&#xA;27/03/2018  Support using BCP command to load data&#xD;&#xA;19/09/2017&#x9;The 'Path On Server' parameter is now also used to specify BULK's file path when the FTP transfer option is not used&#xD;&#xA;19/09/2017&#x9;New 'Clean Initial Temporary Objects' parameter to manage the drop statement performed at the template's start&#xD;&#xA;15/02/2017&#x9;Fix missing xslTargetFtp on clean step&#xD;&#xA;15/02/2017  Initialize template history" id="_g8DKkZTREd-A7bm8ettXjQ" isBeginAction="false" name="LOAD Rdbms to Mssql" nbCycles="-1" toleratedError="false">
+  <parameter description="If true, the exported file containing source data is sent to the target server through FTP.&#xD;&#xA;For this, a FTP folder Metadata Link must be added on the SQL Server target table's Metadata.&#xD;&#xA;The link must be named 'TARGET_FTP'.&#xD;&#xA;&#xD;&#xA;This is useful if the Runtime is not located on the same machine as the target SQL server machine." id="_3iOeeZWbEd-WsbbwTwQ1vg" metaInf="" name="enableFileTransport" type="Boolean" value="true"/>
+  <parameter description="If true, the temporary objects created during the load are removed at the end of the process" id="_3iOeeJWbEd-WsbbwTwQ1vg" name="cleanTemporaryObjects" type="Boolean" value="true"/>
+  <parameter description="If true, a DISTINCT statement will be added on the query extracting source data into a file.&#xD;&#xA;This is used to avoid having duplicates." id="_9P5SEOujEeG7fte7iUkMug" name="useDistinct" type="Boolean" value="false"/>
+  <parameter description="If true, the template will try at start to remove the temporary objects that will be created during the load, to be sure that those objects don't already exist before processing.&#xD;&#xA;&#xD;&#xA;This can be disabled to avoid unnecessary operations that might be time consuming in some environments.&#xD;&#xA;For instance, when using this template in a Semarchy Web Service, with dynamic work names, in which it is so useless to try dropping those objects at start.&#xD;&#xA;" id="_A3dbMJ0UEeekQOSyujLVoQ" name="cleanInitialTemporaryObjects" type="Boolean" value="true"/>
+  <parameter description="If set to true BCP utility will connect to SQL Server with a trusted connection using integrated security (option -T).&#xD;&#xA;If set to false, BCP will use user and password configured on the target metadata server to connect (options -U and -P)." id="_4P62gSK-Eei57uQWj6LrSQ" name="useTrustedConnection" type="Boolean"/>
+  <parameter description="Specifies the method to use for loading data into SQL Server.&#xD;&#xA;&#xD;&#xA;- BULK: &#xD;&#xA;The BULK statement is used to load the temporary files into SQL Server.&#xD;&#xA;This statement requires the temporary files to be located on the SQL Server machine to be able to load it.&#xD;&#xA;&#xD;&#xA;The 'enable File Transport' option can be used to automatically send them through FTP.&#xD;&#xA;Alternatively, you can install the Runtime executing the Mapping directly on the target SQL Server machine.&#xD;&#xA;&#xD;&#xA;To get more information on how to configure MS SQL Server metadata in this case please consult the following article on stambia.org&#xD;&#xA;http://stambia.org/doc/113-technology-articles/sql-server/221-using-bulk-load-on-a-distant-server-with-enablefiletransport-option&#xD;&#xA;&#xD;&#xA;- BCP:&#xD;&#xA;The BCP command line utility is used to load the temporary files into SQL Server.&#xD;&#xA;Make sure that the utility is available on the Runtime's machine for this mode to work." id="_9YN1cCtjEeirtMYH4GAa7g" metaInf="&lt;metaInf id=&quot;value&quot;  value=&quot;BULK&quot;/>&#xD;&#xA;&lt;metaInf id=&quot;value&quot;  value=&quot;BCP&quot;/>" name="loadMethod" type="String" value="BULK"/>
+  <parameter description="Defines the encoding to use for the exported file." id="_3iOedJWbEd-WsbbwTwQ1vg" name="fileEncoding" type="String" value=""/>
+  <parameter description="Character used to separate the records when extracting data in temporary files.&#xD;&#xA;&#xD;&#xA;Please see also 'Row Terminator' parameter to specify the character that will be defined in the BULK / BCP command loading data.&#xD;&#xA;There is two parametesr because SQL Server automatically prefixes '\n' with '\r'.&#xD;&#xA;Make sure that both parameters are well set accordingly to this rule." id="_x5s6MDy7EeiAIeJqHKHabA" name="recordSeparator" type="String" value="\r\n"/>
+  <parameter description="Separator specified in the BULK / BCP command to load the generated temporary files.&#xD;&#xA;&#xD;&#xA;Please note that SQL Server automatically prefixes '\n' with '\r' which results in a row terminator '\r\n'.&#xD;&#xA;So if the records are separated with '\r\n' in the temporary files, for instance, you must set this parameter to '\n'.&#xD;&#xA;See 'Record Separator' for defining the record separator of the temporary files." id="_4P62gyK-Eei57uQWj6LrSQ" name="rowTerminator" type="String" value="\n"/>
+  <parameter description="ASCII field separator used to separate the fields in the exported file.&#xD;&#xA;It may be composed of several characters. \n, \r, \t and \f can be used to specify special characters. " id="_3iOecpWbEd-WsbbwTwQ1vg" name="fieldSeparator" type="String" value="~"/>
+  <parameter description="Decimal Symbol used in the exported file." id="_3iOedpWbEd-WsbbwTwQ1vg" name="numericSeparator" type="String" value=""/>
+  <parameter description="ASCII character used to delimit strings in the exported file." id="_3iOec5WbEd-WsbbwTwQ1vg" name="stringDelimiter" type="String" value=""/>
+  <parameter description="Format used for Date columns." id="_3iOecZWbEd-WsbbwTwQ1vg" name="dateFormat" type="String" value="yyyy-MM-dd"/>
+  <parameter description="Local path where source data will be exported into a file.&#xD;&#xA;This defaults to the temporary folder of the runtime." id="_3iOecJWbEd-WsbbwTwQ1vg" name="workFolder" type="String" value="${/CORE_JAVA_TEMPORARY_FOLDER}$"/>
+  <parameter description="Absolute path to the folder where the temporary load file is located on the server.&#xD;&#xA;This is optional and will be used to specify the file's path indicated in the BULK statement.&#xD;&#xA;&#xD;&#xA;If this parameter is not set, the template will use automatically the following value, depending on the context:&#xD;&#xA;- If using the 'Enable File Transport' option to first send the file through FTP, the path specified by the FTP Metadata Link will be used.&#xD;&#xA;- If not using the 'Enable File Transport', the 'Work Folder' will be used." id="_3iOed5WbEd-WsbbwTwQ1vg" name="pathOnServer" type="String"/>
+  <parameter description="Specifies an expression that is added just after the 'select' keyword of the query extracting source data into a file." id="_73T4YOnzEeCN0bP3SFNOuA" name="selectHint" type="String" value=""/>
+  <parameter description="The JDBC Fetch size (number of lines) used when querying the source database.&#xD;&#xA;Larger values provide better performance but consume more memory in the Runtime as the data is stored in the Memory before being sent to the Load table." id="_3iOedZWbEd-WsbbwTwQ1vg" name="fetchSize" type="String" value="30000"/>
+  <parameter description="Allows to specify the maximum number of syntax errors that can occur before the bcp operation is cancalled (option -m)" id="_4P62giK-Eei57uQWj6LrSQ" name="maximumNumberOfErrors" type="Integer"/>
+  <parameter description="CDC Subscriber to use when CDC has been enabled on a source table." id="_JaK30IeTEeOEXIUv03CbFQ" name="cdcSubscriber" type="String"/>
+  <parameter description="Code Page used in BULK and BCP Load.&#xD;&#xA;&#xD;&#xA;For more details please refer to MS SQL Server documentation." id="969af18a-9a9f-4d88-a960-7aab30d63724" name="codePage" type="String" value=""/>
+  <parameter description="When a source table is used as CDC a lock is performed on it. It makes the changed data available in the Mapping.&#xD;&#xA;If set to false, the Lock must have been performed as part of a previous Mapping." id="_nFNjwLFnEeqAJL64qj9Gxw" name="lockCdcTable" type="Boolean" value="true"/>
+  <parameter description="When a source table is used as CDC an unlock is performed on it after processing. It marks the changed data as consumed.&#xD;&#xA;If set to false, the Unlock must be performed as part of an upcoming Mapping." id="_nFU4gLFnEeqAJL64qj9Gxw" name="unlockCdcTable" type="Boolean" value="true"/>
+  <subProcess id="_g8DKnJTREd-A7bm8ettXjQ" name="Load">
+    <link id="_IrnK4JTkEd-tv7v5yj0V3Q" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_672PQJTjEd-tv7v5yj0V3Q?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=Clean?"/>
+    <parameter id="_VBJqZGHbEeCzVZziNbSfyw" name="realPathOnServer" type="String" value="%x{ &#xD;&#xA;if (not(exists($xslTargetFtp) and md:paramValue($this,'enableFileTransport')='true'))&#xD;&#xA;&#x9;then md:ifEmpty(md:paramValue($this,'pathOnServer'),md:paramValue($this,'workFolder'))&#xD;&#xA; &#x9;else md:ifEmpty(md:paramValue($this,'pathOnServer'),$xslTargetFtp/tech:systemPath())&#xD;&#xA;}x%"/>
+    <actionCode id="_g8DKqJTREd-A7bm8ettXjQ" generationCondition="not(md:paramValue($this, 'loadMethod')= 'BCP')" isBeginAction="false" name="Load into target with BULK" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.JdbcActionCodeI">
+      <link id="_g8DKqZTREd-A7bm8ettXjQ" executionType="OK" generationType="OK" mandatory="1"/>
+      <parameter id="_g8DKqpTREd-A7bm8ettXjQ" name="SQL_CONNECTION" type="String" value="%targetConnection{$REF}%"/>
+      <parameter id="_g8DKq5TREd-A7bm8ettXjQ" name="SQL_ACTION_TYPE" type="String" value="DDL_DML"/>
+      <parameter id="_g8DKrJTREd-A7bm8ettXjQ" name="SQL_TRANSACTION_TYPE" type="String" value="AUTOCOMMIT"/>
+      <code>BULK INSERT	%x{md:physicalPath($REF,'workName')}x%
+FROM 		'${../realPathOnServer}$/data_%x{$REF/tech:workName('','','false')}x%.dat'
+WITH		(
+			FIELDTERMINATOR = '%x{md:paramValue($this,'fieldSeparator')}x%',
+			ROWTERMINATOR = '%x{md:ifEmpty(md:paramValue($this,'rowTerminator'),'\n')}x%',
+			CODEPAGE = '%x{md:ifEmpty(md:paramValue($this,'codePage'),'ACP')}x%'
+		)
+		
+		</code>
+    </actionCode>
+    <actionCode id="_CI3QKQugEeGY683Q7iR8Eg" isBeginAction="false" name="FileExists" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.FileWaitActionCodeI">
+      <link id="_CI3QKgugEeGY683Q7iR8Eg" executionCondition="${FileExists/NB_FILES}$==0" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_CJBBEAugEeGY683Q7iR8Eg"/>
+      <link id="_DqT0sAugEeGY683Q7iR8Eg" executionCondition="${FileExists/NB_FILES}$==1" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_b5bFMESjEeiDY-MtyvSCww"/>
+      <parameter id="_CI3QLQugEeGY683Q7iR8Eg" name="WAIT_FILE" type="String" value="%x{md:paramValue($this,'workFolder')}x%/data_%x{$REF/tech:workName('','','false')}x%.dat"/>
+      <parameter id="_CI3QLgugEeGY683Q7iR8Eg" name="WAIT_FILE_NB_FILES" type="String" value="1"/>
+      <parameter id="_CI3QLwugEeGY683Q7iR8Eg" name="WAIT_FILE_POLLINT" type="String" value="0"/>
+      <parameter id="_CI3QMAugEeGY683Q7iR8Eg" name="WAIT_FILE_TIMEOUT" type="String" value="0"/>
+    </actionCode>
+    <actionCode id="_CJBBEAugEeGY683Q7iR8Eg" isBeginAction="false" name="NoFile" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI"/>
+    <actionCode id="_PGY38CK_Eei57uQWj6LrSQ" generationCondition="md:paramValue($this, 'loadMethod')= 'BCP'" enable="true" isBeginAction="false" name="BCP load" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.ScriptingActionCodeI">
+      <parameter description="Scripting language (Rhino, Jython, etc.)" id="_PGY38SK_Eei57uQWj6LrSQ" name="SCRIPTING_LANGUAGE" type="String" value="rhino"/>
+      <code>importPackage(java.lang);&#xD;
+importPackage(java.io);&#xD;
+&#xD;
+dataFilePath = &quot;%x{md:paramValue($this,'workFolder')}x%/data_%x{$REF/tech:workName('','','false')}x%.dat&quot;;&#xD;
+/*Append line separator to the last line&#xD;
+&#xD;
+dataFile = new BufferedWriter(new FileWriter(dataFilePath, true));&#xD;
+dataFile.append(&quot;%x{md:ifEmpty(md:paramValue($this,'recordSeparator'),'\r\n')}x%&quot;);&#xD;
+dataFile.close(); */&#xD;
+&#xD;
+&#xD;
+tempFolder = &quot;${/CORE_JAVA_TEMPORARY_FOLDER}$&quot;;&#xD;
+command = new java.lang.String();&#xD;
+osName=System.getProperty(&quot;os.name&quot;).toLowerCase();&#xD;
+&#xD;
+ii=0;&#xD;
+args=new Array();&#xD;
+&#xD;
+if (osName.startsWith(&quot;win&quot;)) {&#xD;
+  command = command + &quot;cmd.exe /c &quot;;&#xD;
+  args[ii++]=&quot;cmd.exe&quot;;&#xD;
+  args[ii++]=&quot;/c&quot;;&#xD;
+}&#xD;
+command = command + &quot;bcp  %x{md:physicalPath($REF,'workName')}x% IN \&quot;&quot; + dataFilePath + &quot;\&quot;&quot;;&#xD;
+command = command + &quot; -c &quot;;&#xD;
+command = command + &quot;-C \&quot;%x{md:paramValue($this,'codePage')}x%\&quot; &quot;;&#xD;
+&#xD;
+if  ('%x{md:paramValue($this,'useTrustedConnection')}x%') {&#xD;
+	command = command + &quot;-T &quot;;&#xD;
+	}else{	&#xD;
+		command = command + &quot;-U %x{$REF/ref:target()/tech:jdbcUser()}x% &quot;;&#xD;
+	command = command + &quot;-P %x{$REF/ref:target()/tech:jdbcPassword()}x% &quot;; }&#xD;
+command = command + &quot;-S \&quot;%x{replace($REF/ref:target()/tech:serverName(),&quot;\\&quot;,&quot;\\\\&quot;)}x%\&quot; &quot;;&#xD;
+command = command + &quot;-t \&quot;%x{md:paramValue($this,'fieldSeparator')}x%\&quot; &quot;;&#xD;
+command = command + &quot;-r \&quot;%x{md:ifEmpty(md:paramValue($this,'rowTerminator'),'\n')}x%\&quot; &quot;;&#xD;
+%x{md:encloseIfNotEmpty(md:paramValue($this, 'maximumNumberOfErrors'), 'command = command + &quot;-m ', ' &quot;; ')}x%&#xD;
+%x{md:encloseIfNotEmpty(md:paramValue($this, 'importBatchSize'), 'command = command + &quot;-b ', ' &quot;; ')}x%&#xD;
+&#xD;
+command = command.replace(/\n/g, &quot;\\n&quot;);&#xD;
+&#xD;
+&#xD;
+&#xD;
+&#xD;
+args[ii++]=&quot;bcp&quot;;&#xD;
+args[ii++]=&quot;%x{md:physicalPath($REF,'workName')}x%&quot;;&#xD;
+args[ii++]=&quot;IN&quot;;&#xD;
+args[ii++]=dataFilePath;&#xD;
+args[ii++]=&quot;-c&quot;;&#xD;
+&#xD;
+args[ii++]=&quot;-C&quot;;&#xD;
+args[ii++]=&quot;%x{md:paramValue($this,'codePage')}x%&quot;;&#xD;
+&#xD;
+if  ('%x{md:paramValue($this,'useTrustedConnection')}x%' == 'true') {&#xD;
+	args[ii++]=&quot;-T&quot;;&#xD;
+}else{&#xD;
+	args[ii++]=&quot;-U&quot;;&#xD;
+	args[ii++]=&quot;%x{$REF/ref:target()/tech:jdbcUser()}x%&quot;;&#xD;
+	args[ii++]=&quot;-P&quot;;&#xD;
+	args[ii++]=&quot;%x{$REF/ref:target()/tech:jdbcPassword()}x%&quot;;&#xD;
+}&#xD;
+args[ii++]=&quot;-S&quot;;&#xD;
+args[ii++]=&quot;%x{replace($REF/ref:target()/tech:serverName(),&quot;\\&quot;,&quot;\\\\&quot;)}x%&quot;;&#xD;
+args[ii++]=&quot;-t&quot;;&#xD;
+args[ii++]=&quot;\&quot;%x{md:paramValue($this,'fieldSeparator')}x%\&quot;&quot;;&#xD;
+args[ii++]=&quot;-r&quot;;&#xD;
+args[ii++]=&quot;\&quot;%x{replace(md:ifEmpty(md:paramValue($this,'rowTerminator'),'\n'),'\\n','\\\\n')}x%\&quot;&quot;;&#xD;
+&#xD;
+if  ('%x{md:paramValue($this,'maximumNumberOfErrors')}x%') {&#xD;
+	args[ii++]=&quot;-m&quot;;&#xD;
+	args[ii++]=&quot;%x{md:paramValue($this,'maximumNumberOfErrors')}x%&quot;;&#xD;
+}&#xD;
+&#xD;
+if  ('%x{md:paramValue($this,'importBatchSize')}x%') {&#xD;
+	args[ii++]=&quot;-b&quot;;&#xD;
+	args[ii++]=&quot;%x{md:paramValue($this,'importBatchSize')}x%&quot;;&#xD;
+}&#xD;
+&#xD;
+__ctx__.publishVariable(&quot;./BCP_ARGUMENTS&quot;,args, true);&#xD;
+__ctx__.publishVariable(&quot;./BCP_COMMAND&quot;,command, true);&#xD;
+&#xD;
+var psr;&#xD;
+try{&#xD;
+osRuntime = Runtime.getRuntime();&#xD;
+//osProc=osRuntime.exec(command, null, new File(tempFolder));&#xD;
+osProc=osRuntime.exec(args, null, new File(tempFolder));&#xD;
+&#xD;
+_in = new java.lang.StringBuffer();&#xD;
+_err = new java.lang.StringBuffer();&#xD;
+&#xD;
+psr=com.indy.engine.common.tools.ProcessWrapper.wrap(osProc);&#xD;
+psr.setInputStringBuffer(_in,-1);&#xD;
+psr.setErrorStringBuffer(_err,-1);&#xD;
+ret=psr.waitFor();&#xD;
+&#xD;
+if (_err.length()>0){&#xD;
+	__ctx__.publishVariable(&quot;./BCP_ERROR&quot;,_err.toString(), true);&#xD;
+}&#xD;
+&#xD;
+&#xD;
+if (_in.length()>0){&#xD;
+	str_out = _in.toString();&#xD;
+	__ctx__.publishVariable(&quot;./BCP_STDOUT&quot;,str_out, true);&#xD;
+}&#xD;
+&#xD;
+if (ret!= 0) {&#xD;
+	throw &quot;The SQL Server BCP utility raised an error.&quot;;&#xD;
+}&#xD;
+}finally{&#xD;
+	if (psr!=null) {&#xD;
+		psr.destroy();&#xD;
+	}&#xD;
+	if (str_out != null){&#xD;
+		str_exp_label = new java.lang.String(&quot; lignes copi&quot;);&#xD;
+		indexOfStart = str_out.lastIndexOf(&quot;\n&quot;,str_out.indexOf(str_exp_label))+1;&#xD;
+		/*__ctx__.publishVariable(&quot;./IndexStart&quot;,str_out.lastIndexOf(&quot;\n&quot;,str_out.indexOf(str_exp_label))+2, true);*/&#xD;
+		__ctx__.publishVariable(&quot;./SQL_NB_ROWS&quot;,str_out.slice(indexOfStart,str_out.indexOf(&quot; &quot;,indexOfStart)), &quot;Integer&quot;, true);&#xD;
+	}&#xD;
+&#xD;
+}&#xD;
+&#xD;
+</code>
+    </actionCode>
+    <actionCode id="_b5bFMESjEeiDY-MtyvSCww" isBeginAction="false" name="File Found" nbCycles="-1" toleratedError="false" technology="com.indy.engine.actionCodes.EmptyActionCodeI">
+      <link id="_g-qgsESjEeiDY-MtyvSCww" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_g8DKqJTREd-A7bm8ettXjQ"/>
+      <link id="_hq1qMESjEeiDY-MtyvSCww" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_PGY38CK_Eei57uQWj6LrSQ"/>
+    </actionCode>
+    <actionProcessRef id="_EddIYJTkEd-tv7v5yj0V3Q" isBeginAction="false" name="Unload" nbCycles="-1" toleratedError="false" targetName="resource.proc#_kxpI3ZThEd-tv7v5yj0V3Q?fileId=_kxpI0pThEd-tv7v5yj0V3Q$type=proc$name=Unload?">
+      <link id="_FALa8JTkEd-tv7v5yj0V3Q" executionType="OK" generationType="OK_KO" mandatory="1" targetId="_CI3QKQugEeGY683Q7iR8Eg"/>
+      <parameter id="_A9pGwDM1Eei8ZvdePwKyvA" name="rowSepOnLastRow" type="Boolean" value="true"/>
+      <parameter id="_2Z5H4Dy7EeiAIeJqHKHabA" name="rowSeparator" ref="#_x5s6MDy7EeiAIeJqHKHabA" type="String" value=""/>
+    </actionProcessRef>
+    <templateType>L-TP.RDBMS.LOADING</templateType>
+    <xslVariable id="_6bTIxWG8EeCjTct7AQOqFQ" code="$REF/ref:target()/mdj:xpath('$TARGET_FTP')" name="xslTargetFtp" type="xpath"/>
+  </subProcess>
+  <subProcess id="_672PQJTjEd-tv7v5yj0V3Q" isBeginAction="false" name="Clean" nbCycles="-1" toleratedError="false">
+    <actionProcessRef id="_RatB8JTkEd-tv7v5yj0V3Q" isBeginAction="false" name="Clean" nbCycles="-1" toleratedError="false" targetName="resource.proc#_kxpJFJThEd-tv7v5yj0V3Q?fileId=_kxpI0pThEd-tv7v5yj0V3Q$type=proc$name=Clean?"/>
+    <templateType>L-TP.RDBMS.CLEANING</templateType>
+    <xslVariable id="_9hfDwPNzEeamFOsXkV_lPA" code="$REF/ref:target()/mdj:xpath('$TARGET_FTP')" name="xslTargetFtp" type="xpath"/>
+  </subProcess>
+  <templateType>L-TP.RDBMS</templateType>
+  <diagram><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.1/notation" xmlns:proc="http://www.example.org/proc" xsi:schemaLocation="http://www.eclipse.org/gmf/runtime/1.0.1/notation http://www.eclipse.org/gmf/runtime/1.0.2/notation#/?fileId=_g8DKkZTREd-A7bm8ettXjQ?">
+  <notation:Diagram xmi:id="_vBBp0N8dEeuB674VnNuGfQ" type="Proc" measurementUnit="Pixel">
+    <children xmi:type="notation:Node" xmi:id="_vB5MhN8dEeuB674VnNuGfQ" type="2004">
+      <children xmi:type="notation:Node" xmi:id="_vB5zkN8dEeuB674VnNuGfQ" type="5004"/>
+      <children xmi:type="notation:Node" xmi:id="_vB5zkd8dEeuB674VnNuGfQ" type="7005">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_vB5zkt8dEeuB674VnNuGfQ"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_vB5zk98dEeuB674VnNuGfQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_vB5zlN8dEeuB674VnNuGfQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_vB5zld8dEeuB674VnNuGfQ" type="7006">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_vB5zlt8dEeuB674VnNuGfQ"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_vB5zl98dEeuB674VnNuGfQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_vB5zmN8dEeuB674VnNuGfQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vB5Mhd8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <styles xmi:type="notation:HintedDiagramLinkStyle" xmi:id="_vB5Mht8dEeuB674VnNuGfQ"/>
+      <element xmi:type="proc:SubActionProcess" href="resource.proc#_672PQJTjEd-tv7v5yj0V3Q?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=Clean?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vB5Mh98dEeuB674VnNuGfQ" x="30" y="168"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vB5zmd8dEeuB674VnNuGfQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_vB6aoN8dEeuB674VnNuGfQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vB5zmt8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_3iOeeZWbEd-WsbbwTwQ1vg?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=enableFileTransport?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vB5zm98dEeuB674VnNuGfQ" x="126" y="168"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vB6aod8dEeuB674VnNuGfQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_vB7BsN8dEeuB674VnNuGfQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vB6aot8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_3iOeeJWbEd-WsbbwTwQ1vg?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=cleanTemporaryObjects?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vB6ao98dEeuB674VnNuGfQ" x="126" y="84"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vB7Bsd8dEeuB674VnNuGfQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_vB7BtN8dEeuB674VnNuGfQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vB7Bst8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_9P5SEOujEeG7fte7iUkMug?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=useDistinct?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vB7Bs98dEeuB674VnNuGfQ" x="126" y="564"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vB7Btd8dEeuB674VnNuGfQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_vB7owN8dEeuB674VnNuGfQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vB7Btt8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_A3dbMJ0UEeekQOSyujLVoQ?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=cleanInitialTemporaryObjects?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vB7Bt98dEeuB674VnNuGfQ" x="126" y="60"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vB7owd8dEeuB674VnNuGfQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_vB8P0N8dEeuB674VnNuGfQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vB7owt8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_4P62gSK-Eei57uQWj6LrSQ?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=useTrustedConnection?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vB7ow98dEeuB674VnNuGfQ" x="126" y="588"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vB8P0d8dEeuB674VnNuGfQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_vB824N8dEeuB674VnNuGfQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vB8P0t8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_9YN1cCtjEeirtMYH4GAa7g?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=loadMethod?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vB8P098dEeuB674VnNuGfQ" x="126" y="282"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vB824d8dEeuB674VnNuGfQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_vB9d8N8dEeuB674VnNuGfQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vB824t8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_3iOedJWbEd-WsbbwTwQ1vg?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=fileEncoding?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vB82498dEeuB674VnNuGfQ" x="126" y="252"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vB9d8d8dEeuB674VnNuGfQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_vB9d9N8dEeuB674VnNuGfQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vB9d8t8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_x5s6MDy7EeiAIeJqHKHabA?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=recordSeparator?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vB9d898dEeuB674VnNuGfQ" x="126" y="420"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vB-FAN8dEeuB674VnNuGfQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_vB-FA98dEeuB674VnNuGfQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vB-FAd8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_4P62gyK-Eei57uQWj6LrSQ?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=rowTerminator?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vB-FAt8dEeuB674VnNuGfQ" x="126" y="450"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vB-FBN8dEeuB674VnNuGfQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_vB-sEN8dEeuB674VnNuGfQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vB-FBd8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_3iOecpWbEd-WsbbwTwQ1vg?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=fieldSeparator?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vB-FBt8dEeuB674VnNuGfQ" x="126" y="228"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vB-sEd8dEeuB674VnNuGfQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_vB_TIN8dEeuB674VnNuGfQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vB-sEt8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_3iOedpWbEd-WsbbwTwQ1vg?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=numericSeparator?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vB-sE98dEeuB674VnNuGfQ" x="126" y="366"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vB_TId8dEeuB674VnNuGfQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_vB_TJN8dEeuB674VnNuGfQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vB_TIt8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_3iOec5WbEd-WsbbwTwQ1vg?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=stringDelimiter?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vB_TI98dEeuB674VnNuGfQ" x="126" y="504"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vB_6MN8dEeuB674VnNuGfQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_vB_6M98dEeuB674VnNuGfQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vB_6Md8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_3iOecZWbEd-WsbbwTwQ1vg?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=dateFormat?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vB_6Mt8dEeuB674VnNuGfQ" x="126" y="144"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vB_6NN8dEeuB674VnNuGfQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_vCAhQN8dEeuB674VnNuGfQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vB_6Nd8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_3iOecJWbEd-WsbbwTwQ1vg?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=workFolder?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vB_6Nt8dEeuB674VnNuGfQ" x="126" y="618"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vCAhQd8dEeuB674VnNuGfQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_vCAhRN8dEeuB674VnNuGfQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vCAhQt8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_3iOed5WbEd-WsbbwTwQ1vg?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=pathOnServer?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vCAhQ98dEeuB674VnNuGfQ" x="126" y="396"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vCAhRd8dEeuB674VnNuGfQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_vCBIUN8dEeuB674VnNuGfQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vCAhRt8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_73T4YOnzEeCN0bP3SFNOuA?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=selectHint?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vCAhR98dEeuB674VnNuGfQ" x="126" y="480"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vCBIUd8dEeuB674VnNuGfQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_vCBIVN8dEeuB674VnNuGfQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vCBIUt8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_3iOedZWbEd-WsbbwTwQ1vg?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=fetchSize?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vCBIU98dEeuB674VnNuGfQ" x="126" y="198"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vCBIVd8dEeuB674VnNuGfQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_vCBvYN8dEeuB674VnNuGfQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vCBIVt8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_4P62giK-Eei57uQWj6LrSQ?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=maximumNumberOfErrors?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vCBIV98dEeuB674VnNuGfQ" x="126" y="336"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vCBvYd8dEeuB674VnNuGfQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_vCBvZN8dEeuB674VnNuGfQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vCBvYt8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_JaK30IeTEeOEXIUv03CbFQ?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=cdcSubscriber?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vCBvY98dEeuB674VnNuGfQ" x="126" y="30"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vCBvZd8dEeuB674VnNuGfQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_vCCWcN8dEeuB674VnNuGfQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vCBvZt8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#969af18a-9a9f-4d88-a960-7aab30d63724?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=codePage?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vCBvZ98dEeuB674VnNuGfQ" x="126" y="114"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vCCWcd8dEeuB674VnNuGfQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_vCCWdN8dEeuB674VnNuGfQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vCCWct8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_nFNjwLFnEeqAJL64qj9Gxw?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=lockCdcTable?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vCCWc98dEeuB674VnNuGfQ" x="126" y="312"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vCCWdd8dEeuB674VnNuGfQ" type="2005">
+      <children xmi:type="notation:Node" xmi:id="_vCC9gN8dEeuB674VnNuGfQ" type="5005"/>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vCCWdt8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Parameter" href="resource.proc#_nFU4gLFnEeqAJL64qj9Gxw?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=unlockCdcTable?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vCCWd98dEeuB674VnNuGfQ" x="126" y="534"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_vB3XUN8dEeuB674VnNuGfQ" type="2004">
+      <children xmi:type="notation:Node" xmi:id="_vB4lcN8dEeuB674VnNuGfQ" type="5004"/>
+      <children xmi:type="notation:Node" xmi:id="_vB4lcd8dEeuB674VnNuGfQ" type="7005">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_vB4lct8dEeuB674VnNuGfQ" collapsed="true"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_vB4lc98dEeuB674VnNuGfQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_vB4ldN8dEeuB674VnNuGfQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_vB5MgN8dEeuB674VnNuGfQ" type="7006">
+        <styles xmi:type="notation:DrawerStyle" xmi:id="_vB5Mgd8dEeuB674VnNuGfQ"/>
+        <styles xmi:type="notation:SortingStyle" xmi:id="_vB5Mgt8dEeuB674VnNuGfQ"/>
+        <styles xmi:type="notation:FilteringStyle" xmi:id="_vB5Mg98dEeuB674VnNuGfQ"/>
+      </children>
+      <styles xmi:type="notation:ShapeStyle" xmi:id="_vB3XUd8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <styles xmi:type="notation:HintedDiagramLinkStyle" xmi:id="_vB3XUt8dEeuB674VnNuGfQ"/>
+      <element xmi:type="proc:SubActionProcess" href="resource.proc#_g8DKnJTREd-A7bm8ettXjQ?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=Load?"/>
+      <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vB3XU98dEeuB674VnNuGfQ" x="30" y="66"/>
+    </children>
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_vBBp0d8dEeuB674VnNuGfQ"/>
+    <element xmi:type="proc:ActionProcess" href="resource.proc#_g8DKkZTREd-A7bm8ettXjQ?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=LOAD%20Rdbms%20to%20Mssql?"/>
+    <edges xmi:type="notation:Edge" xmi:id="_vCUDQN8dEeuB674VnNuGfQ" type="4001" source="_vB3XUN8dEeuB674VnNuGfQ" target="_vB5MhN8dEeuB674VnNuGfQ">
+      <styles xmi:type="notation:RoutingStyle" xmi:id="_vCUDQd8dEeuB674VnNuGfQ"/>
+      <styles xmi:type="notation:FontStyle" xmi:id="_vCUDQt8dEeuB674VnNuGfQ" fontName="Segoe UI"/>
+      <element xmi:type="proc:Link" href="resource.proc#_IrnK4JTkEd-tv7v5yj0V3Q?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc?"/>
+      <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_vCUDQ98dEeuB674VnNuGfQ" points="[0, 0, 0, -60]$[0, 60, 0, 0]"/>
+      <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_vCtr4N8dEeuB674VnNuGfQ" id="(0.5,1.0)"/>
+      <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_vCtr4d8dEeuB674VnNuGfQ" id="(0.5,0.0)"/>
+    </edges>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_vBBp0t8dEeuB674VnNuGfQ" type="Proc" measurementUnit="Pixel">
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_vBBp098dEeuB674VnNuGfQ"/>
+    <element xmi:type="proc:SubActionProcess" href="resource.proc#_g8DKnJTREd-A7bm8ettXjQ?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=Load?"/>
+  </notation:Diagram>
+  <notation:Diagram xmi:id="_vBBp1N8dEeuB674VnNuGfQ" type="Proc" measurementUnit="Pixel">
+    <styles xmi:type="notation:DiagramStyle" xmi:id="_vBBp1d8dEeuB674VnNuGfQ"/>
+    <element xmi:type="proc:SubActionProcess" href="resource.proc#_672PQJTjEd-tv7v5yj0V3Q?fileId=_g8DKkZTREd-A7bm8ettXjQ$type=proc$name=Clean?"/>
+  </notation:Diagram>
+</xmi:XMI>
+]]></diagram>
+</proc:process>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tpc:conf xmlns:tpc="http://www.stambia.com/tpc" id="_0jmY4FE5Ed-SQuyZS8LpiA">
+  <case name="I-TP">
+    <propertyState name="TYPE" value="I-TP"/>
+    <case name="WSDL">
+      <propertyState name="trgTech" value="WSDL"/>
+      <template id="_0jnnAlE5Ed-SQuyZS8LpiA" ref="INTEGRATION%20Rdbms%20to%20Wsdl.proc#_oO96sQXbEd-3ZKnpc_AwVw?fileId=_oO96sQXbEd-3ZKnpc_AwVw$type=proc$name=INTEGRATION+Rdbms+to+Wsdl?"/>
+    </case>
+  </case>
+  <case name="L-TP">
+    <propertyState name="TYPE" value="L-TP"/>
+    <case name="TRG_RDBMS">
+      <propertyState name="trgTech" value="RDBMS"/>
+      <case name="SRC_WSDL">
+        <not>
+          <propertyState name="trgProduct" value="HIVE"/>
+        </not>
+        <propertyState name="srcTech" value="WSDL"/>
+        <template id="_0jpcNVE5Ed-SQuyZS8LpiA" ref="LOAD%20Wsdl%20to%20Rdbms.proc#_VUNTATgyEd-jwpjHwxWmmQ?fileId=_VUNTATgyEd-jwpjHwxWmmQ$type=proc$name=Load%20Wsdl%20to%20Rdbms?"/>
+        <template id="_AaMAdGrGEeqb17Enc7Uo4Q" ref="../templates.generic/Xml/LOAD%20Xml%20to%20Rdbms.proc#_eNVMMrdDEd6wPMNq-9tkHw?fileId=_eNVMMrdDEd6wPMNq-9tkHw$type=proc$name=Load%20Xml%20to%20Rdbms?"/>
+      </case>
+    </case>
+  </case>
+</tpc:conf>

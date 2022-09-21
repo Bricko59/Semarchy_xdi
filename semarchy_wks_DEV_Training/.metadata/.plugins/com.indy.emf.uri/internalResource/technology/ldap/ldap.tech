@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tech:tech xmlns:tech="http://www.stambia.com/tech" description="" id="UUID_STAMBIA_TECH_LDAP" name="ldap" ref="resource.md#UUID_MD_SUPER_TYPE?fileId=UUID_MD_SUPER_TYPE$type=md$name=super?">
+  <level icon="icons/full/custom/ldap.server.png" xmlName="server" code="com.stambia.ldap.server" displayName="Server" isFile="true">
+    <attribute xmlName="initialContextFactory" code="initialContextFactory" displayName="Initial Context Factory" mdXpathAccess="tokenize('com.sun.jndi.ldap.LdapCtxFactory',' ')" type="list"/>
+    <attribute xmlName="providerURL" xpathCondition="" code="providerURL" displayName="Provider URL"/>
+    <attribute xmlName="securityPrincipal" code="securityPrincipal" displayName="Security Principal"/>
+    <attribute xmlName="securityCredentials" xpathCondition="" category="" code="securityCredentials" defaultValue="" displayName="Security Credentials" type="password"/>
+    <parent>com.stambia.ldap.product</parent>
+    <xPathExpression expression="@securityCredentials">
+      <code>SECURITY_CREDENTIALS</code>
+    </xPathExpression>
+    <xPathExpression expression="@initialContextFactory">
+      <code>INITIAL_CONTEXT_FACTORY</code>
+    </xPathExpression>
+    <xPathExpression expression="@providerURL">
+      <code>PROVIDER_URL</code>
+    </xPathExpression>
+    <xPathExpression expression="@securityPrincipal">
+      <code>SECURITY_PRINCIPAL</code>
+    </xPathExpression>
+  </level>
+  <level icon="icons/full/custom/jms.server.property.gif" iconBundleName="" xmlName="property" xpathCondition="" xpathDisplayName="" xpathIcon="" activeDisplayName="false" code="com.stambia.ldap.server.property" displayName="Property" isFile="false" position="3">
+    <attribute xmlName="value" category="Standard" code="value" displayName="Value" mdXpathAccess="" multiLine="false" nullable="false" type="string"/>
+    <parent>com.stambia.ldap.server</parent>
+  </level>
+  <level xmlName="product" code="com.stambia.ldap.product" displayName="Ldap Product" isFile="advanced"/>
+</tech:tech>
