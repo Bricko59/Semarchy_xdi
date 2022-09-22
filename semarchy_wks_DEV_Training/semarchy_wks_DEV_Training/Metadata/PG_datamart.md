@@ -5,7 +5,7 @@
   <attribute defType="com.stambia.rdbms.server.driver" id="_SDPOkDA4Ee2gO4RlfKX5uw" value="org.postgresql.Driver"/>
   <attribute defType="com.stambia.rdbms.server.designerAutoCommit" id="_SDP1oDA4Ee2gO4RlfKX5uw" value="true"/>
   <attribute defType="com.stambia.rdbms.server.password" id="_SDP1oTA4Ee2gO4RlfKX5uw" value="67360DCDA26A19D94727280D182292C8"/>
-  <attribute defType="com.stambia.rdbms.server.url" id="_SDP1ojA4Ee2gO4RlfKX5uw" value="jdbc:postgresql://localhost:5434/datamart"/>
+  <attribute defType="com.stambia.rdbms.server.url" id="_SDP1ojA4Ee2gO4RlfKX5uw" value="jdbc:postgresql://localhost:5432/datamart"/>
   <node defType="com.stambia.rdbms.schema" id="_7CX7ADA3Ee2gO4RlfKX5uw" name="datamart.hotel_datamart">
     <attribute defType="com.stambia.rdbms.schema.catalog.name" id="_7FQ28DA3Ee2gO4RlfKX5uw" value="datamart"/>
     <attribute defType="com.stambia.rdbms.schema.name" id="_7FSsIDA3Ee2gO4RlfKX5uw" value="hotel_datamart"/>
