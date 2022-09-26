@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map:map xmlns:map="http://www.indy.com/v2/map" id="_GHIvUDBAEe2gO4RlfKX5uw" internalVersion="8" tech="resource.tech#_waYSMH8VEd2__Mzb_dB76A?fileId=_waYSMH8VEd2__Mzb_dB76A$type=tech$name=flow?">
-  <datastore id="_IJsc8DBAEe2gO4RlfKX5uw" alias="t_payment_type" dataset="_IJ4qMDBAEe2gO4RlfKX5uw" ref="resource.md#_h2N68DA_Ee2gO4RlfKX5uw?fileId=_Wu0vwDA_Ee2gO4RlfKX5uw$type=md$name=t_payment_type?">
-    <field id="_IJx8gjBAEe2gO4RlfKX5uw" fullAlias="pmt_active" name="pmt_active" ref="resource.md#_h2mVcTA_Ee2gO4RlfKX5uw?fileId=_Wu0vwDA_Ee2gO4RlfKX5uw$type=md$name=pmt_active?"/>
-    <field id="_IJx8gTBAEe2gO4RlfKX5uw" fullAlias="pmt_description" name="pmt_description" ref="resource.md#_h2g14TA_Ee2gO4RlfKX5uw?fileId=_Wu0vwDA_Ee2gO4RlfKX5uw$type=md$name=pmt_description?"/>
-    <field id="_IJwuYTBAEe2gO4RlfKX5uw" fullAlias="pmt_code" name="pmt_code" ref="resource.md#_h2Xr8DA_Ee2gO4RlfKX5uw?fileId=_Wu0vwDA_Ee2gO4RlfKX5uw$type=md$name=pmt_code?" updateKey="true"/>
-    <field id="_IJx8gDBAEe2gO4RlfKX5uw" fullAlias="pmt_name" name="pmt_name" ref="resource.md#_h2dLgTA_Ee2gO4RlfKX5uw?fileId=_Wu0vwDA_Ee2gO4RlfKX5uw$type=md$name=pmt_name?"/>
-    <constraint id="_IJx8gzBAEe2gO4RlfKX5uw" name="pk_t_payment_type" ref="resource.md#_h2r1ADA_Ee2gO4RlfKX5uw?fileId=_Wu0vwDA_Ee2gO4RlfKX5uw$type=md$name=pk_t_payment_type?" reject="true"/>
+  <datastore id="_IJsc8DBAEe2gO4RlfKX5uw" alias="t_payment_type" dataset="_IJ4qMDBAEe2gO4RlfKX5uw" ref="resource.md#_iLhzMT2eEe2_b4DAcjV5vw?fileId=_brcm0D2dEe2_b4DAcjV5vw$type=md$name=T_PAYMENT_TYPE?">
+    <field id="_IJx8gjBAEe2gO4RlfKX5uw" fullAlias="pmt_active" name="pmt_active" ref="resource.md#_iLkPdz2eEe2_b4DAcjV5vw?fileId=_brcm0D2dEe2_b4DAcjV5vw$type=md$name=PMT_ACTIVE?"/>
+    <field id="_IJx8gTBAEe2gO4RlfKX5uw" fullAlias="pmt_description" name="pmt_description" ref="resource.md#_iLkPcD2eEe2_b4DAcjV5vw?fileId=_brcm0D2dEe2_b4DAcjV5vw$type=md$name=PMT_DESCRIPTION?"/>
+    <field id="_IJwuYTBAEe2gO4RlfKX5uw" fullAlias="pmt_code" name="pmt_code" ref="resource.md#_iLjoYD2eEe2_b4DAcjV5vw?fileId=_brcm0D2dEe2_b4DAcjV5vw$type=md$name=PMT_CODE?" updateKey="true"/>
+    <field id="_IJx8gDBAEe2gO4RlfKX5uw" fullAlias="pmt_name" name="pmt_name" ref="resource.md#_iLjoZz2eEe2_b4DAcjV5vw?fileId=_brcm0D2dEe2_b4DAcjV5vw$type=md$name=PMT_NAME?"/>
+    <constraint id="_C49V4D2jEe2_b4DAcjV5vw" name="PK_T_PAYMENT_TYPE" ref="resource.md#_iLk2gD2eEe2_b4DAcjV5vw?fileId=_brcm0D2dEe2_b4DAcjV5vw$type=md$name=PK_T_PAYMENT_TYPE?" reject="true"/>
   </datastore>
-  <datastore id="_Mi7uEDBAEe2gO4RlfKX5uw" alias="dim_payment_type" dataset="_MjGtMDBAEe2gO4RlfKX5uw" ref="resource.md#_SJ3bADA4Ee2gO4RlfKX5uw?fileId=_6v7gIDA3Ee2gO4RlfKX5uw$type=md$name=dim_payment_type?" subExpression="[A]">
-    <field id="_Mi-KUDBAEe2gO4RlfKX5uw" enable="true" insert="true" name="pmt_name" ref="resource.md#_SKKV8TA4Ee2gO4RlfKX5uw?fileId=_6v7gIDA3Ee2gO4RlfKX5uw$type=md$name=pmt_name?" update="true">
+  <datastore id="_Mi7uEDBAEe2gO4RlfKX5uw" alias="dim_payment_type" dataset="_MjGtMDBAEe2gO4RlfKX5uw" ref="resource.md#_aU61kT2ZEe2_b4DAcjV5vw?fileId=_VsPaQD2ZEe2_b4DAcjV5vw$type=md$name=DIM_PAYMENT_TYPE?" subExpression="[A]">
+    <field id="_Mi-KUDBAEe2gO4RlfKX5uw" enable="true" insert="true" name="pmt_name" ref="resource.md#_aVBjQD2ZEe2_b4DAcjV5vw?fileId=_VsPaQD2ZEe2_b4DAcjV5vw$type=md$name=PMT_NAME?" update="true">
       <expression id="_NVS_IDBAEe2gO4RlfKX5uw" setDescriptorRef="_NVRxADBAEe2gO4RlfKX5uw">
         <expression>t_payment_type.pmt_name</expression>
       </expression>
     </field>
-    <field id="_Mi9jQDBAEe2gO4RlfKX5uw" enable="true" insert="true" name="pmt_code" ref="resource.md#_SKDBMDA4Ee2gO4RlfKX5uw?fileId=_6v7gIDA3Ee2gO4RlfKX5uw$type=md$name=pmt_code?" update="true" updateKey="true">
+    <field id="_Mi9jQDBAEe2gO4RlfKX5uw" enable="true" insert="true" name="pmt_code" ref="resource.md#_aVAVID2ZEe2_b4DAcjV5vw?fileId=_VsPaQD2ZEe2_b4DAcjV5vw$type=md$name=PMT_CODE?" update="true" updateKey="true">
       <expression id="_NVTmMDBAEe2gO4RlfKX5uw" setDescriptorRef="_NVRxADBAEe2gO4RlfKX5uw">
         <expression>t_payment_type.pmt_code</expression>
       </expression>
     </field>
-    <field id="_Mi-KUTBAEe2gO4RlfKX5uw" enable="true" insert="true" name="pmt_description" ref="resource.md#_SKftITA4Ee2gO4RlfKX5uw?fileId=_6v7gIDA3Ee2gO4RlfKX5uw$type=md$name=pmt_description?" update="true">
+    <field id="_Mi-KUTBAEe2gO4RlfKX5uw" enable="true" insert="true" name="pmt_description" ref="resource.md#_aVCKUD2ZEe2_b4DAcjV5vw?fileId=_VsPaQD2ZEe2_b4DAcjV5vw$type=md$name=PMT_DESCRIPTION?" update="true">
       <expression id="_NVTmMTBAEe2gO4RlfKX5uw" setDescriptorRef="_NVRxADBAEe2gO4RlfKX5uw">
         <expression>t_payment_type.pmt_description</expression>
       </expression>
     </field>
-    <constraint id="_Mi-KUjBAEe2gO4RlfKX5uw" name="pk_dim_payment_type" ref="resource.md#_SKvkwDA4Ee2gO4RlfKX5uw?fileId=_6v7gIDA3Ee2gO4RlfKX5uw$type=md$name=pk_dim_payment_type?" reject="true"/>
+    <constraint id="_HxqKMD2jEe2_b4DAcjV5vw" name="PK_DIM_PAYMENT_TYPE" ref="resource.md#_aVDYcD2ZEe2_b4DAcjV5vw?fileId=_VsPaQD2ZEe2_b4DAcjV5vw$type=md$name=PK_DIM_PAYMENT_TYPE?" reject="true"/>
     <setDescriptor id="_NVRxADBAEe2gO4RlfKX5uw" label="A"/>
   </datastore>
   <filter id="_VzZM0DBAEe2gO4RlfKX5uw" location="SRC">
     <expression>t_payment_type.pmt_active = 1</expression>
   </filter>
-  <template id="_NVYesDBAEe2gO4RlfKX5uw" name="I_dim_payment_type" process="resource.proc#_dQ2dRp4SEd6bQIkgWyxFQQ?fileId=_dQ2dRp4SEd6bQIkgWyxFQQ$type=proc$name=INTEGRATION%20PostgreSql?" targetId="_Mi7uEDBAEe2gO4RlfKX5uw"/>
+  <template id="_NVYesDBAEe2gO4RlfKX5uw" name="I_dim_payment_type" process="resource.proc#_946a4183-2772-439c-9dea-078288948f0e?fileId=_946a4183-2772-439c-9dea-078288948f0e$type=proc$name=INTEGRATION%20Rdbms?" targetId="_Mi7uEDBAEe2gO4RlfKX5uw"/>
   <template id="_NWxl0DBAEe2gO4RlfKX5uw" name="L1_dim_payment_type" process="resource.proc#_aafbe681-11ab-4ebc-ab56-de794128c580?fileId=_aafbe681-11ab-4ebc-ab56-de794128c580$type=proc$name=LOAD%20Rdbms%20to%20Rdbms?" sourceId="_IJsc8DBAEe2gO4RlfKX5uw" targetId="_Mi7uEDBAEe2gO4RlfKX5uw"/>
   <dataSet id="_IJ4qMDBAEe2gO4RlfKX5uw">
     <container>_IJsc8DBAEe2gO4RlfKX5uw</container>
@@ -93,7 +93,7 @@
     <layoutConstraint xmi:type="notation:Bounds" xmi:id="_V7GXVDBAEe2gO4RlfKX5uw" x="319" y="248"/>
   </children>
   <styles xmi:type="notation:DiagramStyle" xmi:id="_GNw7wTBAEe2gO4RlfKX5uw"/>
-  <element xmi:type="map:Map" href="resource.map#_GHIvUDBAEe2gO4RlfKX5uw?fileId=_GHIvUDBAEe2gO4RlfKX5uw$type=map$name=Load%20dim_payment_type?"/>
+  <element xmi:type="map:Map" href="resource.map#_GHIvUDBAEe2gO4RlfKX5uw?fileId=_GHIvUDBAEe2gO4RlfKX5uw$type=map$name=LoadDim_payment_type?"/>
   <edges xmi:type="notation:Edge" xmi:id="_NWhuMDBAEe2gO4RlfKX5uw" type="targetLink" source="_MjwNcDBAEe2gO4RlfKX5uw" target="_IJ_X4DBAEe2gO4RlfKX5uw">
     <element xsi:nil="true"/>
     <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_NWhuMTBAEe2gO4RlfKX5uw" points="[-87, 1, 313, 0]$[-312, 0, 88, -1]"/>
